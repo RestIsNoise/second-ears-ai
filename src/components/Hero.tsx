@@ -1,71 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
 
 const Hero = () => {
-  const artRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!artRef.current) return;
-      const y = window.scrollY;
-      const shapes = artRef.current.children;
-      for (let i = 0; i < shapes.length; i++) {
-        const el = shapes[i] as HTMLElement;
-        const speed = parseFloat(el.dataset.speed || "0");
-        el.style.transform = `translateY(${y * speed}px) rotate(${y * speed * 0.3}deg)`;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <section className="relative pt-56 pb-48 px-6 overflow-hidden">
-      {/* Geometric artwork */}
-      <div ref={artRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {/* Large ring — top right */}
-        <div
-          data-speed="-0.04"
-          className="absolute -top-32 -right-40 w-[600px] h-[600px] rounded-full border-[1.5px] border-foreground/15"
-        />
-        {/* Medium ring — left */}
-        <div
-          data-speed="0.05"
-          className="absolute top-[55%] -left-24 w-72 h-72 rounded-full border border-foreground/12"
-        />
-        {/* Vertical line — right */}
-        <div
-          data-speed="-0.03"
-          className="absolute top-[15%] right-[20%] w-px h-64 bg-foreground/10"
-        />
-        {/* Diagonal line — left */}
-        <div
-          data-speed="0.04"
-          className="absolute top-[25%] left-[15%] w-px h-48 bg-foreground/10 rotate-[25deg] origin-top"
-        />
-        {/* Square — bottom right */}
-        <div
-          data-speed="0.06"
-          className="absolute bottom-16 right-[18%] w-16 h-16 border border-foreground/12 rotate-45"
-        />
-        {/* Small circle — top left */}
-        <div
-          data-speed="-0.05"
-          className="absolute top-[20%] left-[22%] w-10 h-10 rounded-full border border-foreground/12"
-        />
-        {/* Horizontal line — bottom */}
-        <div
-          data-speed="0.03"
-          className="absolute bottom-[30%] left-[8%] w-32 h-px bg-foreground/10"
-        />
-        {/* Large ring — bottom left */}
-        <div
-          data-speed="0.04"
-          className="absolute -bottom-40 -left-32 w-[450px] h-[450px] rounded-full border border-foreground/10"
-        />
-      </div>
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
