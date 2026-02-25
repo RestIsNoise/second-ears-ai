@@ -1,0 +1,4 @@
+project_id = "ltkkcqthnnnyskvomjeb"
+
+[functions.analyze-track]
+verify_jwt = false
