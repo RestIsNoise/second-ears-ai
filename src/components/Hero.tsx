@@ -25,35 +25,45 @@ const Hero = () => {
     <section className="relative pt-56 pb-48 px-6 overflow-hidden">
       {/* Geometric artwork */}
       <div ref={artRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {/* Large thin ring — top right */}
+        {/* Large ring — top right */}
         <div
           data-speed="-0.04"
-          className="absolute -top-20 -right-32 w-[500px] h-[500px] rounded-full border border-foreground/[0.06]"
+          className="absolute -top-32 -right-40 w-[600px] h-[600px] rounded-full border-[1.5px] border-foreground/15"
         />
-        {/* Small circle — left */}
-        <div
-          data-speed="0.06"
-          className="absolute top-1/2 -left-8 w-20 h-20 rounded-full border border-foreground/[0.08]"
-        />
-        {/* Diagonal line — right */}
-        <div
-          data-speed="-0.03"
-          className="absolute top-1/3 right-[15%] w-px h-40 bg-foreground/[0.06] rotate-[30deg] origin-top"
-        />
-        {/* Small square — bottom left */}
+        {/* Medium ring — left */}
         <div
           data-speed="0.05"
-          className="absolute bottom-24 left-[18%] w-8 h-8 border border-foreground/[0.07] rotate-45"
+          className="absolute top-[55%] -left-24 w-72 h-72 rounded-full border border-foreground/12"
         />
-        {/* Thin horizontal rule — top left */}
+        {/* Vertical line — right */}
         <div
-          data-speed="-0.02"
-          className="absolute top-[30%] left-[10%] w-24 h-px bg-foreground/[0.05]"
+          data-speed="-0.03"
+          className="absolute top-[15%] right-[20%] w-px h-64 bg-foreground/10"
         />
-        {/* Medium ring — bottom right */}
+        {/* Diagonal line — left */}
         <div
           data-speed="0.04"
-          className="absolute -bottom-16 right-[12%] w-60 h-60 rounded-full border border-foreground/[0.05]"
+          className="absolute top-[25%] left-[15%] w-px h-48 bg-foreground/10 rotate-[25deg] origin-top"
+        />
+        {/* Square — bottom right */}
+        <div
+          data-speed="0.06"
+          className="absolute bottom-16 right-[18%] w-16 h-16 border border-foreground/12 rotate-45"
+        />
+        {/* Small circle — top left */}
+        <div
+          data-speed="-0.05"
+          className="absolute top-[20%] left-[22%] w-10 h-10 rounded-full border border-foreground/12"
+        />
+        {/* Horizontal line — bottom */}
+        <div
+          data-speed="0.03"
+          className="absolute bottom-[30%] left-[8%] w-32 h-px bg-foreground/10"
+        />
+        {/* Large ring — bottom left */}
+        <div
+          data-speed="0.04"
+          className="absolute -bottom-40 -left-32 w-[450px] h-[450px] rounded-full border border-foreground/10"
         />
       </div>
 
