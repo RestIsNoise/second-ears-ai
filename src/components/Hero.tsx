@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => (
   <section className="pt-40 pb-32 px-6">
@@ -14,9 +15,11 @@ const Hero = () => (
         Stop guessing your mix. Get instant, actionable feedback on your music — from AI that listens like a pro.
       </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
-        <Button variant="hero" size="lg" className="h-12 px-8 text-sm gap-2">
-          <Upload className="w-4 h-4" />
-          Upload your track
+        <Button variant="hero" size="lg" className="h-12 px-8 text-sm gap-2" asChild>
+          <Link to="/analyze">
+            <Upload className="w-4 h-4" />
+            Upload your track
+          </Link>
         </Button>
         <Button variant="hero-outline" size="lg" className="h-12 px-8 text-sm">
           See how it works
