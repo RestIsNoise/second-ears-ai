@@ -35,14 +35,14 @@ const ListeningModes = () => (
         {modes.map((mode) => (
           <div
             key={mode.name}
-            className="bg-background rounded-xl border border-border-subtle p-8 flex flex-col gap-6 hover:border-foreground/10 transition-colors"
+            className="bg-background rounded-xl border border-border-subtle p-10 flex flex-col gap-7 hover:border-foreground/10 transition-colors"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
-                <mode.icon className="w-4 h-4 text-foreground" />
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-lg bg-secondary flex items-center justify-center">
+                <mode.icon className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <h3 className="font-semibold tracking-tight">{mode.name}</h3>
+                <h3 className="text-lg font-semibold tracking-tight">{mode.name}</h3>
                 <p className="font-mono-brand text-xs text-muted-foreground">{mode.tag}</p>
               </div>
             </div>
