@@ -27,11 +27,11 @@ const Hero = () => {
       <div ref={barsRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
           data-speed="-0.03"
-          className="absolute top-[-10%] left-[38%] w-px h-[140%] bg-foreground/[0.07] rotate-[65deg] origin-top"
+          className="absolute top-[5%] left-[52%] w-[1px] h-[90%] bg-foreground/15 rotate-[68deg] origin-center"
         />
         <div
           data-speed="-0.04"
-          className="absolute top-[-10%] left-[44%] w-px h-[140%] bg-foreground/[0.07] rotate-[65deg] origin-top"
+          className="absolute top-[5%] left-[58%] w-[1px] h-[90%] bg-foreground/15 rotate-[68deg] origin-center"
         />
       </div>
 
