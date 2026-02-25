@@ -3,9 +3,9 @@ import { Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => (
-  <section className="pt-52 pb-44 px-6">
+  <section className="pt-56 pb-48 px-6">
     <div className="max-w-2xl mx-auto text-center">
-      <p className="font-mono-brand text-[10px] text-muted-foreground/60 tracking-[0.3em] uppercase mb-10 animate-fade-up">
+      <p className="font-mono-brand text-[10px] text-muted-foreground/60 tracking-[0.4em] uppercase mb-12 animate-fade-up">
         AI speed · Human ears
       </p>
       <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08] mb-10 animate-fade-up" style={{ animationDelay: "0.1s" }}>
