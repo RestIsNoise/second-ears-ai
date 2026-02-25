@@ -3,8 +3,13 @@ import { Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => (
-  <section className="pt-56 pb-48 px-6">
-    <div className="max-w-2xl mx-auto text-center">
+  <section className="relative pt-56 pb-48 px-6 overflow-hidden">
+    {/* Ambient organic glow */}
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-foreground/[0.015] blur-[120px]" />
+      <div className="absolute bottom-0 left-1/3 w-[500px] h-[400px] rounded-full bg-foreground/[0.01] blur-[100px]" />
+    </div>
+    <div className="relative max-w-2xl mx-auto text-center">
       <p className="font-mono-brand text-[10px] text-muted-foreground/60 tracking-[0.4em] uppercase mb-12 animate-fade-up">
         AI speed · Human ears
       </p>
