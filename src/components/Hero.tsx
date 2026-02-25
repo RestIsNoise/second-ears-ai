@@ -1,10 +1,39 @@
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 const Hero = () => {
+  const barsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!barsRef.current) return;
+      const y = window.scrollY;
+      const bars = barsRef.current.children;
+      for (let i = 0; i < bars.length; i++) {
+        const el = bars[i] as HTMLElement;
+        const speed = parseFloat(el.dataset.speed || "0");
+        el.style.transform = `rotate(65deg) translateY(${y * speed}px)`;
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section className="relative pt-56 pb-48 px-6 overflow-hidden">
+      {/* Diagonal bars — "//" motif */}
+      <div ref={barsRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          data-speed="-0.03"
+          className="absolute top-[-10%] left-[38%] w-px h-[140%] bg-foreground/[0.07] rotate-[65deg] origin-top"
+        />
+        <div
+          data-speed="-0.04"
+          className="absolute top-[-10%] left-[44%] w-px h-[140%] bg-foreground/[0.07] rotate-[65deg] origin-top"
+        />
+      </div>
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
