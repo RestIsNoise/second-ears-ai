@@ -42,12 +42,17 @@ const Pricing = () => (
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`rounded-xl border p-8 flex flex-col gap-6 transition-colors ${
+            className={`relative rounded-xl border p-8 flex flex-col gap-6 transition-colors ${
               plan.featured
-                ? "bg-primary text-primary-foreground border-primary"
+                ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_24px_-6px_hsl(var(--foreground)/0.15)] scale-[1.02]"
                 : "bg-background border-border-subtle hover:border-foreground/10"
             }`}
           >
+            {plan.featured && (
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 font-mono-brand text-[10px] tracking-widest uppercase bg-primary-foreground text-primary px-3 py-1 rounded-full">
+                Most popular
+              </span>
+            )}
             <div>
               <h3 className="font-semibold tracking-tight text-lg">{plan.name}</h3>
               <p className={`text-sm mt-1 ${plan.featured ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
