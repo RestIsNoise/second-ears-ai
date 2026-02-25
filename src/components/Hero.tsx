@@ -51,13 +51,13 @@ const Hero = () => {
           Precise, actionable feedback — delivered in minutes.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
-          <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
+          <Button variant="hero" size="lg" className="h-12 px-10 text-[13px] gap-2" asChild>
             <Link to="/analyze">
               <Upload className="w-4 h-4" />
               Upload your track
             </Link>
           </Button>
-          <Button variant="hero-outline" size="lg" className="h-12 px-8 text-sm">
+          <Button variant="hero-outline" size="lg" className="h-11 px-8 text-[13px]">
             See how it works
           </Button>
         </div>
