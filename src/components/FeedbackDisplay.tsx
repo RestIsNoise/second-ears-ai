@@ -1,18 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import WaveformPlayer from "@/components/WaveformPlayer";
 import type { FeedbackResult } from "@/pages/Analyze";
-
-const verdictColor: Record<string, string> = {
-  "release-ready": "text-green-600",
-  compelling: "text-green-600",
-  ready: "text-green-600",
-  "needs-work": "text-yellow-600",
-  decent: "text-yellow-600",
-  promising: "text-yellow-600",
-  "major-issues": "text-red-500",
-  flat: "text-red-500",
-  "needs-rethinking": "text-red-500",
-};
 
 const modeLabels: Record<string, string> = {
   technical: "Technical",
@@ -20,64 +9,169 @@ const modeLabels: Record<string, string> = {
   perception: "Perception",
 };
 
-const FeedbackDisplay = ({ result, onReset }: { result: FeedbackResult; onReset: () => void }) => {
+const FeedbackDisplay = ({
+  result,
+  onReset,
+  audioUrl,
+}: {
+  result: FeedbackResult;
+  onReset: () => void;
+  audioUrl?: string;
+}) => {
   const { feedback, mode } = result;
 
   return (
-    <div className="space-y-8 animate-fade-up">
+    <div className="space-y-16 animate-fade-up">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={onReset} className="gap-2 text-muted-foreground">
+      <div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onReset}
+          className="gap-2 text-muted-foreground mb-8"
+        >
           <ArrowLeft className="w-4 h-4" /> New analysis
         </Button>
-        <span className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
-          {modeLabels[mode]} mode
-        </span>
+
+        <div className="space-y-2">
+          {feedback.track_name && (
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              {feedback.track_name}
+            </h1>
+          )}
+          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            {modeLabels[mode]} analysis
+          </p>
+        </div>
       </div>
 
-      {/* Summary */}
-      <div className="rounded-xl border border-border-subtle p-8 bg-secondary/30">
-        <p className="text-lg font-medium tracking-tight leading-relaxed">{feedback.summary}</p>
-        <p className={`font-mono-brand text-sm mt-4 uppercase tracking-wider font-medium ${verdictColor[feedback.verdict] || "text-foreground"}`}>
-          {feedback.verdict?.replace(/-/g, " ")}
-        </p>
-      </div>
+      {/* Waveform */}
+      {audioUrl && (
+        <WaveformPlayer
+          audioUrl={audioUrl}
+          markers={feedback.timestamps || []}
+        />
+      )}
 
-      {/* Scores */}
-      {feedback.scores && Object.keys(feedback.scores).length > 0 && (
-        <div>
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">Scores</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {Object.entries(feedback.scores).map(([key, score]) => (
-              <div key={key} className="rounded-lg border border-border-subtle p-4 bg-background">
-                <p className="text-2xl font-semibold tracking-tight">{score}<span className="text-sm text-muted-foreground">/10</span></p>
-                <p className="text-xs text-muted-foreground mt-1 capitalize">{key.replace(/_/g, " ")}</p>
+      {/* Overall Impression */}
+      {feedback.overall_impression && (
+        <section>
+          <p className="text-lg md:text-xl font-medium leading-relaxed tracking-tight max-w-xl">
+            {feedback.overall_impression}
+          </p>
+        </section>
+      )}
+
+      {/* Top Priorities */}
+      {feedback.top_priorities && feedback.top_priorities.length > 0 && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            Top priorities
+          </h2>
+          <div className="space-y-4">
+            {feedback.top_priorities.map((item, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border-subtle p-8 bg-background"
+              >
+                <div className="flex items-start gap-6">
+                  <span className="font-mono-brand text-2xl text-muted-foreground/40 font-medium leading-none pt-0.5">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="space-y-3 flex-1">
+                    <h3 className="text-lg font-semibold tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {item.why}
+                    </p>
+                    <div className="pt-2">
+                      <p className="text-sm text-foreground/80 leading-relaxed">
+                        <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                          Fix
+                        </span>
+                        {item.fix}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Issues */}
-      {feedback.issues && feedback.issues.length > 0 && (
-        <div>
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">Issues & fixes</p>
+      {/* What Works */}
+      {feedback.what_works && feedback.what_works.length > 0 && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            What works
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {feedback.what_works.map((item, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border-subtle p-8 bg-background"
+              >
+                <h3 className="text-base font-semibold tracking-tight mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Fix One Thing */}
+      {feedback.fix_one_thing && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            If you fix only one thing today
+          </h2>
+          <div className="rounded-xl border-2 border-foreground/10 p-10 bg-secondary/20">
+            <h3 className="text-xl font-semibold tracking-tight mb-3">
+              {feedback.fix_one_thing.title}
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              {feedback.fix_one_thing.why}
+            </p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                How
+              </span>
+              {feedback.fix_one_thing.how}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Legacy fallback for old format */}
+      {feedback.issues && feedback.issues.length > 0 && !feedback.top_priorities && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            Issues & fixes
+          </h2>
           <div className="space-y-3">
             {feedback.issues.map((issue, i) => (
-              <div key={i} className="rounded-lg border border-border-subtle p-5 bg-background space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-foreground/30" />
-                  <p className="text-sm font-medium">{issue.area}</p>
-                </div>
+              <div
+                key={i}
+                className="rounded-xl border border-border-subtle p-6 bg-background space-y-2"
+              >
+                <p className="text-sm font-medium">{issue.area}</p>
                 <p className="text-sm text-muted-foreground">{issue.problem}</p>
                 <p className="text-sm text-foreground/80">
-                  <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">Fix</span>
+                  <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                    Fix
+                  </span>
                   {issue.fix}
                 </p>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
