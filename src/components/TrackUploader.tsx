@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
+
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
   { id: "musical", label: "Musical", tag: "The producer", icon: Music },

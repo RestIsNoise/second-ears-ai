@@ -8,32 +8,68 @@ const corsHeaders = {
 };
 
 const modePrompts: Record<string, string> = {
-  technical: `You are a world-class mixing engineer analyzing a track. Provide structured, concise feedback on:
-- **Frequency Balance**: Low, mid, high distribution. Any masking or buildup?
-- **Dynamic Range**: Compression, transient detail, loudness consistency
-- **Stereo Image**: Width, mono compatibility, panning issues
-- **Phase & Correlation**: Any phase cancellation?
-- **Loudness**: LUFS estimate, headroom
+  technical: `You are a world-class mixing engineer analyzing a track. Provide structured, concise feedback.
 
-Format as JSON with keys: summary (1 sentence verdict), scores (object with frequency_balance, dynamics, stereo_image, phase, loudness each 1-10), issues (array of {area, problem, fix}), verdict (release-ready / needs-work / major-issues).`,
+Return valid JSON only (no markdown) with this exact structure:
+{
+  "track_name": "<the track name provided>",
+  "overall_impression": "1-2 sentence summary of the mix quality",
+  "top_priorities": [
+    { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
+    { "title": "...", "why": "...", "fix": "..." },
+    { "title": "...", "why": "...", "fix": "..." }
+  ],
+  "what_works": [
+    { "title": "strength name", "detail": "why this works well" },
+    { "title": "...", "detail": "..." }
+  ],
+  "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "timestamps": []
+}
 
-  musical: `You are a Grammy-winning music producer analyzing a track. Provide structured, concise feedback on:
-- **Arrangement**: Density, space, build/release
-- **Tonal Balance**: Warmth vs brightness, harmonic clarity
-- **Vocal Treatment**: Presence, clarity, effects
-- **Low-End**: Sub/bass relationship, clarity, impact
-- **Energy Flow**: Momentum, tension, dynamics
+Focus on: frequency balance, dynamic range, stereo image, phase correlation, loudness.`,
 
-Format as JSON with keys: summary (1 sentence verdict), scores (object with arrangement, tonal_balance, vocal_treatment, low_end, energy_flow each 1-10), issues (array of {area, problem, fix}), verdict (compelling / decent / flat).`,
+  musical: `You are a Grammy-winning music producer analyzing a track. Provide structured, concise feedback.
 
-  perception: `You are a top A&R and music supervisor analyzing a track for commercial potential. Provide structured, concise feedback on:
-- **First Impression**: Hook, impact in first 10 seconds
-- **Emotional Impact**: Does it evoke feeling? What mood?
-- **Genre Fit**: How well does it fit its genre conventions?
-- **Commercial Readiness**: Radio/playlist ready?
-- **Memorability**: Would a listener return?
+Return valid JSON only (no markdown) with this exact structure:
+{
+  "track_name": "<the track name provided>",
+  "overall_impression": "1-2 sentence summary of the musical quality",
+  "top_priorities": [
+    { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
+    { "title": "...", "why": "...", "fix": "..." },
+    { "title": "...", "why": "...", "fix": "..." }
+  ],
+  "what_works": [
+    { "title": "strength name", "detail": "why this works well" },
+    { "title": "...", "detail": "..." }
+  ],
+  "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "timestamps": []
+}
 
-Format as JSON with keys: summary (1 sentence verdict), scores (object with first_impression, emotional_impact, genre_fit, commercial_readiness, memorability each 1-10), issues (array of {area, problem, fix}), verdict (ready / promising / needs-rethinking).`,
+Focus on: arrangement, tonal balance, vocal treatment, low-end, energy flow.`,
+
+  perception: `You are a top A&R and music supervisor analyzing a track for commercial potential. Provide structured, concise feedback.
+
+Return valid JSON only (no markdown) with this exact structure:
+{
+  "track_name": "<the track name provided>",
+  "overall_impression": "1-2 sentence summary of commercial potential",
+  "top_priorities": [
+    { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
+    { "title": "...", "why": "...", "fix": "..." },
+    { "title": "...", "why": "...", "fix": "..." }
+  ],
+  "what_works": [
+    { "title": "strength name", "detail": "why this works well" },
+    { "title": "...", "detail": "..." }
+  ],
+  "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "timestamps": []
+}
+
+Focus on: first impression, emotional impact, genre fit, commercial readiness, memorability.`,
 };
 
 serve(async (req) => {
@@ -108,14 +144,29 @@ serve(async (req) => {
       const cleaned = rawContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       feedback = JSON.parse(cleaned);
     } catch {
-      feedback = { summary: rawContent, scores: {}, issues: [], verdict: "unknown" };
+      feedback = {
+        track_name: trackName,
+        overall_impression: rawContent,
+        top_priorities: [],
+        what_works: [],
+        fix_one_thing: null,
+        timestamps: [],
+      };
     }
 
-    // Store feedback in database
+    // Ensure track_name is set
+    feedback.track_name = feedback.track_name || trackName;
+
+    // Generate a signed URL for playback
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    const { data: signedData } = await supabase.storage
+      .from("tracks")
+      .createSignedUrl(storagePath, 3600);
+
+    // Store feedback in database
     await supabase.from("feedback").insert({
       track_name: trackName,
       storage_path: storagePath,
@@ -123,9 +174,14 @@ serve(async (req) => {
       feedback,
     });
 
-    return new Response(JSON.stringify({ feedback, mode }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        feedback,
+        mode,
+        audioUrl: signedData?.signedUrl || null,
+      }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (e) {
     console.error("analyze-track error:", e);
     return new Response(
