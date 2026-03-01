@@ -8,9 +8,13 @@ export type ListeningMode = "technical" | "musical" | "perception";
 
 export interface FeedbackData {
   track_name?: string;
+  overallImpression?: string;
   overall_impression?: string;
+  priorities?: Array<{ issue: string; why: string; fix: string }>;
   top_priorities?: Array<{ title: string; why: string; fix: string }>;
+  whatWorks?: Array<{ title: string; detail: string }>;
   what_works?: Array<{ title: string; detail: string }>;
+  fixOneThingToday?: { title: string; why: string; how: string };
   fix_one_thing?: { title: string; why: string; how: string };
   timestamps?: Array<{ time: number; label: string }>;
   // Legacy fields
