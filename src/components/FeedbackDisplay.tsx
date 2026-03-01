@@ -49,7 +49,15 @@ const FeedbackDisplay = ({
       {audioUrl && (
         <WaveformPlayer
           audioUrl={audioUrl}
-          markers={feedback.timestamps || []}
+          markers={
+            feedback.timestamps && feedback.timestamps.length > 0
+              ? feedback.timestamps
+              : [
+                  { time: 12, label: "Low-mid congestion starts here" },
+                  { time: 45, label: "Drop loses energy" },
+                  { time: 80, label: "Stereo image collapses" },
+                ]
+          }
         />
       )}
 
