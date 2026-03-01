@@ -55,7 +55,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
       });
 
       if (error) throw error;
-      onResult(data as FeedbackResult);
+
+      // Create a local audio URL from the uploaded file for waveform playback
+      const audioUrl = URL.createObjectURL(file);
+      const resultData = data as FeedbackResult;
+      resultData.audioUrl = audioUrl;
+      onResult(resultData);
     } catch (err: any) {
       console.error(err);
       toast({

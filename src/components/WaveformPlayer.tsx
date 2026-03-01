@@ -11,7 +11,6 @@ interface Marker {
 interface Props {
   audioUrl: string;
   markers?: Marker[];
-  onMarkerClick?: (marker: Marker) => void;
 }
 
 const formatTime = (s: number) => {
@@ -20,27 +19,29 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-const WaveformPlayer = ({ audioUrl, markers = [], onMarkerClick }: Props) => {
+const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WaveSurfer | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [activeMarker, setActiveMarker] = useState<Marker | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
-      waveColor: "hsl(0 0% 78%)",
-      progressColor: "hsl(0 0% 12%)",
-      cursorColor: "hsl(0 0% 12%)",
+      waveColor: "hsl(0 0% 72%)",
+      progressColor: "hsl(0 0% 5%)",
+      cursorColor: "hsl(0 0% 5%)",
       cursorWidth: 1,
       barWidth: 2,
       barGap: 2,
-      barRadius: 2,
-      height: 64,
+      barRadius: 1,
+      height: 72,
       normalize: true,
+      interact: true,
     });
 
     ws.load(audioUrl);
@@ -70,36 +71,50 @@ const WaveformPlayer = ({ audioUrl, markers = [], onMarkerClick }: Props) => {
     if (wsRef.current && duration > 0) {
       wsRef.current.seekTo(marker.time / duration);
       wsRef.current.play();
+      setActiveMarker(marker);
     }
-    onMarkerClick?.(marker);
   };
 
   return (
     <div className="space-y-4">
-      {/* Waveform */}
-      <div className="rounded-xl border border-border-subtle bg-secondary/20 p-6">
-        <div ref={containerRef} className="w-full" />
+      {/* Waveform + markers overlay */}
+      <div className="rounded-xl border border-border-subtle bg-background p-6">
+        <div className="relative">
+          <div ref={containerRef} className="w-full" />
 
-        {/* Markers */}
-        {markers.length > 0 && duration > 0 && (
-          <div className="relative w-full h-6 mt-2">
-            {markers.map((m, i) => (
-              <button
-                key={i}
-                onClick={() => handleMarkerClick(m)}
-                className="absolute -translate-x-1/2 top-0 flex flex-col items-center group"
-                style={{ left: `${(m.time / duration) * 100}%` }}
-                title={m.label}
-              >
-                <span className="w-1 h-3 bg-foreground/40 rounded-full group-hover:bg-foreground transition-colors" />
-                <span className="font-mono-brand text-[9px] text-muted-foreground group-hover:text-foreground mt-0.5 whitespace-nowrap transition-colors">
-                  {formatTime(m.time)}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
+          {/* Marker lines overlaid on waveform */}
+          {markers.length > 0 && duration > 0 && (
+            <div className="absolute inset-0 pointer-events-none">
+              {markers.map((m, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleMarkerClick(m)}
+                  className="absolute top-0 bottom-0 pointer-events-auto group"
+                  style={{ left: `${(m.time / duration) * 100}%` }}
+                  title={m.label}
+                >
+                  {/* Vertical line */}
+                  <span className="absolute top-0 bottom-0 w-px bg-foreground/40 group-hover:bg-foreground transition-colors" />
+                  {/* Label above */}
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono-brand text-[9px] text-muted-foreground group-hover:text-foreground transition-colors bg-background px-1">
+                    {formatTime(m.time)} — {m.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Active marker comment */}
+      {activeMarker && (
+        <div className="rounded-lg border border-border-subtle bg-secondary/30 px-4 py-3 animate-fade-up">
+          <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+            {formatTime(activeMarker.time)}
+          </p>
+          <p className="text-sm text-foreground">{activeMarker.label}</p>
+        </div>
+      )}
 
       {/* Controls */}
       <div className="flex items-center gap-4">
