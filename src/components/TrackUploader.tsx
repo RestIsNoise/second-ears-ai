@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { Upload, Music, Activity, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
@@ -41,26 +40,28 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
     setIsAnalyzing(true);
 
     try {
-      // Upload to storage
-      const path = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("tracks")
-        .upload(path, file);
+      const formData = new FormData();
+      formData.append("audio", file);
+      formData.append("mode", mode);
 
-      if (uploadError) throw uploadError;
+      const response = await fetch(
+        "https://secondears-backend-production.up.railway.app/api/feedback",
+        { method: "POST", body: formData }
+      );
 
-      // Call edge function
-      const { data, error } = await supabase.functions.invoke("analyze-track", {
-        body: { trackName: file.name, storagePath: path, mode },
-      });
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${response.status}`);
+      }
 
-      if (error) throw error;
-
-      // Create a local audio URL from the uploaded file for waveform playback
+      const feedback = await response.json();
       const audioUrl = URL.createObjectURL(file);
-      const resultData = data as FeedbackResult;
-      resultData.audioUrl = audioUrl;
-      onResult(resultData);
+
+      onResult({
+        feedback: { ...feedback, track_name: file.name },
+        mode,
+        audioUrl,
+      });
     } catch (err: any) {
       console.error(err);
       toast({
