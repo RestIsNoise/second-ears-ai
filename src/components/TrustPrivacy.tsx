@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const bullets = [
   "Files are processed securely",
   "You can delete tracks anytime",
@@ -22,12 +24,12 @@ const TrustPrivacy = () => (
           </li>
         ))}
       </ul>
-      <a
-        href="#"
+      <Link
+        to="/privacy"
         className="font-mono-brand text-[11px] text-muted-foreground/50 tracking-wider uppercase hover:text-foreground/60 transition-colors"
       >
         Privacy Policy →
-      </a>
+      </Link>
     </div>
   </section>
 );
