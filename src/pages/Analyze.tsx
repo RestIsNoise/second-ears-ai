@@ -6,6 +6,14 @@ import FeedbackDisplay from "@/components/FeedbackDisplay";
 
 export type ListeningMode = "technical" | "musical" | "perception";
 
+export interface TechnicalMetrics {
+  integrated_lufs?: number;
+  short_term_lufs?: number;
+  dynamic_range?: number;
+  peak_dbtp?: number;
+  stereo_correlation?: number;
+}
+
 export interface FeedbackData {
   track_name?: string;
   overallImpression?: string;
@@ -17,6 +25,7 @@ export interface FeedbackData {
   fixOneThingToday?: { title: string; why: string; how: string };
   fix_one_thing?: { title: string; why: string; how: string };
   timestamps?: Array<{ time: number; label: string }>;
+  technical_metrics?: TechnicalMetrics;
   // Legacy fields
   summary?: string;
   scores?: Record<string, number>;
