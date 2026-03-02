@@ -75,44 +75,32 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         console.log("[TrackUploader] Signed URL created:", signedData?.signedUrl?.substring(0, 80) + "...");
       }
 
-      // Send URL to backend via proxy edge function
-      const { data: feedback, error } = await supabase.functions.invoke("proxy-feedback", {
-        body: { audioUrl: signedData?.signedUrl || '', mode, fileName: file.name },
+      // Send to analyze-track edge function (uses Lovable AI gateway)
+      const { data: result, error } = await supabase.functions.invoke("analyze-track", {
+        body: { trackName: file.name, storagePath, mode },
       });
 
       if (error) throw error;
 
-      console.log("Full API response:", JSON.stringify(feedback, null, 2));
+      console.log("Full API response:", JSON.stringify(result, null, 2));
 
-      // Extract from top-level or nested .feedback
-      const fb = feedback?.feedback;
-
-      const priorities = (feedback?.priorities || fb?.priorities || []).map((p: any) => ({
-        title: p.issue ?? p.title,
-        why: p.whyItMatters ?? p.why,
-        fix: p.suggestedFix ?? p.fix,
-      }));
-
-      const whatWorks = feedback?.whatWorks || fb?.whatWorks || [];
-
-      const rawFix = feedback?.fixOneThingToday ?? fb?.ifFixOneThing ?? fb?.fixOneThingToday ?? "";
-      const fixOneThing = typeof rawFix === "string"
-        ? { title: "Fix one thing", why: "", how: rawFix }
-        : { title: rawFix.title ?? rawFix.issue ?? "", why: rawFix.why ?? rawFix.whyItMatters ?? "", how: rawFix.how ?? rawFix.suggestedFix ?? rawFix.fix ?? "" };
-
-      const overallImpression = feedback?.overallImpression ?? fb?.overallImpression ?? "";
+      const fb = result?.feedback;
 
       const normalized = {
-        track_name: file.name,
-        overall_impression: overallImpression,
-        top_priorities: priorities,
-        what_works: whatWorks.map((w: any) =>
+        track_name: fb?.track_name || file.name,
+        overall_impression: fb?.overall_impression || "",
+        top_priorities: (fb?.top_priorities || []).map((p: any) => ({
+          title: p.title,
+          why: p.why,
+          fix: p.fix,
+        })),
+        what_works: (fb?.what_works || []).map((w: any) =>
           typeof w === "string"
             ? { title: w, detail: "" }
-            : { title: w.title ?? w.strength ?? w.area ?? "", detail: w.detail ?? w.why ?? w.description ?? "" }
+            : { title: w.title ?? "", detail: w.detail ?? "" }
         ),
-        fix_one_thing: rawFix ? fixOneThing : undefined,
-        timestamps: feedback?.timestamps ?? fb?.timestamps,
+        fix_one_thing: fb?.fix_one_thing || undefined,
+        timestamps: fb?.timestamps || [],
       };
 
       console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
