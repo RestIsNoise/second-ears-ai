@@ -8,27 +8,27 @@ import {
 const items = [
   {
     q: "What does SecondEars analyze?",
-    a: "We analyze frequency balance, dynamics, stereo image, loudness, and overall mix quality. Depending on your listening mode, we also cover arrangement, tonal clarity, and commercial readiness.",
+    a: "We evaluate frequency balance, dynamic range, stereo image, loudness (LUFS/dBTP), and overall tonal quality. Depending on the listening mode you choose, feedback also covers arrangement density, vocal-instrument balance, emotional impact, and commercial readiness. Each analysis returns actionable priorities, not just observations.",
   },
   {
     q: "How long does analysis take?",
-    a: "Most tracks are analyzed in under 30 seconds. Longer or higher-resolution files may take up to a minute.",
+    a: "Most tracks are processed in 15–30 seconds. Files over 100 MB or in lossless formats like WAV may take up to a minute. Processing time also depends on current server load, but we aim to keep every result under 60 seconds.",
   },
   {
     q: "Do you support WAV/MP3/FLAC?",
-    a: "Yes. We accept WAV, MP3, FLAC, and most common audio formats up to 200 MB.",
+    a: "Yes — we accept WAV, MP3, FLAC, AIFF, OGG, and most standard audio formats. The maximum file size is 200 MB per upload. For best results, upload a full-resolution mix (WAV or FLAC at 44.1 kHz or higher) rather than a compressed preview.",
   },
   {
     q: "Is this feedback for mastering or mixing?",
-    a: "Primarily for mixing. Our analysis focuses on mix-level decisions like balance, dynamics, and spatial placement — though many insights apply to pre-master evaluation too.",
+    a: "SecondEars is designed primarily for mix-stage evaluation: balance, dynamics, spatial placement, and frequency distribution. That said, many users find it useful for pre-master checks — identifying issues before sending a track to a mastering engineer. We don't replace mastering; we help you arrive with a stronger mix.",
   },
   {
     q: "Can I add reference context?",
-    a: "Yes. The 'What are you going for?' field lets you describe your intent, genre, or reference tracks. This shapes the feedback to match your creative goals.",
+    a: "Yes. The 'What are you going for?' field lets you describe your intent — genre, reference tracks, specific concerns, or creative goals. This context shapes the AI's feedback so it evaluates your mix against your vision, not a generic standard. We recommend keeping it to one or two sentences for best results.",
   },
   {
     q: "Is Human Review available?",
-    a: "Yes. Our Human Review plan pairs AI analysis with a professional mixing engineer who provides a video walkthrough and personalized revision notes.",
+    a: "Yes. The Human Review plan pairs our AI analysis with a professional mixing engineer who listens to your track, records a video walkthrough, and provides personalized revision notes. Turnaround is typically 2–3 business days, and includes one follow-up exchange for clarifications.",
   },
 ];
 

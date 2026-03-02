@@ -10,8 +10,11 @@ const Contact = () => (
       <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-3">
         Contact
       </h2>
-      <p className="text-sm text-muted-foreground mb-8">
+      <p className="text-sm text-muted-foreground mb-2">
         Questions, partnerships, or early access requests.
+      </p>
+      <p className="text-sm text-muted-foreground/70 max-w-md mx-auto mb-8 leading-relaxed">
+        Reach out about billing, technical issues, feedback quality, or feature requests. We read every message and route it to the right person on our team.
       </p>
       <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
         <a href="mailto:hello@secondears.io">
