@@ -1,7 +1,7 @@
 import { Play } from "lucide-react";
 
 const DemoVideo = () => (
-  <section className="py-16 md:py-20 px-6">
+  <section className="pt-8 md:pt-10 pb-16 md:pb-20 px-6">
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-10">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
@@ -10,6 +10,9 @@ const DemoVideo = () => (
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
           See SecondEars in action
         </h2>
+        <p className="text-sm text-muted-foreground/60 mt-2">
+          Upload → Analyze → Fix in minutes
+        </p>
       </div>
 
       {/* 16:9 video container */}
