@@ -1,13 +1,58 @@
+import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import WaveformPlayer from "@/components/WaveformPlayer";
+import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
+import FeedbackTimeline from "@/components/FeedbackTimeline";
 import type { FeedbackResult } from "@/pages/Analyze";
+import type { FeedbackItem, WaveformMarker } from "@/types/feedback";
 
 const modeLabels: Record<string, string> = {
   technical: "Technical",
   musical: "Musical",
   perception: "Perception",
 };
+
+/** Convert API feedback data into FeedbackItems for the timeline */
+function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
+  const { feedback, mode } = result;
+  const items: FeedbackItem[] = [];
+
+  // Build from top_priorities with timestamps
+  if (feedback.top_priorities && feedback.timestamps && feedback.timestamps.length > 0) {
+    feedback.top_priorities.forEach((p, i) => {
+      const ts = feedback.timestamps?.[i];
+      if (ts) {
+        items.push({
+          id: `tp-${i}`,
+          timestampSec: ts.time,
+          title: p.title,
+          observation: p.why,
+          fix: p.fix,
+          severity: i === 0 ? "high" : i < 3 ? "med" : "low",
+          mode,
+        });
+      }
+    });
+  }
+
+  // If we got timestamps but not enough priorities, fill from timestamps directly
+  if (items.length === 0 && feedback.timestamps && feedback.timestamps.length > 0) {
+    feedback.timestamps.forEach((ts, i) => {
+      items.push({
+        id: `ts-${i}`,
+        timestampSec: ts.time,
+        title: ts.label,
+        observation: "",
+        fix: "",
+        severity: "med",
+        mode,
+      });
+    });
+  }
+
+  return items;
+}
 
 const FeedbackDisplay = ({
   result,
@@ -19,6 +64,56 @@ const FeedbackDisplay = ({
   audioFile?: File;
 }) => {
   const { feedback, mode } = result;
+  const waveformRef = useRef<WaveformPlayerHandle>(null);
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
+
+  const timelineItems = useMemo(() => extractTimelineItems(result), [result]);
+  const hasTimeline = timelineItems.length > 0;
+
+  const markers: WaveformMarker[] = useMemo(
+    () =>
+      timelineItems.map((item) => ({
+        id: item.id,
+        time: item.timestampSec,
+        label: item.title,
+        severity: item.severity,
+      })),
+    [timelineItems]
+  );
+
+  const handleMarkerClick = useCallback(
+    (marker: WaveformMarker) => {
+      setActiveItemId(marker.id);
+      waveformRef.current?.seekTo(marker.time);
+    },
+    []
+  );
+
+  const handleItemClick = useCallback(
+    (item: FeedbackItem) => {
+      setActiveItemId(item.id);
+      waveformRef.current?.seekTo(item.timestampSec);
+    },
+    []
+  );
+
+  // During playback, find nearest marker to current time
+  const handleTimeUpdate = useCallback(
+    (time: number) => {
+      if (timelineItems.length === 0) return;
+      // Find the most recent marker the playhead has passed
+      let nearest: FeedbackItem | null = null;
+      for (const item of timelineItems) {
+        if (item.timestampSec <= time + 0.5) {
+          nearest = item;
+        }
+      }
+      if (nearest && nearest.id !== activeItemId) {
+        setActiveItemId(nearest.id);
+      }
+    },
+    [timelineItems, activeItemId]
+  );
 
   return (
     <div className="space-y-16 animate-fade-up">
@@ -48,16 +143,12 @@ const FeedbackDisplay = ({
       {/* Waveform */}
       {audioFile && (
         <WaveformPlayer
+          ref={waveformRef}
           audioFile={audioFile}
-          markers={
-            feedback.timestamps && feedback.timestamps.length > 0
-              ? feedback.timestamps
-              : [
-                  { time: 12, label: "Low-mid congestion starts here" },
-                  { time: 45, label: "Drop loses energy" },
-                  { time: 80, label: "Stereo image collapses" },
-                ]
-          }
+          markers={markers}
+          activeMarkerId={activeItemId}
+          onMarkerClick={handleMarkerClick}
+          onTimeUpdate={handleTimeUpdate}
         />
       )}
 
@@ -70,29 +161,36 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Top Priorities */}
-      {feedback.top_priorities && feedback.top_priorities.length > 0 ? (
+      {/* Timeline Feedback */}
+      {hasTimeline && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            Timeline feedback
+          </h2>
+          <FeedbackTimeline
+            items={timelineItems}
+            activeItemId={activeItemId}
+            onItemClick={handleItemClick}
+          />
+        </section>
+      )}
+
+      {/* Fallback: Top Priorities without timestamps */}
+      {!hasTimeline && feedback.top_priorities && feedback.top_priorities.length > 0 && (
         <section className="space-y-6">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
             Top priorities
           </h2>
           <div className="space-y-4">
             {feedback.top_priorities.map((item, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-border-subtle p-8 bg-background"
-              >
+              <div key={i} className="rounded-xl border border-border-subtle p-8 bg-background">
                 <div className="flex items-start gap-6">
                   <span className="font-mono-brand text-2xl text-muted-foreground/40 font-medium leading-none pt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="space-y-3 flex-1">
-                    <h3 className="text-lg font-semibold tracking-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {item.why}
-                    </p>
+                    <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.why}</p>
                     <div className="pt-2">
                       <p className="text-sm text-foreground/80 leading-relaxed">
                         <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
@@ -107,12 +205,6 @@ const FeedbackDisplay = ({
             ))}
           </div>
         </section>
-      ) : (
-        <section>
-          <p className="text-sm text-muted-foreground">
-            Technical metrics unavailable for this analysis.
-          </p>
-        </section>
       )}
 
       {/* What Works */}
@@ -123,16 +215,9 @@ const FeedbackDisplay = ({
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {feedback.what_works.map((item, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-border-subtle p-8 bg-background"
-              >
-                <h3 className="text-base font-semibold tracking-tight mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {item.detail}
-                </p>
+              <div key={i} className="rounded-xl border border-border-subtle p-8 bg-background">
+                <h3 className="text-base font-semibold tracking-tight mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
               </div>
             ))}
           </div>
@@ -172,7 +257,7 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Legacy fallback for old format */}
+      {/* Legacy fallback */}
       {feedback.issues && feedback.issues.length > 0 && !feedback.top_priorities && (
         <section className="space-y-6">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
@@ -180,10 +265,7 @@ const FeedbackDisplay = ({
           </h2>
           <div className="space-y-3">
             {feedback.issues.map((issue, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-border-subtle p-6 bg-background space-y-2"
-              >
+              <div key={i} className="rounded-xl border border-border-subtle p-6 bg-background space-y-2">
                 <p className="text-sm font-medium">{issue.area}</p>
                 <p className="text-sm text-muted-foreground">{issue.problem}</p>
                 <p className="text-sm text-foreground/80">
