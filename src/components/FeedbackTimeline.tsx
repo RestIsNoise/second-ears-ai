@@ -28,14 +28,19 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
     if (!activeItemId) return;
     const el = itemRefs.current.get(activeItemId);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      const rect = el.getBoundingClientRect();
+      const targetY = window.innerHeight - 120;
+      const scrollBy = rect.top - targetY;
+      if (Math.abs(scrollBy) > 10) {
+        window.scrollBy({ top: scrollBy, behavior: "smooth" });
+      }
     }
   }, [activeItemId]);
 
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
   return (
-    <div ref={containerRef} className="space-y-3">
+    <div ref={containerRef} className="space-y-3 pb-[280px] md:pb-[220px]">
       {sorted.map((item) => {
         const isActive = activeItemId === item.id;
 
