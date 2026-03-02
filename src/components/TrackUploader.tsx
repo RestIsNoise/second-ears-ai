@@ -76,40 +76,53 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       console.log("Full API response:", JSON.stringify(feedback, null, 2));
 
-      // Clean up storage
-      await supabase.storage.from("tracks").remove([storagePath]);
+      // Extract from top-level or nested .feedback
+      const fb = feedback?.feedback;
 
-      // Extract feedback from response — try top-level fields first, then nested .feedback
-      const fb = feedback?.feedback ?? feedback;
+      const priorities = (feedback?.priorities || fb?.priorities || []).map((p: any) => ({
+        title: p.issue ?? p.title,
+        why: p.whyItMatters ?? p.why,
+        fix: p.suggestedFix ?? p.fix,
+      }));
+
+      const whatWorks = feedback?.whatWorks || fb?.whatWorks || [];
+
+      const rawFix = feedback?.fixOneThingToday ?? fb?.ifFixOneThing ?? fb?.fixOneThingToday ?? "";
+      const fixOneThing = typeof rawFix === "string"
+        ? { title: "Fix one thing", why: "", how: rawFix }
+        : { title: rawFix.title ?? rawFix.issue ?? "", why: rawFix.why ?? rawFix.whyItMatters ?? "", how: rawFix.how ?? rawFix.suggestedFix ?? rawFix.fix ?? "" };
+
+      const overallImpression = feedback?.overallImpression ?? fb?.overallImpression ?? "";
+
+      // Use storage public URL for waveform (more reliable), with blob fallback
+      const storageAudioUrl = urlData.publicUrl;
+      const blobUrl = URL.createObjectURL(file);
+
       const normalized = {
         track_name: file.name,
-        overall_impression: feedback?.overallImpression ?? fb?.overallImpression ?? fb?.overall_impression,
-        top_priorities: (feedback?.priorities ?? fb?.priorities)?.map((p: any) => ({
-          title: p.issue ?? p.title,
-          why: p.why,
-          fix: p.fix,
-        })),
-        what_works: (feedback?.whatWorks ?? fb?.whatWorks ?? fb?.what_works)?.map((w: any) => ({
-          title: w.title ?? w.strength ?? w.area,
-          detail: w.detail ?? w.why ?? w.description,
-        })),
-        fix_one_thing: (() => {
-          const f1 = feedback?.fixOneThingToday ?? fb?.fixOneThingToday ?? fb?.ifFixOneThing ?? fb?.fix_one_thing;
-          if (!f1) return undefined;
-          return { title: f1.title ?? f1.issue, why: f1.why, how: f1.how ?? f1.fix };
-        })(),
+        overall_impression: overallImpression,
+        top_priorities: priorities,
+        what_works: whatWorks.map((w: any) =>
+          typeof w === "string"
+            ? { title: w, detail: "" }
+            : { title: w.title ?? w.strength ?? w.area ?? "", detail: w.detail ?? w.why ?? w.description ?? "" }
+        ),
+        fix_one_thing: rawFix ? fixOneThing : undefined,
         timestamps: feedback?.timestamps ?? fb?.timestamps,
       };
 
       console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
 
-      const audioUrl = URL.createObjectURL(file);
-
       onResult({
         feedback: normalized,
         mode,
-        audioUrl,
+        audioUrl: storageAudioUrl,
       });
+
+      // Defer storage cleanup so waveform can load from the public URL
+      setTimeout(async () => {
+        await supabase.storage.from("tracks").remove([storagePath]);
+      }, 60000);
     } catch (err: any) {
       console.error(err);
       toast({

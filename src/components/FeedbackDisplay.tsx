@@ -140,18 +140,28 @@ const FeedbackDisplay = ({
             If you fix only one thing today
           </h2>
           <div className="rounded-xl border-2 border-foreground/10 p-10 bg-secondary/20">
-            <h3 className="text-xl font-semibold tracking-tight mb-3">
-              {feedback.fix_one_thing.title}
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              {feedback.fix_one_thing.why}
-            </p>
-            <p className="text-sm text-foreground/80 leading-relaxed">
-              <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
-                How
-              </span>
-              {feedback.fix_one_thing.how}
-            </p>
+            {feedback.fix_one_thing.how && !feedback.fix_one_thing.why ? (
+              <p className="text-base text-foreground leading-relaxed">
+                {feedback.fix_one_thing.how}
+              </p>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold tracking-tight mb-3">
+                  {feedback.fix_one_thing.title}
+                </h3>
+                {feedback.fix_one_thing.why && (
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    {feedback.fix_one_thing.why}
+                  </p>
+                )}
+                <p className="text-sm text-foreground/80 leading-relaxed">
+                  <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                    How
+                  </span>
+                  {feedback.fix_one_thing.how}
+                </p>
+              </>
+            )}
           </div>
         </section>
       )}
