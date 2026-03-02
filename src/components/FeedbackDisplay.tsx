@@ -295,7 +295,9 @@ const FeedbackDisplay = ({
             {feedback.what_works.map((item, i) => (
               <div key={i} className="rounded-xl border border-border-subtle p-8 bg-background">
                 <h3 className="text-base font-semibold tracking-tight mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
+                {item.detail && (
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
+                )}
               </div>
             ))}
           </div>
