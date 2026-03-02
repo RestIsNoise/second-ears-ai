@@ -4,6 +4,9 @@ import ValueProps from "@/components/ValueProps";
 import DemoVideo from "@/components/DemoVideo";
 import ListeningModes from "@/components/ListeningModes";
 import Pricing from "@/components/Pricing";
+import TrustPrivacy from "@/components/TrustPrivacy";
+import Faq from "@/components/Faq";
+import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 const Index = () => (
@@ -15,6 +18,9 @@ const Index = () => (
       <DemoVideo />
       <ListeningModes />
       <Pricing />
+      <TrustPrivacy />
+      <Faq />
+      <Contact />
     </main>
     <Footer />
   </div>
