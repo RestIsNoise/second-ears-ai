@@ -48,7 +48,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
               else itemRefs.current.delete(item.id);
             }}
             onClick={() => onItemClick(item)}
-            style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
+            style={{ scrollMarginTop: 80, scrollMarginBottom: 80 }}
             className={`w-full text-left rounded-xl border p-6 md:p-8 transition-colors duration-200 ${
               isActive
                 ? "border-foreground/20 bg-secondary/40"
@@ -57,7 +57,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
           >
             <div className="flex items-start gap-4">
               {/* Time badge + severity dot */}
-              <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
+              <div className="flex flex-col items-center gap-1 pt-[3px] shrink-0">
                 <div className={`w-1.5 h-1.5 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
                 <span
                   className="text-muted-foreground tabular-nums"
@@ -72,15 +72,17 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 space-y-2">
+              <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-semibold tracking-tight text-foreground leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {item.observation}
-                </p>
+                {item.observation && (
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">
+                    {item.observation}
+                  </p>
+                )}
                 {item.fix && (
-                  <div className="pt-1">
+                  <div className="mt-3.5">
                     <p className="text-sm text-foreground/80 leading-relaxed">
                       <span
                         className="text-muted-foreground uppercase tracking-wider mr-2"
