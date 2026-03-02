@@ -26,6 +26,12 @@ function correlationStatus(v: number): Status {
   return { label: "Phase Issues", color: "red" };
 }
 
+function crestStatus(v: number): Status {
+  if (v > 10) return { label: "Dynamic", color: "green" };
+  if (v >= 6) return { label: "Compressed", color: "yellow" };
+  return { label: "Brick-Walled", color: "red" };
+}
+
 const statusColors = {
   green: { badge: "bg-emerald-500/15 text-emerald-400", bar: "bg-emerald-500" },
   yellow: { badge: "bg-amber-500/15 text-amber-400", bar: "bg-amber-500" },
@@ -154,7 +160,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
     metrics.short_term_lufs !== undefined ||
     metrics.dynamic_range !== undefined ||
     metrics.peak_dbtp !== undefined ||
-    metrics.stereo_correlation !== undefined;
+    metrics.stereo_correlation !== undefined ||
+    metrics.crest_factor !== undefined;
 
   if (!hasAny) return null;
 
@@ -206,6 +213,16 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         )}
         {metrics.stereo_correlation !== undefined && (
           <CorrelationCard value={metrics.stereo_correlation} />
+        )}
+        {metrics.crest_factor !== undefined && (
+          <MetricCard
+            label="Crest Factor"
+            value={metrics.crest_factor}
+            unit="dB"
+            min={0}
+            max={20}
+            status={crestStatus(metrics.crest_factor)}
+          />
         )}
       </div>
     </section>

@@ -13,7 +13,8 @@ const metricsBlock = `
     "short_term_lufs": <number between -24 and -6>,
     "dynamic_range": <number between 2 and 18>,
     "peak_dbtp": <number between -6 and 0>,
-    "stereo_correlation": <number between -0.2 and 1.0>
+    "stereo_correlation": <number between -0.2 and 1.0>,
+    "crest_factor": <number between 3 and 18>
   },`;
 
 const modePrompts: Record<string, string> = {
