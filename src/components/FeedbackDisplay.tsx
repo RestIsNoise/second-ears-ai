@@ -13,41 +13,57 @@ const modeLabels: Record<string, string> = {
   perception: "Perception",
 };
 
+/** Parse a time value that could be a number (seconds) or a string like "0:30" or "1:15" */
+function parseTimeSec(val: unknown): number {
+  if (typeof val === "number" && Number.isFinite(val)) return val;
+  if (typeof val === "string") {
+    const match = val.match(/^(\d+):(\d+)$/);
+    if (match) return parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
+    const n = parseFloat(val);
+    if (Number.isFinite(n)) return n;
+  }
+  return NaN;
+}
+
 /** Convert API feedback data into FeedbackItems for the timeline */
 function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
   const { feedback, mode } = result;
   const items: FeedbackItem[] = [];
 
-  // Build from top_priorities with timestamps
   if (feedback.top_priorities && feedback.timestamps && feedback.timestamps.length > 0) {
     feedback.top_priorities.forEach((p, i) => {
       const ts = feedback.timestamps?.[i];
       if (ts) {
-        items.push({
-          id: `tp-${i}`,
-          timestampSec: ts.time,
-          title: p.title,
-          observation: p.why,
-          fix: p.fix,
-          severity: i === 0 ? "high" : i < 3 ? "med" : "low",
-          mode,
-        });
+        const sec = parseTimeSec(ts.time);
+        if (Number.isFinite(sec)) {
+          items.push({
+            id: `tp-${i}`,
+            timestampSec: sec,
+            title: p.title,
+            observation: p.why,
+            fix: p.fix,
+            severity: i === 0 ? "high" : i < 3 ? "med" : "low",
+            mode,
+          });
+        }
       }
     });
   }
 
-  // If we got timestamps but not enough priorities, fill from timestamps directly
   if (items.length === 0 && feedback.timestamps && feedback.timestamps.length > 0) {
     feedback.timestamps.forEach((ts, i) => {
-      items.push({
-        id: `ts-${i}`,
-        timestampSec: ts.time,
-        title: ts.label,
-        observation: "",
-        fix: "",
-        severity: "med",
-        mode,
-      });
+      const sec = parseTimeSec(ts.time);
+      if (Number.isFinite(sec)) {
+        items.push({
+          id: `ts-${i}`,
+          timestampSec: sec,
+          title: ts.label,
+          observation: "",
+          fix: "",
+          severity: "med",
+          mode,
+        });
+      }
     });
   }
 
