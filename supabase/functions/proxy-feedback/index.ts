@@ -14,8 +14,10 @@ serve(async (req) => {
   try {
     const { audioUrl, mode, fileName } = await req.json();
 
-    // Send the public URL to Railway instead of the raw file
-    const response = await fetch(
+    const backendUrl = "https://secondears-backend-production.up.railway.app/api/feedback";
+    console.log("Proxying to:", backendUrl, { audioUrl, mode, fileName });
+
+    const response = await fetch(backendUrl,
       "https://secondears-backend-production.up.railway.app/api/feedback",
       {
         method: "POST",
