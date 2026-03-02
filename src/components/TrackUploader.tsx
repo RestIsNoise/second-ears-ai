@@ -28,11 +28,11 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
   const validateAndSetFile = (f: File) => {
     if (!f.type.startsWith("audio/")) {
-      toast({ title: "Please upload an audio file", variant: "destructive" });
+      toast({ title: "Please upload an audio file", variant: "destructive", duration: 2500 });
       return;
     }
     if (f.size > MAX_FILE_SIZE) {
-      toast({ title: "File too large", description: "Maximum file size is 200MB", variant: "destructive" });
+      toast({ title: "File too large", description: "Maximum file size is 200MB", variant: "destructive", duration: 2500 });
       return;
     }
     setFile(f);
@@ -132,7 +132,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Drop zone */}
       <label
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -194,9 +194,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
             <button
               key={m.id}
               onClick={() => setMode(m.id)}
-              className={`rounded-lg border p-4 text-left transition-colors ${
+              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
                 mode === m.id
-                  ? "border-foreground bg-secondary"
+                  ? "border-foreground bg-foreground/[0.07] shadow-[0_0_0_1px_hsl(var(--foreground)/0.15)]"
                   : "border-border-subtle hover:border-foreground/10"
               }`}
             >

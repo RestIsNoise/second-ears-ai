@@ -61,7 +61,7 @@ const Analyze = () => {
         <div className="max-w-2xl mx-auto">
           {!result ? (
             <>
-              <div className="text-center mb-12">
+              <div className="text-center mb-8">
                 <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
                   Upload & analyze
                 </p>
