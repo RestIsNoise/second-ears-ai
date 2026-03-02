@@ -44,9 +44,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
       formData.append("audio", file);
       formData.append("mode", mode);
 
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
       const response = await fetch(
-        "https://secondears-backend-production.up.railway.app/api/feedback",
-        { method: "POST", body: formData }
+        `${supabaseUrl}/functions/v1/proxy-feedback`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${supabaseKey}` },
+          body: formData,
+        }
       );
 
       if (!response.ok) {
