@@ -23,17 +23,30 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
   const [mode, setMode] = useState<ListeningMode>("technical");
   const [dragOver, setDragOver] = useState(false);
 
+  const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
+
+  const validateAndSetFile = (f: File) => {
+    if (!f.type.startsWith("audio/")) {
+      toast({ title: "Please upload an audio file", variant: "destructive" });
+      return;
+    }
+    if (f.size > MAX_FILE_SIZE) {
+      toast({ title: "File too large", description: "Maximum file size is 200MB", variant: "destructive" });
+      return;
+    }
+    setFile(f);
+  };
+
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     const dropped = e.dataTransfer.files[0];
-    if (dropped?.type.startsWith("audio/")) setFile(dropped);
-    else toast({ title: "Please upload an audio file", variant: "destructive" });
+    if (dropped) validateAndSetFile(dropped);
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
-    if (selected) setFile(selected);
+    if (selected) validateAndSetFile(selected);
   };
 
   const analyze = async () => {
@@ -41,7 +54,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
     setIsAnalyzing(true);
 
     try {
-      // Upload file to storage first to avoid CDN body size limits
+      // Upload file to storage
       const storagePath = `${Date.now()}-${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from("tracks")
@@ -49,12 +62,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
-      // Call proxy edge function with storage path
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from("tracks")
+        .getPublicUrl(storagePath);
+
+      // Send URL to backend via proxy edge function
       const { data: feedback, error } = await supabase.functions.invoke("proxy-feedback", {
-        body: { storagePath, mode, fileName: file.name },
+        body: { audioUrl: urlData.publicUrl, mode, fileName: file.name },
       });
 
       if (error) throw error;
+
+      // Clean up storage
+      await supabase.storage.from("tracks").remove([storagePath]);
 
       const audioUrl = URL.createObjectURL(file);
 
