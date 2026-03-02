@@ -19,7 +19,7 @@ const props = [
 ];
 
 const ValueProps = () => (
-  <section id="features" className="py-24 px-6 border-t border-border-subtle">
+  <section id="features" className="py-24 px-6 border-t border-border-subtle scroll-mt-20">
     <div className="max-w-5xl mx-auto">
       <div className="grid md:grid-cols-3 gap-12 md:gap-16">
         {props.map((prop) => (

@@ -12,8 +12,8 @@ const Header = () => (
         <a href="#modes" className="hover:text-foreground transition-colors">Modes</a>
         <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
       </nav>
-      <Button variant="hero" size="sm" className="text-xs h-8 px-4">
-        Get started
+      <Button variant="hero" size="sm" className="text-xs h-8 px-4" asChild>
+        <Link to="/analyze">Get started</Link>
       </Button>
     </div>
   </header>

@@ -57,7 +57,14 @@ const Hero = () => {
               Upload your track
             </Link>
           </Button>
-          <Button variant="hero-outline" size="lg" className="h-11 px-8 text-[13px]">
+          <Button
+            variant="hero-outline"
+            size="lg"
+            className="h-11 px-8 text-[13px]"
+            onClick={() => {
+              document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
             See how it works
           </Button>
         </div>
