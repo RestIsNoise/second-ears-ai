@@ -188,6 +188,20 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
+      {/* Your Focus */}
+      {result.context && (
+        <section>
+          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
+            Your focus
+          </p>
+          <div className="rounded-xl border border-border-subtle p-8 bg-background">
+            <p className="text-sm text-foreground leading-relaxed line-clamp-4">
+              {result.context}
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Waveform */}
       {audioFile && (
         <WaveformPlayer
