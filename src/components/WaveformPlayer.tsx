@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,19 +29,7 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Create object URL from File — revoke on change/unmount
-  const localUrl = useMemo(() => {
-    if (!audioFile) return null;
-    const url = URL.createObjectURL(audioFile);
-    return url;
-  }, [audioFile]);
-
-  useEffect(() => {
-    return () => {
-      if (localUrl) URL.revokeObjectURL(localUrl);
-    };
-  }, [localUrl]);
-
+  // No URL needed — we load directly from the File blob
   useEffect(() => {
     // Cleanup previous instance
     if (wsRef.current) {
@@ -55,18 +43,23 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
     setCurrentTime(0);
     setPlaying(false);
 
-    if (!containerRef.current || !localUrl) return;
+    if (!containerRef.current || !audioFile) return;
+
+    if (!(audioFile instanceof File)) {
+      const msg = `Waveform source is not File (got ${typeof audioFile}: ${String(audioFile).slice(0, 40)})`;
+      console.error("[WaveformPlayer]", msg);
+      setError(msg);
+      setLoading(false);
+      return;
+    }
 
     console.log("[WaveformPlayer]", {
-      hasFile: !!audioFile,
-      fileType: audioFile?.type,
-      fileSize: audioFile?.size,
-      finalUrl: localUrl,
+      isFile: audioFile instanceof File,
+      sourceType: typeof audioFile,
+      fileName: audioFile.name,
+      fileType: audioFile.type,
+      fileSize: audioFile.size,
     });
-
-    const audio = new Audio();
-    audio.preload = "metadata";
-    audio.src = localUrl;
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
@@ -80,7 +73,6 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       height: 72,
       normalize: true,
       interact: true,
-      media: audio,
     });
 
     ws.on("ready", () => {
@@ -103,13 +95,17 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       setLoading(false);
     });
 
+    // Load directly from Blob — no URL fetch involved
+    ws.loadBlob(audioFile);
+    console.log("[WaveformPlayer] loadBlob called — no network fetch");
+
     wsRef.current = ws;
 
     return () => {
       ws.destroy();
       wsRef.current = null;
     };
-  }, [localUrl]);
+  }, [audioFile]);
 
   const togglePlay = useCallback(() => wsRef.current?.playPause(), []);
   const restart = useCallback(() => {
