@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
+import { Play, Pause, RotateCcw, AlertCircle, MapPin } from "lucide-react";
+import { createPortal } from "react-dom";
 import type { WaveformMarker } from "@/types/feedback";
 
 export interface WaveformPlayerHandle {
@@ -23,6 +24,48 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
+/** Portal tooltip positioned relative to anchor element */
+const MarkerTooltip = ({
+  anchorEl,
+  time,
+  title,
+  summary,
+}: {
+  anchorEl: HTMLElement;
+  time: string;
+  title: string;
+  summary?: string;
+}) => {
+  const rect = anchorEl.getBoundingClientRect();
+  return (
+    <div
+      className="pointer-events-none fixed"
+      style={{
+        top: rect.bottom + 6,
+        left: rect.left + rect.width / 2,
+        transform: "translateX(-50%)",
+        zIndex: 9999,
+        maxWidth: 260,
+      }}
+    >
+      <div className="rounded-md border border-border bg-background px-3 py-2 shadow-sm">
+        <div className="flex items-baseline gap-2">
+          <span
+            className="text-muted-foreground tabular-nums shrink-0"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
+          >
+            {time}
+          </span>
+          <span className="text-foreground text-xs font-medium leading-snug">{title}</span>
+        </div>
+        {summary && (
+          <p className="text-muted-foreground text-[11px] leading-relaxed mt-1">{summary}</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
 
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
@@ -35,6 +78,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [hoveredMarker, setHoveredMarker] = useState<string | null>(null);
+    const markerElRefs = useRef<Map<string, HTMLElement>>(new Map());
 
     useImperativeHandle(ref, () => ({
       seekTo: (timeSec: number) => {
@@ -152,57 +196,63 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             style={{ top: 6, bottom: 6 }}
           />
 
-          {/* Markers as circular dots */}
+          {/* Markers as pin icons */}
           {markers.length > 0 && duration > 0 && (
             <div className="absolute inset-0 pointer-events-none z-[2]">
-              {markers.map((m) => {
+              {markers.slice(0, 8).map((m) => {
                 const isActive = activeMarkerId === m.id;
                 const isHovered = hoveredMarker === m.id;
                 const leftPct = `${(m.time / duration) * 100}%`;
 
-                const dotBorder = isActive
-                  ? "border-foreground/60"
+                const ringColor = isActive
+                  ? "ring-foreground/50"
                   : m.severity === "high"
-                  ? "border-foreground/40"
+                  ? "ring-foreground/30"
                   : m.severity === "med"
-                  ? "border-foreground/25"
-                  : "border-foreground/15";
+                  ? "ring-foreground/20"
+                  : "ring-foreground/10";
 
-                const dotBg = isActive
-                  ? "bg-foreground/20"
-                  : "bg-background";
+                const pinColor = isActive
+                  ? "text-foreground/70"
+                  : m.severity === "high"
+                  ? "text-foreground/50"
+                  : m.severity === "med"
+                  ? "text-foreground/35"
+                  : "text-foreground/20";
 
-                const tooltipText = m.label.length > 80 ? m.label.slice(0, 77) + "…" : m.label;
+                // Truncate title to max 8 words
+                const titleWords = m.label.split(/\s+/);
+                const shortTitle = titleWords.length > 8 ? titleWords.slice(0, 8).join(" ") + "…" : m.label;
+                const summary = m.label.length > 80 ? m.label.slice(0, 80) : m.label;
 
                 return (
                   <div key={m.id} className="absolute pointer-events-auto" style={{ left: leftPct, top: 0, transform: "translateX(-50%)" }}>
                     <button
+                      ref={(el) => {
+                        if (el) markerElRefs.current.set(m.id, el);
+                        else markerElRefs.current.delete(m.id);
+                      }}
                       onClick={() => onMarkerClick?.(m)}
                       onMouseEnter={() => setHoveredMarker(m.id)}
                       onMouseLeave={() => setHoveredMarker(null)}
-                      className={`w-3.5 h-3.5 rounded-full border transition-all duration-150 ${dotBorder} ${dotBg} ${
+                      className={`flex items-center justify-center w-5 h-5 rounded-full ring-1 ${ringColor} bg-background transition-all duration-150 ${
                         isActive ? "scale-125" : "hover:scale-110"
                       }`}
-                      style={{ marginTop: 4 }}
+                      style={{ marginTop: 2 }}
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
-                    />
+                    >
+                      <MapPin className={`${pinColor} transition-colors duration-150`} size={11} strokeWidth={2.5} />
+                    </button>
 
-                    {/* Tooltip */}
-                    {isHovered && (
-                      <div
-                        className="absolute top-full mt-1.5 -translate-x-1/2 left-1/2 z-20 pointer-events-none"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
-                        <div className="rounded-md border border-border bg-background px-2.5 py-1.5 shadow-sm">
-                          <span
-                            className="text-muted-foreground tabular-nums"
-                            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
-                          >
-                            {formatTime(m.time)}
-                          </span>
-                          <span className="text-foreground text-xs ml-2">{tooltipText}</span>
-                        </div>
-                      </div>
+                    {/* Portal tooltip */}
+                    {isHovered && markerElRefs.current.get(m.id) && createPortal(
+                      <MarkerTooltip
+                        anchorEl={markerElRefs.current.get(m.id)!}
+                        time={formatTime(m.time)}
+                        title={shortTitle}
+                        summary={shortTitle !== summary ? summary : undefined}
+                      />,
+                      document.body
                     )}
                   </div>
                 );
