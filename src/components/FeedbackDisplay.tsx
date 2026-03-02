@@ -18,16 +18,7 @@ const FeedbackDisplay = ({
   onReset: () => void;
   audioUrl?: string;
 }) => {
-  const { feedback: rawFeedback, mode } = result;
-
-  // Normalize field names from backend API
-  const feedback = {
-    ...rawFeedback,
-    overall_impression: rawFeedback.overall_impression || rawFeedback.overallImpression,
-    top_priorities: rawFeedback.top_priorities || rawFeedback.priorities?.map((p: any) => ({ title: p.issue, why: p.why, fix: p.fix })),
-    what_works: rawFeedback.what_works || rawFeedback.whatWorks,
-    fix_one_thing: rawFeedback.fix_one_thing || rawFeedback.fixOneThingToday,
-  };
+  const { feedback, mode } = result;
 
   return (
     <div className="space-y-16 animate-fade-up">

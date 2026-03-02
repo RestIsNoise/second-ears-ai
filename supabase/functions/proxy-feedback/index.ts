@@ -24,6 +24,7 @@ serve(async (req) => {
     });
 
     const responseText = await response.text();
+    console.log("Backend raw response:", responseText);
 
     return new Response(responseText, {
       status: response.status,
