@@ -7,6 +7,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const metricsBlock = `
+  "technical_metrics": {
+    "integrated_lufs": <number between -24 and -6>,
+    "short_term_lufs": <number between -24 and -6>,
+    "dynamic_range": <number between 2 and 18>,
+    "peak_dbtp": <number between -6 and 0>,
+    "stereo_correlation": <number between -0.2 and 1.0>
+  },`;
+
 const modePrompts: Record<string, string> = {
   technical: `You are a world-class mixing engineer analyzing a track. Provide structured, concise feedback.
 
@@ -14,6 +23,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of the mix quality",
+${metricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
@@ -27,7 +37,8 @@ Return valid JSON only (no markdown) with this exact structure:
   "timestamps": []
 }
 
-Focus on: frequency balance, dynamic range, stereo image, phase correlation, loudness.`,
+Focus on: frequency balance, dynamic range, stereo image, phase correlation, loudness.
+Generate realistic technical_metrics values based on likely genre characteristics and production quality.`,
 
   musical: `You are a Grammy-winning music producer analyzing a track. Provide structured, concise feedback.
 
@@ -35,6 +46,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of the musical quality",
+${metricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
@@ -48,7 +60,8 @@ Return valid JSON only (no markdown) with this exact structure:
   "timestamps": []
 }
 
-Focus on: arrangement, tonal balance, vocal treatment, low-end, energy flow.`,
+Focus on: arrangement, tonal balance, vocal treatment, low-end, energy flow.
+Generate realistic technical_metrics values based on likely genre characteristics and production quality.`,
 
   perception: `You are a top A&R and music supervisor analyzing a track for commercial potential. Provide structured, concise feedback.
 
@@ -56,6 +69,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of commercial potential",
+${metricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
@@ -69,7 +83,8 @@ Return valid JSON only (no markdown) with this exact structure:
   "timestamps": []
 }
 
-Focus on: first impression, emotional impact, genre fit, commercial readiness, memorability.`,
+Focus on: first impression, emotional impact, genre fit, commercial readiness, memorability.
+Generate realistic technical_metrics values based on likely genre characteristics and production quality.`,
 };
 
 serve(async (req) => {

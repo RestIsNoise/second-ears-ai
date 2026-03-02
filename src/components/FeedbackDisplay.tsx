@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
+import TechnicalMetrics from "@/components/TechnicalMetrics";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { FeedbackItem, WaveformMarker } from "@/types/feedback";
 
@@ -253,6 +254,11 @@ const FeedbackDisplay = ({
             ))}
           </div>
         </section>
+      )}
+
+      {/* Technical Metrics */}
+      {feedback.technical_metrics && (
+        <TechnicalMetrics metrics={feedback.technical_metrics} />
       )}
 
       {/* What Works */}
