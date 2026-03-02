@@ -35,6 +35,7 @@ export interface FeedbackData {
   timestamps?: Array<{ time: number; label: string }>;
   technical_metrics?: TechnicalMetrics;
   fullAnalysis?: FullAnalysis;
+  focus_response?: string | null;
   // Legacy fields
   summary?: string;
   scores?: Record<string, number>;
