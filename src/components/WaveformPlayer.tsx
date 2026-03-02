@@ -20,7 +20,7 @@ const formatTime = (s: number) => {
 };
 
 const isValidUrl = (url: string) =>
-  typeof url === "string" && /^https?:\/\/.+/i.test(url);
+  typeof url === "string" && (/^https?:\/\/.+/i.test(url) || /^blob:.+/i.test(url));
 
 const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,17 +48,20 @@ const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
     if (!containerRef.current) return;
 
     if (!isValidUrl(audioUrl)) {
-      console.error("[WaveformPlayer] Invalid audioUrl:", audioUrl);
+      console.error("[WaveformPlayer] Invalid audioUrl:", typeof audioUrl, audioUrl);
       setError(`Invalid audio URL: ${audioUrl}`);
       setLoading(false);
       return;
     }
 
-    console.log("[WaveformPlayer] Initializing with URL:", audioUrl);
+    const isBlobUrl = audioUrl.startsWith("blob:");
+    console.log("[WaveformPlayer] Source type:", isBlobUrl ? "blob" : "http", "| URL:", audioUrl.substring(0, 80));
 
-    // Create a media element with CORS enabled
+    // Create a media element — skip CORS for blob URLs
     const audio = new Audio();
-    audio.crossOrigin = "anonymous";
+    if (!isBlobUrl) {
+      audio.crossOrigin = "anonymous";
+    }
     audio.preload = "metadata";
     audio.src = audioUrl;
 
