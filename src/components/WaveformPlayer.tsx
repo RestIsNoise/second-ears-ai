@@ -63,17 +63,21 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
-      waveColor: "hsl(0 0% 72%)",
-      progressColor: "hsl(0 0% 5%)",
-      cursorColor: "hsl(0 0% 5%)",
-      cursorWidth: 1,
-      barWidth: 2,
-      barGap: 2,
+      waveColor: "#b8b8b8",
+      progressColor: "#111111",
+      cursorColor: "transparent",
+      cursorWidth: 0,
+      barWidth: 1,
+      barGap: 1,
       barRadius: 1,
-      height: 72,
+      height: 84,
       normalize: true,
       interact: true,
     });
+
+    // Re-render waveform on window resize
+    const onResize = () => ws.setOptions({ width: containerRef.current?.clientWidth });
+    window.addEventListener("resize", onResize);
 
     ws.on("ready", () => {
       const dur = ws.getDuration();
@@ -102,6 +106,7 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
     wsRef.current = ws;
 
     return () => {
+      window.removeEventListener("resize", onResize);
       ws.destroy();
       wsRef.current = null;
     };
@@ -135,11 +140,13 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       )}
 
       {/* Waveform + markers overlay */}
-      <div className="rounded-xl border border-border-subtle bg-background p-6">
+      <div className="rounded-xl border border-border-subtle bg-background px-6 py-4">
         {loading && !error && (
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-wider animate-pulse mb-2">
-            Loading waveform…
-          </p>
+          <div className="h-[84px] flex items-center justify-center">
+            <p className="font-mono-brand text-xs text-muted-foreground tracking-wider animate-pulse">
+              Loading waveform…
+            </p>
+          </div>
         )}
         <div className="relative">
           <div ref={containerRef} className="w-full" />
@@ -177,15 +184,15 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       )}
 
       {/* Controls */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={togglePlay} className="h-10 w-10" disabled={!!error || loading}>
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={togglePlay} className="h-9 w-9" disabled={!!error || loading}>
           {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </Button>
-        <Button variant="ghost" size="icon" onClick={restart} className="h-9 w-9" disabled={!!error || loading}>
+        <Button variant="ghost" size="icon" onClick={restart} className="h-8 w-8" disabled={!!error || loading}>
           <RotateCcw className="w-3.5 h-3.5" />
         </Button>
-        <span className="font-mono-brand text-xs text-muted-foreground tracking-wider">
-          {formatTime(currentTime)} / {formatTime(duration)}
+        <span className="font-mono-brand text-[11px] text-muted-foreground tracking-widest tabular-nums">
+          {formatTime(currentTime)}&nbsp;/&nbsp;{formatTime(duration)}
         </span>
       </div>
     </div>
