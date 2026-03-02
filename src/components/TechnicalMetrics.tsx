@@ -54,7 +54,7 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   const colors = statusColors[status.color];
 
   return (
-    <div className="rounded-xl border border-border-subtle p-6 space-y-4 bg-background">
+    <div className="rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
       {/* Top row: value + status badge */}
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -80,9 +80,8 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
           {status.label}
         </span>
       </div>
-
       {/* Bar */}
-      <div className="h-1.5 rounded-full bg-muted/40 overflow-hidden">
+      <div className="h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${colors.bar}`}
           style={{ width: `${pct}%`, opacity: 0.8 }}
@@ -101,7 +100,7 @@ const CorrelationCard = ({ value }: { value: number }) => {
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div className="rounded-xl border border-border-subtle p-6 space-y-4 bg-background">
+    <div className="rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
@@ -122,7 +121,7 @@ const CorrelationCard = ({ value }: { value: number }) => {
       </div>
 
       {/* Centered bar */}
-      <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden">
+      <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
         {/* Center line */}
         <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
         {/* Fill from center */}
@@ -166,8 +165,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   if (!hasAny) return null;
 
   return (
-    <section className="space-y-6">
-      <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+    <section>
+      <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
         Technical metrics
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
