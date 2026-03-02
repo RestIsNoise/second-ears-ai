@@ -188,20 +188,6 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
-      {/* Your Focus */}
-      {result.context && (
-        <section className="mt-7 md:mt-10">
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-            Your focus
-          </p>
-          <div className="rounded-xl border border-border-subtle p-8 bg-background">
-            <p className="text-sm text-foreground leading-relaxed line-clamp-4 max-w-[70ch]">
-              {result.context}
-            </p>
-          </div>
-        </section>
-      )}
-
       {/* Waveform */}
       {audioFile && (
         <div className="mt-7 md:mt-10">
@@ -374,6 +360,30 @@ const FeedbackDisplay = ({
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Your Focus — bottom of results */}
+      {result.context && (
+        <section className="mt-12 space-y-4">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            Your focus
+          </h2>
+          <div className="rounded-xl border border-border-subtle p-8 bg-background space-y-5 max-w-[70ch]">
+            <p className="text-sm text-foreground leading-relaxed line-clamp-4">
+              {result.context}
+            </p>
+            {feedback.focus_response && (
+              <div className="space-y-2">
+                <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider">
+                  Response to your request
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {feedback.focus_response}
+                </p>
+              </div>
+            )}
           </div>
         </section>
       )}

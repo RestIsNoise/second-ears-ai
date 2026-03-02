@@ -104,6 +104,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         timestamps: fb?.timestamps || [],
         technical_metrics: fb?.technical_metrics || undefined,
         fullAnalysis: fb?.fullAnalysis || undefined,
+        focus_response: fb?.focus_response || undefined,
       };
 
       console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));

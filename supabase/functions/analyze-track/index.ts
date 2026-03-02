@@ -41,6 +41,7 @@ ${metricsBlock}
     { "title": "...", "detail": "..." }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
   "timestamps": []
 }
 
@@ -64,6 +65,7 @@ ${metricsBlock}
     { "title": "...", "detail": "..." }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
   "timestamps": []
 }
 
@@ -87,6 +89,7 @@ ${metricsBlock}
     { "title": "...", "detail": "..." }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
+  "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
   "timestamps": []
 }
 
