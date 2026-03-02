@@ -27,7 +27,7 @@ export interface FeedbackData {
 export interface FeedbackResult {
   feedback: FeedbackData;
   mode: ListeningMode;
-  audioUrl?: string;
+  audioFile?: File;
 }
 
 const Analyze = () => {
@@ -59,7 +59,7 @@ const Analyze = () => {
             <FeedbackDisplay
               result={result}
               onReset={() => setResult(null)}
-              audioUrl={result.audioUrl}
+              audioFile={result.audioFile}
             />
           )}
         </div>
