@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Upload, Music, Activity, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
@@ -40,27 +41,21 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
     setIsAnalyzing(true);
 
     try {
-      const formData = new FormData();
-      formData.append("audio", file);
-      formData.append("mode", mode);
+      // Upload file to storage first to avoid CDN body size limits
+      const storagePath = `${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("tracks")
+        .upload(storagePath, file);
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/proxy-feedback`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${supabaseKey}` },
-          body: formData,
-        }
-      );
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || `Server error: ${response.status}`);
-      }
+      // Call proxy edge function with storage path
+      const { data: feedback, error } = await supabase.functions.invoke("proxy-feedback", {
+        body: { storagePath, mode, fileName: file.name },
+      });
 
-      const feedback = await response.json();
+      if (error) throw error;
+
       const audioUrl = URL.createObjectURL(file);
 
       onResult({
