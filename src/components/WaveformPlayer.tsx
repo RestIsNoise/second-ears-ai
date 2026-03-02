@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ interface Marker {
 }
 
 interface Props {
-  audioUrl: string;
+  audioFile: File;
   markers?: Marker[];
 }
 
@@ -19,10 +19,7 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-const isValidUrl = (url: string) =>
-  typeof url === "string" && (/^https?:\/\/.+/i.test(url) || /^blob:.+/i.test(url));
-
-const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
+const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WaveSurfer | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -31,6 +28,19 @@ const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
   const [activeMarker, setActiveMarker] = useState<Marker | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Create object URL from File — revoke on change/unmount
+  const localUrl = useMemo(() => {
+    if (!audioFile) return null;
+    const url = URL.createObjectURL(audioFile);
+    return url;
+  }, [audioFile]);
+
+  useEffect(() => {
+    return () => {
+      if (localUrl) URL.revokeObjectURL(localUrl);
+    };
+  }, [localUrl]);
 
   useEffect(() => {
     // Cleanup previous instance
@@ -45,25 +55,18 @@ const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
     setCurrentTime(0);
     setPlaying(false);
 
-    if (!containerRef.current) return;
+    if (!containerRef.current || !localUrl) return;
 
-    if (!isValidUrl(audioUrl)) {
-      console.error("[WaveformPlayer] Invalid audioUrl:", typeof audioUrl, audioUrl);
-      setError(`Invalid audio URL: ${audioUrl}`);
-      setLoading(false);
-      return;
-    }
+    console.log("[WaveformPlayer]", {
+      hasFile: !!audioFile,
+      fileType: audioFile?.type,
+      fileSize: audioFile?.size,
+      finalUrl: localUrl,
+    });
 
-    const isBlobUrl = audioUrl.startsWith("blob:");
-    console.log("[WaveformPlayer] Source type:", isBlobUrl ? "blob" : "http", "| URL:", audioUrl.substring(0, 80));
-
-    // Create a media element — skip CORS for blob URLs
     const audio = new Audio();
-    if (!isBlobUrl) {
-      audio.crossOrigin = "anonymous";
-    }
     audio.preload = "metadata";
-    audio.src = audioUrl;
+    audio.src = localUrl;
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
@@ -106,7 +109,7 @@ const WaveformPlayer = ({ audioUrl, markers = [] }: Props) => {
       ws.destroy();
       wsRef.current = null;
     };
-  }, [audioUrl]);
+  }, [localUrl]);
 
   const togglePlay = useCallback(() => wsRef.current?.playPause(), []);
   const restart = useCallback(() => {

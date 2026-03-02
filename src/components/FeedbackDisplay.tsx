@@ -12,11 +12,11 @@ const modeLabels: Record<string, string> = {
 const FeedbackDisplay = ({
   result,
   onReset,
-  audioUrl,
+  audioFile,
 }: {
   result: FeedbackResult;
   onReset: () => void;
-  audioUrl?: string;
+  audioFile?: File;
 }) => {
   const { feedback, mode } = result;
 
@@ -46,9 +46,9 @@ const FeedbackDisplay = ({
       </div>
 
       {/* Waveform */}
-      {audioUrl && (
+      {audioFile && (
         <WaveformPlayer
-          audioUrl={audioUrl}
+          audioFile={audioFile}
           markers={
             feedback.timestamps && feedback.timestamps.length > 0
               ? feedback.timestamps
