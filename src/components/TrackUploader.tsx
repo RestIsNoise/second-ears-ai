@@ -102,11 +102,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       const overallImpression = feedback?.overallImpression ?? fb?.overallImpression ?? "";
 
-      // Use signed URL for waveform, fallback to blob URL
+      // Use local blob URL for waveform (avoids CORS issues with signed URLs)
       const blobUrl = URL.createObjectURL(file);
-      const playbackUrl = signedData?.signedUrl || blobUrl;
-      const urlType = signedData?.signedUrl ? "signed" : "blob";
-      console.log(`[TrackUploader] Playback URL type: ${urlType}`, playbackUrl);
+      console.log(`[TrackUploader] Waveform source: blob URL (local file)`);
       const normalized = {
         track_name: file.name,
         overall_impression: overallImpression,
@@ -125,7 +123,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
       onResult({
         feedback: normalized,
         mode,
-        audioUrl: playbackUrl,
+        audioUrl: blobUrl,
       });
 
       // Storage cleanup disabled — keep file so waveform can load reliably
