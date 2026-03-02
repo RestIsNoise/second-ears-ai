@@ -30,6 +30,30 @@ const items = [
     q: "Is Human Review available?",
     a: "Yes. The Human Review plan pairs our AI analysis with a professional mixing engineer who listens to your track, records a video walkthrough, and provides personalized revision notes. Turnaround is typically 2–3 business days, and includes one follow-up exchange for clarifications.",
   },
+  {
+    q: "Is my audio private?",
+    a: "Yes. Your files are uploaded over an encrypted connection and stored securely. They are never shared publicly or made accessible to other users. You can delete your tracks at any time from your account.",
+  },
+  {
+    q: "Do you use my tracks to train AI models?",
+    a: "No. Your audio is used solely to generate your feedback and is not included in any training datasets. We do not retain or repurpose your content for model development under any circumstances.",
+  },
+  {
+    q: "What are the file length and size limits?",
+    a: "The maximum file size is 200 MB per upload. There is no strict duration limit, but tracks longer than 15 minutes may produce less granular feedback. For best results, upload individual songs or focused sections rather than full DJ sets or album-length files.",
+  },
+  {
+    q: "What happens if analysis fails or times out?",
+    a: "If an analysis fails due to a server issue or timeout, you'll see an error message with the option to retry immediately. Your file remains uploaded, so you won't need to re-upload it. If the issue persists, contact us and we'll investigate.",
+  },
+  {
+    q: "Can I re-run analysis after uploading a new version?",
+    a: "Yes. Simply upload the updated file and run a new analysis. Each upload is treated independently, so you can compare feedback across versions to track your mix improvements over time.",
+  },
+  {
+    q: "Can I cancel my plan anytime?",
+    a: "Yes. You can cancel your subscription at any time — no lock-in, no cancellation fees. Your access continues until the end of your current billing period, and your existing reports remain available after cancellation.",
+  },
 ];
 
 const Faq = () => (
