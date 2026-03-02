@@ -119,10 +119,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         audioUrl: storageAudioUrl,
       });
 
-      // Defer storage cleanup so waveform can load from the public URL
-      setTimeout(async () => {
-        await supabase.storage.from("tracks").remove([storagePath]);
-      }, 60000);
+      // Storage cleanup disabled — keep file so waveform can load reliably
+      // TODO: re-enable cleanup once waveform loading is confirmed stable
+      console.log("[TrackUploader] Skipping storage cleanup for:", storagePath);
     } catch (err: any) {
       console.error(err);
       toast({
