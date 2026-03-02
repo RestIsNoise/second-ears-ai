@@ -74,13 +74,39 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       if (error) throw error;
 
+      console.log("Full API response:", JSON.stringify(feedback, null, 2));
+
       // Clean up storage
       await supabase.storage.from("tracks").remove([storagePath]);
+
+      // Extract feedback from response — try top-level fields first, then nested .feedback
+      const fb = feedback?.feedback ?? feedback;
+      const normalized = {
+        track_name: file.name,
+        overall_impression: feedback?.overallImpression ?? fb?.overallImpression ?? fb?.overall_impression,
+        top_priorities: (feedback?.priorities ?? fb?.priorities)?.map((p: any) => ({
+          title: p.issue ?? p.title,
+          why: p.why,
+          fix: p.fix,
+        })),
+        what_works: (feedback?.whatWorks ?? fb?.whatWorks ?? fb?.what_works)?.map((w: any) => ({
+          title: w.title ?? w.strength ?? w.area,
+          detail: w.detail ?? w.why ?? w.description,
+        })),
+        fix_one_thing: (() => {
+          const f1 = feedback?.fixOneThingToday ?? fb?.fixOneThingToday ?? fb?.ifFixOneThing ?? fb?.fix_one_thing;
+          if (!f1) return undefined;
+          return { title: f1.title ?? f1.issue, why: f1.why, how: f1.how ?? f1.fix };
+        })(),
+        timestamps: feedback?.timestamps ?? fb?.timestamps,
+      };
+
+      console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
 
       const audioUrl = URL.createObjectURL(file);
 
       onResult({
-        feedback: { ...feedback, track_name: file.name },
+        feedback: normalized,
         mode,
         audioUrl,
       });
