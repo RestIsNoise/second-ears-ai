@@ -12,6 +12,7 @@ export interface TechnicalMetrics {
   dynamic_range?: number;
   peak_dbtp?: number;
   stereo_correlation?: number;
+  crest_factor?: number;
 }
 
 export interface FeedbackData {
