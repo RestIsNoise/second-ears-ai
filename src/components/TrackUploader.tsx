@@ -112,6 +112,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         feedback: normalized,
         mode,
         audioFile: file,
+        context: context.trim() || undefined,
       });
 
       // Storage cleanup disabled — keep file so waveform can load reliably

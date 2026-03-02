@@ -46,6 +46,7 @@ export interface FeedbackResult {
   feedback: FeedbackData;
   mode: ListeningMode;
   audioFile?: File;
+  context?: string;
 }
 
 const Analyze = () => {
