@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface Marker {
   time: number;
@@ -29,9 +28,7 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // No URL needed — we load directly from the File blob
   useEffect(() => {
-    // Cleanup previous instance
     if (wsRef.current) {
       wsRef.current.destroy();
       wsRef.current = null;
@@ -69,13 +66,12 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       cursorWidth: 0,
       barWidth: 1,
       barGap: 1,
-      barRadius: 1,
+      barRadius: 0,
       height: 84,
       normalize: true,
       interact: true,
     });
 
-    // Re-render waveform on window resize
     const onResize = () => ws.setOptions({ width: containerRef.current?.clientWidth });
     window.addEventListener("resize", onResize);
 
@@ -99,7 +95,6 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
       setLoading(false);
     });
 
-    // Load directly from Blob — no URL fetch involved
     ws.loadBlob(audioFile);
     console.log("[WaveformPlayer] loadBlob called — no network fetch");
 
@@ -127,8 +122,7 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Error state */}
+    <div className="space-y-3">
       {error && (
         <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex items-start gap-3">
           <AlertCircle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
@@ -139,41 +133,41 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
         </div>
       )}
 
-      {/* Waveform + markers overlay */}
-      <div className="rounded-xl border border-border-subtle bg-background px-6 py-4">
+      {/* Waveform container — canvas only, no text */}
+      <div
+        className="relative overflow-hidden rounded-xl border border-border-subtle bg-background"
+        style={{ height: 96, padding: 0 }}
+      >
         {loading && !error && (
-          <div className="h-[84px] flex items-center justify-center">
-            <p className="font-mono-brand text-xs text-muted-foreground tracking-wider animate-pulse">
-              Loading waveform…
-            </p>
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="w-3 h-3 rounded-full bg-muted-foreground/30 animate-pulse" />
           </div>
         )}
-        <div className="relative">
-          <div ref={containerRef} className="w-full" />
+        <div
+          ref={containerRef}
+          className="absolute left-0 right-0"
+          style={{ top: 6, bottom: 6 }}
+        />
 
-          {/* Marker lines overlaid on waveform */}
-          {markers.length > 0 && duration > 0 && (
-            <div className="absolute inset-0 pointer-events-none">
-              {markers.map((m, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleMarkerClick(m)}
-                  className="absolute top-0 bottom-0 pointer-events-auto group"
-                  style={{ left: `${(m.time / duration) * 100}%` }}
-                  title={m.label}
-                >
-                  <span className="absolute top-0 bottom-0 w-px bg-foreground/40 group-hover:bg-foreground transition-colors" />
-                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono-brand text-[9px] text-muted-foreground group-hover:text-foreground transition-colors bg-background px-1">
-                    {formatTime(m.time)} — {m.label}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Marker lines — no text inside canvas */}
+        {markers.length > 0 && duration > 0 && (
+          <div className="absolute inset-0 pointer-events-none z-[2]">
+            {markers.map((m, i) => (
+              <button
+                key={i}
+                onClick={() => handleMarkerClick(m)}
+                className="absolute top-0 bottom-0 pointer-events-auto"
+                style={{ left: `${(m.time / duration) * 100}%` }}
+                title={`${formatTime(m.time)} — ${m.label}`}
+              >
+                <span className="absolute top-0 bottom-0 w-px bg-foreground/25 hover:bg-foreground/60 transition-colors" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Active marker comment */}
+      {/* Active marker — outside waveform */}
       {activeMarker && (
         <div className="rounded-lg border border-border-subtle bg-secondary/30 px-4 py-3 animate-fade-up">
           <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
@@ -183,15 +177,37 @@ const WaveformPlayer = ({ audioFile, markers = [] }: Props) => {
         </div>
       )}
 
-      {/* Controls */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={togglePlay} className="h-9 w-9" disabled={!!error || loading}>
+      {/* Controls — CSS grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "24px 24px auto",
+          gap: 20,
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={togglePlay}
+          disabled={!!error || loading}
+          className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40"
+        >
           {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-        </Button>
-        <Button variant="ghost" size="icon" onClick={restart} className="h-8 w-8" disabled={!!error || loading}>
+        </button>
+        <button
+          onClick={restart}
+          disabled={!!error || loading}
+          className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40"
+        >
           <RotateCcw className="w-3.5 h-3.5" />
-        </Button>
-        <span className="font-mono-brand text-[11px] text-muted-foreground tracking-widest tabular-nums">
+        </button>
+        <span
+          className="text-muted-foreground tabular-nums leading-none"
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 16,
+            letterSpacing: "0.01em",
+          }}
+        >
           {formatTime(currentTime)}&nbsp;/&nbsp;{formatTime(duration)}
         </span>
       </div>
