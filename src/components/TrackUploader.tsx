@@ -138,12 +138,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-12 cursor-pointer transition-colors ${
+        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 cursor-pointer transition-all duration-150 ${
           dragOver
-            ? "border-foreground/30 bg-secondary/80"
+            ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
             : file
-            ? "border-foreground/20 bg-secondary/40"
-            : "border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
+            ? "border border-solid border-foreground/20 bg-secondary/30"
+            : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
         }`}
       >
         <input
@@ -180,8 +180,11 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
           value={context}
           onChange={(e) => setContext(e.target.value)}
           placeholder="What are you going for?"
-          className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
         />
+        <p className="text-[11px] text-muted-foreground/50 mt-1.5 ml-1">
+          Optional: references, goals, or specific concerns.
+        </p>
       </div>
 
       {/* Mode selector */}
@@ -196,7 +199,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
               onClick={() => setMode(m.id)}
               className={`rounded-lg border p-4 text-left transition-all duration-150 ${
                 mode === m.id
-                  ? "border-foreground bg-foreground/[0.07] shadow-[0_0_0_1px_hsl(var(--foreground)/0.15)]"
+                  ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
                   : "border-border-subtle hover:border-foreground/10"
               }`}
             >
