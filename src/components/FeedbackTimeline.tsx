@@ -36,7 +36,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
   return (
-    <div ref={containerRef} className="space-y-3 pb-[220px]">
+    <div ref={containerRef} className="space-y-[18px]">
       {sorted.map((item) => {
         const isActive = activeItemId === item.id;
 
