@@ -66,20 +66,51 @@ const FeedbackDisplay = ({
   const { feedback, mode } = result;
   const waveformRef = useRef<WaveformPlayerHandle>(null);
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
+  const [audioDuration, setAudioDuration] = useState<number>(0);
 
-  const timelineItems = useMemo(() => extractTimelineItems(result), [result]);
+  // Extract items with real timestamps first
+  const rawTimelineItems = useMemo(() => extractTimelineItems(result), [result]);
+
+  // If no timeline items but we have priorities + duration, auto-generate timestamps
+  const timelineItems = useMemo(() => {
+    if (rawTimelineItems.length > 0) return rawTimelineItems;
+    if (audioDuration <= 0 || !feedback.top_priorities || feedback.top_priorities.length === 0) return [];
+
+    const priorities = feedback.top_priorities.slice(0, 8);
+    const count = priorities.length;
+    // Place markers evenly across 15%..90% of duration
+    const startPct = 0.15;
+    const endPct = 0.90;
+    const step = count > 1 ? (endPct - startPct) / (count - 1) : 0;
+
+    return priorities.map((p, i): FeedbackItem => ({
+      id: `auto-${i}`,
+      timestampSec: audioDuration * (startPct + step * i),
+      title: p.title,
+      observation: p.why,
+      fix: p.fix,
+      severity: i === 0 ? "high" : i < 3 ? "med" : "low",
+      mode,
+    }));
+  }, [rawTimelineItems, audioDuration, feedback.top_priorities, mode]);
+
   const hasTimeline = timelineItems.length > 0;
 
-  const markers: WaveformMarker[] = useMemo(
-    () =>
-      timelineItems.map((item) => ({
-        id: item.id,
-        time: item.timestampSec,
-        label: item.title,
-        severity: item.severity,
-      })),
-    [timelineItems]
-  );
+  const markers: WaveformMarker[] = useMemo(() => {
+    const m = timelineItems.map((item) => ({
+      id: item.id,
+      time: item.timestampSec,
+      label: item.title,
+      severity: item.severity,
+    }));
+    // Debug log
+    if (m.length > 0) {
+      console.log(`[SecondEars] markers.length=${m.length}, first=`, m[0]);
+    } else {
+      console.log(`[SecondEars] No markers generated. duration=${audioDuration}, priorities=${feedback.top_priorities?.length ?? 0}`);
+    }
+    return m;
+  }, [timelineItems, audioDuration, feedback.top_priorities]);
 
   const handleMarkerClick = useCallback(
     (marker: WaveformMarker) => {
@@ -149,6 +180,7 @@ const FeedbackDisplay = ({
           activeMarkerId={activeItemId}
           onMarkerClick={handleMarkerClick}
           onTimeUpdate={handleTimeUpdate}
+          onDurationReady={setAudioDuration}
         />
       )}
 

@@ -14,6 +14,7 @@ interface Props {
   activeMarkerId?: string | null;
   onMarkerClick?: (marker: WaveformMarker) => void;
   onTimeUpdate?: (time: number) => void;
+  onDurationReady?: (duration: number) => void;
 }
 
 const formatTime = (s: number) => {
@@ -22,20 +23,10 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-const severityOpacity: Record<string, string> = {
-  high: "bg-foreground/50",
-  med: "bg-foreground/30",
-  low: "bg-foreground/15",
-};
 
-const severityActiveOpacity: Record<string, string> = {
-  high: "bg-foreground/80",
-  med: "bg-foreground/60",
-  low: "bg-foreground/40",
-};
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
     const [playing, setPlaying] = useState(false);
@@ -92,8 +83,10 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       window.addEventListener("resize", onResize);
 
       ws.on("ready", () => {
-        setDuration(ws.getDuration());
+        const d = ws.getDuration();
+        setDuration(d);
         setLoading(false);
+        onDurationReady?.(d);
       });
 
       ws.on("audioprocess", () => {
@@ -159,37 +152,45 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             style={{ top: 6, bottom: 6 }}
           />
 
-          {/* Markers */}
+          {/* Markers as circular dots */}
           {markers.length > 0 && duration > 0 && (
             <div className="absolute inset-0 pointer-events-none z-[2]">
               {markers.map((m) => {
                 const isActive = activeMarkerId === m.id;
                 const isHovered = hoveredMarker === m.id;
                 const leftPct = `${(m.time / duration) * 100}%`;
-                const barClass = isActive
-                  ? severityActiveOpacity[m.severity] || "bg-foreground/60"
-                  : severityOpacity[m.severity] || "bg-foreground/20";
+
+                const dotBorder = isActive
+                  ? "border-foreground/60"
+                  : m.severity === "high"
+                  ? "border-foreground/40"
+                  : m.severity === "med"
+                  ? "border-foreground/25"
+                  : "border-foreground/15";
+
+                const dotBg = isActive
+                  ? "bg-foreground/20"
+                  : "bg-background";
+
+                const tooltipText = m.label.length > 80 ? m.label.slice(0, 77) + "…" : m.label;
 
                 return (
-                  <div key={m.id} className="absolute top-0 bottom-0 pointer-events-auto" style={{ left: leftPct }}>
+                  <div key={m.id} className="absolute pointer-events-auto" style={{ left: leftPct, top: 0, transform: "translateX(-50%)" }}>
                     <button
                       onClick={() => onMarkerClick?.(m)}
                       onMouseEnter={() => setHoveredMarker(m.id)}
                       onMouseLeave={() => setHoveredMarker(null)}
-                      className="absolute top-0 bottom-0 w-5 -ml-2.5 cursor-pointer group"
+                      className={`w-3.5 h-3.5 rounded-full border transition-all duration-150 ${dotBorder} ${dotBg} ${
+                        isActive ? "scale-125" : "hover:scale-110"
+                      }`}
+                      style={{ marginTop: 4 }}
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
-                    >
-                      <span
-                        className={`absolute left-1/2 -translate-x-px top-0 bottom-0 transition-all duration-150 ${
-                          isActive ? "w-[2px]" : "w-px"
-                        } ${barClass}`}
-                      />
-                    </button>
+                    />
 
                     {/* Tooltip */}
                     {isHovered && (
                       <div
-                        className="absolute bottom-full mb-2 -translate-x-1/2 left-0 z-20 pointer-events-none"
+                        className="absolute top-full mt-1.5 -translate-x-1/2 left-1/2 z-20 pointer-events-none"
                         style={{ whiteSpace: "nowrap" }}
                       >
                         <div className="rounded-md border border-border bg-background px-2.5 py-1.5 shadow-sm">
@@ -199,7 +200,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                           >
                             {formatTime(m.time)}
                           </span>
-                          <span className="text-foreground text-xs ml-2">{m.label}</span>
+                          <span className="text-foreground text-xs ml-2">{tooltipText}</span>
                         </div>
                       </div>
                     )}
