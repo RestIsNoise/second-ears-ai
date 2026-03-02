@@ -62,10 +62,18 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
+      console.log("[TrackUploader] Uploaded to bucket: tracks, path:", storagePath);
+
       // Create signed URL for playback (1 hour expiry)
       const { data: signedData, error: signedError } = await supabase.storage
         .from("tracks")
         .createSignedUrl(storagePath, 3600);
+
+      if (signedError) {
+        console.warn("[TrackUploader] Signed URL failed:", signedError.message);
+      } else {
+        console.log("[TrackUploader] Signed URL created:", signedData?.signedUrl?.substring(0, 80) + "...");
+      }
 
       // Send URL to backend via proxy edge function
       const { data: feedback, error } = await supabase.functions.invoke("proxy-feedback", {
@@ -97,7 +105,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
       // Use signed URL for waveform, fallback to blob URL
       const blobUrl = URL.createObjectURL(file);
       const playbackUrl = signedData?.signedUrl || blobUrl;
-      console.log("[TrackUploader] Playback source:", signedData?.signedUrl ? "signed URL" : "blob fallback", playbackUrl);
+      const urlType = signedData?.signedUrl ? "signed" : "blob";
+      console.log(`[TrackUploader] Playback URL type: ${urlType}`, playbackUrl);
       const normalized = {
         track_name: file.name,
         overall_impression: overallImpression,
