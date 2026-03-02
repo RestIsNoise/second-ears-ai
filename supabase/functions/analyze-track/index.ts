@@ -15,6 +15,12 @@ const metricsBlock = `
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
     "crest_factor": <number between 3 and 18>
+  },
+  "fullAnalysis": {
+    "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
+    "dynamics": "2-3 sentences analyzing dynamics processing, loudness, compression, and transient handling.",
+    "stereoSpace": "2-3 sentences analyzing the stereo image, spatial placement of elements, and use of width/depth.",
+    "frequencyBalance": "2-3 sentences analyzing the frequency spectrum, tonal balance, and how different frequency ranges interact."
   },`;
 
 const modePrompts: Record<string, string> = {
@@ -94,7 +100,7 @@ serve(async (req) => {
   }
 
   try {
-    const { trackName, storagePath, mode } = await req.json();
+    const { trackName, storagePath, mode, context } = await req.json();
 
     if (!trackName || !storagePath || !mode) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -116,7 +122,8 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const userPrompt = `Analyze the track "${trackName}". Since you cannot listen to audio directly, simulate a realistic and varied professional analysis based on the track name, likely genre cues, and your expertise. Provide genuinely useful, specific feedback as if you had listened. Always return valid JSON only, no markdown wrapping.`;
+    const contextLine = context ? ` The artist says about their intent: "${context}".` : "";
+    const userPrompt = `Analyze the track "${trackName}".${contextLine} Since you cannot listen to audio directly, simulate a realistic and varied professional analysis based on the track name, likely genre cues, and your expertise. Provide genuinely useful, specific feedback as if you had listened. Always return valid JSON only, no markdown wrapping.`;
 
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

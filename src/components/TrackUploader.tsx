@@ -22,6 +22,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<ListeningMode>("technical");
   const [dragOver, setDragOver] = useState(false);
+  const [context, setContext] = useState("");
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
 
@@ -77,7 +78,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       // Send to analyze-track edge function (uses Lovable AI gateway)
       const { data: result, error } = await supabase.functions.invoke("analyze-track", {
-        body: { trackName: file.name, storagePath, mode },
+        body: { trackName: file.name, storagePath, mode, context: context.trim() || undefined },
       });
 
       if (error) throw error;
@@ -102,6 +103,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         fix_one_thing: fb?.fix_one_thing || undefined,
         timestamps: fb?.timestamps || [],
         technical_metrics: fb?.technical_metrics || undefined,
+        fullAnalysis: fb?.fullAnalysis || undefined,
       };
 
       console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
@@ -168,6 +170,17 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
           </>
         )}
       </label>
+
+      {/* Context input */}
+      <div>
+        <input
+          type="text"
+          value={context}
+          onChange={(e) => setContext(e.target.value)}
+          placeholder="What are you going for?"
+          className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        />
+      </div>
 
       {/* Mode selector */}
       <div>

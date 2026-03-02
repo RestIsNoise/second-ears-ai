@@ -261,6 +261,30 @@ const FeedbackDisplay = ({
         <TechnicalMetrics metrics={feedback.technical_metrics} />
       )}
 
+      {/* Full Analysis */}
+      {feedback.fullAnalysis && (
+        <section className="space-y-6">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            Full analysis
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { key: "mixBalance" as const, label: "Mix Balance" },
+              { key: "dynamics" as const, label: "Dynamics & Loudness" },
+              { key: "stereoSpace" as const, label: "Stereo & Space" },
+              { key: "frequencyBalance" as const, label: "Frequency Balance" },
+            ].map(({ key, label }) =>
+              feedback.fullAnalysis?.[key] ? (
+                <div key={key} className="rounded-xl border border-border-subtle p-8 bg-background">
+                  <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{feedback.fullAnalysis[key]}</p>
+                </div>
+              ) : null
+            )}
+          </div>
+        </section>
+      )}
+
       {/* What Works */}
       {feedback.what_works && feedback.what_works.length > 0 && (
         <section className="space-y-6">
