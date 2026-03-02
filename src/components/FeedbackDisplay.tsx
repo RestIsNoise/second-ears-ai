@@ -71,7 +71,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* Top Priorities */}
-      {feedback.top_priorities && feedback.top_priorities.length > 0 && (
+      {feedback.top_priorities && feedback.top_priorities.length > 0 ? (
         <section className="space-y-6">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
             Top priorities
@@ -106,6 +106,12 @@ const FeedbackDisplay = ({
               </div>
             ))}
           </div>
+        </section>
+      ) : (
+        <section>
+          <p className="text-sm text-muted-foreground">
+            Technical metrics unavailable for this analysis.
+          </p>
         </section>
       )}
 
