@@ -48,28 +48,25 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   const colors = statusColors[status.color];
 
   return (
-    <div
-      className="rounded-xl border border-white/[0.06] p-6 space-y-4"
-      style={{ backgroundColor: "hsl(0 0% 10%)" }}
-    >
+    <div className="rounded-xl border border-border-subtle p-6 space-y-4 bg-background">
       {/* Top row: value + status badge */}
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
             <span
-              className="text-2xl font-bold text-white tabular-nums tracking-tight"
+              className="text-2xl font-bold text-foreground tabular-nums tracking-tight"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               {value.toFixed(1)}
             </span>
             <span
-              className="text-sm text-white/40 font-medium"
+              className="text-sm text-muted-foreground font-medium"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               {unit}
             </span>
           </div>
-          <p className="text-xs text-white/35 mt-1 tracking-wide">{label}</p>
+          <p className="text-xs text-muted-foreground mt-1 tracking-wide">{label}</p>
         </div>
         <span
           className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
@@ -79,7 +76,7 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
       </div>
 
       {/* Bar */}
-      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+      <div className="h-1.5 rounded-full bg-muted/40 overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${colors.bar}`}
           style={{ width: `${pct}%`, opacity: 0.8 }}
@@ -98,21 +95,18 @@ const CorrelationCard = ({ value }: { value: number }) => {
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div
-      className="rounded-xl border border-white/[0.06] p-6 space-y-4"
-      style={{ backgroundColor: "hsl(0 0% 10%)" }}
-    >
+    <div className="rounded-xl border border-border-subtle p-6 space-y-4 bg-background">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
             <span
-              className="text-2xl font-bold text-white tabular-nums tracking-tight"
+              className="text-2xl font-bold text-foreground tabular-nums tracking-tight"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               {value > 0 ? "+" : ""}{value.toFixed(2)}
             </span>
           </div>
-          <p className="text-xs text-white/35 mt-1 tracking-wide">Stereo Correlation</p>
+          <p className="text-xs text-muted-foreground mt-1 tracking-wide">Stereo Correlation</p>
         </div>
         <span
           className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
@@ -122,9 +116,9 @@ const CorrelationCard = ({ value }: { value: number }) => {
       </div>
 
       {/* Centered bar */}
-      <div className="relative h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+      <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden">
         {/* Center line */}
-        <div className="absolute inset-y-0 left-1/2 w-px bg-white/10" />
+        <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
         {/* Fill from center */}
         {clampedPct >= 50 ? (
           <div
