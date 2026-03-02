@@ -28,19 +28,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
     if (!activeItemId) return;
     const el = itemRefs.current.get(activeItemId);
     if (el) {
-      const rect = el.getBoundingClientRect();
-      const targetY = window.innerHeight - 120;
-      const scrollBy = rect.top - targetY;
-      if (Math.abs(scrollBy) > 10) {
-        window.scrollBy({ top: scrollBy, behavior: "smooth" });
-      }
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [activeItemId]);
 
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
   return (
-    <div ref={containerRef} className="space-y-3 pb-[280px] md:pb-[220px]">
+    <div ref={containerRef} className="space-y-3 pb-[220px]">
       {sorted.map((item) => {
         const isActive = activeItemId === item.id;
 
@@ -52,6 +47,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
               else itemRefs.current.delete(item.id);
             }}
             onClick={() => onItemClick(item)}
+            style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
             className={`w-full text-left rounded-xl border p-6 md:p-8 transition-colors duration-200 ${
               isActive
                 ? "border-foreground/20 bg-secondary/40"
