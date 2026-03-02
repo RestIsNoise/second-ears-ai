@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { Play, Pause, RotateCcw, AlertCircle, MapPin } from "lucide-react";
+import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import { createPortal } from "react-dom";
 import type { WaveformMarker } from "@/types/feedback";
 
@@ -204,21 +204,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 const isHovered = hoveredMarker === m.id;
                 const leftPct = `${(m.time / duration) * 100}%`;
 
-                const ringColor = isActive
-                  ? "ring-foreground/50"
-                  : m.severity === "high"
-                  ? "ring-foreground/30"
-                  : m.severity === "med"
-                  ? "ring-foreground/20"
-                  : "ring-foreground/10";
 
-                const pinColor = isActive
-                  ? "text-foreground/70"
-                  : m.severity === "high"
-                  ? "text-foreground/50"
-                  : m.severity === "med"
-                  ? "text-foreground/35"
-                  : "text-foreground/20";
 
                 // Truncate title to max 8 words
                 const titleWords = m.label.split(/\s+/);
@@ -235,13 +221,20 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                       onClick={() => onMarkerClick?.(m)}
                       onMouseEnter={() => setHoveredMarker(m.id)}
                       onMouseLeave={() => setHoveredMarker(null)}
-                      className={`flex items-center justify-center w-5 h-5 rounded-full ring-1 ${ringColor} bg-background transition-all duration-150 ${
-                        isActive ? "scale-125" : "hover:scale-110"
+                      className={`flex items-center justify-center w-[18px] h-[18px] rounded-full transition-all duration-150 ${
+                        isActive ? "scale-125 ring-2 ring-foreground/20" : isHovered ? "scale-110 ring-2 ring-foreground/15" : ""
                       }`}
                       style={{ marginTop: 2 }}
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
                     >
-                      <MapPin className={`${pinColor} transition-colors duration-150`} size={11} strokeWidth={2.5} />
+                      {/* Diamond cue marker */}
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="transition-colors duration-150">
+                        <rect
+                          x="5" y="0" width="5" height="5"
+                          transform="rotate(45 5 5)"
+                          className={isActive || isHovered ? "fill-foreground" : "fill-muted-foreground/40"}
+                        />
+                      </svg>
                     </button>
 
                     {/* Portal tooltip */}
