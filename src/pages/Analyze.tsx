@@ -15,6 +15,13 @@ export interface TechnicalMetrics {
   crest_factor?: number;
 }
 
+export interface FullAnalysis {
+  mixBalance?: string;
+  dynamics?: string;
+  stereoSpace?: string;
+  frequencyBalance?: string;
+}
+
 export interface FeedbackData {
   track_name?: string;
   overallImpression?: string;
@@ -27,6 +34,7 @@ export interface FeedbackData {
   fix_one_thing?: { title: string; why: string; how: string };
   timestamps?: Array<{ time: number; label: string }>;
   technical_metrics?: TechnicalMetrics;
+  fullAnalysis?: FullAnalysis;
   // Legacy fields
   summary?: string;
   scores?: Record<string, number>;
