@@ -57,7 +57,7 @@ const Analyze = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-32 pb-[72px] md:pb-[72px] px-6">
+      <main className="pt-32 pb-12 md:pb-16 px-6">
         <div className="max-w-2xl mx-auto">
           {!result ? (
             <>
