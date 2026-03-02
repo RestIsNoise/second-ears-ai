@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
-import { createPortal } from "react-dom";
 import type { WaveformMarker } from "@/types/feedback";
 
 export interface WaveformPlayerHandle {
@@ -25,62 +24,20 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-/** Portal tooltip positioned relative to anchor element */
-const MarkerTooltip = ({
-  anchorEl,
-  time,
-  title,
-  summary,
-}: {
-  anchorEl: HTMLElement;
-  time: string;
-  title: string;
-  summary?: string;
-}) => {
-  const rect = anchorEl.getBoundingClientRect();
-  return (
-    <div
-      className="pointer-events-none fixed"
-      style={{
-        top: rect.bottom + 6,
-        left: rect.left + rect.width / 2,
-        transform: "translateX(-50%)",
-        zIndex: 9999,
-        maxWidth: 260,
-      }}
-    >
-      <div className="rounded-md border border-border bg-background px-3 py-2 shadow-sm">
-        <div className="flex items-baseline gap-2">
-          <span
-            className="text-muted-foreground tabular-nums shrink-0"
-            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
-          >
-            {time}
-          </span>
-          <span className="text-foreground text-xs font-medium leading-snug">{title}</span>
-        </div>
-        {summary && (
-          <p className="text-muted-foreground text-[11px] leading-relaxed mt-1">{summary}</p>
-        )}
-      </div>
-    </div>
-  );
-};
-
 
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
   ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [hoveredMarker, setHoveredMarker] = useState<string | null>(null);
-    const markerElRefs = useRef<Map<string, HTMLElement>>(new Map());
-
+    const [hoverX, setHoverX] = useState<number | null>(null);
+    const [hoverTime, setHoverTime] = useState<number>(0);
     useImperativeHandle(ref, () => ({
       seekTo: (timeSec: number) => {
         if (wsRef.current && duration > 0) {
@@ -169,6 +126,22 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       wsRef.current?.play();
     }, []);
 
+    const handleMouseMove = useCallback(
+      (e: React.MouseEvent) => {
+        if (!wrapperRef.current || duration <= 0) return;
+        const rect = wrapperRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const pct = Math.max(0, Math.min(1, x / rect.width));
+        setHoverX(x);
+        setHoverTime(pct * duration);
+      },
+      [duration]
+    );
+
+    const handleMouseLeave = useCallback(() => {
+      setHoverX(null);
+    }, []);
+
     return (
       <div className="space-y-3">
         {error && (
@@ -183,8 +156,11 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
         {/* Waveform container */}
         <div
-          className="relative overflow-hidden rounded-xl border border-border-subtle bg-background"
+          ref={wrapperRef}
+          className="relative overflow-visible rounded-xl border border-border-subtle bg-background"
           style={{ height: 96, padding: 0 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         >
           {loading && !error && (
             <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -197,57 +173,79 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             style={{ top: 6, bottom: 6 }}
           />
 
-          {/* Markers as pin icons */}
+          {/* Hover cursor line + tooltip */}
+          {hoverX !== null && duration > 0 && (
+            <>
+              <div
+                className="absolute top-0 bottom-0 w-px bg-foreground/40 pointer-events-none z-[3]"
+                style={{ left: hoverX }}
+              />
+              <div
+                className="absolute pointer-events-none z-[5]"
+                style={{
+                  left: hoverX,
+                  top: -28,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                <span
+                  className="bg-foreground text-background px-1.5 py-0.5 rounded text-[10px] tabular-nums whitespace-nowrap"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                >
+                  {formatTime(hoverTime)}
+                </span>
+              </div>
+            </>
+          )}
+
+          {/* Triangle markers */}
           {markers.length > 0 && duration > 0 && (
-            <div className="absolute inset-0 pointer-events-none z-[2]">
+            <div className="absolute inset-0 pointer-events-none z-[2]" style={{ overflow: "visible" }}>
               {markers.slice(0, 8).map((m) => {
                 const isActive = activeMarkerId === m.id;
-                const isHovered = hoveredMarker === m.id;
                 const leftPct = `${(m.time / duration) * 100}%`;
 
-
-
-                // Truncate title to max 8 words
-                const titleWords = m.label.split(/\s+/);
-                const shortTitle = titleWords.length > 8 ? titleWords.slice(0, 8).join(" ") + "…" : m.label;
-                const summary = m.label.length > 80 ? m.label.slice(0, 80) : m.label;
-
                 return (
-                  <div key={m.id} className="absolute pointer-events-auto" style={{ left: leftPct, top: 0, transform: "translateX(-50%)" }}>
+                  <div
+                    key={m.id}
+                    className="absolute pointer-events-auto flex flex-col items-center"
+                    style={{ left: leftPct, top: 0, transform: "translateX(-50%)" }}
+                  >
                     <button
-                      ref={(el) => {
-                        if (el) markerElRefs.current.set(m.id, el);
-                        else markerElRefs.current.delete(m.id);
-                      }}
                       onClick={() => onMarkerClick?.(m)}
-                      onMouseEnter={() => setHoveredMarker(m.id)}
-                      onMouseLeave={() => setHoveredMarker(null)}
-                      className={`flex items-center justify-center w-[18px] h-[18px] rounded-full transition-all duration-150 ${
-                        isActive ? "scale-125 ring-2 ring-foreground/20" : isHovered ? "scale-110 ring-2 ring-foreground/15" : ""
-                      }`}
-                      style={{ marginTop: 2 }}
+                      className="group flex flex-col items-center"
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
                     >
-                      {/* Diamond cue marker */}
-                      <svg width="10" height="10" viewBox="0 0 10 10" className="transition-colors duration-150">
-                        <rect
-                          x="5" y="0" width="5" height="5"
-                          transform="rotate(45 5 5)"
-                          className={isActive || isHovered ? "fill-foreground" : "fill-muted-foreground/40"}
+                      <svg
+                        width="10"
+                        height="8"
+                        viewBox="0 0 10 8"
+                        className="transition-colors duration-150"
+                      >
+                        <polygon
+                          points="5,0 10,8 0,8"
+                          className={
+                            isActive
+                              ? "fill-foreground"
+                              : "fill-muted-foreground/50 group-hover:fill-foreground"
+                          }
                         />
                       </svg>
+                      <span
+                        className={`mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-150 ${
+                          isActive
+                            ? "text-foreground"
+                            : "text-muted-foreground/50 group-hover:text-foreground"
+                        }`}
+                        style={{
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontSize: 9,
+                          lineHeight: 1,
+                        }}
+                      >
+                        {formatTime(m.time)}
+                      </span>
                     </button>
-
-                    {/* Portal tooltip */}
-                    {isHovered && markerElRefs.current.get(m.id) && createPortal(
-                      <MarkerTooltip
-                        anchorEl={markerElRefs.current.get(m.id)!}
-                        time={formatTime(m.time)}
-                        title={shortTitle}
-                        summary={shortTitle !== summary ? summary : undefined}
-                      />,
-                      document.body
-                    )}
                   </div>
                 );
               })}
