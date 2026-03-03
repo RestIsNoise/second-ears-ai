@@ -24,8 +24,6 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-
-
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
   ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -38,6 +36,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [loading, setLoading] = useState(true);
     const [hoverX, setHoverX] = useState<number | null>(null);
     const [hoverTime, setHoverTime] = useState<number>(0);
+
     useImperativeHandle(ref, () => ({
       seekTo: (timeSec: number) => {
         if (wsRef.current && duration > 0) {
@@ -69,8 +68,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
       const ws = WaveSurfer.create({
         container: containerRef.current,
-        waveColor: "#b8b8b8",
-        progressColor: "#111111",
+        waveColor: "#d0d0d0",
+        progressColor: "#1a1a1a",
         cursorColor: "transparent",
         cursorWidth: 0,
         barWidth: 1,
@@ -143,9 +142,9 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     }, []);
 
     return (
-      <div className="space-y-3">
+      <div className="rounded-xl border border-border-subtle bg-background p-4 space-y-3">
         {error && (
-          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex items-start gap-3">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 flex items-start gap-3">
             <AlertCircle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-medium text-destructive">Waveform failed to load</p>
@@ -157,8 +156,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         {/* Waveform container */}
         <div
           ref={wrapperRef}
-          className="relative overflow-visible rounded-xl border border-border-subtle bg-background"
-          style={{ height: 96, padding: 0 }}
+          className="relative overflow-visible"
+          style={{ height: 96 }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
@@ -177,20 +176,29 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           {hoverX !== null && duration > 0 && (
             <>
               <div
-                className="absolute top-0 bottom-0 w-px bg-foreground/40 pointer-events-none z-[3]"
-                style={{ left: hoverX }}
+                className="absolute top-0 bottom-0 pointer-events-none z-[3]"
+                style={{
+                  left: hoverX,
+                  width: "0.5px",
+                  backgroundColor: "hsl(var(--foreground) / 0.25)",
+                }}
               />
               <div
                 className="absolute pointer-events-none z-[5]"
                 style={{
                   left: hoverX,
-                  top: -28,
+                  top: -24,
                   transform: "translateX(-50%)",
                 }}
               >
                 <span
-                  className="bg-foreground text-background px-1.5 py-0.5 rounded text-[10px] tabular-nums whitespace-nowrap"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  className="text-muted-foreground tabular-nums whitespace-nowrap"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 9,
+                    lineHeight: 1,
+                    letterSpacing: "0.02em",
+                  }}
                 >
                   {formatTime(hoverTime)}
                 </span>
@@ -217,17 +225,17 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
                     >
                       <svg
-                        width="10"
-                        height="8"
-                        viewBox="0 0 10 8"
-                        className="transition-colors duration-150"
+                        width={isActive ? "12" : "10"}
+                        height={isActive ? "10" : "8"}
+                        viewBox={isActive ? "0 0 12 10" : "0 0 10 8"}
+                        className="transition-all duration-150"
                       >
                         <polygon
-                          points="5,0 10,8 0,8"
+                          points={isActive ? "6,0 12,10 0,10" : "5,0 10,8 0,8"}
                           className={
                             isActive
                               ? "fill-foreground"
-                              : "fill-muted-foreground/50 group-hover:fill-foreground"
+                              : "fill-muted-foreground/[0.55] group-hover:fill-foreground/80"
                           }
                         />
                       </svg>
@@ -235,7 +243,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                         className={`mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-150 ${
                           isActive
                             ? "text-foreground"
-                            : "text-muted-foreground/50 group-hover:text-foreground"
+                            : "text-muted-foreground/[0.55] group-hover:text-foreground/80"
                         }`}
                         style={{
                           fontFamily: "'IBM Plex Mono', monospace",
@@ -255,24 +263,20 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
         {/* Controls */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "24px 24px auto",
-            gap: 20,
-            alignItems: "center",
-          }}
+          className="flex items-center"
+          style={{ gap: 16 }}
         >
           <button
             onClick={togglePlay}
             disabled={!!error || loading}
-            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40"
+            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40 transition-colors"
           >
             {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </button>
           <button
             onClick={restart}
             disabled={!!error || loading}
-            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40"
+            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
@@ -280,11 +284,11 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             className="text-muted-foreground tabular-nums leading-none"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 16,
-              letterSpacing: "0.01em",
+              fontSize: 13,
+              letterSpacing: "-0.01em",
             }}
           >
-            {formatTime(currentTime)}&nbsp;/&nbsp;{formatTime(duration)}
+            {formatTime(currentTime)}<span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>{formatTime(duration)}
           </span>
         </div>
       </div>
