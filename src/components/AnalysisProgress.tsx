@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +15,26 @@ const getActiveStep = (percent: number) => {
   if (percent <= 45) return 1;
   if (percent <= 85) return 2;
   return 3;
+};
+
+const AnalyzingSubtitle = () => {
+  const [dotCount, setDotCount] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setDotCount((c) => (c + 1) % 4), 500);
+    return () => clearInterval(id);
+  }, []);
+
+  const dots = ".".repeat(dotCount);
+
+  return (
+    <p
+      className="text-[13px] text-muted-foreground mb-10 md:mb-12 motion-safe:animate-[subtle-pulse_2.4s_ease-in-out_infinite]"
+    >
+      Analyzing your mix
+      <span className="inline-block w-[1.2em] text-left">{dots}</span>
+    </p>
+  );
 };
 
 interface AnalysisProgressProps {
@@ -136,9 +156,7 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
       </div>
 
       {/* Subtitle */}
-      <p className="text-[13px] text-muted-foreground mb-10 md:mb-12">
-        Analyzing your mix
-      </p>
+      <AnalyzingSubtitle />
 
       {/* Step timeline */}
       <div className="space-y-2.5 w-full max-w-[180px]">
