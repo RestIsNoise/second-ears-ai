@@ -86,6 +86,7 @@ const Analyze = () => {
               currentStep={progressStep}
               error={analysisError}
               onRetry={handleRetry}
+              onCancel={handleRetry}
             />
           ) : (
             <>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +9,15 @@ const steps = [
   "Finalizing report",
 ];
 
-// Map progress % to active step
+const microStatuses = [
+  "Checking dynamics",
+  "Mapping low-end balance",
+  "Evaluating stereo field",
+  "Scanning transient detail",
+  "Assessing tonal clarity",
+  "Preparing final report",
+];
+
 const getActiveStep = (percent: number) => {
   if (percent <= 20) return 0;
   if (percent <= 45) return 1;
@@ -19,38 +27,59 @@ const getActiveStep = (percent: number) => {
 
 const AnalyzingSubtitle = () => {
   const [dotCount, setDotCount] = useState(0);
+  const [statusIdx, setStatusIdx] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setDotCount((c) => (c + 1) % 4), 500);
-    return () => clearInterval(id);
+    const dotId = setInterval(() => setDotCount((c) => (c + 1) % 4), 500);
+    const statusId = setInterval(() => setStatusIdx((c) => (c + 1) % microStatuses.length), 2800);
+    return () => {
+      clearInterval(dotId);
+      clearInterval(statusId);
+    };
   }, []);
 
-  const dots = ".".repeat(dotCount);
-
   return (
-    <p
-      className="text-[13px] text-muted-foreground mb-10 md:mb-12 motion-safe:animate-[subtle-pulse_2.4s_ease-in-out_infinite]"
-    >
-      Analyzing your mix
-      <span className="inline-block w-[1.2em] text-left">{dots}</span>
-    </p>
+    <div className="flex flex-col items-center mb-10 md:mb-12">
+      <p className="text-[13px] text-muted-foreground motion-safe:animate-[subtle-pulse_2.4s_ease-in-out_infinite]">
+        Analyzing your mix
+        <span className="inline-block w-[1.2em] text-left">{".".repeat(dotCount)}</span>
+      </p>
+      <p
+        key={statusIdx}
+        className="text-[11px] text-muted-foreground/50 mt-2 motion-safe:animate-[fade-in_300ms_ease-out]"
+      >
+        {microStatuses[statusIdx]}
+      </p>
+    </div>
   );
 };
 
 interface AnalysisProgressProps {
-  currentStep: number; // 0-3 from parent
+  currentStep: number;
   error: string | null;
   onRetry: () => void;
+  onCancel?: () => void;
 }
 
-const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps) => {
+const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisProgressProps) => {
   const [displayPercent, setDisplayPercent] = useState(5);
+  const [elapsedSec, setElapsedSec] = useState(0);
   const animRef = useRef<number>();
   const startRef = useRef(Date.now());
   const startValRef = useRef(5);
-  const [visible, setVisible] = useState(true);
+  const mountRef = useRef(Date.now());
 
   const stepTargets = [18, 42, 82, 95];
+
+  // Elapsed timer
+  useEffect(() => {
+    if (error) return;
+    mountRef.current = Date.now();
+    const id = setInterval(() => {
+      setElapsedSec(Math.floor((Date.now() - mountRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [error]);
 
   useEffect(() => {
     if (error) return;
@@ -81,8 +110,17 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
 
   const activeStep = getActiveStep(displayPercent);
 
-  // Ring dimensions
-  const ringSize = 84; // desktop
+  // Estimate remaining: assume ~30s total, scale by progress
+  const estimatedTotal = 30;
+  const remaining = Math.max(0, Math.round(estimatedTotal * (1 - displayPercent / 100)));
+  const remMin = Math.floor(remaining / 60);
+  const remSec = remaining % 60;
+  const remainingStr = remMin > 0
+    ? `~${remMin}:${remSec.toString().padStart(2, "0")} remaining`
+    : `~${remSec}s remaining`;
+
+  // Ring
+  const ringSize = 84;
   const strokeWidth = 2;
   const radius = (ringSize - strokeWidth * 2) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -113,18 +151,13 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
   }
 
   return (
-    <div
-      className={`flex flex-col items-center justify-center py-24 md:py-28 transition-opacity duration-200 ${
-        visible ? "opacity-100" : "opacity-0"
-      }`}
-    >
+    <div className="flex flex-col items-center justify-center py-24 md:py-28 transition-opacity duration-200">
       {/* Circular progress ring */}
-      <div className="relative w-[72px] h-[72px] md:w-[84px] md:h-[84px] mb-6">
+      <div className="relative w-[72px] h-[72px] md:w-[84px] md:h-[84px] mb-3">
         <svg
           className="w-full h-full -rotate-90"
           viewBox={`0 0 ${viewBox} ${viewBox}`}
         >
-          {/* Track */}
           <circle
             cx={center}
             cy={center}
@@ -133,7 +166,6 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
             stroke="hsl(var(--border-subtle))"
             strokeWidth={strokeWidth}
           />
-          {/* Progress */}
           <circle
             cx={center}
             cy={center}
@@ -147,7 +179,6 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
             style={{ transition: "stroke-dashoffset 400ms ease-out" }}
           />
         </svg>
-        {/* Center percentage */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="font-mono-brand text-[13px] md:text-[15px] font-medium text-foreground tabular-nums tracking-tight">
             {displayPercent}%
@@ -155,7 +186,14 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
         </div>
       </div>
 
-      {/* Subtitle */}
+      {/* Estimated remaining */}
+      <p
+        className="font-mono-brand text-[10px] text-muted-foreground/45 tabular-nums tracking-wide mb-6"
+      >
+        {remainingStr}
+      </p>
+
+      {/* Subtitle + micro-status */}
       <AnalyzingSubtitle />
 
       {/* Step timeline */}
@@ -172,16 +210,16 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
                     ? "bg-foreground"
                     : isActive
                     ? "bg-foreground"
-                    : "bg-muted-foreground/25"
+                    : "bg-muted-foreground/40"
                 }`}
               />
               <span
                 className={`text-[12px] transition-colors duration-500 ${
                   isComplete
-                    ? "text-muted-foreground"
+                    ? "text-muted-foreground/70"
                     : isActive
                     ? "text-foreground"
-                    : "text-muted-foreground/35"
+                    : "text-muted-foreground/45"
                 }`}
               >
                 {label}
@@ -190,6 +228,16 @@ const AnalysisProgress = ({ currentStep, error, onRetry }: AnalysisProgressProps
           );
         })}
       </div>
+
+      {/* Cancel */}
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="mt-10 text-[11px] text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
+        >
+          Cancel analysis
+        </button>
+      )}
     </div>
   );
 };
