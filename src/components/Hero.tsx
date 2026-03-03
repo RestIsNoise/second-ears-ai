@@ -68,6 +68,9 @@ const Hero = () => {
             See how it works
           </Button>
         </div>
+        <p className="text-[11px] text-muted-foreground/50 mt-6 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+          No credit card required to start
+        </p>
       </div>
     </section>
   );
