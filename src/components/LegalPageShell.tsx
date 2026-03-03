@@ -22,7 +22,7 @@ interface LegalPageShellProps {
 
 const LegalPageShell = ({ title, sections, footnote }: LegalPageShellProps) => {
   const allIds = useMemo(() => sections.map((s) => s.id), [sections]);
-  const [openItems, setOpenItems] = useState<string[]>([allIds[0]]);
+  const [openItems, setOpenItems] = useState<string[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
