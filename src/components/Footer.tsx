@@ -26,6 +26,13 @@ const Footer = () => (
             Privacy Policy
           </Link>
           <span className="text-muted-foreground/20">·</span>
+          <Link
+            to="/terms"
+            className="text-[10px] text-muted-foreground/40 tracking-wide hover:text-muted-foreground/60 transition-colors"
+          >
+            Terms of Service
+          </Link>
+          <span className="text-muted-foreground/20">·</span>
           <a
             href="mailto:hello@secondears.io"
             className="text-[10px] text-muted-foreground/40 tracking-wide hover:text-muted-foreground/60 transition-colors"
