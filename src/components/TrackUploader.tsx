@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
-
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
   { id: "musical", label: "Musical", tag: "The producer", icon: Music },
@@ -16,15 +15,17 @@ interface Props {
   onResult: (result: FeedbackResult) => void;
   isAnalyzing: boolean;
   setIsAnalyzing: (v: boolean) => void;
+  onProgressStep?: (step: number) => void;
+  onError?: (msg: string) => void;
 }
 
-const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
+const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<ListeningMode>("technical");
   const [dragOver, setDragOver] = useState(false);
   const [context, setContext] = useState("");
 
-  const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
+  const MAX_FILE_SIZE = 200 * 1024 * 1024;
 
   const validateAndSetFile = (f: File) => {
     if (!f.type.startsWith("audio/")) {
@@ -53,9 +54,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
   const analyze = async () => {
     if (!file) return;
     setIsAnalyzing(true);
+    onProgressStep?.(0); // Uploading track
 
     try {
-      // Upload file to storage
       const storagePath = `${Date.now()}-${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from("tracks")
@@ -64,8 +65,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
       console.log("[TrackUploader] Uploaded to bucket: tracks, path:", storagePath);
+      onProgressStep?.(1); // Reading audio
 
-      // Create signed URL for playback (1 hour expiry)
       const { data: signedData, error: signedError } = await supabase.storage
         .from("tracks")
         .createSignedUrl(storagePath, 3600);
@@ -76,12 +77,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         console.log("[TrackUploader] Signed URL created:", signedData?.signedUrl?.substring(0, 80) + "...");
       }
 
-      // Send to analyze-track edge function (uses Lovable AI gateway)
+      onProgressStep?.(2); // Generating feedback
+
       const { data: result, error } = await supabase.functions.invoke("analyze-track", {
         body: { trackName: file.name, storagePath, mode, context: context.trim() || undefined },
       });
 
       if (error) throw error;
+
+      onProgressStep?.(3); // Finalizing report
 
       console.log("Full API response:", JSON.stringify(result, null, 2));
 
@@ -109,6 +113,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
 
       console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
 
+      // Brief pause so user sees "Finalizing report" complete
+      await new Promise((r) => setTimeout(r, 600));
+
       onResult({
         feedback: normalized,
         mode,
@@ -116,14 +123,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing }: Props) => {
         context: context.trim() || undefined,
       });
 
-      // Storage cleanup disabled — keep file so waveform can load reliably
-      // TODO: re-enable cleanup once waveform loading is confirmed stable
       console.log("[TrackUploader] Skipping storage cleanup for:", storagePath);
     } catch (err: any) {
       console.error(err);
+      const msg = err.message || "Something went wrong. Please try again.";
+      onError?.(msg);
       toast({
         title: "Analysis failed",
-        description: err.message || "Something went wrong",
+        description: msg,
         variant: "destructive",
       });
     } finally {

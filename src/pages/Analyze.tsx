@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
+import AnalysisProgress from "@/components/AnalysisProgress";
 
 export type ListeningMode = "technical" | "musical" | "perception";
 
@@ -36,7 +37,6 @@ export interface FeedbackData {
   technical_metrics?: TechnicalMetrics;
   fullAnalysis?: FullAnalysis;
   focus_response?: string | null;
-  // Legacy fields
   summary?: string;
   scores?: Record<string, number>;
   issues?: Array<{ area: string; problem: string; fix: string }>;
@@ -53,13 +53,41 @@ export interface FeedbackResult {
 const Analyze = () => {
   const [result, setResult] = useState<FeedbackResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progressStep, setProgressStep] = useState(0);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+
+  const handleRetry = () => {
+    setAnalysisError(null);
+    setIsAnalyzing(false);
+    setProgressStep(0);
+  };
+
+  const handleStartAnalysis = (v: boolean) => {
+    setIsAnalyzing(v);
+    if (v) {
+      setAnalysisError(null);
+      setProgressStep(0);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="pt-28 pb-10 md:pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          {!result ? (
+          {result ? (
+            <FeedbackDisplay
+              result={result}
+              onReset={() => setResult(null)}
+              audioFile={result.audioFile}
+            />
+          ) : isAnalyzing || analysisError ? (
+            <AnalysisProgress
+              currentStep={progressStep}
+              error={analysisError}
+              onRetry={handleRetry}
+            />
+          ) : (
             <>
               <div className="text-center mb-8">
                 <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
@@ -72,15 +100,11 @@ const Analyze = () => {
               <TrackUploader
                 onResult={setResult}
                 isAnalyzing={isAnalyzing}
-                setIsAnalyzing={setIsAnalyzing}
+                setIsAnalyzing={handleStartAnalysis}
+                onProgressStep={setProgressStep}
+                onError={(msg) => setAnalysisError(msg)}
               />
             </>
-          ) : (
-            <FeedbackDisplay
-              result={result}
-              onReset={() => setResult(null)}
-              audioFile={result.audioFile}
-            />
           )}
         </div>
       </main>
