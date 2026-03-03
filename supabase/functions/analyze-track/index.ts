@@ -7,7 +7,39 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const metricsBlock = `
+const technicalMetricsBlock = `
+  "technical_metrics": {
+    "integrated_lufs": <number between -24 and -6>,
+    "short_term_lufs": <number between -24 and -6>,
+    "dynamic_range": <number between 2 and 18>,
+    "peak_dbtp": <number between -6 and 0>,
+    "stereo_correlation": <number between -0.2 and 1.0>,
+    "crest_factor": <number between 3 and 18>
+  },
+  "fullAnalysis": {
+    "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
+    "dynamics": "2-3 sentences analyzing dynamics processing, loudness, compression, and transient handling.",
+    "stereoSpace": "2-3 sentences analyzing the stereo image, spatial placement of elements, and use of width/depth.",
+    "frequencyBalance": "2-3 sentences analyzing the frequency spectrum, tonal balance, and how different frequency ranges interact."
+  },`;
+
+const musicalMetricsBlock = `
+  "technical_metrics": {
+    "integrated_lufs": <number between -24 and -6>,
+    "short_term_lufs": <number between -24 and -6>,
+    "dynamic_range": <number between 2 and 18>,
+    "peak_dbtp": <number between -6 and 0>,
+    "stereo_correlation": <number between -0.2 and 1.0>,
+    "crest_factor": <number between 3 and 18>
+  },
+  "fullAnalysis": {
+    "energyArc": "2-3 sentences analyzing how energy builds, peaks, and releases across the track. Does the arrangement create satisfying momentum?",
+    "sectionContrast": "2-3 sentences analyzing contrast between sections (verse/chorus/bridge). Do transitions feel impactful? Is there enough variation?",
+    "grooveContinuity": "2-3 sentences analyzing rhythmic feel, groove consistency, and how well rhythmic elements lock together throughout.",
+    "hookClarity": "2-3 sentences analyzing melodic hooks, memorable moments, and whether the main ideas land clearly and stick."
+  },`;
+
+const perceptionMetricsBlock = `
   "technical_metrics": {
     "integrated_lufs": <number between -24 and -6>,
     "short_term_lufs": <number between -24 and -6>,
@@ -30,7 +62,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of the mix quality",
-${metricsBlock}
+${technicalMetricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
@@ -54,7 +86,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of the musical quality",
-${metricsBlock}
+${musicalMetricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
@@ -78,7 +110,7 @@ Return valid JSON only (no markdown) with this exact structure:
 {
   "track_name": "<the track name provided>",
   "overall_impression": "1-2 sentence summary of commercial potential",
-${metricsBlock}
+${perceptionMetricsBlock}
   "top_priorities": [
     { "title": "short issue name", "why": "why this matters", "fix": "specific actionable fix" },
     { "title": "...", "why": "...", "fix": "..." },
