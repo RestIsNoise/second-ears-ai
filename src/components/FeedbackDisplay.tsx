@@ -339,10 +339,8 @@ const FeedbackDisplay = ({
                       <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">{item.why}</p>
                       <div className="mt-3.5">
                         <p className="text-sm text-foreground/80 leading-relaxed">
-                          <span className={`font-mono-brand text-[10px] uppercase tracking-wider mr-2 ${
-                            mode === "musical" ? "text-violet-400" : "text-muted-foreground"
-                          }`}>
-                            {mode === "musical" ? "Arrange" : "Fix"}
+                          <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                            Fix
                           </span>
                           {item.fix}
                         </p>
