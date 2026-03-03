@@ -169,15 +169,27 @@ serve(async (req) => {
     try {
       const cleaned = rawContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       feedback = JSON.parse(cleaned);
-    } catch {
-      feedback = {
-        track_name: trackName,
-        overall_impression: rawContent,
-        top_priorities: [],
-        what_works: [],
-        fix_one_thing: null,
-        timestamps: [],
-      };
+    } catch (parseErr) {
+      console.warn("Primary JSON parse failed, attempting extraction:", parseErr);
+      // Try to extract JSON object from the raw content
+      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          feedback = JSON.parse(jsonMatch[0]);
+        } catch {
+          console.error("Secondary JSON parse also failed");
+        }
+      }
+      if (!feedback) {
+        feedback = {
+          track_name: trackName,
+          overall_impression: rawContent,
+          top_priorities: [],
+          what_works: [],
+          fix_one_thing: null,
+          timestamps: [],
+        };
+      }
     }
 
     // Ensure track_name is set
