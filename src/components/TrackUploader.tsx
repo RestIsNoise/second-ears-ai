@@ -102,7 +102,10 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         what_works: (fb?.what_works || []).map((w: any) =>
           typeof w === "string"
             ? { title: w, detail: "" }
-            : { title: w.title ?? "", detail: w.detail ?? "" }
+            : {
+                title: w.title ?? "",
+                detail: w.detail || w.description || w.whyItWorks || w.body || "",
+              }
         ),
         fix_one_thing: fb?.fix_one_thing || undefined,
         timestamps: fb?.timestamps || [],

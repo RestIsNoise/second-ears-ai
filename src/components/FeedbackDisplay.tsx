@@ -296,14 +296,20 @@ const FeedbackDisplay = ({
             What works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {feedback.what_works.map((item, i) => (
-              <div key={i} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
-                <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
-                {item.detail && (
-                  <p className="text-sm text-muted-foreground max-w-[70ch] mt-2" style={{ lineHeight: 1.575 }}>{item.detail}</p>
-                )}
-              </div>
-            ))}
+            {feedback.what_works.map((item: any, i: number) => {
+              if (i === 0) console.log("WhatWorks item:", item);
+              const body =
+                item.detail || item.description || item.whyItWorks || item.body || "";
+
+              return (
+                <div key={i} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
+                  <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
+                  {body && (
+                    <p className="text-sm text-muted-foreground max-w-[70ch] mt-2" style={{ lineHeight: 1.575 }}>{body}</p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
