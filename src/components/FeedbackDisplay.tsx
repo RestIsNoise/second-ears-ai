@@ -339,8 +339,10 @@ const FeedbackDisplay = ({
                       <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">{item.why}</p>
                       <div className="mt-3.5">
                         <p className="text-sm text-foreground/80 leading-relaxed">
-                          <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
-                            Fix
+                          <span className={`font-mono-brand text-[10px] uppercase tracking-wider mr-2 ${
+                            mode === "musical" ? "text-violet-400" : "text-muted-foreground"
+                          }`}>
+                            {mode === "musical" ? "Arrange" : "Fix"}
                           </span>
                           {item.fix}
                         </p>
@@ -368,12 +370,20 @@ const FeedbackDisplay = ({
             Full analysis
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { key: "mixBalance" as const, label: "Mix Balance" },
-              { key: "dynamics" as const, label: "Dynamics & Loudness" },
-              { key: "stereoSpace" as const, label: "Stereo & Space" },
-              { key: "frequencyBalance" as const, label: "Frequency Balance" },
-            ].map(({ key, label }) =>
+            {(mode === "musical"
+              ? [
+                  { key: "energyArc" as const, label: "Energy Arc" },
+                  { key: "sectionContrast" as const, label: "Section Contrast" },
+                  { key: "grooveContinuity" as const, label: "Groove Continuity" },
+                  { key: "hookClarity" as const, label: "Hook Clarity" },
+                ]
+              : [
+                  { key: "mixBalance" as const, label: "Mix Balance" },
+                  { key: "dynamics" as const, label: "Dynamics & Loudness" },
+                  { key: "stereoSpace" as const, label: "Stereo & Space" },
+                  { key: "frequencyBalance" as const, label: "Frequency Balance" },
+                ]
+            ).map(({ key, label }) =>
               feedback.fullAnalysis?.[key] ? (
                 <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
                   <div className="flex items-start justify-between gap-3 mb-3">
