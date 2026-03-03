@@ -14,6 +14,7 @@ export interface TechnicalMetrics {
   peak_dbtp?: number;
   stereo_correlation?: number;
   crest_factor?: number;
+  sub_kick_ratio?: number;
 }
 
 export interface FullAnalysis {

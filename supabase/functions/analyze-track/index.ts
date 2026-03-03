@@ -14,7 +14,8 @@ const technicalMetricsBlock = `
     "dynamic_range": <number between 2 and 18>,
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
-    "crest_factor": <number between 3 and 18>
+    "crest_factor": <number between 3 and 18>,
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
   },
   "fullAnalysis": {
     "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
@@ -30,7 +31,8 @@ const musicalMetricsBlock = `
     "dynamic_range": <number between 2 and 18>,
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
-    "crest_factor": <number between 3 and 18>
+    "crest_factor": <number between 3 and 18>,
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
   },
   "fullAnalysis": {
     "energyArc": "2-3 sentences analyzing how energy builds, peaks, and releases across the track. Does the arrangement create satisfying momentum?",
@@ -46,7 +48,8 @@ const perceptionMetricsBlock = `
     "dynamic_range": <number between 2 and 18>,
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
-    "crest_factor": <number between 3 and 18>
+    "crest_factor": <number between 3 and 18>,
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
   },
   "fullAnalysis": {
     "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
