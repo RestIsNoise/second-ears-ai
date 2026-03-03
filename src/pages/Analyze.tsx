@@ -27,12 +27,23 @@ export interface FeedbackData {
   track_name?: string;
   overallImpression?: string;
   overall_impression?: string;
-  priorities?: Array<{ issue: string; why: string; fix: string }>;
+  // Technical mode
+  priorities?: Array<{ issue: string; whyItMatters: string; suggestedFix: string }>;
   top_priorities?: Array<{ title: string; why: string; fix: string }>;
   whatWorks?: Array<{ title: string; detail: string }>;
   what_works?: Array<{ title: string; detail: string }>;
+  ifFixOneThing?: { title: string; why: string; how: string };
   fixOneThingToday?: { title: string; why: string; how: string };
   fix_one_thing?: { title: string; why: string; how: string };
+  // Musical mode
+  arrangementNotes?: Array<{ section: string; timestamp?: number; observation: string; suggestion: string }>;
+  whatLands?: Array<{ title: string; detail?: string }>;
+  focusHere?: { title: string; why: string; how: string };
+  // Perception mode
+  systemNotes?: Array<{ timestamp?: number; observation: string; translationRisk: string; fix: string }>;
+  whatTranslates?: Array<{ title: string; detail?: string }>;
+  urgentFix?: { title: string; why: string; how: string };
+  // Shared
   timestamps?: Array<{ time: number; label: string }>;
   technical_metrics?: TechnicalMetrics;
   fullAnalysis?: FullAnalysis;

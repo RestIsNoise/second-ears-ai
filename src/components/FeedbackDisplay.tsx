@@ -15,6 +15,18 @@ const modeLabels: Record<string, string> = {
   perception: "Perception",
 };
 
+const modeWhatWorksLabel: Record<string, string> = {
+  technical: "What works",
+  musical: "What lands",
+  perception: "What translates",
+};
+
+const modeFixOneLabel: Record<string, string> = {
+  technical: "If you fix only one thing today",
+  musical: "Focus here",
+  perception: "Urgent fix",
+};
+
 function parseTimeSec(val: unknown): number {
   if (typeof val === "number" && Number.isFinite(val)) return val;
   if (typeof val === "string") {
@@ -382,7 +394,7 @@ const FeedbackDisplay = ({
       {feedback.what_works && feedback.what_works.length > 0 && (
         <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
-            What works
+            {modeWhatWorksLabel[mode] || "What works"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {feedback.what_works.map((item: any, i: number) => {
@@ -407,7 +419,7 @@ const FeedbackDisplay = ({
       {feedback.fix_one_thing && (
         <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
-            If you fix only one thing today
+            {modeFixOneLabel[mode] || "If you fix only one thing today"}
           </h2>
           <div className="rounded-xl border-2 border-foreground/10 p-8 md:p-10 bg-secondary/20 max-w-[70ch]">
             {feedback.fix_one_thing.how && !feedback.fix_one_thing.why ? (
