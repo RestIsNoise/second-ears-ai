@@ -384,12 +384,7 @@ const FeedbackDisplay = ({
             ).map(({ key, label }) =>
               feedback.fullAnalysis?.[key] ? (
                 <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <h3 className="text-base font-semibold tracking-tight">{label}</h3>
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider border border-border-subtle text-muted-foreground/60">
-                      Medium
-                    </span>
-                  </div>
+                  <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
                   <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>{feedback.fullAnalysis[key]}</p>
                 </div>
               ) : null
