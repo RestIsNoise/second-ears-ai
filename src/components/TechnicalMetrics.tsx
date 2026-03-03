@@ -32,6 +32,12 @@ function crestStatus(v: number): Status {
   return { label: "Brick-Walled", color: "red" };
 }
 
+function subKickStatus(v: number): Status {
+  if (v >= 0.8 && v <= 1.2) return { label: "Balanced", color: "green" };
+  if (v < 0.5 || v > 1.5) return { label: v < 0.5 ? "Kick Dominant" : "Sub Heavy", color: "red" };
+  return { label: v < 0.8 ? "Kick Dominant" : "Sub Heavy", color: "yellow" };
+}
+
 const statusColors = {
   green: { badge: "bg-emerald-500/15 text-emerald-400", bar: "bg-emerald-500" },
   yellow: { badge: "bg-amber-500/15 text-amber-400", bar: "bg-amber-500" },
@@ -149,6 +155,72 @@ const CorrelationCard = ({ value }: { value: number }) => {
   );
 };
 
+/** Sub/Kick Ratio balance meter – spans full width */
+const SubKickCard = ({ value }: { value: number }) => {
+  const status = subKickStatus(value);
+  const colors = statusColors[status.color];
+  // Map 0..2 → 0..100
+  const pct = Math.max(0, Math.min(100, (value / 2) * 100));
+
+  return (
+    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs text-muted-foreground tracking-wide">Sub / Kick Ratio</p>
+        </div>
+        <span
+          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
+        >
+          {status.label}
+        </span>
+      </div>
+
+      {/* Balance meter */}
+      <div className="mt-4">
+        {/* Pole labels */}
+        <div className="flex justify-between mb-1.5">
+          <span
+            className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            Kick
+          </span>
+          <span
+            className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            Sub
+          </span>
+        </div>
+
+        {/* Track */}
+        <div className="relative h-2 rounded-full bg-muted/40 overflow-hidden">
+          {/* Green center zone (0.8–1.2 → 40%–60%) */}
+          <div
+            className="absolute inset-y-0 bg-emerald-500/10 rounded-full"
+            style={{ left: "40%", width: "20%" }}
+          />
+          {/* Indicator dot */}
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-all duration-700 ease-out ${colors.bar}`}
+            style={{ left: `${pct}%`, marginLeft: "-6px" }}
+          />
+        </div>
+      </div>
+
+      {/* Value readout */}
+      <div className="mt-3 text-center">
+        <span
+          className="text-lg font-bold text-foreground tabular-nums tracking-tight"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          {value.toFixed(2)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 interface Props {
   metrics: TechnicalMetricsType;
 }
@@ -160,7 +232,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
     metrics.dynamic_range !== undefined ||
     metrics.peak_dbtp !== undefined ||
     metrics.stereo_correlation !== undefined ||
-    metrics.crest_factor !== undefined;
+    metrics.crest_factor !== undefined ||
+    metrics.sub_kick_ratio !== undefined;
 
   if (!hasAny) return null;
 
@@ -171,6 +244,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
     metrics.peak_dbtp,
     metrics.stereo_correlation,
     metrics.crest_factor,
+    metrics.sub_kick_ratio,
   ].filter((v) => v !== undefined).length;
 
   const isPartial = definedCount < 4;
@@ -238,6 +312,9 @@ const TechnicalMetrics = ({ metrics }: Props) => {
             max={20}
             status={crestStatus(metrics.crest_factor)}
           />
+        )}
+        {metrics.sub_kick_ratio !== undefined && (
+          <SubKickCard value={metrics.sub_kick_ratio} />
         )}
       </div>
     </section>
