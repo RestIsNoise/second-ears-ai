@@ -91,15 +91,50 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
       const fb = result?.feedback;
 
+      // Normalize mode-specific schemas into common internal format
+      let rawPriorities: any[] = [];
+      let rawWorks: any[] = [];
+      let rawFixOne: any = undefined;
+
+      if (mode === "musical") {
+        rawPriorities = (fb?.arrangementNotes || fb?.top_priorities || []).map((p: any) => ({
+          title: p.section || p.title || "",
+          why: p.observation || p.why || "",
+          fix: p.suggestion || p.fix || "",
+          time: p.timestamp ?? p.time,
+        }));
+        rawWorks = fb?.whatLands || fb?.what_works || [];
+        rawFixOne = fb?.focusHere || fb?.fix_one_thing;
+      } else if (mode === "perception") {
+        rawPriorities = (fb?.systemNotes || fb?.top_priorities || []).map((p: any) => ({
+          title: p.observation || p.title || "",
+          why: p.translationRisk || p.why || "",
+          fix: p.fix || "",
+          time: p.timestamp ?? p.time,
+        }));
+        rawWorks = fb?.whatTranslates || fb?.what_works || [];
+        rawFixOne = fb?.urgentFix || fb?.fix_one_thing;
+      } else {
+        // Technical (default)
+        rawPriorities = (fb?.priorities || fb?.top_priorities || []).map((p: any) => ({
+          title: p.issue || p.title || "",
+          why: p.whyItMatters || p.why || "",
+          fix: p.suggestedFix || p.fix || "",
+          time: p.timestamp ?? p.time,
+        }));
+        rawWorks = fb?.whatWorks || fb?.what_works || [];
+        rawFixOne = fb?.ifFixOneThing || fb?.fix_one_thing;
+      }
+
       const normalized = {
         track_name: fb?.track_name || file.name,
-        overall_impression: fb?.overall_impression || "",
-        top_priorities: (fb?.top_priorities || []).map((p: any) => ({
+        overall_impression: fb?.overallImpression || fb?.overall_impression || "",
+        top_priorities: rawPriorities.map((p: any) => ({
           title: p.title,
           why: p.why,
           fix: p.fix,
         })),
-        what_works: (fb?.what_works || []).map((w: any) =>
+        what_works: (rawWorks || []).map((w: any) =>
           typeof w === "string"
             ? { title: w, detail: "" }
             : {
@@ -107,8 +142,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 detail: w.detail || w.description || w.whyItWorks || w.body || "",
               }
         ),
-        fix_one_thing: fb?.fix_one_thing || undefined,
-        timestamps: fb?.timestamps || [],
+        fix_one_thing: rawFixOne
+          ? {
+              title: rawFixOne.title || "",
+              why: rawFixOne.why || rawFixOne.whyItMatters || "",
+              how: rawFixOne.how || rawFixOne.suggestion || rawFixOne.fix || "",
+            }
+          : undefined,
+        timestamps: rawPriorities
+          .map((p: any, i: number) => {
+            const t = p.time;
+            if (t !== undefined && t !== null) return { time: t, label: p.title };
+            return null;
+          })
+          .filter(Boolean) as Array<{ time: number; label: string }>,
         technical_metrics: fb?.technical_metrics || undefined,
         fullAnalysis: fb?.fullAnalysis || undefined,
         focus_response: fb?.focus_response || undefined,
