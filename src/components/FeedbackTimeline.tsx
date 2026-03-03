@@ -1,4 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { Copy, Check } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import type { FeedbackItem } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -14,6 +16,39 @@ const severityDot: Record<string, string> = {
   low: "bg-foreground/20",
 };
 
+const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const text = [
+      item.title,
+      item.observation ? `Why: ${item.observation}` : "",
+      item.fix ? `Fix: ${item.fix}` : "",
+    ].filter(Boolean).join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast({ title: "Copied", duration: 1500 });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: "Copy failed", variant: "destructive", duration: 1500 });
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+      title="Copy fix to clipboard"
+    >
+      {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+      <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
+    </button>
+  );
+};
+
 interface Props {
   items: FeedbackItem[];
   activeItemId: string | null;
@@ -24,7 +59,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // Auto-scroll to active item
   useEffect(() => {
     if (!activeItemId) return;
     const el = itemRefs.current.get(activeItemId);
@@ -73,9 +107,12 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold tracking-tight text-foreground leading-snug">
-                  {item.title}
-                </h3>
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-sm font-semibold tracking-tight text-foreground leading-snug">
+                    {item.title}
+                  </h3>
+                  <CopyFixInline item={item} />
+                </div>
                 {item.observation && (
                   <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">
                     {item.observation}
