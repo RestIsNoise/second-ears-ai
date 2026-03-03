@@ -1,131 +1,118 @@
-import { useEffect } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import LegalPageShell from "@/components/LegalPageShell";
 
-const Privacy = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+const P = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">{children}</p>
+);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="pt-14 md:pt-14 pb-12 px-4 md:px-6">
-        <div className="max-w-[760px] mx-auto">
-          <div className="pt-5 md:pt-10 mb-10 md:mb-14">
-            <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-              Legal
-            </p>
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2">
-              Privacy Policy
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Last updated: March 2026
-            </p>
-          </div>
-
-          <div className="space-y-10 md:space-y-12">
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                What we collect
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                When you use SecondEars, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
-              </p>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground mt-4">
-                We do not collect personal information beyond what is necessary for authentication and billing (email address, payment details via Stripe).
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                How we use data
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                Your audio files are processed solely to generate mix feedback. They are not shared with third parties, used for advertising, or included in any AI training datasets. Analysis results are stored so you can access them later from your dashboard.
-              </p>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground mt-4">
-                Aggregated, anonymous usage metrics (e.g. total analyses run, average file duration) may be used internally to monitor service health and plan capacity. These metrics never contain identifiable information.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                Audio files &amp; retention
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                Uploaded tracks are stored securely and encrypted at rest. You can delete your tracks at any time from your account. Files are retained only as long as needed to deliver your analysis results.
-              </p>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground mt-4">
-                If you delete your account, all associated data — including uploaded files, analysis results, and personal information — is permanently removed within 30 days. Temporary processing copies are purged immediately after analysis completes.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                Third-party processors
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                SecondEars relies on a small number of infrastructure providers to operate:
-              </p>
-              <ul className="mt-3 space-y-2 text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground list-disc list-inside">
-                <li>
-                  <span className="text-foreground font-medium">Supabase</span> — authentication, database, and file storage
-                </li>
-                <li>
-                  <span className="text-foreground font-medium">Railway</span> — backend compute and hosting
-                </li>
-                <li>
-                  <span className="text-foreground font-medium">AI providers</span> — audio analysis processing (your files are sent for analysis only, not retained)
-                </li>
-                <li>
-                  <span className="text-foreground font-medium">Stripe</span> — payment processing (we never see or store your full card details)
-                </li>
-              </ul>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground mt-4">
-                All providers are contractually bound to protect your data and are not permitted to use it for their own purposes. We do not sell or share your personal information.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                Your rights
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                You have the right to access, correct, or delete your personal data at any time. You can also request a full export of your data or ask us to stop processing it entirely.
-              </p>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground mt-4">
-                We respond to all privacy-related requests within 14 business days. If you're located in the EU, you also have rights under GDPR including data portability and the right to lodge a complaint with a supervisory authority.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-semibold text-foreground tracking-tight mb-3">
-                Contact
-              </h2>
-              <p className="text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground">
-                For any privacy-related questions or requests, reach us at{" "}
-                <a
-                  href="mailto:hello@secondears.io"
-                  className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
-                >
-                  hello@secondears.io
-                </a>
-                .
-              </p>
-            </section>
-
-            <p className="text-xs text-muted-foreground/50 pt-4">
-              This policy may be updated from time to time. Significant changes will be communicated via email.
-            </p>
-          </div>
+const sections = [
+  {
+    id: "collect",
+    title: "What we collect",
+    content: (
+      <>
+        <P>
+          When you use SecondEars, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
+        </P>
+        <div className="mt-4">
+          <P>
+            We do not collect personal information beyond what is necessary for authentication and billing (email address, payment details via Stripe).
+          </P>
         </div>
-      </main>
+      </>
+    ),
+  },
+  {
+    id: "use",
+    title: "How we use data",
+    content: (
+      <>
+        <P>
+          Your audio files are processed solely to generate mix feedback. They are not shared with third parties, used for advertising, or included in any AI training datasets. Analysis results are stored so you can access them later from your dashboard.
+        </P>
+        <div className="mt-4">
+          <P>
+            Aggregated, anonymous usage metrics (e.g. total analyses run, average file duration) may be used internally to monitor service health and plan capacity. These metrics never contain identifiable information.
+          </P>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "audio",
+    title: "Audio files & retention",
+    content: (
+      <>
+        <P>
+          Uploaded tracks are stored securely and encrypted at rest. You can delete your tracks at any time from your account. Files are retained only as long as needed to deliver your analysis results.
+        </P>
+        <div className="mt-4">
+          <P>
+            If you delete your account, all associated data — including uploaded files, analysis results, and personal information — is permanently removed within 30 days. Temporary processing copies are purged immediately after analysis completes.
+          </P>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "third-party",
+    title: "Third-party processors",
+    content: (
+      <>
+        <P>SecondEars relies on a small number of infrastructure providers to operate:</P>
+        <ul className="mt-3 space-y-2 text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground list-disc list-inside">
+          <li><span className="text-foreground font-medium">Supabase</span> — authentication, database, and file storage</li>
+          <li><span className="text-foreground font-medium">Railway</span> — backend compute and hosting</li>
+          <li><span className="text-foreground font-medium">AI providers</span> — audio analysis processing (your files are sent for analysis only, not retained)</li>
+          <li><span className="text-foreground font-medium">Stripe</span> — payment processing (we never see or store your full card details)</li>
+        </ul>
+        <div className="mt-4">
+          <P>
+            All providers are contractually bound to protect your data and are not permitted to use it for their own purposes. We do not sell or share your personal information.
+          </P>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "rights",
+    title: "Your rights",
+    content: (
+      <>
+        <P>
+          You have the right to access, correct, or delete your personal data at any time. You can also request a full export of your data or ask us to stop processing it entirely.
+        </P>
+        <div className="mt-4">
+          <P>
+            We respond to all privacy-related requests within 14 business days. If you're located in the EU, you also have rights under GDPR including data portability and the right to lodge a complaint with a supervisory authority.
+          </P>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "contact",
+    title: "Contact",
+    content: (
+      <P>
+        For any privacy-related questions or requests, reach us at{" "}
+        <a
+          href="mailto:hello@secondears.io"
+          className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors"
+        >
+          hello@secondears.io
+        </a>
+        .
+      </P>
+    ),
+  },
+];
 
-      <Footer />
-    </div>
-  );
-};
+const Privacy = () => (
+  <LegalPageShell
+    title="Privacy Policy"
+    sections={sections}
+    footnote="This policy may be updated from time to time. Significant changes will be communicated via email."
+  />
+);
 
 export default Privacy;
