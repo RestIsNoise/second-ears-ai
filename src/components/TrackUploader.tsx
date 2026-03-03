@@ -89,7 +89,26 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
       console.log("Full API response:", JSON.stringify(result, null, 2));
 
-      const fb = result?.feedback;
+      let fb = result?.feedback;
+
+      // Safety net: if overall_impression contains a JSON string (edge function parse failure),
+      // try to re-parse it and use that as the actual feedback object
+      if (
+        fb &&
+        typeof fb.overall_impression === "string" &&
+        fb.overall_impression.trim().startsWith("{") &&
+        (!fb.top_priorities || fb.top_priorities.length === 0)
+      ) {
+        try {
+          const reparsed = JSON.parse(fb.overall_impression);
+          if (reparsed && typeof reparsed === "object" && reparsed.overall_impression) {
+            console.log("[TrackUploader] Re-parsed feedback from overall_impression string");
+            fb = reparsed;
+          }
+        } catch {
+          console.warn("[TrackUploader] overall_impression looks like JSON but failed to parse");
+        }
+      }
 
       // Normalize mode-specific schemas into common internal format
       let rawPriorities: any[] = [];
