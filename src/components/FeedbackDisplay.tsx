@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Copy, Check } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
@@ -14,7 +15,6 @@ const modeLabels: Record<string, string> = {
   perception: "Perception",
 };
 
-/** Parse a time value that could be a number (seconds) or a string like "0:30" or "1:15" */
 function parseTimeSec(val: unknown): number {
   if (typeof val === "number" && Number.isFinite(val)) return val;
   if (typeof val === "string") {
@@ -26,7 +26,6 @@ function parseTimeSec(val: unknown): number {
   return NaN;
 }
 
-/** Convert API feedback data into FeedbackItems for the timeline */
 function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
   const { feedback, mode } = result;
   const items: FeedbackItem[] = [];
@@ -71,6 +70,34 @@ function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
   return items;
 }
 
+/** Small copy button component */
+const CopyFixButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast({ title: "Copied", duration: 1500 });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: "Copy failed", variant: "destructive", duration: 1500 });
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+      title="Copy fix to clipboard"
+    >
+      {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+      <span>{copied ? "Copied" : "Copy fix"}</span>
+    </button>
+  );
+};
+
 const FeedbackDisplay = ({
   result,
   onReset,
@@ -85,17 +112,14 @@ const FeedbackDisplay = ({
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState<number>(0);
 
-  // Extract items with real timestamps first
   const rawTimelineItems = useMemo(() => extractTimelineItems(result), [result]);
 
-  // If no timeline items but we have priorities + duration, auto-generate timestamps
   const timelineItems = useMemo(() => {
     if (rawTimelineItems.length > 0) return rawTimelineItems;
     if (audioDuration <= 0 || !feedback.top_priorities || feedback.top_priorities.length === 0) return [];
 
     const priorities = feedback.top_priorities.slice(0, 8);
     const count = priorities.length;
-    // Place markers evenly across 15%..90% of duration
     const startPct = 0.15;
     const endPct = 0.90;
     const step = count > 1 ? (endPct - startPct) / (count - 1) : 0;
@@ -120,7 +144,6 @@ const FeedbackDisplay = ({
       label: item.title,
       severity: item.severity,
     }));
-    // Debug log
     if (m.length > 0) {
       console.log(`[SecondEars] markers.length=${m.length}, first=`, m[0]);
     } else {
@@ -145,11 +168,9 @@ const FeedbackDisplay = ({
     []
   );
 
-  // During playback, find nearest marker to current time
   const handleTimeUpdate = useCallback(
     (time: number) => {
       if (timelineItems.length === 0) return;
-      // Find the most recent marker the playhead has passed
       let nearest: FeedbackItem | null = null;
       for (const item of timelineItems) {
         if (item.timestampSec <= time + 0.5) {
@@ -162,6 +183,24 @@ const FeedbackDisplay = ({
     },
     [timelineItems, activeItemId]
   );
+
+  // Executive summary data
+  const topIssue = feedback.top_priorities?.[0]?.title;
+  const biggestWin = feedback.what_works?.[0]?.title;
+  const metrics = feedback.technical_metrics;
+  const releaseReadiness = useMemo(() => {
+    if (!metrics) return null;
+    const lufs = metrics.integrated_lufs;
+    const peak = metrics.peak_dbtp;
+    if (lufs !== undefined && peak !== undefined) {
+      if (lufs >= -14 && lufs <= -9 && peak < -1) return "Ready";
+      if ((lufs >= -16 && lufs <= -7) && peak < 0) return "Almost there";
+      return "Needs work";
+    }
+    return null;
+  }, [metrics]);
+
+  const hasExecutiveSummary = topIssue || biggestWin || releaseReadiness;
 
   return (
     <div className="animate-fade-up">
@@ -188,7 +227,7 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
-      {/* Waveform */}
+      {/* Waveform + A/B placeholder */}
       {audioFile && (
         <div className="mt-8 md:mt-10">
           <WaveformPlayer
@@ -200,21 +239,60 @@ const FeedbackDisplay = ({
             onTimeUpdate={handleTimeUpdate}
             onDurationReady={setAudioDuration}
           />
+          {/* A/B Compare placeholder */}
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center rounded-md border border-border-subtle overflow-hidden">
+              <span className="px-2.5 py-1 text-[11px] font-medium text-foreground bg-secondary/60">
+                A
+              </span>
+              <span
+                className="px-2.5 py-1 text-[11px] text-muted-foreground/40 cursor-not-allowed"
+                title="Upload updated bounce to compare"
+              >
+                B
+              </span>
+            </div>
+            <span className="text-[10px] text-muted-foreground/40">Original</span>
+          </div>
         </div>
       )}
 
       {/* Overall Impression */}
       {feedback.overall_impression && (
-        <section className="mt-10">
+        <section className="mt-8">
           <p className="text-lg md:text-xl font-medium leading-relaxed tracking-tight max-w-[70ch]">
             {feedback.overall_impression}
           </p>
         </section>
       )}
 
+      {/* Executive Summary Strip */}
+      {hasExecutiveSummary && (
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+          {topIssue && (
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Top issue</span>
+              <span className="text-[13px] text-foreground">{topIssue}</span>
+            </div>
+          )}
+          {biggestWin && (
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Biggest win</span>
+              <span className="text-[13px] text-foreground">{biggestWin}</span>
+            </div>
+          )}
+          {releaseReadiness && (
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Release</span>
+              <span className="text-[13px] text-foreground">{releaseReadiness}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Timeline Feedback */}
       {hasTimeline && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Timeline feedback
           </h2>
@@ -228,46 +306,52 @@ const FeedbackDisplay = ({
 
       {/* Fallback: Top Priorities without timestamps */}
       {!hasTimeline && feedback.top_priorities && feedback.top_priorities.length > 0 && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Top priorities
           </h2>
           <div className="space-y-[18px]">
-            {feedback.top_priorities.map((item, i) => (
-              <div key={i} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background">
-                <div className="flex items-start gap-5">
-                  <span className="font-mono-brand text-2xl text-muted-foreground/40 font-medium leading-none pt-0.5">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="flex-1 max-w-[70ch]">
-                    <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">{item.why}</p>
-                    <div className="mt-3.5">
-                      <p className="text-sm text-foreground/80 leading-relaxed">
-                        <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
-                          Fix
-                        </span>
-                        {item.fix}
-                      </p>
+            {feedback.top_priorities.map((item, i) => {
+              const copyText = `${item.title}\nWhy: ${item.why}\nFix: ${item.fix}`;
+              return (
+                <div key={i} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background">
+                  <div className="flex items-start gap-5">
+                    <span className="font-mono-brand text-2xl text-muted-foreground/40 font-medium leading-none pt-0.5">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex-1 max-w-[70ch]">
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
+                        <CopyFixButton text={copyText} />
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">{item.why}</p>
+                      <div className="mt-3.5">
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                          <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
+                            Fix
+                          </span>
+                          {item.fix}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}
 
       {/* Technical Metrics */}
       {feedback.technical_metrics && (
-        <div className="mt-8 md:mt-12">
+        <div className="mt-8 md:mt-10">
           <TechnicalMetrics metrics={feedback.technical_metrics} />
         </div>
       )}
 
       {/* Full Analysis */}
       {feedback.fullAnalysis && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Full analysis
           </h2>
@@ -280,7 +364,12 @@ const FeedbackDisplay = ({
             ].map(({ key, label }) =>
               feedback.fullAnalysis?.[key] ? (
                 <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
-                  <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <h3 className="text-base font-semibold tracking-tight">{label}</h3>
+                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider border border-border-subtle text-muted-foreground/60">
+                      Medium
+                    </span>
+                  </div>
                   <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>{feedback.fullAnalysis[key]}</p>
                 </div>
               ) : null
@@ -291,7 +380,7 @@ const FeedbackDisplay = ({
 
       {/* What Works */}
       {feedback.what_works && feedback.what_works.length > 0 && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             What works
           </h2>
@@ -316,20 +405,28 @@ const FeedbackDisplay = ({
 
       {/* Fix One Thing */}
       {feedback.fix_one_thing && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             If you fix only one thing today
           </h2>
           <div className="rounded-xl border-2 border-foreground/10 p-8 md:p-10 bg-secondary/20 max-w-[70ch]">
             {feedback.fix_one_thing.how && !feedback.fix_one_thing.why ? (
-              <p className="text-base text-foreground leading-relaxed">
-                {feedback.fix_one_thing.how}
-              </p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-base text-foreground leading-relaxed">
+                  {feedback.fix_one_thing.how}
+                </p>
+                <CopyFixButton text={feedback.fix_one_thing.how} />
+              </div>
             ) : (
               <>
-                <h3 className="text-xl font-bold tracking-tight mb-3">
-                  {feedback.fix_one_thing.title}
-                </h3>
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-xl font-bold tracking-tight mb-3">
+                    {feedback.fix_one_thing.title}
+                  </h3>
+                  <CopyFixButton
+                    text={`${feedback.fix_one_thing.title}\nWhy: ${feedback.fix_one_thing.why || ""}\nHow: ${feedback.fix_one_thing.how || ""}`}
+                  />
+                </div>
                 {feedback.fix_one_thing.why && (
                   <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                     {feedback.fix_one_thing.why}
@@ -349,7 +446,7 @@ const FeedbackDisplay = ({
 
       {/* Legacy fallback */}
       {feedback.issues && feedback.issues.length > 0 && !feedback.top_priorities && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Issues & fixes
           </h2>
@@ -370,9 +467,9 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Your Focus — bottom of results */}
+      {/* Your Focus */}
       {result.context && (
-        <section className="mt-8 md:mt-12">
+        <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Your focus
           </h2>

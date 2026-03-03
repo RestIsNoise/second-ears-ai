@@ -164,11 +164,27 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
   if (!hasAny) return null;
 
+  const definedCount = [
+    metrics.integrated_lufs,
+    metrics.short_term_lufs,
+    metrics.dynamic_range,
+    metrics.peak_dbtp,
+    metrics.stereo_correlation,
+    metrics.crest_factor,
+  ].filter((v) => v !== undefined).length;
+
+  const isPartial = definedCount < 4;
+
   return (
     <section>
-      <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
-        Technical metrics
-      </h2>
+      <div className="flex items-baseline justify-between mb-5">
+        <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+          Technical metrics
+        </h2>
+        <span className="font-mono-brand text-[10px] text-muted-foreground/40 tracking-wide">
+          {isPartial ? "Partial measurement" : "Measured on full track"}
+        </span>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {metrics.integrated_lufs !== undefined && (
           <MetricCard
