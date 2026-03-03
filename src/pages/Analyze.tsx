@@ -21,6 +21,11 @@ export interface FullAnalysis {
   dynamics?: string;
   stereoSpace?: string;
   frequencyBalance?: string;
+  // Musical mode
+  energyArc?: string;
+  sectionContrast?: string;
+  grooveContinuity?: string;
+  hookClarity?: string;
 }
 
 export interface FeedbackData {

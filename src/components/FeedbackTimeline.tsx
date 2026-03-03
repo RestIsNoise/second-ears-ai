@@ -122,13 +122,17 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
                   <div className="mt-3.5">
                     <p className="text-sm text-foreground/80 leading-relaxed">
                       <span
-                        className="text-muted-foreground uppercase tracking-wider mr-2"
+                        className={`uppercase tracking-wider mr-2 ${
+                          item.mode === "musical"
+                            ? "text-violet-400"
+                            : "text-muted-foreground"
+                        }`}
                         style={{
                           fontFamily: "'IBM Plex Mono', monospace",
                           fontSize: 10,
                         }}
                       >
-                        Fix
+                        {item.mode === "musical" ? "Arrange" : "Fix"}
                       </span>
                       {item.fix}
                     </p>

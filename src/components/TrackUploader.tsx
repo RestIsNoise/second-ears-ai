@@ -119,7 +119,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         rawPriorities = (fb?.arrangementNotes || fb?.top_priorities || []).map((p: any) => ({
           title: p.section || p.title || "",
           why: p.observation || p.why || "",
-          fix: p.suggestion || p.fix || "",
+          fix: p.arrangement_move || p.suggestion || p.fix || "",
           time: p.timestamp ?? p.time,
         }));
         rawWorks = fb?.whatLands || fb?.what_works || [];
