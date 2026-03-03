@@ -1,10 +1,16 @@
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const Privacy = () => (
-  <div className="min-h-screen bg-background">
-    <Header />
-    <main className="pt-28 pb-16 px-6">
+const Privacy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="pt-20 pb-10 px-6">
       <div className="max-w-2xl mx-auto">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
           Legal
@@ -54,9 +60,10 @@ const Privacy = () => (
           </p>
         </div>
       </div>
-    </main>
-    <Footer />
-  </div>
-);
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 export default Privacy;
