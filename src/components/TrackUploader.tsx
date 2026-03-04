@@ -3,7 +3,41 @@ import { Upload, Music, Activity, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
+import type { ListeningMode, FeedbackResult, TechnicalMetrics } from "@/pages/Analyze";
+
+/** Map backend metrics shape to internal TechnicalMetrics */
+function normalizeMetrics(fb: any): TechnicalMetrics | undefined {
+  // If already in internal shape
+  if (fb?.technical_metrics) return fb.technical_metrics;
+
+  // Backend sends flat fields: integratedLoudness, rms, dynamicRange, stereoWidth, etc.
+  const il = fb?.integratedLoudness ?? fb?.integrated_lufs;
+  const dr = fb?.dynamicRange ?? fb?.dynamic_range;
+  const sw = fb?.stereoWidth ?? fb?.stereo_correlation;
+  const skr = fb?.subKickRatio ?? fb?.sub_kick_ratio;
+  const cf = fb?.transientDensity ?? fb?.crest_factor;
+  const rms = fb?.rms;
+  const peak = fb?.peak_dbtp ?? fb?.peakDbtp;
+
+  const hasAny = il != null || dr != null || sw != null || skr != null || cf != null || rms != null || peak != null;
+  if (!hasAny) return undefined;
+
+  const toNum = (v: unknown): number | undefined => {
+    if (v == null) return undefined;
+    const n = typeof v === "number" ? v : parseFloat(String(v));
+    return Number.isFinite(n) ? n : undefined;
+  };
+
+  return {
+    integrated_lufs: toNum(il),
+    short_term_lufs: toNum(rms), // map RMS as short-term proxy
+    dynamic_range: toNum(dr),
+    peak_dbtp: toNum(peak),
+    stereo_correlation: toNum(sw),
+    crest_factor: toNum(cf),
+    sub_kick_ratio: toNum(skr),
+  };
+}
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
@@ -180,7 +214,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             return null;
           })
           .filter(Boolean) as Array<{ time: number; label: string }>,
-        technical_metrics: fb?.technical_metrics || undefined,
+        technical_metrics: normalizeMetrics(fb),
         fullAnalysis: fb?.fullAnalysis || undefined,
         focus_response: fb?.focus_response || undefined,
       };
