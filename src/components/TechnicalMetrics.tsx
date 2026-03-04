@@ -46,16 +46,17 @@ const statusColors = {
 
 interface MetricCardProps {
   label: string;
-  value: number;
+  value: number | null;
   unit: string;
   min: number;
   max: number;
-  status: Status;
+  status: Status | null;
 }
 
 const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) => {
-  const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
-  const colors = statusColors[status.color];
+  const isMissing = value === null || status === null;
+  const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+  const colors = isMissing ? null : statusColors[status.color];
 
   return (
     <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
@@ -66,28 +67,34 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
               className="text-2xl font-bold text-foreground tabular-nums tracking-tight"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
-              {value.toFixed(1)}
+              {isMissing ? "—" : value.toFixed(1)}
             </span>
-            <span
-              className="text-sm text-muted-foreground font-medium"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-            >
-              {unit}
-            </span>
+            {!isMissing && (
+              <span
+                className="text-sm text-muted-foreground font-medium"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                {unit}
+              </span>
+            )}
           </div>
           <p className="text-xs text-muted-foreground mt-1 tracking-wide">{label}</p>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
+          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${
+            isMissing ? "bg-muted text-muted-foreground/50" : colors!.badge
+          }`}
         >
-          {status.label}
+          {isMissing ? "N/A" : status.label}
         </span>
       </div>
       <div className="h-1 rounded-full bg-muted/50 overflow-hidden mt-4">
-        <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${colors.bar}`}
-          style={{ width: `${pct}%`, opacity: 0.75 }}
-        />
+        {!isMissing && (
+          <div
+            className={`h-full rounded-full transition-all duration-700 ease-out ${colors!.bar}`}
+            style={{ width: `${pct}%`, opacity: 0.75 }}
+          />
+        )}
       </div>
     </div>
   );
@@ -221,6 +228,10 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
   if (!hasAny) return null;
 
+  if (metrics.peak_dbtp === undefined) {
+    console.warn("[metrics] peak dBTP missing, rendering placeholder card");
+  }
+
   const definedCount = [
     metrics.integrated_lufs,
     metrics.short_term_lufs,
@@ -228,10 +239,16 @@ const TechnicalMetrics = ({ metrics }: Props) => {
     metrics.peak_dbtp,
     metrics.stereo_correlation,
     metrics.crest_factor,
-    metrics.sub_kick_ratio,
   ].filter((v) => v !== undefined).length;
 
   const isPartial = definedCount < 4;
+
+  const il = metrics.integrated_lufs ?? null;
+  const stl = metrics.short_term_lufs ?? null;
+  const dr = metrics.dynamic_range ?? null;
+  const peak = metrics.peak_dbtp ?? null;
+  const sc = metrics.stereo_correlation ?? null;
+  const cf = metrics.crest_factor ?? null;
 
   return (
     <section>
@@ -243,25 +260,17 @@ const TechnicalMetrics = ({ metrics }: Props) => {
           {isPartial ? "Partial measurement" : "Measured on full track"}
         </span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {metrics.integrated_lufs !== undefined && (
-          <MetricCard label="Integrated LUFS" value={metrics.integrated_lufs} unit="LUFS" min={-24} max={-6} status={lufsStatus(metrics.integrated_lufs)} />
+      <div className="grid grid-cols-2 gap-3">
+        <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
+        <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
+        <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
+        <MetricCard label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
+        {sc !== null ? (
+          <CorrelationCard value={sc} />
+        ) : (
+          <MetricCard label="Stereo Correlation" value={null} unit="" min={-1} max={1} status={null} />
         )}
-        {metrics.short_term_lufs !== undefined && (
-          <MetricCard label="Short-Term LUFS" value={metrics.short_term_lufs} unit="LUFS" min={-24} max={-6} status={lufsStatus(metrics.short_term_lufs)} />
-        )}
-        {metrics.dynamic_range !== undefined && (
-          <MetricCard label="Dynamic Range" value={metrics.dynamic_range} unit="DR" min={0} max={20} status={drStatus(metrics.dynamic_range)} />
-        )}
-        {metrics.peak_dbtp !== undefined && (
-          <MetricCard label="Peak dBTP" value={metrics.peak_dbtp} unit="dBTP" min={-6} max={0} status={peakStatus(metrics.peak_dbtp)} />
-        )}
-        {metrics.stereo_correlation !== undefined && (
-          <CorrelationCard value={metrics.stereo_correlation} />
-        )}
-        {metrics.crest_factor !== undefined && (
-          <MetricCard label="Crest Factor" value={metrics.crest_factor} unit="dB" min={0} max={20} status={crestStatus(metrics.crest_factor)} />
-        )}
+        <MetricCard label="Crest Factor" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
       </div>
       {metrics.sub_kick_ratio !== undefined && (
         <div className="mt-3">
