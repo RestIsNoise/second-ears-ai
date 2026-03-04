@@ -1,7 +1,7 @@
 import { Play } from "lucide-react";
 
 const DemoVideo = () => (
-  <section className="pt-6 md:pt-8 pb-14 md:pb-16 px-6">
+  <section id="demo" className="pt-6 md:pt-8 pb-14 md:pb-16 px-6 scroll-mt-20">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
