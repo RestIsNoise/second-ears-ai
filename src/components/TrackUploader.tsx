@@ -79,8 +79,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
       onProgressStep?.(2); // Generating feedback
 
-      const { data: result, error } = await supabase.functions.invoke("analyze-track", {
-        body: { trackName: file.name, storagePath, mode, context: context.trim() || undefined },
+      const { data: result, error } = await supabase.functions.invoke("proxy-feedback", {
+        body: {
+          audioUrl: signedData?.signedUrl
+            ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1${signedData.signedUrl}`
+            : undefined,
+          fileName: file.name,
+          mode,
+          userContext: context.trim() || undefined,
+        },
       });
 
       if (error) throw error;

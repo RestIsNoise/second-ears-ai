@@ -494,29 +494,6 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Your Focus */}
-      {result.context && (
-        <section className="mt-8 md:mt-10">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
-            Your focus
-          </h2>
-          <div className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background max-w-[70ch]">
-            <p className="text-sm text-foreground leading-relaxed line-clamp-4">
-              {result.context}
-            </p>
-            {feedback.focus_response && (
-              <div className="mt-5 pt-5 border-t border-border-subtle">
-                <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
-                  Response to your request
-                </p>
-                <p className="text-sm text-muted-foreground" style={{ lineHeight: 1.575 }}>
-                  {feedback.focus_response}
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
     </div>
   );
 };
