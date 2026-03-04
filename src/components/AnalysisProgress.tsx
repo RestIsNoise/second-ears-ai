@@ -142,13 +142,6 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
     return `~${stableRemaining}s remaining`;
   })();
 
-  // Ring geometry
-  const ringSize = 88;
-  const strokeWidth = 2.5;
-  const radius = (ringSize - strokeWidth * 2) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const strokeOffset = circumference - (displayPercent / 100) * circumference;
-
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-24 md:py-28 animate-fade-in">
@@ -168,38 +161,14 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
 
   return (
     <div className="flex flex-col items-center justify-center py-20 md:py-24 animate-fade-in">
-      <div className="w-full max-w-[320px] rounded-2xl border border-border-subtle/60 bg-card/80 backdrop-blur-sm px-7 py-9 flex flex-col items-center">
+      <div className="w-full max-w-[340px] rounded-2xl border border-border-subtle/60 bg-card/80 backdrop-blur-sm px-7 py-9 flex flex-col items-center">
 
-        {/* Progress ring */}
-        <div className="relative w-20 h-20 md:w-[88px] md:h-[88px] mb-5">
-          <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${ringSize} ${ringSize}`}>
-            <circle
-              cx={ringSize / 2} cy={ringSize / 2} r={radius}
-              fill="none" stroke="hsl(var(--border-subtle))" strokeWidth={strokeWidth}
-            />
-            <circle
-              cx={ringSize / 2} cy={ringSize / 2} r={radius}
-              fill="none" stroke="hsl(var(--foreground))" strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeOffset}
-              className="transition-[stroke-dashoffset] duration-300 ease-out"
-            />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-mono-brand text-sm md:text-[15px] font-medium text-foreground tabular-nums tracking-tight">
-              {displayPercent}%
-            </span>
-          </div>
-        </div>
-
-        {/* Subtitle with pulse */}
-        <div className="flex flex-col items-center mb-6">
-          <p className="text-[13px] text-foreground/70 animate-[subtle-pulse_2.4s_ease-in-out_infinite]">
-            Analyzing your mix
-            <DotAnimation />
+        {/* Title + subtitle */}
+        <div className="flex flex-col items-center mb-6 w-full">
+          <p className="text-[13px] font-medium text-foreground mb-1">
+            Analyzing your mix<DotAnimation />
           </p>
-          <div className="h-5 mt-1.5 flex items-center">
+          <div className="h-4 flex items-center">
             {rotatingMessage ? (
               <p key={rotatingMessage} className="text-[11px] text-muted-foreground/60 animate-fade-in">
                 {rotatingMessage}
@@ -210,7 +179,29 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
           </div>
         </div>
 
-        {/* Step list */}
+        {/* Progress bar + percentage */}
+        <div className="w-full flex items-center gap-3 mb-7">
+          <div className="flex-1 h-[3px] rounded-full bg-border-subtle/80 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-foreground transition-[width] duration-300 ease-out"
+              style={{ width: `${displayPercent}%` }}
+            />
+          </div>
+          <span
+            className="text-foreground/70 tabular-nums shrink-0"
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+              letterSpacing: "-0.01em",
+              minWidth: 32,
+              textAlign: "right",
+            }}
+          >
+            {displayPercent}%
+          </span>
+        </div>
+
+        {/* Step checklist */}
         <div className="space-y-1.5 w-full max-w-[200px] mb-5">
           {steps.map((label, i) => {
             const isComplete = i < activeStep;
@@ -248,7 +239,10 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
 
         {/* ETA */}
         {remainingStr && (
-          <p className="font-mono-brand text-[10px] text-muted-foreground/40 tabular-nums tracking-wide mb-1">
+          <p
+            className="text-muted-foreground/40 tabular-nums tracking-wide mb-1"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+          >
             {remainingStr}
           </p>
         )}
