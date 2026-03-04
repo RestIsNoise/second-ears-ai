@@ -75,7 +75,7 @@ const Pricing = () => (
             </ul>
             <Button
               variant={plan.featured ? "hero-outline" : "hero"}
-              className={`w-full h-11 text-sm ${
+              className={`w-full h-11 text-[13px] rounded-full ${
                 plan.featured
                   ? "border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 bg-transparent"
                   : ""

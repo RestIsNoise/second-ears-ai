@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 
 const Contact = () => (
-  <section className="py-14 md:py-16 px-6 border-t border-border-subtle">
+  <section className="py-10 md:py-12 px-6 border-t border-border-subtle">
     <div className="max-w-5xl mx-auto text-center">
       <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
         Get in touch

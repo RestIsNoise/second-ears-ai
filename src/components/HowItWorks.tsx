@@ -25,10 +25,10 @@ const steps = [
 ];
 
 const HowItWorks = () => (
-  <section className="relative py-20 md:py-24 px-6 border-t border-border-subtle">
+  <section className="relative py-14 md:py-16 px-6 border-t border-border-subtle">
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-14">
-        <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.4em] uppercase mb-3">
+      <div className="text-center mb-10">
+        <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.3em] uppercase mb-3">
           How it works
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">

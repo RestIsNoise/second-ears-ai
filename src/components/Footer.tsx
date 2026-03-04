@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => (
-  <footer className="py-16 md:py-20 px-6 border-t border-border-subtle">
+  <footer className="py-10 md:py-14 px-6 border-t border-border-subtle">
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-col items-center gap-5">
         <span className="font-mono-brand text-xs tracking-tight text-foreground/40">
