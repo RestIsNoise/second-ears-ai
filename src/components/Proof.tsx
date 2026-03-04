@@ -5,11 +5,10 @@ const blocks = [
     icon: Search,
     title: "Measurements",
     items: [
-      "Integrated & short-term LUFS",
-      "Dynamic range, crest factor, peak dBTP",
-      "Stereo correlation & width",
-      "Sub/kick ratio",
-      "Section contrast",
+      "Loudness (LUFS, peak dBTP)",
+      "Dynamic range and crest factor",
+      "Stereo image and correlation",
+      "Sub/kick balance",
     ],
   },
   {
@@ -17,7 +16,7 @@ const blocks = [
     title: "Deliverables",
     items: [
       "Timestamped issues with fixes",
-      "Per-mode analysis cards",
+      "Per-mode analysis breakdown",
       "Top issue, biggest win, next move",
       "One shareable report link",
     ],
@@ -27,7 +26,7 @@ const blocks = [
     title: "Privacy",
     items: [
       "Files stay private",
-      "No model training on your audio",
+      "Never used for model training",
       "Delete tracks anytime",
     ],
   },
@@ -52,7 +51,7 @@ const Proof = () => (
               <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
                 <block.icon className="w-4 h-4 text-foreground" strokeWidth={1.8} />
               </div>
-              <h3 className="text-base font-semibold tracking-tight">{block.title}</h3>
+              <h3 className="text-base font-semibold tracking-tight text-foreground">{block.title}</h3>
             </div>
             <ul className="space-y-2 pl-0">
               {block.items.map((item) => (
