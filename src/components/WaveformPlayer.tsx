@@ -35,7 +35,9 @@ const formatTimePrecise = (s: number) => {
 /* ── Time ruler helpers ── */
 
 const RULER_HEIGHT = 28;
+const MARKER_ZONE_HEIGHT = 20; // space below ruler for marker triangles + labels
 const MIN_LABEL_GAP_PX = 64;
+const MARKER_SNAP_PX = 14;
 
 function pickInterval(duration: number, containerWidth: number): { major: number; minor: number } {
   const candidates: [number, number][] = [
@@ -49,19 +51,23 @@ function pickInterval(duration: number, containerWidth: number): { major: number
   return { major: 120, minor: 30 };
 }
 
-const MARKER_SNAP_PX = 14;
-
 interface RulerProps {
   duration: number;
   containerWidth: number;
   currentTime: number;
+  playing: boolean;
   hoverX: number | null;
   hoverTime: number;
-  markers?: WaveformMarker[];
-  snappedMarkerId?: string | null;
+  markers: WaveformMarker[];
+  activeMarkerId?: string | null;
+  snappedMarkerId: string | null;
+  onMarkerClick?: (marker: WaveformMarker) => void;
 }
 
-const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime, markers = [], snappedMarkerId }: RulerProps) => {
+const TimeRuler = ({
+  duration, containerWidth, currentTime, playing,
+  hoverX, hoverTime, markers, activeMarkerId, snappedMarkerId, onMarkerClick,
+}: RulerProps) => {
   const { major, minor } = useMemo(
     () => pickInterval(duration, containerWidth),
     [duration, containerWidth]
@@ -75,120 +81,165 @@ const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime, m
   }
 
   const playheadPct = (currentTime / duration) * 100;
-
-  // Snapped marker diamond indicators on the ruler
   const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
+  const hasMarkers = markers.length > 0;
+  const totalHeight = RULER_HEIGHT + (hasMarkers ? MARKER_ZONE_HEIGHT : 0);
 
   return (
-    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%" }}>
-      {/* Bottom border line */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{ height: "1px", backgroundColor: "hsl(var(--foreground) / 0.08)" }}
-      />
-
-      {/* Ticks + labels */}
-      {ticks.map(({ time, isMajor }) => {
-        const leftPct = (time / duration) * 100;
-        return (
-          <div
-            key={time}
-            className="absolute bottom-0"
-            style={{ left: `${leftPct}%`, transform: "translateX(-0.5px)" }}
-          >
-            <div
-              style={{
-                width: isMajor ? "1px" : "0.5px",
-                height: isMajor ? 10 : 5,
-                backgroundColor: isMajor
-                  ? "hsl(var(--foreground) / 0.35)"
-                  : "hsl(var(--foreground) / 0.1)",
-              }}
-            />
-            {isMajor && (
-              <span
-                className="absolute whitespace-nowrap tabular-nums"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 9,
-                  lineHeight: 1,
-                  letterSpacing: "0.02em",
-                  color: "hsl(var(--foreground) / 0.4)",
-                  bottom: 13,
-                  left: 0,
-                  transform: time === 0 ? "none" : "translateX(-50%)",
-                }}
-              >
-                {formatTime(time)}
-              </span>
-            )}
-          </div>
-        );
-      })}
-
-      {/* Marker snap diamonds on ruler */}
-      {markers.slice(0, 8).map((m) => {
-        const leftPct = (m.time / duration) * 100;
-        const isSnapped = snappedMarkerId === m.id;
-        return (
-          <div
-            key={`ruler-${m.id}`}
-            className="absolute bottom-0 pointer-events-none z-[3]"
-            style={{ left: `${leftPct}%`, transform: "translateX(-3px)" }}
-          >
-            <div
-              className="transition-all duration-150"
-              style={{
-                width: 5,
-                height: 5,
-                transform: "rotate(45deg)",
-                backgroundColor: isSnapped
-                  ? "hsl(var(--foreground) / 0.7)"
-                  : "hsl(var(--foreground) / 0.15)",
-                marginBottom: -0.5,
-              }}
-            />
-          </div>
-        );
-      })}
-
-      {/* Playhead indicator on ruler */}
-      <div
-        className="absolute bottom-0 z-[4] pointer-events-none"
-        style={{ left: `${playheadPct}%`, transform: "translateX(-0.5px)" }}
-      >
+    <div className="relative select-none" style={{ height: totalHeight, width: "100%" }}>
+      {/* Ruler area */}
+      <div className="absolute top-0 left-0 right-0" style={{ height: RULER_HEIGHT }}>
+        {/* Bottom border line (ruler baseline) */}
         <div
-          style={{
-            width: "1px",
-            height: 12,
-            backgroundColor: "hsl(var(--foreground) / 0.7)",
-          }}
+          className="absolute bottom-0 left-0 right-0"
+          style={{ height: "1px", backgroundColor: "hsl(var(--foreground) / 0.08)" }}
         />
+
+        {/* Ticks + labels */}
+        {ticks.map(({ time, isMajor }) => {
+          const leftPct = (time / duration) * 100;
+          return (
+            <div
+              key={time}
+              className="absolute bottom-0"
+              style={{ left: `${leftPct}%`, transform: "translateX(-0.5px)" }}
+            >
+              <div
+                style={{
+                  width: isMajor ? "1px" : "0.5px",
+                  height: isMajor ? 10 : 5,
+                  backgroundColor: isMajor
+                    ? "hsl(var(--foreground) / 0.35)"
+                    : "hsl(var(--foreground) / 0.1)",
+                }}
+              />
+              {isMajor && (
+                <span
+                  className="absolute whitespace-nowrap tabular-nums"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 9,
+                    lineHeight: 1,
+                    letterSpacing: "0.02em",
+                    color: "hsl(var(--foreground) / 0.4)",
+                    bottom: 13,
+                    left: 0,
+                    transform: time === 0 ? "none" : "translateX(-50%)",
+                  }}
+                >
+                  {formatTime(time)}
+                </span>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Playhead tick on ruler */}
+        <div
+          className="absolute bottom-0 z-[4] pointer-events-none"
+          style={{
+            left: `${playheadPct}%`,
+            transform: "translateX(-0.5px)",
+            transition: playing ? "none" : "left 0.1s ease-out",
+          }}
+        >
+          <div style={{ width: "1px", height: 12, backgroundColor: "hsl(var(--foreground) / 0.7)" }} />
+        </div>
+
+        {/* Hover tooltip */}
+        {hoverX !== null && (
+          <div
+            className="absolute pointer-events-none z-[6]"
+            style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}
+          >
+            <span
+              className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9,
+                lineHeight: 1,
+                letterSpacing: "0.02em",
+                color: snappedMarker ? "hsl(var(--foreground) / 0.9)" : "hsl(var(--foreground) / 0.6)",
+                backgroundColor: "hsl(var(--background) / 0.95)",
+                border: `0.5px solid hsl(var(--foreground) / ${snappedMarker ? "0.15" : "0.08"})`,
+                fontWeight: snappedMarker ? 500 : 400,
+              }}
+            >
+              {snappedMarker
+                ? `▸ ${formatTimePrecise(snappedMarker.time)}`
+                : formatTimePrecise(hoverTime)}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Hover tooltip */}
-      {hoverX !== null && (
+      {/* Marker zone — anchored directly below ruler baseline */}
+      {hasMarkers && (
         <div
-          className="absolute pointer-events-none z-[6]"
-          style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}
+          className="absolute left-0 right-0 z-[5]"
+          style={{ top: RULER_HEIGHT, height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
         >
-          <span
-            className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9,
-              lineHeight: 1,
-              letterSpacing: "0.02em",
-              color: snappedMarker ? "hsl(var(--foreground) / 0.9)" : "hsl(var(--foreground) / 0.6)",
-              backgroundColor: "hsl(var(--background) / 0.95)",
-              border: `0.5px solid hsl(var(--foreground) / ${snappedMarker ? "0.15" : "0.08"})`,
-              fontWeight: snappedMarker ? 500 : 400,
-            }}
-          >
-            {snappedMarker
-              ? `▸ ${formatTimePrecise(snappedMarker.time)}`
-              : formatTimePrecise(hoverTime)}
-          </span>
+          {markers.slice(0, 8).map((m) => {
+            const isActive = activeMarkerId === m.id;
+            const isSnapped = snappedMarkerId === m.id;
+            const leftPct = (m.time / duration) * 100;
+
+            return (
+              <div
+                key={m.id}
+                className="absolute pointer-events-auto"
+                style={{
+                  left: `${leftPct}%`,
+                  top: 0,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                <button
+                  onClick={() => onMarkerClick?.(m)}
+                  className="group flex flex-col items-center"
+                  style={{ padding: "1px 2px" }}
+                  aria-label={`${formatTime(m.time)} — ${m.label}`}
+                >
+                  {/* Triangle pointing down from ruler baseline */}
+                  <svg
+                    width={isActive || isSnapped ? "10" : "8"}
+                    height={isActive || isSnapped ? "6" : "5"}
+                    viewBox={isActive || isSnapped ? "0 0 10 6" : "0 0 8 5"}
+                    className="transition-all duration-150"
+                  >
+                    <polygon
+                      points={isActive || isSnapped ? "5,6 0,0 10,0" : "4,5 0,0 8,0"}
+                      style={{
+                        fill: isActive
+                          ? "hsl(var(--foreground))"
+                          : isSnapped
+                            ? "hsl(var(--foreground) / 0.65)"
+                            : "hsl(var(--foreground) / 0.3)",
+                        transition: "fill 0.15s",
+                      }}
+                    />
+                  </svg>
+                  <span
+                    className="tabular-nums whitespace-nowrap transition-colors duration-150"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 8,
+                      lineHeight: 1,
+                      marginTop: 1,
+                      color: isActive
+                        ? "hsl(var(--foreground))"
+                        : isSnapped
+                          ? "hsl(var(--foreground) / 0.6)"
+                          : "hsl(var(--foreground) / 0.3)",
+                      fontWeight: isActive ? 500 : 400,
+                    }}
+                  >
+                    {formatTime(m.time)}
+                  </span>
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -220,34 +271,21 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       getCurrentTime: () => currentTime,
     }));
 
-    // Track container width for ruler
     useEffect(() => {
       if (!wrapperRef.current) return;
       const ro = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          setContainerWidth(entry.contentRect.width);
-        }
+        for (const entry of entries) setContainerWidth(entry.contentRect.width);
       });
       ro.observe(wrapperRef.current);
       return () => ro.disconnect();
     }, []);
 
     useEffect(() => {
-      if (wsRef.current) {
-        wsRef.current.destroy();
-        wsRef.current = null;
-      }
-      setError(null);
-      setLoading(true);
-      setDuration(0);
-      setCurrentTime(0);
-      setPlaying(false);
-
+      if (wsRef.current) { wsRef.current.destroy(); wsRef.current = null; }
+      setError(null); setLoading(true); setDuration(0); setCurrentTime(0); setPlaying(false);
       if (!containerRef.current || !audioFile) return;
-
       if (!(audioFile instanceof File)) {
-        const msg = `Waveform source is not File (got ${typeof audioFile})`;
-        setError(msg);
+        setError(`Waveform source is not File (got ${typeof audioFile})`);
         setLoading(false);
         return;
       }
@@ -269,49 +307,26 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       const onResize = () => ws.setOptions({ width: containerRef.current?.clientWidth });
       window.addEventListener("resize", onResize);
 
-      ws.on("ready", () => {
-        const d = ws.getDuration();
-        setDuration(d);
-        setLoading(false);
-        onDurationReady?.(d);
-      });
-
-      ws.on("audioprocess", () => {
-        const t = ws.getCurrentTime();
-        setCurrentTime(t);
-        onTimeUpdate?.(t);
-      });
-      ws.on("seeking", () => {
-        const t = ws.getCurrentTime();
-        setCurrentTime(t);
-        onTimeUpdate?.(t);
-      });
+      ws.on("ready", () => { const d = ws.getDuration(); setDuration(d); setLoading(false); onDurationReady?.(d); });
+      ws.on("audioprocess", () => { const t = ws.getCurrentTime(); setCurrentTime(t); onTimeUpdate?.(t); });
+      ws.on("seeking", () => { const t = ws.getCurrentTime(); setCurrentTime(t); onTimeUpdate?.(t); });
       ws.on("play", () => setPlaying(true));
       ws.on("pause", () => setPlaying(false));
       ws.on("finish", () => setPlaying(false));
       ws.on("error", (err) => {
-        const msg = typeof err === "string" ? err : (err as any)?.message || String(err);
-        setError(msg);
+        setError(typeof err === "string" ? err : (err as any)?.message || String(err));
         setLoading(false);
       });
 
       ws.loadBlob(audioFile);
       wsRef.current = ws;
 
-      return () => {
-        window.removeEventListener("resize", onResize);
-        ws.destroy();
-        wsRef.current = null;
-      };
+      return () => { window.removeEventListener("resize", onResize); ws.destroy(); wsRef.current = null; };
     }, [audioFile]);
 
     const togglePlay = useCallback(() => wsRef.current?.playPause(), []);
-    const restart = useCallback(() => {
-      wsRef.current?.seekTo(0);
-      wsRef.current?.play();
-    }, []);
+    const restart = useCallback(() => { wsRef.current?.seekTo(0); wsRef.current?.play(); }, []);
 
-    // Find snapped marker based on hover proximity
     const snappedMarkerId_hover = useMemo(() => {
       if (hoverX === null || duration <= 0 || containerWidth <= 0 || markers.length === 0) return null;
       for (const m of markers) {
@@ -333,9 +348,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       [duration]
     );
 
-    const handleMouseLeave = useCallback(() => {
-      setHoverX(null);
-    }, []);
+    const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -351,27 +364,30 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           </div>
         )}
 
-        {/* Combined ruler + waveform area — shared hover zone */}
+        {/* Ruler + markers + waveform — single hover zone */}
         <div
           ref={wrapperRef}
           className="relative overflow-visible cursor-crosshair"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Time ruler */}
+          {/* Time ruler with markers (single layer) */}
           {duration > 0 && containerWidth > 0 && (
             <TimeRuler
               duration={duration}
               containerWidth={containerWidth}
               currentTime={currentTime}
+              playing={playing}
               hoverX={hoverX}
               hoverTime={hoverTime}
               markers={markers}
+              activeMarkerId={activeMarkerId}
               snappedMarkerId={snappedMarkerId_hover}
+              onMarkerClick={onMarkerClick}
             />
           )}
 
-          {/* Waveform container */}
+          {/* Waveform container — NO markers here */}
           <div className="relative" style={{ height: 96 }}>
             {loading && !error && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -384,7 +400,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               style={{ top: 6, bottom: 6 }}
             />
 
-            {/* Playhead line through waveform */}
+            {/* Playhead line spanning waveform */}
             {duration > 0 && (
               <div
                 className="absolute top-0 bottom-0 pointer-events-none z-[3]"
@@ -412,66 +428,6 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   transition: "width 0.1s, background-color 0.1s",
                 }}
               />
-            )}
-
-            {/* Triangle markers */}
-            {markers.length > 0 && duration > 0 && (
-              <div className="absolute inset-0 pointer-events-none z-[2]" style={{ overflow: "visible" }}>
-                {markers.slice(0, 8).map((m) => {
-                  const isActive = activeMarkerId === m.id;
-                  const isSnapped = snappedMarkerId_hover === m.id;
-                  const leftPct = `${(m.time / duration) * 100}%`;
-
-                  return (
-                    <div
-                      key={m.id}
-                      className="absolute pointer-events-auto flex flex-col items-center"
-                      style={{ left: leftPct, bottom: 0, transform: "translateX(-50%)" }}
-                    >
-                      <button
-                        onClick={() => onMarkerClick?.(m)}
-                        className="group flex flex-col items-center p-0.5"
-                        aria-label={`${formatTime(m.time)} — ${m.label}`}
-                      >
-                        <svg
-                          width={isActive || isSnapped ? "12" : "10"}
-                          height={isActive || isSnapped ? "10" : "8"}
-                          viewBox={isActive || isSnapped ? "0 0 12 10" : "0 0 10 8"}
-                          className="transition-all duration-150"
-                        >
-                          <polygon
-                            points={isActive || isSnapped ? "6,0 12,10 0,10" : "5,0 10,8 0,8"}
-                            style={{
-                              fill: isActive
-                                ? "hsl(var(--foreground))"
-                                : isSnapped
-                                  ? "hsl(var(--foreground) / 0.65)"
-                                  : "hsl(var(--foreground) / 0.35)",
-                              transition: "fill 0.15s",
-                            }}
-                          />
-                        </svg>
-                        <span
-                          className="mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-150"
-                          style={{
-                            fontFamily: "'IBM Plex Mono', monospace",
-                            fontSize: 9,
-                            lineHeight: 1,
-                            color: isActive
-                              ? "hsl(var(--foreground))"
-                              : isSnapped
-                                ? "hsl(var(--foreground) / 0.65)"
-                                : "hsl(var(--foreground) / 0.35)",
-                            fontWeight: isActive ? 500 : 400,
-                          }}
-                        >
-                          {formatTime(m.time)}
-                        </span>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
             )}
           </div>
         </div>
