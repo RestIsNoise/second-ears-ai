@@ -235,7 +235,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             return null;
           })
           .filter(Boolean) as Array<{ time: number; label: string }>,
-        technical_metrics: normalizeMetrics(fb, result),
+        technical_metrics: normalizeMetrics(fb, result?.metrics, result),
         fullAnalysis: fb?.fullAnalysis || undefined,
         focus_response: fb?.focus_response || undefined,
       };
