@@ -52,10 +52,10 @@ const perceptionMetricsBlock = `
     "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
   },
   "fullAnalysis": {
-    "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
-    "dynamics": "2-3 sentences analyzing dynamics processing, loudness, compression, and transient handling.",
-    "stereoSpace": "2-3 sentences analyzing the stereo image, spatial placement of elements, and use of width/depth.",
-    "frequencyBalance": "2-3 sentences analyzing the frequency spectrum, tonal balance, and how different frequency ranges interact."
+    "subLowTranslation": "2-3 sentences analyzing how sub-bass and low frequencies will translate across playback systems (phone speakers, car, club, earbuds). Flag any elements likely to disappear or distort.",
+    "headroomTransients": "2-3 sentences analyzing headroom management and transient preservation. Will peaks clip on lossy codecs? Are transients intact or over-limited?",
+    "stereoFoldDown": "2-3 sentences analyzing mono compatibility and stereo fold-down behavior. Identify elements that may phase-cancel or shift in level when summed to mono.",
+    "listenerFatigue": "2-3 sentences analyzing potential listener fatigue factors: harsh frequency buildup, excessive loudness, fatiguing resonances, or lack of dynamic rest."
   },`;
 
 const modePrompts: Record<string, string> = {

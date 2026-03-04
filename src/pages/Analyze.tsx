@@ -27,6 +27,11 @@ export interface FullAnalysis {
   sectionContrast?: string;
   grooveContinuity?: string;
   hookClarity?: string;
+  // Perception mode
+  subLowTranslation?: string;
+  headroomTransients?: string;
+  stereoFoldDown?: string;
+  listenerFatigue?: string;
 }
 
 export interface FeedbackData {
