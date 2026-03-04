@@ -112,6 +112,32 @@ const CopyFixButton = ({ text }: { text: string }) => {
   );
 };
 
+/** Full Analysis card text with 3-sentence truncation */
+const AnalysisCardText = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  const needsTruncation = sentences.length > 3;
+  const displayText = needsTruncation && !expanded
+    ? sentences.slice(0, 3).join("").trim()
+    : text;
+
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>
+        {displayText}
+      </p>
+      {needsTruncation && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-1.5 text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors font-mono-brand tracking-wide uppercase"
+        >
+          {expanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+  );
+};
+
 const FeedbackDisplay = ({
   result,
   onReset,
@@ -198,13 +224,19 @@ const FeedbackDisplay = ({
     [timelineItems, activeItemId]
   );
 
-  // Executive summary — use short titles, truncated to ~4 words max
-  const truncateTitle = (t: string) => {
+  // Executive summary — extract a short 2-3 word label, not a truncated sentence
+  const extractShortLabel = (t: string): string => {
+    // If it's already short (3 words or less), use as-is
     const words = t.split(/\s+/);
-    return words.length <= 4 ? t : words.slice(0, 4).join(" ") + "…";
+    if (words.length <= 3) return t;
+    // Try to extract a noun-phrase label: take first 2-3 meaningful words
+    // Strip leading articles/determiners
+    const stripped = t.replace(/^(the|a|an|its|their|this|that)\s+/i, "");
+    const strippedWords = stripped.split(/\s+/);
+    return strippedWords.slice(0, 2).join(" ");
   };
-  const topIssue = feedback.top_priorities?.[0]?.title ? truncateTitle(feedback.top_priorities[0].title) : undefined;
-  const biggestWin = feedback.what_works?.[0]?.title ? truncateTitle(feedback.what_works[0].title) : undefined;
+  const topIssue = feedback.top_priorities?.[0]?.title ? extractShortLabel(feedback.top_priorities[0].title) : undefined;
+  const biggestWin = feedback.what_works?.[0]?.title ? extractShortLabel(feedback.what_works[0].title) : undefined;
   const metrics = feedback.technical_metrics;
   const releaseReadiness = useMemo(() => {
     if (!metrics) return null;
@@ -403,7 +435,7 @@ const FeedbackDisplay = ({
               feedback.fullAnalysis?.[key] ? (
                 <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
                   <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
-                  <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>{feedback.fullAnalysis[key]}</p>
+                  <AnalysisCardText text={feedback.fullAnalysis[key] as string} />
                 </div>
               ) : null
             )}
