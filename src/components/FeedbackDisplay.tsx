@@ -358,25 +358,25 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Executive Summary Strip */}
+      {/* Executive Summary Mini Cards */}
       {hasExecutiveSummary && (
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+        <div className="mt-5 flex flex-wrap gap-3">
           {topIssue && (
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Top issue</span>
-              <span className="text-[13px] text-foreground">{topIssue}</span>
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3 min-w-[140px]">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Top issue</p>
+              <p className="text-[13px] font-medium text-foreground">{topIssue}</p>
             </div>
           )}
           {biggestWin && (
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Biggest win</span>
-              <span className="text-[13px] text-foreground">{biggestWin}</span>
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3 min-w-[140px]">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Biggest win</p>
+              <p className="text-[13px] font-medium text-foreground">{biggestWin}</p>
             </div>
           )}
           {releaseReadiness && (
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider">Release</span>
-              <span className="text-[13px] text-foreground">{releaseReadiness}</span>
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3 min-w-[140px]">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Release</p>
+              <p className="text-[13px] font-medium text-foreground">{releaseReadiness}</p>
             </div>
           )}
         </div>
@@ -491,11 +491,35 @@ const FeedbackDisplay = ({
                 {modeWhatWorksLabel[mode] || "What works"}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {feedback.what_works.map((item: any, i: number) => {
-                  const body = item.detail || item.description || item.whyItWorks || item.body || "";
+                {feedback.what_works.map((rawItem: any, i: number) => {
+                  let title: string;
+                  let body: string;
+                  if (typeof rawItem === "string") {
+                    const sentences = rawItem.match(/[^.!?]+[.!?]+/g);
+                    if (sentences && sentences.length > 1) {
+                      title = sentences[0].trim();
+                      body = sentences.slice(1).join("").trim();
+                    } else {
+                      const words = rawItem.split(/\s+/);
+                      title = words.slice(0, 4).join(" ");
+                      body = rawItem;
+                    }
+                    console.warn("[FeedbackDisplay] what_works item was plain string, normalized:", { title, body });
+                  } else {
+                    title = rawItem.title || "Untitled";
+                    body = rawItem.detail || rawItem.description || rawItem.whyItWorks || rawItem.body || "";
+                    if (!body && title) {
+                      const sentences = title.match(/[^.!?]+[.!?]+/g);
+                      if (sentences && sentences.length > 1) {
+                        body = sentences.slice(1).join("").trim();
+                        title = sentences[0].trim();
+                        console.warn("[FeedbackDisplay] what_works: split title into title+body");
+                      }
+                    }
+                  }
                   return (
-                    <div key={i} className="rounded-xl border border-border-subtle p-4 md:p-5 bg-background flex flex-col">
-                      <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
+                    <div key={i} className={`rounded-xl border border-border-subtle bg-background flex flex-col ${body ? "p-4 md:p-5" : "p-4"}`}>
+                      <h3 className="text-base font-semibold tracking-tight">{title}</h3>
                       {body && (
                         <p className="text-[13px] text-foreground/55 max-w-[70ch] mt-1.5" style={{ lineHeight: 1.575 }}>{body}</p>
                       )}
@@ -537,6 +561,29 @@ const FeedbackDisplay = ({
                     </p>
                   </>
                 )}
+              </div>
+            </section>
+          )}
+
+          {/* Your Focus — user context response */}
+          {result.context && (
+            <section>
+              <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
+                Your focus
+              </h2>
+              <div className="rounded-xl border border-border-subtle p-5 md:p-6 bg-background max-w-[70ch]">
+                <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
+                  You asked
+                </p>
+                <p className="text-[13px] text-foreground/70 leading-relaxed italic mb-4" style={{ lineHeight: 1.575 }}>
+                  "{result.context}"
+                </p>
+                <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
+                  Response
+                </p>
+                <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
+                  {feedback.focus_response || "No direct focus response available for this run."}
+                </p>
               </div>
             </section>
           )}

@@ -145,7 +145,7 @@ const SubKickCard = ({ value }: { value: number }) => {
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
+    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs text-muted-foreground tracking-wide">Sub / Kick Ratio</p>
@@ -262,10 +262,12 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         {metrics.crest_factor !== undefined && (
           <MetricCard label="Crest Factor" value={metrics.crest_factor} unit="dB" min={0} max={20} status={crestStatus(metrics.crest_factor)} />
         )}
-        {metrics.sub_kick_ratio !== undefined && (
-          <SubKickCard value={metrics.sub_kick_ratio} />
-        )}
       </div>
+      {metrics.sub_kick_ratio !== undefined && (
+        <div className="mt-3">
+          <SubKickCard value={metrics.sub_kick_ratio} />
+        </div>
+      )}
     </section>
   );
 };
