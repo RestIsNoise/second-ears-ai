@@ -101,7 +101,7 @@ const Hero = () => {
               className="text-[14px] sm:text-[15px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
               style={{ color: "hsl(0 0% 58%)", animationDelay: "0.16s" }}
             >
-              Three listening modes. Timestamped issues. A to-do list to work through.
+              From upload to a prioritized fix plan in minutes.
             </p>
 
             <div
