@@ -3,32 +3,32 @@ import { Search, FileText, ShieldCheck } from "lucide-react";
 const blocks = [
   {
     icon: Search,
-    title: "What we measure",
+    title: "Measurements",
     items: [
       "Integrated & short-term LUFS",
       "Dynamic range, crest factor, peak dBTP",
       "Stereo correlation & width",
-      "Sub/kick balance ratio",
-      "Section contrast across arrangement",
+      "Sub/kick ratio",
+      "Section contrast",
     ],
   },
   {
     icon: FileText,
-    title: "What you receive",
+    title: "Deliverables",
     items: [
-      "Timestamped issues with suggested fixes",
-      "Analysis cards for each listening mode",
-      "One highest-priority action surfaced",
-      "Shareable link to your full report",
+      "Timestamped issues with fixes",
+      "Per-mode analysis cards",
+      "Top issue, biggest win, next move",
+      "One shareable report link",
     ],
   },
   {
     icon: ShieldCheck,
-    title: "How we handle your audio",
+    title: "Privacy",
     items: [
-      "Files are private — never shared publicly",
-      "Audio is not used for model training",
-      "Delete your tracks at any time",
+      "Files stay private",
+      "No model training on your audio",
+      "Delete tracks anytime",
     ],
   },
 ];
@@ -38,10 +38,10 @@ const Proof = () => (
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-12">
         <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.4em] uppercase mb-3">
-          Built for real workflows
+          Specifics
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-          What SecondEars actually does
+          What you get
         </h2>
       </div>
 
