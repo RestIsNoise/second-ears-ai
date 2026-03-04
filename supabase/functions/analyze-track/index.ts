@@ -72,8 +72,8 @@ ${technicalMetricsBlock}
     { "title": "...", "why": "...", "fix": "..." }
   ],
   "what_works": [
-    { "title": "strength name", "detail": "why this works well" },
-    { "title": "...", "detail": "..." }
+    { "title": "strength name", "detail": "1-2 sentences explaining WHY this works well — never leave detail empty" },
+    { "title": "...", "detail": "1-2 sentences — always provide a substantive explanation" }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
   "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
@@ -96,8 +96,8 @@ ${musicalMetricsBlock}
     { "title": "...", "why": "...", "fix": "..." }
   ],
   "what_works": [
-    { "title": "strength name", "detail": "why this works well" },
-    { "title": "...", "detail": "..." }
+    { "title": "strength name", "detail": "1-2 sentences explaining WHY this works well — never leave detail empty" },
+    { "title": "...", "detail": "1-2 sentences — always provide a substantive explanation" }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
   "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
@@ -120,8 +120,8 @@ ${perceptionMetricsBlock}
     { "title": "...", "why": "...", "fix": "..." }
   ],
   "what_works": [
-    { "title": "strength name", "detail": "why this works well" },
-    { "title": "...", "detail": "..." }
+    { "title": "strength name", "detail": "1-2 sentences explaining WHY this works well — never leave detail empty" },
+    { "title": "...", "detail": "1-2 sentences — always provide a substantive explanation" }
   ],
   "fix_one_thing": { "title": "the single most impactful fix", "why": "why this matters most", "how": "step-by-step how to fix it" },
   "focus_response": "<If the artist provided context about their intent, write 2-4 sentences directly addressing their specific question or goal. Be concrete and reference the track. If no context was provided, set to null.>",
