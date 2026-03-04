@@ -77,28 +77,28 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-6 pt-32 pb-24 md:pt-40 md:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-40 md:pb-32">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left column — Copy */}
           <div className="max-w-xl">
             <p
-              className="font-mono-brand text-[11px] font-medium tracking-[0.4em] uppercase mb-8 animate-fade-up"
+              className="font-mono-brand text-[11px] font-medium tracking-[0.4em] uppercase mb-6 sm:mb-8 animate-fade-up"
               style={{ color: "hsl(0 0% 55%)" }}
             >
               AI speed · Human ears
             </p>
 
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold tracking-tight leading-[1.1] mb-6 animate-fade-up"
+              className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold tracking-tight leading-[1.12] mb-5 sm:mb-6 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
-              Actionable mix feedback
-              <br />
-              in minutes.
+              Actionable mix
+              <br className="hidden sm:block" />
+              {" "}feedback in minutes.
             </h1>
 
             <p
-              className="text-[15px] leading-relaxed font-light mb-10 max-w-md animate-fade-up"
+              className="text-[14px] sm:text-[15px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
               style={{ color: "hsl(0 0% 58%)", animationDelay: "0.16s" }}
             >
               Technical, musical, and perception analysis with exact timestamps
@@ -106,13 +106,13 @@ const Hero = () => {
             </p>
 
             <div
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 mb-8 animate-fade-up"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-3.5 mb-7 sm:mb-8 animate-fade-up"
               style={{ animationDelay: "0.24s" }}
             >
               <Button
                 variant="hero"
                 size="lg"
-                className="h-12 px-10 text-[13px] gap-2"
+                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto"
                 asChild
               >
                 <Link to="/analyze">
@@ -122,7 +122,7 @@ const Hero = () => {
               </Button>
               <Button
                 size="lg"
-                className="h-11 px-8 text-[13px] rounded-full font-medium tracking-tight transition-all duration-200 border bg-transparent hover:bg-white/5"
+                className="h-11 px-8 text-[13px] rounded-full font-medium tracking-tight transition-all duration-200 border bg-transparent hover:bg-white/5 w-full sm:w-auto"
                 style={{
                   borderColor: "hsl(0 0% 100% / 0.15)",
                   color: "hsl(0 0% 80%)",
@@ -140,13 +140,13 @@ const Hero = () => {
 
             {/* Trust row */}
             <div
-              className="flex flex-wrap items-center gap-x-5 gap-y-2 animate-fade-up"
+              className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 animate-fade-up"
               style={{ animationDelay: "0.32s" }}
             >
               {trustItems.map((item, i) => (
                 <span
                   key={item}
-                  className="flex items-center gap-2 text-[11px] tracking-wide"
+                  className="flex items-center gap-2 text-[11px] tracking-wide whitespace-nowrap"
                   style={{ color: "hsl(0 0% 42%)" }}
                 >
                   {i > 0 && (
@@ -163,19 +163,19 @@ const Hero = () => {
 
           {/* Right column — Product frame */}
           <div
-            className="relative animate-fade-up lg:justify-self-end"
+            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0"
             style={{ animationDelay: "0.2s" }}
           >
             {/* Glow behind frame */}
             <div
-              className="absolute -inset-8 rounded-3xl blur-[80px] pointer-events-none"
+              className="absolute -inset-6 sm:-inset-8 rounded-3xl blur-[80px] pointer-events-none"
               aria-hidden="true"
               style={{ background: "hsl(0 0% 18% / 0.5)" }}
             />
 
             {/* Mock product frame */}
             <div
-              className="relative w-full max-w-[480px] aspect-[4/3] rounded-xl border overflow-hidden"
+              className="relative w-full max-w-[360px] sm:max-w-[480px] aspect-[4/3] rounded-xl border overflow-hidden"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 background: "hsl(0 0% 7%)",
