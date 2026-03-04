@@ -237,26 +237,14 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
           })}
         </div>
 
-        {/* ETA */}
-        {remainingStr && (
-          <p
-            className="text-muted-foreground/40 tabular-nums tracking-wide mb-1"
-            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-          >
-            {remainingStr}
-          </p>
-        )}
-
         {/* Cancel */}
         {onCancel && (
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={onCancel}
-            className="mt-2 h-8 px-4 text-[11px] text-muted-foreground/60 hover:text-foreground/70 tracking-wide"
+            className="mt-1 h-[40px] px-5 text-[12px] font-medium text-foreground/55 rounded-[11px] border border-foreground/[0.18] bg-transparent hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-150 tracking-wide"
           >
-            Cancel
-          </Button>
+            Cancel analysis
+          </button>
         )}
       </div>
     </div>
