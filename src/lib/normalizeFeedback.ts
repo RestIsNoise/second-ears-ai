@@ -122,15 +122,33 @@ function pickFrom(sources: any[], ...keys: string[]): unknown {
   return undefined;
 }
 
+const FILLER_WORDS = /^(the|a|an|its|their|this|that|very|really|quite|just|some|overall)\s+/gi;
+const SLOPPY_SEPARATORS = /[\/,;]+/g;
+
 function toTitleCase(s: string): string {
-  return s.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+  return s
+    .replace(SLOPPY_SEPARATORS, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+function cleanChipLabel(raw: string): string {
+  if (!raw) return "";
+  // Remove sloppy separators, filler words, extra whitespace
+  let cleaned = raw
+    .replace(SLOPPY_SEPARATORS, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  // Strip leading filler words (up to 2 passes)
+  cleaned = cleaned.replace(FILLER_WORDS, "").replace(FILLER_WORDS, "").trim();
+  // Take first 4 meaningful words max
+  const words = cleaned.split(/\s+/).slice(0, 4);
+  return toTitleCase(words.join(" "));
 }
 
 function extractShortLabel(t: string): string {
-  const words = t.split(/\s+/);
-  if (words.length <= 3) return toTitleCase(t);
-  const raw = t.replace(/^(the|a|an|its|their|this|that)\s+/i, "").split(/\s+/).slice(0, 2).join(" ");
-  return toTitleCase(raw);
+  return cleanChipLabel(t);
 }
 
 function normalizeWhatWorksItem(item: unknown): NormalizedWhatWorks {
