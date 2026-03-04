@@ -4,23 +4,23 @@ const steps = [
   {
     icon: Upload,
     number: "01",
-    title: "Upload your track",
-    description: "Drop a WAV, MP3, or FLAC. Analysis begins automatically.",
-    proof: "Up to 100 MB per file",
+    title: "Upload",
+    description: "Drop a WAV, MP3, or FLAC. Analysis starts on upload.",
+    proof: "Up to 100 MB",
   },
   {
     icon: BarChart3,
     number: "02",
-    title: "Get three perspectives",
-    description: "Technical, musical, and perception modes flag issues at exact timestamps.",
-    proof: "Feedback in MM:SS format",
+    title: "Analyze",
+    description: "Three modes flag issues at exact timestamps in your track.",
+    proof: "MM:SS timestamps",
   },
   {
     icon: ListChecks,
     number: "03",
-    title: "Work through the fixes",
-    description: "A prioritized to-do list orders issues by impact so you know where to start.",
-    proof: "Shareable report link",
+    title: "Fix",
+    description: "A to-do list ranks issues by impact. Share one link with collaborators.",
+    proof: "Shareable report",
   },
 ];
 

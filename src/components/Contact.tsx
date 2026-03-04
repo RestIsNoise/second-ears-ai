@@ -11,7 +11,7 @@ const Contact = () => (
         Contact
       </h2>
       <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed">
-        Questions about billing, feedback quality, or feature requests — we read every message.
+        Billing, feedback quality, feature requests. We read every message.
       </p>
       <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
         <a href="mailto:hello@secondears.io">

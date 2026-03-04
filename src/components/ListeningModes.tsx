@@ -4,23 +4,23 @@ const modes = [
   {
     icon: Activity,
     name: "Technical",
-    tag: "The engineer",
-    description: "Loudness, dynamic range, stereo width, phase. Objective measurements of your mix.",
-    points: ["EQ curve analysis", "Dynamic range scoring", "Stereo correlation", "LUFS metering"],
+    tag: "Engineer view",
+    description: "LUFS, dynamic range, stereo width, phase. Numbers and meters.",
+    points: ["EQ curve", "DR scoring", "Stereo correlation", "LUFS"],
   },
   {
     icon: Music,
     name: "Musical",
-    tag: "The producer",
-    description: "Arrangement flow, tonal balance, vocal presence. How the mix works as a piece of music.",
-    points: ["Arrangement density", "Tonal warmth vs. brightness", "Vocal-instrument balance", "Low-end clarity"],
+    tag: "Producer view",
+    description: "Arrangement, tonal balance, vocal presence. How the track works as music.",
+    points: ["Arrangement density", "Tonal balance", "Vocal clarity", "Low-end weight"],
   },
   {
     icon: Eye,
     name: "Perception",
-    tag: "The listener",
-    description: "Translation-focused analysis: how your mix sounds on different systems and to fresh ears.",
-    points: ["System translation", "First-impression impact", "Genre context", "Playback compatibility"],
+    tag: "Listener view",
+    description: "System translation, first impressions, genre context. How it sounds on other speakers.",
+    points: ["System translation", "First impression", "Genre fit", "Playback check"],
   },
 ];
 
