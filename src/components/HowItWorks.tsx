@@ -36,7 +36,7 @@ const HowItWorks = () => (
         </h2>
       </div>
 
-      <div className="relative grid md:grid-cols-3 gap-10 md:gap-0">
+      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
         {/* Connector lines — desktop only */}
         <div className="hidden md:block absolute top-[38px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-border-subtle" aria-hidden="true" />
 
