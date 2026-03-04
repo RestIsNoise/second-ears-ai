@@ -25,20 +25,20 @@ const modes = [
 ];
 
 const ListeningModes = () => (
-  <section id="modes" className="py-16 md:py-20 px-6 bg-secondary/50 overflow-visible">
+  <section id="modes" className="py-14 md:py-16 px-6 bg-secondary/50 overflow-visible">
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-10 md:mb-12">
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">Three perspectives</p>
+      <div className="text-center mb-8 md:mb-10">
+        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Three perspectives</p>
         <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Listening modes</h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-5">
         {modes.map((mode) => (
           <div
             key={mode.name}
-            className="bg-background rounded-xl border border-border-subtle p-8 md:p-10 flex flex-col gap-6 hover:border-foreground/10 transition-colors"
+            className="bg-background rounded-xl border border-border-subtle p-7 md:p-8 flex flex-col gap-5 hover:border-foreground/10 transition-colors"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-lg bg-secondary flex items-center justify-center">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
                 <mode.icon className="w-5 h-5 text-foreground" />
               </div>
               <div>

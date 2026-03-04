@@ -22,7 +22,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative pt-56 pb-48 px-6 overflow-hidden">
+    <section className="relative pt-44 pb-36 px-6 overflow-hidden">
       {/* Diagonal bars — "//" motif */}
       <div ref={barsRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
@@ -41,13 +41,13 @@ const Hero = () => {
       </div>
 
       <div className="relative max-w-2xl mx-auto text-center">
-        <p className="font-mono-brand text-[11px] font-medium text-muted-foreground tracking-[0.4em] uppercase mb-12 animate-fade-up">
+        <p className="font-mono-brand text-[11px] font-medium text-muted-foreground tracking-[0.4em] uppercase mb-10 animate-fade-up">
           AI speed · Human ears
         </p>
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08] mb-10 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08] mb-8 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           Hear your mix<br />differently.
         </h1>
-        <p className="text-[14px] text-muted-foreground/70 max-w-xs mx-auto mb-16 leading-relaxed font-light animate-fade-up" style={{ animationDelay: "0.2s" }}>
+        <p className="text-[14px] text-muted-foreground max-w-xs mx-auto mb-12 leading-relaxed font-light animate-fade-up" style={{ animationDelay: "0.2s" }}>
           Precise, actionable feedback — delivered in minutes.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
@@ -68,7 +68,7 @@ const Hero = () => {
             See how it works
           </Button>
         </div>
-        <p className="text-[11px] text-muted-foreground/50 mt-6 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+        <p className="text-[11px] text-muted-foreground/50 mt-5 animate-fade-up" style={{ animationDelay: "0.4s" }}>
           No credit card required to start
         </p>
       </div>

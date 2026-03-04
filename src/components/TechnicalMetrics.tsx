@@ -51,7 +51,6 @@ interface MetricCardProps {
   min: number;
   max: number;
   status: Status;
-  /** Optional zones to color the bar background */
   barZones?: Array<{ from: number; to: number; color: string }>;
 }
 
@@ -60,8 +59,7 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   const colors = statusColors[status.color];
 
   return (
-    <div className="rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
-      {/* Top row: value + status badge */}
+    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
@@ -86,7 +84,6 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
           {status.label}
         </span>
       </div>
-      {/* Bar */}
       <div className="h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${colors.bar}`}
@@ -97,16 +94,14 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   );
 };
 
-/** Stereo correlation gets a special centered bar */
 const CorrelationCard = ({ value }: { value: number }) => {
   const status = correlationStatus(value);
   const colors = statusColors[status.color];
-  // Map -1..+1 → 0..100
   const pct = ((value + 1) / 2) * 100;
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div className="rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
+    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
@@ -126,28 +121,17 @@ const CorrelationCard = ({ value }: { value: number }) => {
         </span>
       </div>
 
-      {/* Centered bar */}
       <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
-        {/* Center line */}
         <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
-        {/* Fill from center */}
         {clampedPct >= 50 ? (
           <div
             className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{
-              left: "50%",
-              width: `${clampedPct - 50}%`,
-              opacity: 0.8,
-            }}
+            style={{ left: "50%", width: `${clampedPct - 50}%`, opacity: 0.8 }}
           />
         ) : (
           <div
             className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{
-              left: `${clampedPct}%`,
-              width: `${50 - clampedPct}%`,
-              opacity: 0.8,
-            }}
+            style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, opacity: 0.8 }}
           />
         )}
       </div>
@@ -155,16 +139,13 @@ const CorrelationCard = ({ value }: { value: number }) => {
   );
 };
 
-/** Sub/Kick Ratio balance meter – spans full width */
 const SubKickCard = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
   const colors = statusColors[status.color];
-  // Map 0..2 → 0..100
-  // Map value 0→0%, 1→50%, 2→100% (left=Kick, right=Sub)
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-6 bg-background flex flex-col justify-between min-h-[140px]">
+    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs text-muted-foreground tracking-wide">Sub / Kick Ratio</p>
@@ -176,9 +157,7 @@ const SubKickCard = ({ value }: { value: number }) => {
         </span>
       </div>
 
-      {/* Balance meter */}
       <div className="mt-4">
-        {/* Pole labels */}
         <div className="flex justify-between mb-1.5">
           <span
             className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase"
@@ -194,14 +173,11 @@ const SubKickCard = ({ value }: { value: number }) => {
           </span>
         </div>
 
-        {/* Track */}
         <div className="relative h-2 rounded-full bg-muted/40 overflow-hidden">
-          {/* Green center zone (0.8–1.2 → 40%–60%) */}
           <div
             className="absolute inset-y-0 bg-emerald-500/10 rounded-full"
             style={{ left: "40%", width: "20%" }}
           />
-          {/* Indicator dot */}
           <div
             className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-all duration-700 ease-out ${colors.bar}`}
             style={{ left: `${pct}%`, marginLeft: "-6px" }}
@@ -209,8 +185,7 @@ const SubKickCard = ({ value }: { value: number }) => {
         </div>
       </div>
 
-      {/* Value readout */}
-      <div className="mt-3 text-center">
+      <div className="mt-2.5 text-center">
         <span
           className="text-lg font-bold text-foreground tabular-nums tracking-tight"
           style={{ fontFamily: "'IBM Plex Mono', monospace" }}
@@ -252,7 +227,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
   return (
     <section>
-      <div className="flex items-baseline justify-between mb-5">
+      <div className="flex items-baseline justify-between mb-4">
         <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
           Technical metrics
         </h2>
@@ -262,57 +237,22 @@ const TechnicalMetrics = ({ metrics }: Props) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {metrics.integrated_lufs !== undefined && (
-          <MetricCard
-            label="Integrated LUFS"
-            value={metrics.integrated_lufs}
-            unit="LUFS"
-            min={-24}
-            max={-6}
-            status={lufsStatus(metrics.integrated_lufs)}
-          />
+          <MetricCard label="Integrated LUFS" value={metrics.integrated_lufs} unit="LUFS" min={-24} max={-6} status={lufsStatus(metrics.integrated_lufs)} />
         )}
         {metrics.short_term_lufs !== undefined && (
-          <MetricCard
-            label="Short-Term LUFS"
-            value={metrics.short_term_lufs}
-            unit="LUFS"
-            min={-24}
-            max={-6}
-            status={lufsStatus(metrics.short_term_lufs)}
-          />
+          <MetricCard label="Short-Term LUFS" value={metrics.short_term_lufs} unit="LUFS" min={-24} max={-6} status={lufsStatus(metrics.short_term_lufs)} />
         )}
         {metrics.dynamic_range !== undefined && (
-          <MetricCard
-            label="Dynamic Range"
-            value={metrics.dynamic_range}
-            unit="DR"
-            min={0}
-            max={20}
-            status={drStatus(metrics.dynamic_range)}
-          />
+          <MetricCard label="Dynamic Range" value={metrics.dynamic_range} unit="DR" min={0} max={20} status={drStatus(metrics.dynamic_range)} />
         )}
         {metrics.peak_dbtp !== undefined && (
-          <MetricCard
-            label="Peak dBTP"
-            value={metrics.peak_dbtp}
-            unit="dBTP"
-            min={-6}
-            max={0}
-            status={peakStatus(metrics.peak_dbtp)}
-          />
+          <MetricCard label="Peak dBTP" value={metrics.peak_dbtp} unit="dBTP" min={-6} max={0} status={peakStatus(metrics.peak_dbtp)} />
         )}
         {metrics.stereo_correlation !== undefined && (
           <CorrelationCard value={metrics.stereo_correlation} />
         )}
         {metrics.crest_factor !== undefined && (
-          <MetricCard
-            label="Crest Factor"
-            value={metrics.crest_factor}
-            unit="dB"
-            min={0}
-            max={20}
-            status={crestStatus(metrics.crest_factor)}
-          />
+          <MetricCard label="Crest Factor" value={metrics.crest_factor} unit="dB" min={0} max={20} status={crestStatus(metrics.crest_factor)} />
         )}
         {metrics.sub_kick_ratio !== undefined && (
           <SubKickCard value={metrics.sub_kick_ratio} />
