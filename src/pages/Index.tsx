@@ -5,7 +5,6 @@ import SampleFeedback from "@/components/SampleFeedback";
 import Proof from "@/components/Proof";
 import ListeningModes from "@/components/ListeningModes";
 import Pricing from "@/components/Pricing";
-import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import FinalCta from "@/components/FinalCta";
 import TrustStrip from "@/components/TrustStrip";
@@ -21,7 +20,6 @@ const Index = () => (
       <Proof />
       <ListeningModes />
       <Pricing />
-      <Faq />
       <Contact />
       <TrustStrip />
       <FinalCta />
