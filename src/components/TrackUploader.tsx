@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Upload, Music, Activity, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,6 +78,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<ListeningMode>("technical");
   const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
@@ -270,7 +271,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   return (
     <div className="space-y-6">
       {/* Drop zone */}
-      <label
+      <div
+        onClick={() => fileInputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -283,10 +285,11 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         }`}
       >
         <input
+          ref={fileInputRef}
           type="file"
           accept="audio/*"
           onChange={handleFileChange}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="hidden"
         />
         {file ? (
           <>
@@ -307,7 +310,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             </div>
           </>
         )}
-      </label>
+      </div>
 
       {/* Context input */}
       <div>
