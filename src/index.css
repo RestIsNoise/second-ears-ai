@@ -22,7 +22,7 @@
     --secondary-foreground: 0 0% 5%;
 
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
+    --muted-foreground: 0 0% 34%;
 
     --accent: 0 0% 93%;
     --accent-foreground: 0 0% 5%;
@@ -47,7 +47,7 @@
 
     /* Custom tokens */
     --surface-elevated: 0 0% 99%;
-    --text-tertiary: 0 0% 55%;
+    --text-tertiary: 0 0% 48%;
     --border-subtle: 0 0% 92%;
   }
 
@@ -63,7 +63,7 @@
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 96%;
     --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 50%;
+    --muted-foreground: 0 0% 56%;
     --accent: 0 0% 14%;
     --accent-foreground: 0 0% 96%;
     --destructive: 0 62.8% 30.6%;
@@ -72,7 +72,7 @@
     --input: 0 0% 16%;
     --ring: 0 0% 83%;
     --surface-elevated: 0 0% 8%;
-    --text-tertiary: 0 0% 42%;
+    --text-tertiary: 0 0% 50%;
     --border-subtle: 0 0% 14%;
   }
 }

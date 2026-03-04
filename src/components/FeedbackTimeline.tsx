@@ -155,7 +155,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                           fontSize: 10,
                         }}
                       >
-                        Fix
+                        {item.mode === "musical" ? "Arrange" : item.mode === "perception" ? "System" : "Fix"}
                       </span>
                       {item.fix}
                     </p>

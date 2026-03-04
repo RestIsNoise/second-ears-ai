@@ -298,7 +298,7 @@ const FeedbackDisplay = ({
 
       {/* Full-width Waveform */}
       {audioFile && (
-        <div className="mt-7 md:mt-8">
+        <div className="mt-7 md:mt-8 w-full overflow-hidden">
           <WaveformPlayer
             ref={waveformRef}
             audioFile={audioFile}
@@ -370,7 +370,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ─── Two-column studio layout ─── */}
-      <div className="mt-10 md:mt-12 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+      <div className="mt-10 md:mt-12 flex flex-col lg:flex-row gap-8 lg:gap-8 items-start">
         {/* Left column (70%) — scrollable content */}
         <div className="w-full lg:w-[70%] min-w-0 space-y-10 md:space-y-12">
           {/* Timeline Feedback */}
@@ -442,7 +442,7 @@ const FeedbackDisplay = ({
               <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
                 Full analysis
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {fullAnalysisCards.map(({ key, label, text }) =>
                   text ? (
                     <div key={key} className="rounded-xl border border-border-subtle p-4 md:p-5 bg-background flex flex-col">
@@ -461,7 +461,7 @@ const FeedbackDisplay = ({
               <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
                 {modeWhatWorksLabel[mode] || "What works"}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {n.whatWorks.map((item, i) => (
                   <div key={i} className={`rounded-xl border border-border-subtle bg-background flex flex-col ${item.description ? "p-4 md:p-5" : "p-4"}`}>
                     <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
@@ -535,8 +535,8 @@ const FeedbackDisplay = ({
           )}
         </div>
 
-        {/* Right column (30%) — sticky To-Do + Share + Brand */}
-        <div className="w-full lg:w-[30%] lg:sticky lg:top-24 space-y-5" style={{ maxHeight: "calc(100vh - 8rem)" }}>
+        {/* Right column (30%) — sticky To-Do + Share + Brand. On mobile: below main content */}
+        <div className="w-full lg:w-[30%] lg:sticky lg:top-24 space-y-5 order-last" style={{ maxHeight: "calc(100vh - 8rem)" }}>
           <ToDoPanel
             items={todoItems}
             onToggle={handleToggleToDo}
