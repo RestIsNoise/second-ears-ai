@@ -20,9 +20,9 @@ const Index = () => (
       <Proof />
       <ListeningModes />
       <Pricing />
-      <Contact />
       <TrustStrip />
       <FinalCta />
+      <Contact />
     </main>
     <Footer />
   </div>
