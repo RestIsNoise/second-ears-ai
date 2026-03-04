@@ -5,22 +5,22 @@ const steps = [
     icon: Upload,
     number: "01",
     title: "Upload your track",
-    description: "Drag in any WAV, MP3, or FLAC file. Analysis starts immediately.",
-    proof: "Supports files up to 100 MB",
+    description: "Drop a WAV, MP3, or FLAC. Analysis begins automatically.",
+    proof: "Up to 100 MB per file",
   },
   {
     icon: BarChart3,
     number: "02",
-    title: "Analyze three ways",
-    description: "Technical, musical, and perception modes dissect your mix at exact timestamps.",
-    proof: "Timestamps in MM:SS format",
+    title: "Get three perspectives",
+    description: "Technical, musical, and perception modes flag issues at exact timestamps.",
+    proof: "Feedback in MM:SS format",
   },
   {
     icon: ListChecks,
     number: "03",
-    title: "Fix with a clear plan",
-    description: "A prioritized to-do list and timeline walk you from biggest issue to final polish.",
-    proof: "Shareable report link included",
+    title: "Work through the fixes",
+    description: "A prioritized to-do list orders issues by impact so you know where to start.",
+    proof: "Shareable report link",
   },
 ];
 
@@ -32,7 +32,7 @@ const HowItWorks = () => (
           How it works
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-          Three steps to a better mix
+          Upload, analyze, fix
         </h2>
       </div>
 
