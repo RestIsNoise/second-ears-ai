@@ -81,9 +81,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
       const { data: result, error } = await supabase.functions.invoke("proxy-feedback", {
         body: {
-          audioUrl: signedData?.signedUrl
-            ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1${signedData.signedUrl}`
-            : undefined,
+          audioUrl: signedData?.signedUrl || undefined,
           fileName: file.name,
           mode,
           userContext: context.trim() || undefined,
