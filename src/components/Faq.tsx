@@ -57,7 +57,7 @@ const items = [
 ];
 
 const Faq = () => (
-  <section className="py-14 md:py-16 px-6 border-t border-border-subtle">
+  <section id="faq" className="py-14 md:py-16 px-6 border-t border-border-subtle scroll-mt-20">
     <div className="max-w-5xl mx-auto">
       <div className="max-w-2xl">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
