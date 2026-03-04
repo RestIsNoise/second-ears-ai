@@ -79,6 +79,11 @@ function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
     });
   }
 
+  // If all timestamps are suspiciously low (all < 5s), they're likely placeholders — discard them
+  if (items.length > 1 && items.every((it) => it.timestampSec < 5)) {
+    return [];
+  }
+
   return items;
 }
 
@@ -196,9 +201,13 @@ const FeedbackDisplay = ({
     [timelineItems, activeItemId]
   );
 
-  // Executive summary data
-  const topIssue = feedback.top_priorities?.[0]?.title;
-  const biggestWin = feedback.what_works?.[0]?.title;
+  // Executive summary — use short titles, truncated to ~4 words max
+  const truncateTitle = (t: string) => {
+    const words = t.split(/\s+/);
+    return words.length <= 4 ? t : words.slice(0, 4).join(" ") + "…";
+  };
+  const topIssue = feedback.top_priorities?.[0]?.title ? truncateTitle(feedback.top_priorities[0].title) : undefined;
+  const biggestWin = feedback.what_works?.[0]?.title ? truncateTitle(feedback.what_works[0].title) : undefined;
   const metrics = feedback.technical_metrics;
   const releaseReadiness = useMemo(() => {
     if (!metrics) return null;
@@ -431,13 +440,13 @@ const FeedbackDisplay = ({
       )}
 
       {/* Fix One Thing */}
-      {feedback.fix_one_thing && (
+      {feedback.fix_one_thing && (feedback.fix_one_thing.title || feedback.fix_one_thing.how || feedback.fix_one_thing.why) && (
         <section className="mt-8 md:mt-10">
           <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             {modeFixOneLabel[mode] || "If you fix only one thing today"}
           </h2>
           <div className="rounded-xl border-2 border-foreground/10 p-8 md:p-10 bg-secondary/20 max-w-[70ch]">
-            {feedback.fix_one_thing.how && !feedback.fix_one_thing.why ? (
+            {feedback.fix_one_thing.how && !feedback.fix_one_thing.why && !feedback.fix_one_thing.title ? (
               <div className="flex items-start justify-between gap-3">
                 <p className="text-base text-foreground leading-relaxed">
                   {feedback.fix_one_thing.how}
