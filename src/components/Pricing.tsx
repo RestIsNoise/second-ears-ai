@@ -8,7 +8,7 @@ const plans = [
     period: "forever",
     description: "Try it out with your first tracks.",
     features: ["3 tracks / month", "Technical mode only", "Basic frequency analysis", "48h cooldown between uploads"],
-    cta: "Start free",
+    cta: "Get started",
     featured: false,
   },
   {
@@ -32,17 +32,17 @@ const plans = [
 ];
 
 const Pricing = () => (
-  <section id="pricing" className="py-24 px-6 border-t border-border-subtle">
+  <section id="pricing" className="py-14 md:py-16 px-6 border-t border-border-subtle">
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-16">
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">Simple pricing</p>
+      <div className="text-center mb-10">
+        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Simple pricing</p>
         <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Pick your plan</h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-5">
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative rounded-xl border p-8 flex flex-col gap-6 transition-colors ${
+            className={`relative rounded-xl border p-7 flex flex-col gap-5 transition-colors ${
               plan.featured
                 ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_24px_-6px_hsl(var(--foreground)/0.15)] scale-[1.02]"
                 : "bg-background border-border-subtle hover:border-foreground/10"
@@ -65,7 +65,7 @@ const Pricing = () => (
                 {plan.period}
               </span>
             </div>
-            <ul className="space-y-3 flex-1">
+            <ul className="space-y-2.5 flex-1">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2.5 text-sm">
                   <Check className={`w-4 h-4 flex-shrink-0 ${plan.featured ? "text-primary-foreground/70" : "text-muted-foreground"}`} />

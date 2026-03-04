@@ -19,11 +19,11 @@ const props = [
 ];
 
 const ValueProps = () => (
-  <section id="features" className="pt-16 md:pt-20 pb-10 md:pb-12 px-6 border-t border-border-subtle scroll-mt-20 overflow-visible">
+  <section id="features" className="py-14 md:py-16 px-6 border-t border-border-subtle scroll-mt-20 overflow-visible">
     <div className="max-w-5xl mx-auto">
-      <div className="grid md:grid-cols-3 gap-12 md:gap-16">
+      <div className="grid md:grid-cols-3 gap-10 md:gap-14">
         {props.map((prop) => (
-          <div key={prop.title} className="space-y-4">
+          <div key={prop.title} className="space-y-3.5">
             <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
               <prop.icon className="w-5 h-5 text-foreground" />
             </div>

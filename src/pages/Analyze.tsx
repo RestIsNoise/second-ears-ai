@@ -95,7 +95,7 @@ const Analyze = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-28 pb-6 md:pb-10 px-6">
+      <main className="pt-24 pb-6 md:pb-10 px-6">
         <div className="max-w-2xl mx-auto">
           {result ? (
             <FeedbackDisplay
@@ -112,8 +112,8 @@ const Analyze = () => {
             />
           ) : (
             <>
-              <div className="text-center mb-8">
-                <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+              <div className="text-center mb-6">
+                <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
                   Upload & analyze
                 </p>
                 <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">

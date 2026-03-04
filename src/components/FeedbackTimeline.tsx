@@ -70,7 +70,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
   return (
-    <div ref={containerRef} className="space-y-[18px]">
+    <div ref={containerRef} className="space-y-3.5">
       {sorted.map((item) => {
         const isActive = activeItemId === item.id;
 
@@ -83,7 +83,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
             }}
             onClick={() => onItemClick(item)}
             style={{ scrollMarginTop: 80, scrollMarginBottom: 80 }}
-            className={`w-full text-left rounded-xl border p-6 md:p-8 transition-colors duration-200 ${
+            className={`w-full text-left rounded-xl border p-5 md:p-7 transition-colors duration-200 ${
               isActive
                 ? "border-foreground/20 bg-secondary/40"
                 : "border-border-subtle bg-background hover:border-foreground/10"
@@ -114,12 +114,12 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
                   <CopyFixInline item={item} />
                 </div>
                 {item.observation && (
-                  <p className="text-sm text-muted-foreground leading-relaxed mt-2.5">
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-2">
                     {item.observation}
                   </p>
                 )}
                 {item.fix && (
-                  <div className="mt-3.5">
+                  <div className="mt-3">
                     <p className="text-sm text-foreground/80 leading-relaxed">
                       <span
                         className="text-muted-foreground uppercase tracking-wider mr-2"

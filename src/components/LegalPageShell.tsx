@@ -32,10 +32,10 @@ const LegalPageShell = ({ title, sections, footnote }: LegalPageShellProps) => {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="pt-14 md:pt-14 pb-12 px-4 md:px-6">
+      <main className="pt-14 pb-10 px-4 md:px-6">
         <div className="max-w-[760px] mx-auto">
           {/* Header */}
-          <div className="pt-5 md:pt-10 mb-8 md:mb-10">
+          <div className="pt-5 md:pt-8 mb-6 md:mb-8">
             <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
               Legal
             </p>
@@ -48,7 +48,7 @@ const LegalPageShell = ({ title, sections, footnote }: LegalPageShellProps) => {
           </div>
 
           {/* Controls */}
-          <div className="flex justify-end gap-3 mb-4">
+          <div className="flex justify-end gap-3 mb-3">
             <button
               onClick={() => setOpenItems(allIds)}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
@@ -77,12 +77,12 @@ const LegalPageShell = ({ title, sections, footnote }: LegalPageShellProps) => {
                 value={id}
                 className="border-b border-border-subtle"
               >
-                <AccordionTrigger className="py-5 md:py-6 hover:no-underline group">
+                <AccordionTrigger className="py-4 md:py-5 hover:no-underline group">
                   <span className="text-base md:text-lg font-semibold text-foreground tracking-tight text-left group-hover:text-foreground/80 transition-colors">
                     {sectionTitle}
                   </span>
                 </AccordionTrigger>
-                <AccordionContent className="pb-6 md:pb-8">
+                <AccordionContent className="pb-5 md:pb-6">
                   {content}
                 </AccordionContent>
               </AccordionItem>
@@ -90,7 +90,7 @@ const LegalPageShell = ({ title, sections, footnote }: LegalPageShellProps) => {
           </Accordion>
 
           {footnote && (
-            <p className="text-xs text-muted-foreground/50 mt-8">
+            <p className="text-xs text-muted-foreground/50 mt-6">
               {footnote}
             </p>
           )}
