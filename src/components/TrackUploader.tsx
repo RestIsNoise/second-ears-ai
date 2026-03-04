@@ -126,13 +126,33 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   return (
     <div className="space-y-6">
+      {/* Hidden file input — outside dropzone to prevent click conflicts */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".mp3,.wav,.flac,audio/*"
+        onChange={handleFileChange}
+        className="hidden"
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+
       {/* Drop zone */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Upload track"
         onClick={() => fileInputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }
+        }}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 cursor-pointer transition-all duration-150 ${
+        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 cursor-pointer select-none transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           dragOver
             ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
             : file
@@ -140,13 +160,6 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
         }`}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="audio/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
         {file ? (
           <>
             <Music className="w-8 h-8 text-foreground/60" />
