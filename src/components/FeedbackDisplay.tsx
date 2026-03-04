@@ -375,6 +375,13 @@ const FeedbackDisplay = ({
                   { key: "grooveContinuity" as const, label: "Groove Continuity" },
                   { key: "hookClarity" as const, label: "Hook Clarity" },
                 ]
+              : mode === "perception"
+              ? [
+                  { key: "subLowTranslation" as const, label: "Sub & Low Translation" },
+                  { key: "headroomTransients" as const, label: "Headroom & Transients" },
+                  { key: "stereoFoldDown" as const, label: "Stereo Fold-Down" },
+                  { key: "listenerFatigue" as const, label: "Listener Fatigue" },
+                ]
               : [
                   { key: "mixBalance" as const, label: "Mix Balance" },
                   { key: "dynamics" as const, label: "Dynamics & Loudness" },
