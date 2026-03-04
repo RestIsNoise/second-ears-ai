@@ -16,3 +16,11 @@ export interface WaveformMarker {
   label: string;
   severity: Severity;
 }
+
+export interface ToDoItem {
+  id: string;
+  text: string;
+  timestampSec: number;
+  done: boolean;
+  sourceId?: string; // links back to a FeedbackItem
+}
