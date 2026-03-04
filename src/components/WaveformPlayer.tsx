@@ -24,13 +24,20 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
+const formatTimePrecise = (s: number) => {
+  if (!Number.isFinite(s) || s < 0) return "0:00.0";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  const tenths = Math.floor((s % 1) * 10);
+  return `${m}:${sec.toString().padStart(2, "0")}.${tenths}`;
+};
+
 /* ── Time ruler helpers ── */
 
-const RULER_HEIGHT = 24;
-const MIN_LABEL_GAP_PX = 60; // minimum pixels between labels
+const RULER_HEIGHT = 28;
+const MIN_LABEL_GAP_PX = 64;
 
 function pickInterval(duration: number, containerWidth: number): { major: number; minor: number } {
-  // Candidate intervals in seconds [major, minor]
   const candidates: [number, number][] = [
     [5, 1], [10, 2], [15, 5], [20, 5], [30, 10], [60, 15], [120, 30],
   ];
@@ -42,15 +49,19 @@ function pickInterval(duration: number, containerWidth: number): { major: number
   return { major: 120, minor: 30 };
 }
 
+const MARKER_SNAP_PX = 14;
+
 interface RulerProps {
   duration: number;
   containerWidth: number;
   currentTime: number;
   hoverX: number | null;
   hoverTime: number;
+  markers?: WaveformMarker[];
+  snappedMarkerId?: string | null;
 }
 
-const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime }: RulerProps) => {
+const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime, markers = [], snappedMarkerId }: RulerProps) => {
   const { major, minor } = useMemo(
     () => pickInterval(duration, containerWidth),
     [duration, containerWidth]
@@ -65,12 +76,15 @@ const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime }:
 
   const playheadPct = (currentTime / duration) * 100;
 
+  // Snapped marker diamond indicators on the ruler
+  const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
+
   return (
     <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%" }}>
       {/* Bottom border line */}
       <div
         className="absolute bottom-0 left-0 right-0"
-        style={{ height: "0.5px", backgroundColor: "hsl(var(--foreground) / 0.1)" }}
+        style={{ height: "1px", backgroundColor: "hsl(var(--foreground) / 0.08)" }}
       />
 
       {/* Ticks + labels */}
@@ -80,28 +94,27 @@ const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime }:
           <div
             key={time}
             className="absolute bottom-0"
-            style={{ left: `${leftPct}%`, transform: "translateX(-0.25px)" }}
+            style={{ left: `${leftPct}%`, transform: "translateX(-0.5px)" }}
           >
-            {/* Tick mark */}
             <div
               style={{
-                width: "0.5px",
-                height: isMajor ? 8 : 4,
+                width: isMajor ? "1px" : "0.5px",
+                height: isMajor ? 10 : 5,
                 backgroundColor: isMajor
-                  ? "hsl(var(--foreground) / 0.25)"
+                  ? "hsl(var(--foreground) / 0.35)"
                   : "hsl(var(--foreground) / 0.1)",
               }}
             />
-            {/* Label for major ticks */}
             {isMajor && (
               <span
-                className="absolute whitespace-nowrap text-muted-foreground/50 tabular-nums"
+                className="absolute whitespace-nowrap tabular-nums"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: 9,
                   lineHeight: 1,
                   letterSpacing: "0.02em",
-                  bottom: 10,
+                  color: "hsl(var(--foreground) / 0.4)",
+                  bottom: 13,
                   left: 0,
                   transform: time === 0 ? "none" : "translateX(-50%)",
                 }}
@@ -113,43 +126,68 @@ const TimeRuler = ({ duration, containerWidth, currentTime, hoverX, hoverTime }:
         );
       })}
 
+      {/* Marker snap diamonds on ruler */}
+      {markers.slice(0, 8).map((m) => {
+        const leftPct = (m.time / duration) * 100;
+        const isSnapped = snappedMarkerId === m.id;
+        return (
+          <div
+            key={`ruler-${m.id}`}
+            className="absolute bottom-0 pointer-events-none z-[3]"
+            style={{ left: `${leftPct}%`, transform: "translateX(-3px)" }}
+          >
+            <div
+              className="transition-all duration-150"
+              style={{
+                width: 5,
+                height: 5,
+                transform: "rotate(45deg)",
+                backgroundColor: isSnapped
+                  ? "hsl(var(--foreground) / 0.7)"
+                  : "hsl(var(--foreground) / 0.15)",
+                marginBottom: -0.5,
+              }}
+            />
+          </div>
+        );
+      })}
+
       {/* Playhead indicator on ruler */}
       <div
         className="absolute bottom-0 z-[4] pointer-events-none"
-        style={{
-          left: `${playheadPct}%`,
-          transform: "translateX(-0.5px)",
-        }}
+        style={{ left: `${playheadPct}%`, transform: "translateX(-0.5px)" }}
       >
         <div
           style={{
             width: "1px",
-            height: 10,
-            backgroundColor: "hsl(var(--foreground) / 0.6)",
+            height: 12,
+            backgroundColor: "hsl(var(--foreground) / 0.7)",
           }}
         />
       </div>
 
-      {/* Hover tooltip on ruler */}
+      {/* Hover tooltip */}
       {hoverX !== null && (
         <div
           className="absolute pointer-events-none z-[6]"
-          style={{
-            left: hoverX,
-            top: 0,
-            transform: "translateX(-50%)",
-          }}
+          style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}
         >
           <span
-            className="bg-background/90 border border-border-subtle rounded px-1.5 py-0.5 text-foreground/70 tabular-nums whitespace-nowrap"
+            className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 9,
               lineHeight: 1,
               letterSpacing: "0.02em",
+              color: snappedMarker ? "hsl(var(--foreground) / 0.9)" : "hsl(var(--foreground) / 0.6)",
+              backgroundColor: "hsl(var(--background) / 0.95)",
+              border: `0.5px solid hsl(var(--foreground) / ${snappedMarker ? "0.15" : "0.08"})`,
+              fontWeight: snappedMarker ? 500 : 400,
             }}
           >
-            {formatTime(hoverTime)}
+            {snappedMarker
+              ? `▸ ${formatTimePrecise(snappedMarker.time)}`
+              : formatTimePrecise(hoverTime)}
           </span>
         </div>
       )}
@@ -273,6 +311,16 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       wsRef.current?.play();
     }, []);
 
+    // Find snapped marker based on hover proximity
+    const snappedMarkerId_hover = useMemo(() => {
+      if (hoverX === null || duration <= 0 || containerWidth <= 0 || markers.length === 0) return null;
+      for (const m of markers) {
+        const markerX = (m.time / duration) * containerWidth;
+        if (Math.abs(markerX - hoverX) <= MARKER_SNAP_PX) return m.id;
+      }
+      return null;
+    }, [hoverX, duration, containerWidth, markers]);
+
     const handleMouseMove = useCallback(
       (e: React.MouseEvent) => {
         if (!wrapperRef.current || duration <= 0) return;
@@ -318,6 +366,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               currentTime={currentTime}
               hoverX={hoverX}
               hoverTime={hoverTime}
+              markers={markers}
+              snappedMarkerId={snappedMarkerId_hover}
             />
           )}
 
@@ -352,9 +402,14 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               <div
                 className="absolute top-0 bottom-0 pointer-events-none z-[3]"
                 style={{
-                  left: hoverX,
-                  width: "0.5px",
-                  backgroundColor: "hsl(var(--foreground) / 0.15)",
+                  left: snappedMarkerId_hover
+                    ? `${(markers.find(m => m.id === snappedMarkerId_hover)!.time / duration) * 100}%`
+                    : hoverX,
+                  width: snappedMarkerId_hover ? "1px" : "0.5px",
+                  backgroundColor: snappedMarkerId_hover
+                    ? "hsl(var(--foreground) / 0.3)"
+                    : "hsl(var(--foreground) / 0.12)",
+                  transition: "width 0.1s, background-color 0.1s",
                 }}
               />
             )}
@@ -364,6 +419,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               <div className="absolute inset-0 pointer-events-none z-[2]" style={{ overflow: "visible" }}>
                 {markers.slice(0, 8).map((m) => {
                   const isActive = activeMarkerId === m.id;
+                  const isSnapped = snappedMarkerId_hover === m.id;
                   const leftPct = `${(m.time / duration) * 100}%`;
 
                   return (
@@ -378,30 +434,35 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                         aria-label={`${formatTime(m.time)} — ${m.label}`}
                       >
                         <svg
-                          width={isActive ? "12" : "10"}
-                          height={isActive ? "10" : "8"}
-                          viewBox={isActive ? "0 0 12 10" : "0 0 10 8"}
-                          className="transition-all duration-200"
+                          width={isActive || isSnapped ? "12" : "10"}
+                          height={isActive || isSnapped ? "10" : "8"}
+                          viewBox={isActive || isSnapped ? "0 0 12 10" : "0 0 10 8"}
+                          className="transition-all duration-150"
                         >
                           <polygon
-                            points={isActive ? "6,0 12,10 0,10" : "5,0 10,8 0,8"}
-                            className={
-                              isActive
-                                ? "fill-foreground"
-                                : "fill-foreground/40 group-hover:fill-foreground/70"
-                            }
+                            points={isActive || isSnapped ? "6,0 12,10 0,10" : "5,0 10,8 0,8"}
+                            style={{
+                              fill: isActive
+                                ? "hsl(var(--foreground))"
+                                : isSnapped
+                                  ? "hsl(var(--foreground) / 0.65)"
+                                  : "hsl(var(--foreground) / 0.35)",
+                              transition: "fill 0.15s",
+                            }}
                           />
                         </svg>
                         <span
-                          className={`mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-200 ${
-                            isActive
-                              ? "text-foreground font-medium"
-                              : "text-foreground/40 group-hover:text-foreground/70"
-                          }`}
+                          className="mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-150"
                           style={{
                             fontFamily: "'IBM Plex Mono', monospace",
                             fontSize: 9,
                             lineHeight: 1,
+                            color: isActive
+                              ? "hsl(var(--foreground))"
+                              : isSnapped
+                                ? "hsl(var(--foreground) / 0.65)"
+                                : "hsl(var(--foreground) / 0.35)",
+                            fontWeight: isActive ? 500 : 400,
                           }}
                         >
                           {formatTime(m.time)}
