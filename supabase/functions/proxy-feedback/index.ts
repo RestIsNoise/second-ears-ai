@@ -7,6 +7,29 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+/** Extract valid JSON from markdown-fenced or raw text, fixing trailing commas */
+function trySalvageJson(text: string): Record<string, unknown> | null {
+  // Look for JSON inside code fences first
+  const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)```/);
+  const candidate = fenceMatch ? fenceMatch[1].trim() : text;
+
+  // Also try extracting from an error payload that includes the raw response
+  let jsonStr = candidate;
+  if (!jsonStr.startsWith("{")) {
+    const innerMatch = jsonStr.match(/Raw response:\s*```(?:json)?\s*\n?([\s\S]*?)```/);
+    if (innerMatch) jsonStr = innerMatch[1].trim();
+  }
+
+  // Fix trailing commas before } or ] (common Gemini issue)
+  jsonStr = jsonStr.replace(/,\s*([\]}])/g, "$1");
+
+  try {
+    const parsed = JSON.parse(jsonStr);
+    if (typeof parsed === "object" && parsed !== null) return parsed;
+  } catch { /* not valid JSON */ }
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -26,8 +49,21 @@ serve(async (req) => {
       body: JSON.stringify({ audioUrl, mode, fileName, userContext }),
     });
 
-    const responseText = await response.text();
+    let responseText = await response.text();
     console.log("Backend response status:", response.status);
+
+    // If the backend returned an error with raw Gemini output wrapped in code fences,
+    // try to salvage the JSON instead of forwarding the error.
+    if (response.status >= 400 || responseText.includes("malformed JSON")) {
+      const salvaged = trySalvageJson(responseText);
+      if (salvaged) {
+        console.log("Salvaged JSON from malformed backend response");
+        return new Response(JSON.stringify(salvaged), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
 
     return new Response(responseText, {
       status: response.status,
