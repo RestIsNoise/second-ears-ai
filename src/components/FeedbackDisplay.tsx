@@ -79,10 +79,7 @@ function extractTimelineItems(result: FeedbackResult): FeedbackItem[] {
     });
   }
 
-  // If all timestamps are suspiciously low (all < 5s), they're likely placeholders — discard them
-  if (items.length > 1 && items.every((it) => it.timestampSec < 5)) {
-    return [];
-  }
+  // Remove the placeholder filter — trust exact timestamps from backend
 
   return items;
 }
@@ -278,6 +275,18 @@ const FeedbackDisplay = ({
         </div>
       )}
 
+      {/* Response to Your Request — above overall impression */}
+      {result.context && feedback.focus_response && (
+        <section className="mt-8">
+          <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
+            Response to your request
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-[70ch]" style={{ lineHeight: 1.575 }}>
+            {feedback.focus_response}
+          </p>
+        </section>
+      )}
+
       {/* Overall Impression */}
       {feedback.overall_impression && (
         <section className="mt-8">
@@ -363,56 +372,51 @@ const FeedbackDisplay = ({
         </section>
       )}
 
-      {/* Technical Metrics & Full Analysis — order depends on mode */}
-      {(() => {
-        const metricsSection = feedback.technical_metrics ? (
-          <div className="mt-8 md:mt-10" key="metrics">
-            <TechnicalMetrics metrics={feedback.technical_metrics} />
+      {/* Full Analysis */}
+      {feedback.fullAnalysis && (
+        <section className="mt-8 md:mt-10">
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
+            Full analysis
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {(mode === "musical"
+              ? [
+                  { key: "energyArc" as const, label: "Energy Arc" },
+                  { key: "sectionContrast" as const, label: "Section Contrast" },
+                  { key: "grooveContinuity" as const, label: "Groove Continuity" },
+                  { key: "hookClarity" as const, label: "Hook Clarity" },
+                ]
+              : mode === "perception"
+              ? [
+                  { key: "subLowTranslation" as const, label: "Sub & Low Translation" },
+                  { key: "headroomTransients" as const, label: "Headroom & Transients" },
+                  { key: "stereoFoldDown" as const, label: "Stereo Fold-Down" },
+                  { key: "listenerFatigue" as const, label: "Listener Fatigue" },
+                ]
+              : [
+                  { key: "mixBalance" as const, label: "Mix Balance" },
+                  { key: "dynamics" as const, label: "Dynamics & Loudness" },
+                  { key: "stereoSpace" as const, label: "Stereo & Space" },
+                  { key: "frequencyBalance" as const, label: "Frequency Balance" },
+                ]
+            ).map(({ key, label }) =>
+              feedback.fullAnalysis?.[key] ? (
+                <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
+                  <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
+                  <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>{feedback.fullAnalysis[key]}</p>
+                </div>
+              ) : null
+            )}
           </div>
-        ) : null;
+        </section>
+      )}
 
-        const analysisSection = feedback.fullAnalysis ? (
-          <section className="mt-8 md:mt-10" key="analysis">
-            <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
-              Full analysis
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(mode === "musical"
-                ? [
-                    { key: "energyArc" as const, label: "Energy Arc" },
-                    { key: "sectionContrast" as const, label: "Section Contrast" },
-                    { key: "grooveContinuity" as const, label: "Groove Continuity" },
-                    { key: "hookClarity" as const, label: "Hook Clarity" },
-                  ]
-                : mode === "perception"
-                ? [
-                    { key: "subLowTranslation" as const, label: "Sub & Low Translation" },
-                    { key: "headroomTransients" as const, label: "Headroom & Transients" },
-                    { key: "stereoFoldDown" as const, label: "Stereo Fold-Down" },
-                    { key: "listenerFatigue" as const, label: "Listener Fatigue" },
-                  ]
-                : [
-                    { key: "mixBalance" as const, label: "Mix Balance" },
-                    { key: "dynamics" as const, label: "Dynamics & Loudness" },
-                    { key: "stereoSpace" as const, label: "Stereo & Space" },
-                    { key: "frequencyBalance" as const, label: "Frequency Balance" },
-                  ]
-              ).map(({ key, label }) =>
-                feedback.fullAnalysis?.[key] ? (
-                  <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
-                    <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
-                    <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>{feedback.fullAnalysis[key]}</p>
-                  </div>
-                ) : null
-              )}
-            </div>
-          </section>
-        ) : null;
-
-        return mode === "technical"
-          ? <>{metricsSection}{analysisSection}</>
-          : <>{analysisSection}{metricsSection}</>;
-      })()}
+      {/* Technical Metrics — always shown after Full Analysis */}
+      {feedback.technical_metrics && (
+        <div className="mt-8 md:mt-10">
+          <TechnicalMetrics metrics={feedback.technical_metrics} />
+        </div>
+      )}
 
       {/* What Works */}
       {feedback.what_works && feedback.what_works.length > 0 && (
