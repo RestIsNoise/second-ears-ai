@@ -142,7 +142,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     }, []);
 
     return (
-      <div className="rounded-xl border border-border-subtle bg-background p-4 space-y-3">
+      <div className="rounded-xl border border-border-subtle bg-background p-4 md:p-5 space-y-2.5">
         {error && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 flex items-start gap-3">
             <AlertCircle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
@@ -156,7 +156,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         {/* Waveform container */}
         <div
           ref={wrapperRef}
-          className="relative overflow-visible"
+          className="relative overflow-visible cursor-crosshair"
           style={{ height: 96 }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -180,19 +180,19 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 style={{
                   left: hoverX,
                   width: "0.5px",
-                  backgroundColor: "hsl(var(--foreground) / 0.25)",
+                  backgroundColor: "hsl(var(--foreground) / 0.2)",
                 }}
               />
               <div
                 className="absolute pointer-events-none z-[5]"
                 style={{
                   left: hoverX,
-                  top: -24,
+                  top: -22,
                   transform: "translateX(-50%)",
                 }}
               >
                 <span
-                  className="text-muted-foreground tabular-nums whitespace-nowrap"
+                  className="text-muted-foreground/70 tabular-nums whitespace-nowrap"
                   style={{
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: 9,
@@ -221,29 +221,29 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   >
                     <button
                       onClick={() => onMarkerClick?.(m)}
-                      className="group flex flex-col items-center"
+                      className="group flex flex-col items-center p-0.5"
                       aria-label={`${formatTime(m.time)} — ${m.label}`}
                     >
                       <svg
                         width={isActive ? "12" : "10"}
                         height={isActive ? "10" : "8"}
                         viewBox={isActive ? "0 0 12 10" : "0 0 10 8"}
-                        className="transition-all duration-150"
+                        className="transition-all duration-200"
                       >
                         <polygon
                           points={isActive ? "6,0 12,10 0,10" : "5,0 10,8 0,8"}
                           className={
                             isActive
                               ? "fill-foreground"
-                              : "fill-muted-foreground/[0.55] group-hover:fill-foreground/80"
+                              : "fill-foreground/40 group-hover:fill-foreground/70"
                           }
                         />
                       </svg>
                       <span
-                        className={`mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-150 ${
+                        className={`mt-0.5 tabular-nums whitespace-nowrap transition-colors duration-200 ${
                           isActive
-                            ? "text-foreground"
-                            : "text-muted-foreground/[0.55] group-hover:text-foreground/80"
+                            ? "text-foreground font-medium"
+                            : "text-foreground/40 group-hover:text-foreground/70"
                         }`}
                         style={{
                           fontFamily: "'IBM Plex Mono', monospace",
@@ -261,34 +261,33 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           )}
         </div>
 
-        {/* Controls */}
-        <div
-          className="flex items-center"
-          style={{ gap: 16 }}
-        >
+        {/* Controls row */}
+        <div className="flex items-center gap-3">
           <button
             onClick={togglePlay}
             disabled={!!error || loading}
-            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40 transition-colors"
+            className="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-foreground hover:bg-secondary/60 disabled:text-muted-foreground/30 disabled:hover:bg-transparent transition-colors"
           >
-            {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
           </button>
           <button
             onClick={restart}
             disabled={!!error || loading}
-            className="w-6 h-6 flex items-center justify-center text-foreground disabled:text-muted-foreground/40 transition-colors"
+            className="w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:text-muted-foreground/30 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
           <span
-            className="text-muted-foreground tabular-nums leading-none"
+            className="text-foreground/80 tabular-nums leading-none ml-1"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 13,
               letterSpacing: "-0.01em",
             }}
           >
-            {formatTime(currentTime)}<span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>{formatTime(duration)}
+            {formatTime(currentTime)}
+            <span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>
+            {formatTime(duration)}
           </span>
         </div>
       </div>

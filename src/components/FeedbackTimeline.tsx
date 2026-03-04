@@ -13,7 +13,7 @@ const formatTime = (s: number) => {
 const severityDot: Record<string, string> = {
   high: "bg-foreground/70",
   med: "bg-foreground/40",
-  low: "bg-foreground/20",
+  low: "bg-foreground/25",
 };
 
 const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
@@ -40,7 +40,7 @@ const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors shrink-0"
+      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-foreground/60 transition-colors shrink-0"
       title="Copy fix to clipboard"
     >
       {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -70,7 +70,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
   return (
-    <div ref={containerRef} className="space-y-3.5">
+    <div ref={containerRef} className="space-y-3">
       {sorted.map((item) => {
         const isActive = activeItemId === item.id;
 
@@ -83,15 +83,15 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
             }}
             onClick={() => onItemClick(item)}
             style={{ scrollMarginTop: 80, scrollMarginBottom: 80 }}
-            className={`w-full text-left rounded-xl border p-5 md:p-7 transition-colors duration-200 ${
+            className={`w-full text-left rounded-xl border p-4 md:p-5 transition-all duration-200 ${
               isActive
-                ? "border-foreground/20 bg-secondary/40"
-                : "border-border-subtle bg-background hover:border-foreground/10"
+                ? "border-foreground/15 bg-secondary/50"
+                : "border-border-subtle bg-background hover:border-foreground/10 hover:bg-secondary/20"
             }`}
           >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3.5">
               {/* Time badge + severity dot */}
-              <div className="flex flex-col items-center gap-1 pt-[3px] shrink-0">
+              <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
                 <div className={`w-1.5 h-1.5 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
                 <span
                   className="text-muted-foreground tabular-nums"
@@ -114,13 +114,13 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick }: Props) => {
                   <CopyFixInline item={item} />
                 </div>
                 {item.observation && (
-                  <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                  <p className="text-[13px] text-foreground/60 leading-relaxed mt-1.5" style={{ lineHeight: 1.55 }}>
                     {item.observation}
                   </p>
                 )}
                 {item.fix && (
-                  <div className="mt-3">
-                    <p className="text-sm text-foreground/80 leading-relaxed">
+                  <div className="mt-2.5">
+                    <p className="text-[13px] text-foreground/75 leading-relaxed" style={{ lineHeight: 1.55 }}>
                       <span
                         className="text-muted-foreground uppercase tracking-wider mr-2"
                         style={{

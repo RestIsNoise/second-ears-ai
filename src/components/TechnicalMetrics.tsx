@@ -39,9 +39,9 @@ function subKickStatus(v: number): Status {
 }
 
 const statusColors = {
-  green: { badge: "bg-emerald-500/15 text-emerald-400", bar: "bg-emerald-500" },
-  yellow: { badge: "bg-amber-500/15 text-amber-400", bar: "bg-amber-500" },
-  red: { badge: "bg-red-500/15 text-red-400", bar: "bg-red-500" },
+  green: { badge: "bg-emerald-500/15 text-emerald-500", bar: "bg-emerald-500" },
+  yellow: { badge: "bg-amber-500/15 text-amber-500", bar: "bg-amber-500" },
+  red: { badge: "bg-red-500/15 text-red-500", bar: "bg-red-500" },
 };
 
 interface MetricCardProps {
@@ -51,7 +51,6 @@ interface MetricCardProps {
   min: number;
   max: number;
   status: Status;
-  barZones?: Array<{ from: number; to: number; color: string }>;
 }
 
 const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) => {
@@ -59,7 +58,7 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   const colors = statusColors[status.color];
 
   return (
-    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
+    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
@@ -84,10 +83,10 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
           {status.label}
         </span>
       </div>
-      <div className="h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
+      <div className="h-1 rounded-full bg-muted/50 overflow-hidden mt-4">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${colors.bar}`}
-          style={{ width: `${pct}%`, opacity: 0.8 }}
+          style={{ width: `${pct}%`, opacity: 0.75 }}
         />
       </div>
     </div>
@@ -101,7 +100,7 @@ const CorrelationCard = ({ value }: { value: number }) => {
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
+    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-baseline gap-1.5">
@@ -121,17 +120,17 @@ const CorrelationCard = ({ value }: { value: number }) => {
         </span>
       </div>
 
-      <div className="relative h-1.5 rounded-full bg-muted/40 overflow-hidden mt-4">
+      <div className="relative h-1 rounded-full bg-muted/50 overflow-hidden mt-4">
         <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
         {clampedPct >= 50 ? (
           <div
             className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{ left: "50%", width: `${clampedPct - 50}%`, opacity: 0.8 }}
+            style={{ left: "50%", width: `${clampedPct - 50}%`, opacity: 0.75 }}
           />
         ) : (
           <div
             className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, opacity: 0.8 }}
+            style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, opacity: 0.75 }}
           />
         )}
       </div>
@@ -142,10 +141,11 @@ const CorrelationCard = ({ value }: { value: number }) => {
 const SubKickCard = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
   const colors = statusColors[status.color];
+  // 0 = full KICK, 2 = full SUB, 1 = balanced center
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[130px]">
+    <div className="sm:col-span-2 rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs text-muted-foreground tracking-wide">Sub / Kick Ratio</p>
@@ -158,34 +158,42 @@ const SubKickCard = ({ value }: { value: number }) => {
       </div>
 
       <div className="mt-4">
-        <div className="flex justify-between mb-1.5">
+        <div className="flex justify-between mb-2">
           <span
-            className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase"
+            className="text-[10px] text-muted-foreground/70 font-semibold tracking-widest uppercase"
             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
           >
             Kick
           </span>
           <span
-            className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase"
+            className="text-[10px] text-muted-foreground/70 font-semibold tracking-widest uppercase"
             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
           >
             Sub
           </span>
         </div>
 
-        <div className="relative h-2 rounded-full bg-muted/40 overflow-hidden">
+        {/* Track with balanced zone and dot indicator */}
+        <div className="relative h-1.5 rounded-full bg-muted/50">
+          {/* Balanced zone highlight */}
           <div
             className="absolute inset-y-0 bg-emerald-500/10 rounded-full"
             style={{ left: "40%", width: "20%" }}
           />
+          {/* Center tick */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-px -translate-y-1/2 w-0.5 h-3 bg-foreground/8" />
+          {/* Indicator dot — sits centered on the track */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-all duration-700 ease-out ${colors.bar}`}
-            style={{ left: `${pct}%`, marginLeft: "-6px" }}
+            className={`absolute top-1/2 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-all duration-700 ease-out ${colors.bar}`}
+            style={{
+              left: `calc(${pct}% - 6px)`,
+              transform: "translateY(-50%)",
+            }}
           />
         </div>
       </div>
 
-      <div className="mt-2.5 text-center">
+      <div className="mt-3 text-center">
         <span
           className="text-lg font-bold text-foreground tabular-nums tracking-tight"
           style={{ fontFamily: "'IBM Plex Mono', monospace" }}
@@ -227,7 +235,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
   return (
     <section>
-      <div className="flex items-baseline justify-between mb-4">
+      <div className="flex items-baseline justify-between mb-5">
         <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
           Technical metrics
         </h2>

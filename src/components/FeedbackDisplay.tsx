@@ -101,7 +101,7 @@ const CopyFixButton = ({ text }: { text: string }) => {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-foreground/60 transition-colors"
       title="Copy fix to clipboard"
     >
       {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -116,7 +116,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[13px] text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.6 }}>
+    <p className="text-[13px] text-foreground/60 max-w-[70ch]" style={{ lineHeight: 1.6 }}>
       {displayText}
     </p>
   );
@@ -236,6 +236,9 @@ const FeedbackDisplay = ({
 
   const hasExecutiveSummary = topIssue || biggestWin || releaseReadiness;
 
+  /* Section spacing constant */
+  const sectionGap = "mt-10 md:mt-12";
+
   return (
     <div className="animate-fade-up">
       {/* Header */}
@@ -274,7 +277,7 @@ const FeedbackDisplay = ({
             onDurationReady={setAudioDuration}
           />
           {/* A/B Compare placeholder */}
-          <div className="flex items-center gap-2 mt-3">
+          <div className="flex items-center gap-2.5 mt-3">
             <div className="flex items-center rounded-md border border-border-subtle overflow-hidden">
               <span className="px-2.5 py-1 text-[11px] font-medium text-foreground bg-secondary/60">
                 A
@@ -286,7 +289,9 @@ const FeedbackDisplay = ({
                 B
               </span>
             </div>
-            <span className="text-[10px] text-muted-foreground/40">Original</span>
+            <span className="text-[10px] text-muted-foreground/40" title="Upload an updated mix to compare side by side">
+              Original · <span className="underline decoration-dotted underline-offset-2 cursor-help">Compare?</span>
+            </span>
           </div>
         </div>
       )}
@@ -297,7 +302,7 @@ const FeedbackDisplay = ({
           <p className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
             Response to your request
           </p>
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-[70ch]" style={{ lineHeight: 1.575 }}>
+          <p className="text-sm text-foreground/65 leading-relaxed max-w-[70ch]" style={{ lineHeight: 1.575 }}>
             {feedback.focus_response}
           </p>
         </section>
@@ -342,8 +347,8 @@ const FeedbackDisplay = ({
 
       {/* Timeline Feedback */}
       {hasTimeline && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Timeline feedback
           </h2>
           <FeedbackTimeline
@@ -356,17 +361,17 @@ const FeedbackDisplay = ({
 
       {/* Fallback: Top Priorities without timestamps */}
       {!hasTimeline && feedback.top_priorities && feedback.top_priorities.length > 0 && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Top priorities
           </h2>
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {feedback.top_priorities.map((item, i) => {
               const copyText = `${item.title}\nWhy: ${item.why}\nFix: ${item.fix}`;
               return (
-                <div key={i} className="rounded-xl border border-border-subtle p-5 md:p-7 bg-background">
+                <div key={i} className="rounded-xl border border-border-subtle p-5 md:p-6 bg-background">
                   <div className="flex items-start gap-4">
-                    <span className="font-mono-brand text-2xl text-muted-foreground/40 font-medium leading-none pt-0.5">
+                    <span className="font-mono-brand text-2xl text-muted-foreground/30 font-medium leading-none pt-0.5">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="flex-1 max-w-[70ch]">
@@ -374,9 +379,9 @@ const FeedbackDisplay = ({
                         <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
                         <CopyFixButton text={copyText} />
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed mt-2">{item.why}</p>
-                      <div className="mt-3">
-                        <p className="text-sm text-foreground/80 leading-relaxed">
+                      <p className="text-[13px] text-foreground/60 leading-relaxed mt-1.5" style={{ lineHeight: 1.55 }}>{item.why}</p>
+                      <div className="mt-2.5">
+                        <p className="text-[13px] text-foreground/75 leading-relaxed" style={{ lineHeight: 1.55 }}>
                           <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
                             Fix
                           </span>
@@ -394,11 +399,11 @@ const FeedbackDisplay = ({
 
       {/* Full Analysis */}
       {feedback.fullAnalysis && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Full analysis
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {(mode === "musical"
               ? [
                   { key: "energyArc" as const, label: "Energy Arc" },
@@ -421,8 +426,8 @@ const FeedbackDisplay = ({
                 ]
             ).map(({ key, label }) =>
               feedback.fullAnalysis?.[key] ? (
-                <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-7 bg-background flex flex-col">
-                  <h3 className="text-[15px] font-semibold tracking-tight mb-3">{label}</h3>
+                <div key={key} className="rounded-xl border border-border-subtle p-5 md:p-6 bg-background flex flex-col">
+                  <h3 className="text-[15px] font-semibold tracking-tight mb-2.5">{label}</h3>
                   <AnalysisCardText text={feedback.fullAnalysis[key] as string} />
                 </div>
               ) : null
@@ -433,28 +438,28 @@ const FeedbackDisplay = ({
 
       {/* Technical Metrics */}
       {feedback.technical_metrics && (
-        <div className="mt-8">
+        <div className={sectionGap}>
           <TechnicalMetrics metrics={feedback.technical_metrics} />
         </div>
       )}
 
       {/* What Works */}
       {feedback.what_works && feedback.what_works.length > 0 && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             {modeWhatWorksLabel[mode] || "What works"}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {feedback.what_works.map((item: any, i: number) => {
               if (i === 0) console.log("WhatWorks item:", item);
               const body =
                 item.detail || item.description || item.whyItWorks || item.body || "";
 
               return (
-                <div key={i} className="rounded-xl border border-border-subtle p-5 md:p-7 bg-background flex flex-col">
+                <div key={i} className="rounded-xl border border-border-subtle p-5 md:p-6 bg-background flex flex-col">
                   <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
                   {body && (
-                    <p className="text-sm text-muted-foreground max-w-[70ch] mt-2" style={{ lineHeight: 1.575 }}>{body}</p>
+                    <p className="text-[13px] text-foreground/60 max-w-[70ch] mt-1.5" style={{ lineHeight: 1.575 }}>{body}</p>
                   )}
                 </div>
               );
@@ -465,11 +470,11 @@ const FeedbackDisplay = ({
 
       {/* Fix One Thing */}
       {feedback.fix_one_thing && (feedback.fix_one_thing.title || feedback.fix_one_thing.how || feedback.fix_one_thing.why) && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             {modeFixOneLabel[mode] || "If you fix only one thing today"}
           </h2>
-          <div className="rounded-xl border-2 border-foreground/10 p-7 md:p-8 bg-secondary/20 max-w-[70ch]">
+          <div className="rounded-xl border-2 border-foreground/10 p-6 md:p-7 bg-secondary/20 max-w-[70ch]">
             {feedback.fix_one_thing.how && !feedback.fix_one_thing.why && !feedback.fix_one_thing.title ? (
               <div className="flex items-start justify-between gap-3">
                 <p className="text-base text-foreground leading-relaxed">
@@ -480,7 +485,7 @@ const FeedbackDisplay = ({
             ) : (
               <>
                 <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-xl font-bold tracking-tight mb-2.5">
+                  <h3 className="text-xl font-bold tracking-tight mb-2">
                     {feedback.fix_one_thing.title}
                   </h3>
                   <CopyFixButton
@@ -488,11 +493,11 @@ const FeedbackDisplay = ({
                   />
                 </div>
                 {feedback.fix_one_thing.why && (
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-3.5">
+                  <p className="text-[13px] text-foreground/60 leading-relaxed mb-3" style={{ lineHeight: 1.55 }}>
                     {feedback.fix_one_thing.why}
                   </p>
                 )}
-                <p className="text-sm text-foreground/80 leading-relaxed">
+                <p className="text-[13px] text-foreground/75 leading-relaxed" style={{ lineHeight: 1.55 }}>
                   <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
                     How
                   </span>
@@ -506,16 +511,16 @@ const FeedbackDisplay = ({
 
       {/* Legacy fallback */}
       {feedback.issues && feedback.issues.length > 0 && !feedback.top_priorities && (
-        <section className="mt-8">
-          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
+        <section className={sectionGap}>
+          <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
             Issues & fixes
           </h2>
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {feedback.issues.map((issue, i) => (
               <div key={i} className="rounded-xl border border-border-subtle p-5 bg-background">
                 <p className="text-sm font-medium">{issue.area}</p>
-                <p className="text-sm text-muted-foreground mt-2">{issue.problem}</p>
-                <p className="text-sm text-foreground/80 mt-3">
+                <p className="text-[13px] text-foreground/60 mt-1.5" style={{ lineHeight: 1.55 }}>{issue.problem}</p>
+                <p className="text-[13px] text-foreground/75 mt-2.5" style={{ lineHeight: 1.55 }}>
                   <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">
                     Fix
                   </span>
