@@ -309,7 +309,11 @@ const FeedbackDisplay = ({
       {feedback.overall_impression && (
         <section className="mt-8">
           <p className="text-lg md:text-xl font-medium leading-relaxed tracking-tight max-w-[70ch]">
-            {feedback.overall_impression}
+            {(() => {
+              const text = feedback.overall_impression || "";
+              const sentences = text.match(/[^.!?]+[.!?]+/g);
+              return sentences ? sentences.slice(0, 3).join("").trim() : text;
+            })()}
           </p>
         </section>
       )}

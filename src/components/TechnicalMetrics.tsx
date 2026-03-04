@@ -160,6 +160,7 @@ const SubKickCard = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
   const colors = statusColors[status.color];
   // Map 0..2 → 0..100
+  // Map value 0→0%, 1→50%, 2→100% (left=Kick, right=Sub)
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
