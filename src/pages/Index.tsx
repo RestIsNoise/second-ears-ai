@@ -6,6 +6,7 @@ import ListeningModes from "@/components/ListeningModes";
 import Pricing from "@/components/Pricing";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
+import FinalCta from "@/components/FinalCta";
 import Footer from "@/components/Footer";
 
 const Index = () => (
@@ -19,6 +20,7 @@ const Index = () => (
       <Pricing />
       <Faq />
       <Contact />
+      <FinalCta />
     </main>
     <Footer />
   </div>
