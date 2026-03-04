@@ -22,6 +22,13 @@ const Footer = () => (
             Terms of Service
           </Link>
           <span className="text-muted-foreground/20">·</span>
+          <Link
+            to="/faq"
+            className="text-[10px] text-muted-foreground/50 tracking-wide hover:text-muted-foreground transition-colors"
+          >
+            FAQ
+          </Link>
+          <span className="text-muted-foreground/20">·</span>
           <a
             href="mailto:hello@secondears.io"
             className="text-[10px] text-muted-foreground/50 tracking-wide hover:text-muted-foreground transition-colors"

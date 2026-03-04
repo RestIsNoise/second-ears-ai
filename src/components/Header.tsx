@@ -5,7 +5,7 @@ const navItems = [
   { label: "Features", href: "/#features" },
   { label: "Modes", href: "/#modes" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 const Header = () => (
@@ -15,11 +15,17 @@ const Header = () => (
         <span className="font-mono-brand text-sm font-medium tracking-tight">SecondEars</span>
       </Link>
       <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
-        {navItems.map((item) => (
-          <a key={item.label} href={item.href} className="hover:text-foreground transition-colors">
-            {item.label}
-          </a>
-        ))}
+        {navItems.map((item) =>
+          item.href.startsWith("/") && !item.href.startsWith("/#") ? (
+            <Link key={item.label} to={item.href} className="hover:text-foreground transition-colors">
+              {item.label}
+            </Link>
+          ) : (
+            <a key={item.label} href={item.href} className="hover:text-foreground transition-colors">
+              {item.label}
+            </a>
+          )
+        )}
       </nav>
       <Button variant="hero" size="sm" className="text-xs h-8 px-4" asChild>
         <Link to="/analyze">Start free</Link>
