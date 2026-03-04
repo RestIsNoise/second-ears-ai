@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
+import ShareBlock from "@/components/ShareBlock";
 import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
 import type { FeedbackResult } from "@/pages/Analyze";
@@ -562,14 +563,15 @@ const FeedbackDisplay = ({
           )}
         </div>
 
-        {/* Right column (30%) — sticky To-Do panel */}
-        <div className="w-full lg:w-[30%] lg:sticky lg:top-24" style={{ maxHeight: "calc(100vh - 8rem)" }}>
+        {/* Right column (30%) — sticky To-Do + Share + Brand */}
+        <div className="w-full lg:w-[30%] lg:sticky lg:top-24 space-y-5" style={{ maxHeight: "calc(100vh - 8rem)" }}>
           <ToDoPanel
             items={todoItems}
             onToggle={handleToggleToDo}
             onAdd={handleAddToDoNote}
             onItemClick={handleToDoItemClick}
           />
+          <ShareBlock />
         </div>
       </div>
     </div>
