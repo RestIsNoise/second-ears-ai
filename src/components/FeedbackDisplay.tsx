@@ -112,29 +112,15 @@ const CopyFixButton = ({ text }: { text: string }) => {
   );
 };
 
-/** Full Analysis card text with 3-sentence truncation */
+/** Full Analysis card text — hard cut at 2 sentences */
 const AnalysisCardText = ({ text }: { text: string }) => {
-  const [expanded, setExpanded] = useState(false);
   const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-  const needsTruncation = sentences.length > 3;
-  const displayText = needsTruncation && !expanded
-    ? sentences.slice(0, 3).join("").trim()
-    : text;
+  const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <div>
-      <p className="text-sm text-muted-foreground max-w-[70ch]" style={{ lineHeight: 1.575 }}>
-        {displayText}
-      </p>
-      {needsTruncation && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-1.5 text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors font-mono-brand tracking-wide uppercase"
-        >
-          {expanded ? "Show less" : "Show more"}
-        </button>
-      )}
-    </div>
+    <p className="text-[13px] text-muted-foreground/80 max-w-[70ch]" style={{ lineHeight: 1.6 }}>
+      {displayText}
+    </p>
   );
 };
 
@@ -433,8 +419,8 @@ const FeedbackDisplay = ({
                 ]
             ).map(({ key, label }) =>
               feedback.fullAnalysis?.[key] ? (
-                <div key={key} className="rounded-xl border border-border-subtle p-6 md:p-8 bg-background flex flex-col">
-                  <h3 className="text-base font-semibold tracking-tight mb-3">{label}</h3>
+                <div key={key} className="rounded-xl border border-border-subtle p-7 md:p-9 bg-background flex flex-col">
+                  <h3 className="text-[15px] font-semibold tracking-tight mb-3.5">{label}</h3>
                   <AnalysisCardText text={feedback.fullAnalysis[key] as string} />
                 </div>
               ) : null
