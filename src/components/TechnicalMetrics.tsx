@@ -16,8 +16,10 @@ function drStatus(v: number): Status {
 }
 
 function peakStatus(v: number): Status {
-  if (v < -1) return { label: "Safe", color: "green" };
-  return { label: "Clipping Risk", color: "red" };
+  if (v > -0.3) return { label: "Clipping Risk", color: "red" };
+  if (v >= -1.0) return { label: "Hot", color: "yellow" };
+  if (v >= -3.0) return { label: "Safe", color: "green" };
+  return { label: "Headroom", color: "green" };
 }
 
 function correlationStatus(v: number): Status {

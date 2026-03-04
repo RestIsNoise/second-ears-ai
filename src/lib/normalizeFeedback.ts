@@ -82,6 +82,12 @@ function str(v: unknown): string {
 
 function num(v: unknown): number | null {
   if (v == null) return null;
+  // Handle "-inf" / "inf" strings from backend
+  if (typeof v === "string") {
+    const lower = v.trim().toLowerCase();
+    if (lower === "-inf" || lower === "-infinity") return -100;
+    if (lower === "inf" || lower === "infinity") return 100;
+  }
   const n = typeof v === "number" ? v : parseFloat(String(v));
   return Number.isFinite(n) ? n : null;
 }
@@ -352,7 +358,7 @@ export function normalizeFeedbackResponse(
     integratedLufs: num(pickFrom(metricSources, "integrated_lufs", "integratedLufs", "integratedLoudness", "integratedLUFS")),
     shortTermLufs: num(pickFrom(metricSources, "short_term_lufs", "shortTermLufs", "rms")),
     dynamicRange: num(pickFrom(metricSources, "dynamic_range", "dynamicRange")),
-    peakDbtp: num(pickFrom(metricSources, "peak_dbtp", "peakDbtp", "truePeak", "true_peak")),
+    peakDbtp: num(pickFrom(metricSources, "peak_dbtp", "peakDbtp", "peakDbTP", "truePeak", "true_peak")),
     stereoCorrelation: num(pickFrom(metricSources, "stereo_correlation", "stereoCorrelation", "stereoWidth", "stereo_width")),
     crestFactor: num(pickFrom(metricSources, "crest_factor", "crestFactor", "transientDensity")),
     subKickRatio: num(pickFrom(metricSources, "sub_kick_ratio", "subKickRatio")),
