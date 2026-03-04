@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const steps = [
@@ -22,7 +22,6 @@ const processingMessages = [
   "Evaluating spatial depth",
 ];
 
-// Step 0→18 (upload), 1→25 (reading), 2→time-based crawl to 78, 3→95
 const stepBaseTargets = [18, 25, 30, 95];
 
 const getActiveStep = (percent: number) => {
@@ -32,7 +31,6 @@ const getActiveStep = (percent: number) => {
   return 3;
 };
 
-/** During step 2, crawl from 30→78% over ~25s using an ease-out curve */
 function useProcessingCrawl(currentStep: number) {
   const [crawlPercent, setCrawlPercent] = useState(0);
   const startTimeRef = useRef<number | null>(null);
@@ -45,45 +43,31 @@ function useProcessingCrawl(currentStep: number) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
-
     startTimeRef.current = Date.now();
-
     const tick = () => {
       const elapsed = (Date.now() - startTimeRef.current!) / 1000;
-      const duration = 25;
-      const t = Math.min(elapsed / duration, 1);
-      // Ease-out cubic: fast start, slow end — feels alive
+      const t = Math.min(elapsed / 25, 1);
       const eased = 1 - Math.pow(1 - t, 3);
-      const crawlRange = 48; // 30% → 78%
-      setCrawlPercent(Math.round(eased * crawlRange));
+      setCrawlPercent(Math.round(eased * 48));
       rafRef.current = requestAnimationFrame(tick);
     };
-
     rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [currentStep]);
 
   return crawlPercent;
 }
 
-/** Rotating processing message */
 function useRotatingMessage(active: boolean) {
   const [idx, setIdx] = useState(() => Math.floor(Math.random() * processingMessages.length));
-
   useEffect(() => {
     if (!active) return;
-    const id = setInterval(() => {
-      setIdx((c) => (c + 1) % processingMessages.length);
-    }, 4200);
+    const id = setInterval(() => setIdx((c) => (c + 1) % processingMessages.length), 4200);
     return () => clearInterval(id);
   }, [active]);
-
   return active ? processingMessages[idx] : null;
 }
 
-/** Smooth progress interpolation using rAF */
 function useSmoothedProgress(targetPercent: number, stopped: boolean) {
   const displayRef = useRef(0);
   const [display, setDisplay] = useState(0);
@@ -94,58 +78,44 @@ function useSmoothedProgress(targetPercent: number, stopped: boolean) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
-
     const tick = () => {
       const current = displayRef.current;
-      const speed = targetPercent >= 95 ? 0.1 : 0.05;
+      const speed = targetPercent >= 95 ? 0.12 : 0.045;
       const next = current + (targetPercent - current) * speed;
       const rounded = Math.round(next);
-      if (rounded !== Math.round(current)) {
-        displayRef.current = next;
-        setDisplay(rounded);
-      } else {
-        displayRef.current = next;
-      }
+      if (rounded !== Math.round(current)) setDisplay(rounded);
+      displayRef.current = next;
       rafRef.current = requestAnimationFrame(tick);
     };
-
     rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [targetPercent, stopped]);
 
   return display;
 }
 
-/** Debounced remaining time */
 function useStableRemaining(displayPercent: number) {
-  const [stableRemaining, setStableRemaining] = useState<number | null>(null);
-  const lastUpdateRef = useRef(0);
-  const lastValueRef = useRef<number | null>(null);
+  const [stable, setStable] = useState<number | null>(null);
+  const lastUpdate = useRef(0);
+  const lastValue = useRef<number | null>(null);
 
   useEffect(() => {
     const now = Date.now();
-    if (now - lastUpdateRef.current < 1000) return;
-
-    const estimatedTotal = 30;
-    const raw = Math.max(0, Math.round(estimatedTotal * (1 - displayPercent / 100)));
-
-    if (lastValueRef.current === null) {
-      lastValueRef.current = raw;
-      setStableRemaining(raw);
-      lastUpdateRef.current = now;
+    if (now - lastUpdate.current < 1200) return;
+    const raw = Math.max(0, Math.round(30 * (1 - displayPercent / 100)));
+    if (lastValue.current === null) {
+      lastValue.current = raw;
+      setStable(raw);
+      lastUpdate.current = now;
       return;
     }
-
-    const prev = lastValueRef.current;
-    const clamped = raw > prev ? Math.min(raw, prev + 1) : raw;
-    lastValueRef.current = clamped;
-    setStableRemaining(clamped);
-    lastUpdateRef.current = now;
+    const clamped = raw > lastValue.current ? Math.min(raw, lastValue.current + 1) : raw;
+    lastValue.current = clamped;
+    setStable(clamped);
+    lastUpdate.current = now;
   }, [displayPercent]);
 
-  return stableRemaining;
+  return stable;
 }
 
 interface AnalysisProgressProps {
@@ -160,47 +130,36 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
   const isProcessing = currentStep === 2;
   const rotatingMessage = useRotatingMessage(isProcessing);
 
-  // Compute target: base target + crawl addition during step 2
   const baseTarget = stepBaseTargets[Math.min(currentStep, 3)];
   const targetPercent = error ? 0 : currentStep === 2 ? baseTarget + crawlPercent : baseTarget;
-
   const displayPercent = useSmoothedProgress(targetPercent, !!error);
   const stableRemaining = useStableRemaining(displayPercent);
   const activeStep = getActiveStep(displayPercent);
 
   const remainingStr = (() => {
     if (stableRemaining === null || stableRemaining <= 0) return "";
-    if (stableRemaining > 20) return `~${stableRemaining}s`;
-    const remMin = Math.floor(stableRemaining / 60);
-    const remSec = stableRemaining % 60;
-    return remMin > 0
-      ? `~${remMin}:${remSec.toString().padStart(2, "0")} remaining`
-      : `~${remSec}s remaining`;
+    if (stableRemaining > 60) return `~${Math.ceil(stableRemaining / 60)}m remaining`;
+    return `~${stableRemaining}s remaining`;
   })();
 
   // Ring geometry
-  const ringSize = 84;
-  const strokeWidth = 2;
+  const ringSize = 88;
+  const strokeWidth = 2.5;
   const radius = (ringSize - strokeWidth * 2) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeOffset = circumference - (displayPercent / 100) * circumference;
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 md:py-28 opacity-0 animate-[fade-in_200ms_ease-out_forwards]">
-        <div className="w-[72px] h-[72px] md:w-[84px] md:h-[84px] rounded-full border border-muted-foreground/20 flex items-center justify-center mb-8">
+      <div className="flex flex-col items-center justify-center py-24 md:py-28 animate-fade-in">
+        <div className="w-20 h-20 rounded-full border border-border-subtle flex items-center justify-center mb-7">
           <AlertCircle className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
         </div>
         <p className="text-sm font-medium text-foreground mb-1.5">Analysis failed</p>
-        <p className="text-xs text-muted-foreground max-w-[260px] text-center mb-10 leading-relaxed">
+        <p className="text-xs text-muted-foreground max-w-[260px] text-center mb-8 leading-relaxed">
           {error || "Something went wrong. Please try again."}
         </p>
-        <Button
-          variant="outline"
-          size="lg"
-          className="h-10 px-7 text-xs border-border-subtle hover:bg-secondary/50"
-          onClick={onRetry}
-        >
+        <Button variant="outline" size="sm" className="h-9 px-6 text-xs" onClick={onRetry}>
           Try again
         </Button>
       </div>
@@ -208,10 +167,11 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-24 md:py-28">
-      <div className="w-full max-w-[340px] rounded-2xl border border-border-subtle/60 bg-background/50 px-8 py-10 flex flex-col items-center">
-        {/* Circular progress ring */}
-        <div className="relative w-[72px] h-[72px] md:w-[84px] md:h-[84px] mb-6">
+    <div className="flex flex-col items-center justify-center py-20 md:py-24 animate-fade-in">
+      <div className="w-full max-w-[320px] rounded-2xl border border-border-subtle/60 bg-card/80 backdrop-blur-sm px-7 py-9 flex flex-col items-center">
+
+        {/* Progress ring */}
+        <div className="relative w-20 h-20 md:w-[88px] md:h-[88px] mb-5">
           <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${ringSize} ${ringSize}`}>
             <circle
               cx={ringSize / 2} cy={ringSize / 2} r={radius}
@@ -220,49 +180,63 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
             <circle
               cx={ringSize / 2} cy={ringSize / 2} r={radius}
               fill="none" stroke="hsl(var(--foreground))" strokeWidth={strokeWidth}
-              strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeOffset}
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeOffset}
+              className="transition-[stroke-dashoffset] duration-300 ease-out"
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-mono-brand text-[13px] md:text-[15px] font-medium text-foreground tabular-nums tracking-tight">
+            <span className="font-mono-brand text-sm md:text-[15px] font-medium text-foreground tabular-nums tracking-tight">
               {displayPercent}%
             </span>
           </div>
         </div>
 
-        {/* Subtitle + rotating message */}
-        <div className="flex flex-col items-center mb-5">
-          <p className="text-[13px] text-muted-foreground motion-safe:animate-[subtle-pulse_2.4s_ease-in-out_infinite]">
+        {/* Subtitle with pulse */}
+        <div className="flex flex-col items-center mb-6">
+          <p className="text-[13px] text-foreground/70 animate-[subtle-pulse_2.4s_ease-in-out_infinite]">
             Analyzing your mix
             <DotAnimation />
           </p>
-          {rotatingMessage ? (
-            <p
-              key={rotatingMessage}
-              className="text-[11px] text-muted-foreground/50 mt-2 motion-safe:animate-[fade-in_300ms_ease-out]"
-            >
-              {rotatingMessage}
-            </p>
-          ) : (
-            <p className="text-[11px] text-muted-foreground/50 mt-2">Preparing…</p>
-          )}
+          <div className="h-5 mt-1.5 flex items-center">
+            {rotatingMessage ? (
+              <p key={rotatingMessage} className="text-[11px] text-muted-foreground/60 animate-fade-in">
+                {rotatingMessage}
+              </p>
+            ) : (
+              <p className="text-[11px] text-muted-foreground/60">Preparing…</p>
+            )}
+          </div>
         </div>
 
-        {/* Step timeline */}
-        <div className="space-y-2 w-full max-w-[180px]">
+        {/* Step list */}
+        <div className="space-y-1.5 w-full max-w-[200px] mb-5">
           {steps.map((label, i) => {
             const isComplete = i < activeStep;
             const isActive = i === activeStep;
             return (
-              <div key={label} className="flex items-center gap-2.5 h-[20px]">
-                <div
-                  className={`w-[5px] h-[5px] rounded-full shrink-0 transition-all duration-500 ${
-                    isComplete ? "bg-foreground/50" : isActive ? "bg-foreground" : "bg-muted-foreground/25"
-                  }`}
-                />
+              <div key={label} className="flex items-center gap-2.5 h-6">
+                <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                  {isComplete ? (
+                    <Check className="w-3 h-3 text-foreground/50" strokeWidth={2} />
+                  ) : (
+                    <div
+                      className={`w-[5px] h-[5px] rounded-full transition-all duration-500 ${
+                        isActive
+                          ? "bg-foreground scale-110"
+                          : "bg-muted-foreground/30"
+                      }`}
+                    />
+                  )}
+                </div>
                 <span
-                  className={`text-[12px] transition-colors duration-500 ${
-                    isComplete ? "text-foreground/50" : isActive ? "text-foreground font-medium" : "text-muted-foreground/40"
+                  className={`text-[12px] leading-none transition-colors duration-500 ${
+                    isComplete
+                      ? "text-foreground/50"
+                      : isActive
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground/50"
                   }`}
                 >
                   {label}
@@ -272,26 +246,29 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
           })}
         </div>
 
+        {/* ETA */}
         {remainingStr && (
-          <p className="font-mono-brand text-[10px] text-muted-foreground/40 tabular-nums tracking-wide mt-6">
+          <p className="font-mono-brand text-[10px] text-muted-foreground/40 tabular-nums tracking-wide mb-1">
             {remainingStr}
           </p>
         )}
 
+        {/* Cancel */}
         {onCancel && (
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onCancel}
-            className="mt-3.5 h-9 px-4 rounded-lg border border-border-subtle text-[11px] text-muted-foreground/70 tracking-wide transition-all duration-150 hover:border-foreground/20 hover:text-foreground/70 active:scale-[0.97]"
+            className="mt-2 h-8 px-4 text-[11px] text-muted-foreground/60 hover:text-foreground/70 tracking-wide"
           >
-            Cancel analysis
-          </button>
+            Cancel
+          </Button>
         )}
       </div>
     </div>
   );
 };
 
-/** Animated dots */
 const DotAnimation = () => {
   const [dotCount, setDotCount] = useState(0);
   useEffect(() => {
