@@ -7,36 +7,39 @@ import type { ListeningMode, FeedbackResult, TechnicalMetrics } from "@/pages/An
 
 /** Map backend metrics shape to internal TechnicalMetrics */
 function normalizeMetrics(fb: any): TechnicalMetrics | undefined {
-  // If already in internal shape
-  if (fb?.technical_metrics) return fb.technical_metrics;
-
-  // Backend sends flat fields: integratedLoudness, rms, dynamicRange, stereoWidth, etc.
-  const il = fb?.integratedLoudness ?? fb?.integrated_lufs;
-  const dr = fb?.dynamicRange ?? fb?.dynamic_range;
-  const sw = fb?.stereoWidth ?? fb?.stereo_correlation;
-  const skr = fb?.subKickRatio ?? fb?.sub_kick_ratio;
-  const cf = fb?.transientDensity ?? fb?.crest_factor;
-  const rms = fb?.rms;
-  const peak = fb?.peak_dbtp ?? fb?.peakDbtp;
-
-  const hasAny = il != null || dr != null || sw != null || skr != null || cf != null || rms != null || peak != null;
-  if (!hasAny) return undefined;
-
   const toNum = (v: unknown): number | undefined => {
     if (v == null) return undefined;
     const n = typeof v === "number" ? v : parseFloat(String(v));
     return Number.isFinite(n) ? n : undefined;
   };
 
-  return {
+  // Always try flat fields first (backend canonical shape), then nested fallback
+  const il = fb?.integratedLoudness ?? fb?.integrated_lufs ?? fb?.technical_metrics?.integrated_lufs;
+  const dr = fb?.dynamicRange ?? fb?.dynamic_range ?? fb?.technical_metrics?.dynamic_range;
+  const sw = fb?.stereoWidth ?? fb?.stereo_correlation ?? fb?.technical_metrics?.stereo_correlation;
+  const skr = fb?.subKickRatio ?? fb?.sub_kick_ratio ?? fb?.technical_metrics?.sub_kick_ratio;
+  const cf = fb?.transientDensity ?? fb?.crest_factor ?? fb?.technical_metrics?.crest_factor;
+  const rms = fb?.rms ?? fb?.technical_metrics?.short_term_lufs;
+  const peak = fb?.peak_dbtp ?? fb?.peakDbtp ?? fb?.technical_metrics?.peak_dbtp;
+
+  const hasAny = il != null || dr != null || sw != null || skr != null || cf != null || rms != null || peak != null;
+  if (!hasAny) {
+    console.warn("[normalizeMetrics] No metric fields found on fb:", Object.keys(fb || {}));
+    return undefined;
+  }
+
+  const result: TechnicalMetrics = {
     integrated_lufs: toNum(il),
-    short_term_lufs: toNum(rms), // map RMS as short-term proxy
+    short_term_lufs: toNum(rms),
     dynamic_range: toNum(dr),
     peak_dbtp: toNum(peak),
     stereo_correlation: toNum(sw),
     crest_factor: toNum(cf),
     sub_kick_ratio: toNum(skr),
   };
+
+  console.log("[normalizeMetrics] Result:", result);
+  return result;
 }
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
