@@ -260,6 +260,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           type="text"
           value={context}
           onChange={(e) => setContext(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && file && !isAnalyzing) {
+              e.preventDefault();
+              analyze();
+            }
+          }}
           placeholder="What are you going for?"
           className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
         />
