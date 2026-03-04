@@ -3,62 +3,8 @@ import { Upload, Music, Activity, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import type { ListeningMode, FeedbackResult, TechnicalMetrics } from "@/pages/Analyze";
-
-/** Map backend metrics shape to internal TechnicalMetrics.
- *  Accepts multiple source objects — checks each in order for flat metric fields. */
-function normalizeMetrics(...sources: any[]): TechnicalMetrics | undefined {
-  const toNum = (v: unknown): number | undefined => {
-    if (v == null) return undefined;
-    const n = typeof v === "number" ? v : parseFloat(String(v));
-    return Number.isFinite(n) ? n : undefined;
-  };
-
-  // Pick first non-nil value across all sources
-  const pick = (...keys: string[]) => {
-    for (const src of sources) {
-      if (!src || typeof src !== "object") continue;
-      for (const k of keys) {
-        if (src[k] != null) return src[k];
-      }
-      // Also check nested technical_metrics
-      if (src.technical_metrics) {
-        for (const k of keys) {
-          if (src.technical_metrics[k] != null) return src.technical_metrics[k];
-        }
-      }
-    }
-    return undefined;
-  };
-
-  const il = pick("integratedLoudness", "integrated_lufs");
-  const dr = pick("dynamicRange", "dynamic_range");
-  const sw = pick("stereoWidth", "stereo_correlation");
-  const skr = pick("subKickRatio", "sub_kick_ratio");
-  const cf = pick("transientDensity", "crest_factor");
-  const rms = pick("rms", "short_term_lufs");
-  const peak = pick("peak_dbtp", "peakDbtp");
-
-  const hasAny = il != null || dr != null || sw != null || skr != null || cf != null || rms != null || peak != null;
-  if (!hasAny) {
-    console.warn("[normalizeMetrics] No metric fields found. Source keys:",
-      sources.map(s => Object.keys(s || {})));
-    return undefined;
-  }
-
-  const metrics: TechnicalMetrics = {
-    integrated_lufs: toNum(il),
-    short_term_lufs: toNum(rms),
-    dynamic_range: toNum(dr),
-    peak_dbtp: toNum(peak),
-    stereo_correlation: toNum(sw),
-    crest_factor: toNum(cf),
-    sub_kick_ratio: toNum(skr),
-  };
-
-  console.log("[normalizeMetrics] Result:", metrics);
-  return metrics;
-}
+import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
+import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
@@ -110,7 +56,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const analyze = async () => {
     if (!file) return;
     setIsAnalyzing(true);
-    onProgressStep?.(0); // Uploading track
+    onProgressStep?.(0);
 
     try {
       const storagePath = `${Date.now()}-${file.name}`;
@@ -121,7 +67,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
       console.log("[TrackUploader] Uploaded to bucket: tracks, path:", storagePath);
-      onProgressStep?.(1); // Reading audio
+      onProgressStep?.(1);
 
       const { data: signedData, error: signedError } = await supabase.storage
         .from("tracks")
@@ -133,7 +79,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         console.log("[TrackUploader] Signed URL created:", signedData?.signedUrl?.substring(0, 80) + "...");
       }
 
-      onProgressStep?.(2); // Generating feedback
+      onProgressStep?.(2);
 
       const { data: result, error } = await supabase.functions.invoke("proxy-feedback", {
         body: {
@@ -146,111 +92,21 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
       if (error) throw error;
 
-      onProgressStep?.(3); // Finalizing report
+      onProgressStep?.(3);
 
-      console.log("Full API response:", JSON.stringify(result, null, 2));
+      console.log("[TrackUploader] Raw API response:", JSON.stringify(result, null, 2));
 
-      let fb = result?.feedback;
+      // ── Single normalizer call ──
+      const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
 
-      // Safety net: if overall_impression contains a JSON string (edge function parse failure),
-      // try to re-parse it and use that as the actual feedback object
-      if (
-        fb &&
-        typeof fb.overall_impression === "string" &&
-        fb.overall_impression.trim().startsWith("{") &&
-        (!fb.top_priorities || fb.top_priorities.length === 0)
-      ) {
-        try {
-          const reparsed = JSON.parse(fb.overall_impression);
-          if (reparsed && typeof reparsed === "object" && reparsed.overall_impression) {
-            console.log("[TrackUploader] Re-parsed feedback from overall_impression string");
-            fb = reparsed;
-          }
-        } catch {
-          console.warn("[TrackUploader] overall_impression looks like JSON but failed to parse");
-        }
-      }
-
-      // Normalize mode-specific schemas into common internal format
-      let rawPriorities: any[] = [];
-      let rawWorks: any[] = [];
-      let rawFixOne: any = undefined;
-
-      if (mode === "musical") {
-        rawPriorities = (fb?.arrangementNotes || fb?.top_priorities || []).map((p: any) => ({
-          title: p.section || p.title || "",
-          why: p.observation || p.why || "",
-          fix: p.arrangement_move || p.suggestion || p.fix || "",
-          time: p.timestamp ?? p.time,
-        }));
-        rawWorks = fb?.whatLands || fb?.what_works || [];
-        rawFixOne = fb?.focusHere || fb?.fix_one_thing;
-      } else if (mode === "perception") {
-        rawPriorities = (fb?.systemNotes || fb?.top_priorities || []).map((p: any) => ({
-          title: p.observation || p.title || "",
-          why: p.translationRisk || p.why || "",
-          fix: p.fix || "",
-          time: p.timestamp ?? p.time,
-        }));
-        rawWorks = fb?.whatTranslates || fb?.what_works || [];
-        rawFixOne = fb?.urgentFix || fb?.fix_one_thing;
-      } else {
-        // Technical (default)
-        rawPriorities = (fb?.priorities || fb?.top_priorities || []).map((p: any) => ({
-          title: p.issue || p.title || "",
-          why: p.whyItMatters || p.why || "",
-          fix: p.suggestedFix || p.fix || "",
-          time: p.timestamp ?? p.time,
-        }));
-        rawWorks = fb?.whatWorks || fb?.what_works || [];
-        rawFixOne = fb?.ifFixOneThing || fb?.fix_one_thing;
-      }
-
-      const normalized = {
-        track_name: fb?.track_name || file.name,
-        overall_impression: fb?.overallImpression || fb?.overall_impression || "",
-        top_priorities: rawPriorities.map((p: any) => ({
-          title: p.title,
-          why: p.why,
-          fix: p.fix,
-        })),
-        what_works: (rawWorks || []).map((w: any) =>
-          typeof w === "string"
-            ? { title: w, detail: "" }
-            : {
-                title: w.title ?? "",
-                detail: w.detail || w.description || w.whyItWorks || w.body || "",
-              }
-        ),
-        fix_one_thing: rawFixOne
-          ? {
-              title: rawFixOne.title || "",
-              why: rawFixOne.why || rawFixOne.whyItMatters || "",
-              how: rawFixOne.how || rawFixOne.suggestion || rawFixOne.fix || "",
-            }
-          : undefined,
-        timestamps: rawPriorities
-          .map((p: any, i: number) => {
-            const t = p.time;
-            if (t !== undefined && t !== null) return { time: t, label: p.title };
-            return null;
-          })
-          .filter(Boolean) as Array<{ time: number; label: string }>,
-        technical_metrics: normalizeMetrics(fb, result?.metrics, result),
-        fullAnalysis: fb?.fullAnalysis || undefined,
-        focus_response: fb?.focus_response || undefined,
-      };
-
-      console.log("Normalized feedback:", JSON.stringify(normalized, null, 2));
+      console.log("[TrackUploader] Normalized feedback:", JSON.stringify(normalized, null, 2));
 
       // Brief pause so user sees "Finalizing report" complete
       await new Promise((r) => setTimeout(r, 600));
 
       onResult({
-        feedback: normalized,
-        mode,
+        normalized,
         audioFile: file,
-        context: context.trim() || undefined,
       });
 
       console.log("[TrackUploader] Skipping storage cleanup for:", storagePath);

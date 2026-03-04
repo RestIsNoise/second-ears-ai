@@ -4,9 +4,11 @@ import Footer from "@/components/Footer";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import AnalysisProgress from "@/components/AnalysisProgress";
+import type { NormalizedFeedback } from "@/lib/normalizeFeedback";
 
 export type ListeningMode = "technical" | "musical" | "perception";
 
+// Legacy types kept for TrackUploader's raw processing
 export interface TechnicalMetrics {
   integrated_lufs?: number;
   short_term_lufs?: number;
@@ -22,54 +24,19 @@ export interface FullAnalysis {
   dynamics?: string;
   stereoSpace?: string;
   frequencyBalance?: string;
-  // Musical mode
   energyArc?: string;
   sectionContrast?: string;
   grooveContinuity?: string;
   hookClarity?: string;
-  // Perception mode
   subLowTranslation?: string;
   headroomTransients?: string;
   stereoFoldDown?: string;
   listenerFatigue?: string;
 }
 
-export interface FeedbackData {
-  track_name?: string;
-  overallImpression?: string;
-  overall_impression?: string;
-  // Technical mode
-  priorities?: Array<{ issue: string; whyItMatters: string; suggestedFix: string }>;
-  top_priorities?: Array<{ title: string; why: string; fix: string }>;
-  whatWorks?: Array<{ title: string; detail: string }>;
-  what_works?: Array<{ title: string; detail: string }>;
-  ifFixOneThing?: { title: string; why: string; how: string };
-  fixOneThingToday?: { title: string; why: string; how: string };
-  fix_one_thing?: { title: string; why: string; how: string };
-  // Musical mode
-  arrangementNotes?: Array<{ section: string; timestamp?: number; observation: string; suggestion: string }>;
-  whatLands?: Array<{ title: string; detail?: string }>;
-  focusHere?: { title: string; why: string; how: string };
-  // Perception mode
-  systemNotes?: Array<{ timestamp?: number; observation: string; translationRisk: string; fix: string }>;
-  whatTranslates?: Array<{ title: string; detail?: string }>;
-  urgentFix?: { title: string; why: string; how: string };
-  // Shared
-  timestamps?: Array<{ time: number; label: string }>;
-  technical_metrics?: TechnicalMetrics;
-  fullAnalysis?: FullAnalysis;
-  focus_response?: string | null;
-  summary?: string;
-  scores?: Record<string, number>;
-  issues?: Array<{ area: string; problem: string; fix: string }>;
-  verdict?: string;
-}
-
 export interface FeedbackResult {
-  feedback: FeedbackData;
-  mode: ListeningMode;
+  normalized: NormalizedFeedback;
   audioFile?: File;
-  context?: string;
 }
 
 const Analyze = () => {
