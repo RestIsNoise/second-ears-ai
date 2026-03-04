@@ -211,15 +211,15 @@ const FeedbackDisplay = ({
   );
 
   // Executive summary — extract a short 2-3 word label, not a truncated sentence
+  const toTitleCase = (s: string) =>
+    s.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+
   const extractShortLabel = (t: string): string => {
-    // If it's already short (3 words or less), use as-is
     const words = t.split(/\s+/);
-    if (words.length <= 3) return t;
-    // Try to extract a noun-phrase label: take first 2-3 meaningful words
-    // Strip leading articles/determiners
-    const stripped = t.replace(/^(the|a|an|its|their|this|that)\s+/i, "");
-    const strippedWords = stripped.split(/\s+/);
-    return strippedWords.slice(0, 2).join(" ");
+    const raw = words.length <= 3
+      ? t
+      : t.replace(/^(the|a|an|its|their|this|that)\s+/i, "").split(/\s+/).slice(0, 2).join(" ");
+    return toTitleCase(raw);
   };
   const topIssue = feedback.top_priorities?.[0]?.title ? extractShortLabel(feedback.top_priorities[0].title) : undefined;
   const biggestWin = feedback.what_works?.[0]?.title ? extractShortLabel(feedback.what_works[0].title) : undefined;
