@@ -5,30 +5,48 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { ListeningMode, FeedbackResult, TechnicalMetrics } from "@/pages/Analyze";
 
-/** Map backend metrics shape to internal TechnicalMetrics */
-function normalizeMetrics(fb: any): TechnicalMetrics | undefined {
+/** Map backend metrics shape to internal TechnicalMetrics.
+ *  Accepts multiple source objects — checks each in order for flat metric fields. */
+function normalizeMetrics(...sources: any[]): TechnicalMetrics | undefined {
   const toNum = (v: unknown): number | undefined => {
     if (v == null) return undefined;
     const n = typeof v === "number" ? v : parseFloat(String(v));
     return Number.isFinite(n) ? n : undefined;
   };
 
-  // Always try flat fields first (backend canonical shape), then nested fallback
-  const il = fb?.integratedLoudness ?? fb?.integrated_lufs ?? fb?.technical_metrics?.integrated_lufs;
-  const dr = fb?.dynamicRange ?? fb?.dynamic_range ?? fb?.technical_metrics?.dynamic_range;
-  const sw = fb?.stereoWidth ?? fb?.stereo_correlation ?? fb?.technical_metrics?.stereo_correlation;
-  const skr = fb?.subKickRatio ?? fb?.sub_kick_ratio ?? fb?.technical_metrics?.sub_kick_ratio;
-  const cf = fb?.transientDensity ?? fb?.crest_factor ?? fb?.technical_metrics?.crest_factor;
-  const rms = fb?.rms ?? fb?.technical_metrics?.short_term_lufs;
-  const peak = fb?.peak_dbtp ?? fb?.peakDbtp ?? fb?.technical_metrics?.peak_dbtp;
+  // Pick first non-nil value across all sources
+  const pick = (...keys: string[]) => {
+    for (const src of sources) {
+      if (!src || typeof src !== "object") continue;
+      for (const k of keys) {
+        if (src[k] != null) return src[k];
+      }
+      // Also check nested technical_metrics
+      if (src.technical_metrics) {
+        for (const k of keys) {
+          if (src.technical_metrics[k] != null) return src.technical_metrics[k];
+        }
+      }
+    }
+    return undefined;
+  };
+
+  const il = pick("integratedLoudness", "integrated_lufs");
+  const dr = pick("dynamicRange", "dynamic_range");
+  const sw = pick("stereoWidth", "stereo_correlation");
+  const skr = pick("subKickRatio", "sub_kick_ratio");
+  const cf = pick("transientDensity", "crest_factor");
+  const rms = pick("rms", "short_term_lufs");
+  const peak = pick("peak_dbtp", "peakDbtp");
 
   const hasAny = il != null || dr != null || sw != null || skr != null || cf != null || rms != null || peak != null;
   if (!hasAny) {
-    console.warn("[normalizeMetrics] No metric fields found on fb:", Object.keys(fb || {}));
+    console.warn("[normalizeMetrics] No metric fields found. Source keys:",
+      sources.map(s => Object.keys(s || {})));
     return undefined;
   }
 
-  const result: TechnicalMetrics = {
+  const metrics: TechnicalMetrics = {
     integrated_lufs: toNum(il),
     short_term_lufs: toNum(rms),
     dynamic_range: toNum(dr),
@@ -38,8 +56,8 @@ function normalizeMetrics(fb: any): TechnicalMetrics | undefined {
     sub_kick_ratio: toNum(skr),
   };
 
-  console.log("[normalizeMetrics] Result:", result);
-  return result;
+  console.log("[normalizeMetrics] Result:", metrics);
+  return metrics;
 }
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
@@ -217,7 +235,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             return null;
           })
           .filter(Boolean) as Array<{ time: number; label: string }>,
-        technical_metrics: normalizeMetrics(fb),
+        technical_metrics: normalizeMetrics(fb, result),
         fullAnalysis: fb?.fullAnalysis || undefined,
         focus_response: fb?.focus_response || undefined,
       };
