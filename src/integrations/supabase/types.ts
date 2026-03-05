@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      analyses: {
+        Row: {
+          created_at: string
+          feedback: Json
+          id: string
+          metrics: Json
+          mode: string
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback?: Json
+          id?: string
+          metrics?: Json
+          mode: string
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback?: Json
+          id?: string
+          metrics?: Json
+          mode?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analyses_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           created_at: string
@@ -38,6 +73,51 @@ export type Database = {
           listening_mode?: string
           storage_path?: string
           track_name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
         }
         Relationships: []
       }
