@@ -53,44 +53,47 @@ interface MetricCardProps {
   min: number;
   max: number;
   status: Status | null;
+  compact?: boolean;
 }
 
-const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) => {
+const MetricCard = ({ label, value, unit, min, max, status, compact }: MetricCardProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const colors = isMissing ? null : statusColors[status.color];
 
   return (
-    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
-      <div className="flex items-start justify-between gap-3">
+    <div className={`rounded-xl border border-border-subtle bg-background flex flex-col justify-between ${
+      compact ? "p-3 min-h-[90px]" : "p-5 min-h-[128px]"
+    }`}>
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="flex items-baseline gap-1.5">
+          <div className="flex items-baseline gap-1">
             <span
-              className="text-2xl font-bold text-foreground tabular-nums tracking-tight"
+              className={`font-bold text-foreground tabular-nums tracking-tight ${compact ? "text-lg" : "text-2xl"}`}
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               {isMissing ? "—" : value.toFixed(1)}
             </span>
             {!isMissing && (
               <span
-                className="text-sm text-muted-foreground font-medium"
+                className={`text-muted-foreground font-medium ${compact ? "text-[10px]" : "text-sm"}`}
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 {unit}
               </span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1 tracking-wide">{label}</p>
+          <p className={`text-muted-foreground tracking-wide ${compact ? "text-[10px] mt-0.5" : "text-xs mt-1"}`}>{label}</p>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${
-            isMissing ? "bg-muted text-muted-foreground/50" : colors!.badge
-          }`}
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${
+            compact ? "px-1.5 py-0.5 text-[8px]" : "px-2.5 py-0.5 text-[10px]"
+          } ${isMissing ? "bg-muted text-muted-foreground/50" : colors!.badge}`}
         >
           {isMissing ? "N/A" : status.label}
         </span>
       </div>
-      <div className="h-1 rounded-full bg-muted/50 overflow-hidden mt-4">
+      <div className={`h-1 rounded-full bg-muted/50 overflow-hidden ${compact ? "mt-2" : "mt-4"}`}>
         {!isMissing && (
           <div
             className={`h-full rounded-full transition-all duration-700 ease-out ${colors!.bar}`}
@@ -102,34 +105,38 @@ const MetricCard = ({ label, value, unit, min, max, status }: MetricCardProps) =
   );
 };
 
-const CorrelationCard = ({ value }: { value: number }) => {
+const CorrelationCard = ({ value, compact }: { value: number; compact?: boolean }) => {
   const status = correlationStatus(value);
   const colors = statusColors[status.color];
   const pct = ((value + 1) / 2) * 100;
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
-      <div className="flex items-start justify-between gap-3">
+    <div className={`rounded-xl border border-border-subtle bg-background flex flex-col justify-between ${
+      compact ? "p-3 min-h-[90px]" : "p-5 min-h-[128px]"
+    }`}>
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="flex items-baseline gap-1.5">
+          <div className="flex items-baseline gap-1">
             <span
-              className="text-2xl font-bold text-foreground tabular-nums tracking-tight"
+              className={`font-bold text-foreground tabular-nums tracking-tight ${compact ? "text-lg" : "text-2xl"}`}
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               {value > 0 ? "+" : ""}{value.toFixed(2)}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-1 tracking-wide">Stereo Correlation</p>
+          <p className={`text-muted-foreground tracking-wide ${compact ? "text-[10px] mt-0.5" : "text-xs mt-1"}`}>Stereo Correlation</p>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${
+            compact ? "px-1.5 py-0.5 text-[8px]" : "px-2.5 py-0.5 text-[10px]"
+          } ${colors.badge}`}
         >
           {status.label}
         </span>
       </div>
 
-      <div className="relative h-1 rounded-full bg-muted/50 overflow-hidden mt-4">
+      <div className={`relative h-1 rounded-full bg-muted/50 overflow-hidden ${compact ? "mt-2" : "mt-4"}`}>
         <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
         {clampedPct >= 50 ? (
           <div
@@ -147,27 +154,30 @@ const CorrelationCard = ({ value }: { value: number }) => {
   );
 };
 
-const SubKickCard = ({ value }: { value: number }) => {
+const SubKickCard = ({ value, compact }: { value: number; compact?: boolean }) => {
   const status = subKickStatus(value);
   const colors = statusColors[status.color];
-  // 0 = full KICK, 2 = full SUB, 1 = balanced center
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="rounded-xl border border-border-subtle p-5 bg-background flex flex-col justify-between min-h-[128px]">
-      <div className="flex items-start justify-between gap-3">
+    <div className={`rounded-xl border border-border-subtle bg-background flex flex-col justify-between ${
+      compact ? "p-3 min-h-[80px]" : "p-5 min-h-[128px]"
+    }`}>
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-xs text-muted-foreground tracking-wide">Sub / Kick Ratio</p>
+          <p className={`text-muted-foreground tracking-wide ${compact ? "text-[10px]" : "text-xs"}`}>Sub / Kick Ratio</p>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${colors.badge}`}
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${
+            compact ? "px-1.5 py-0.5 text-[8px]" : "px-2.5 py-0.5 text-[10px]"
+          } ${colors.badge}`}
         >
           {status.label}
         </span>
       </div>
 
-      <div className="mt-4">
-        <div className="flex justify-between mb-2">
+      <div className={compact ? "mt-2" : "mt-4"}>
+        <div className="flex justify-between mb-1.5">
           <span
             className="text-[10px] text-muted-foreground/70 font-semibold tracking-widest uppercase"
             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
@@ -182,16 +192,12 @@ const SubKickCard = ({ value }: { value: number }) => {
           </span>
         </div>
 
-        {/* Track with balanced zone and dot indicator */}
         <div className="relative h-1.5 rounded-full bg-muted/50">
-          {/* Balanced zone highlight */}
           <div
             className="absolute inset-y-0 bg-emerald-500/10 rounded-full"
             style={{ left: "40%", width: "20%" }}
           />
-          {/* Center tick */}
           <div className="absolute top-1/2 left-1/2 -translate-x-px -translate-y-1/2 w-0.5 h-3 bg-foreground/8" />
-          {/* Indicator dot — sits centered on the track */}
           <div
             className={`absolute top-1/2 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-all duration-700 ease-out ${colors.bar}`}
             style={{
@@ -202,9 +208,9 @@ const SubKickCard = ({ value }: { value: number }) => {
         </div>
       </div>
 
-      <div className="mt-3 text-center">
+      <div className={`text-center ${compact ? "mt-1.5" : "mt-3"}`}>
         <span
-          className="text-lg font-bold text-foreground tabular-nums tracking-tight"
+          className={`font-bold text-foreground tabular-nums tracking-tight ${compact ? "text-sm" : "text-lg"}`}
           style={{ fontFamily: "'IBM Plex Mono', monospace" }}
         >
           {value.toFixed(2)}
@@ -216,9 +222,10 @@ const SubKickCard = ({ value }: { value: number }) => {
 
 interface Props {
   metrics: TechnicalMetricsType;
+  compact?: boolean;
 }
 
-const TechnicalMetrics = ({ metrics }: Props) => {
+const TechnicalMetrics = ({ metrics, compact }: Props) => {
   const hasAny =
     metrics.integrated_lufs !== undefined ||
     metrics.short_term_lufs !== undefined ||
@@ -254,29 +261,31 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
   return (
     <section>
-      <div className="flex items-baseline justify-between mb-5">
+      <div className={`flex items-baseline justify-between ${compact ? "mb-3" : "mb-5"}`}>
         <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
           Technical metrics
         </h2>
-        <span className="font-mono-brand text-[10px] text-muted-foreground/40 tracking-wide">
-          {isPartial ? "Partial measurement" : "Measured on full track"}
-        </span>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
-        <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
-        <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
-        <MetricCard label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
-        {sc !== null ? (
-          <CorrelationCard value={sc} />
-        ) : (
-          <MetricCard label="Stereo Correlation" value={null} unit="" min={-1} max={1} status={null} />
+        {!compact && (
+          <span className="font-mono-brand text-[10px] text-muted-foreground/40 tracking-wide">
+            {isPartial ? "Partial measurement" : "Measured on full track"}
+          </span>
         )}
-        <MetricCard label="Crest Factor" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
+      </div>
+      <div className={`grid gap-2 ${compact ? "grid-cols-1" : "grid-cols-2 gap-3"}`}>
+        <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} compact={compact} />
+        <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} compact={compact} />
+        <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} compact={compact} />
+        <MetricCard label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} compact={compact} />
+        {sc !== null ? (
+          <CorrelationCard value={sc} compact={compact} />
+        ) : (
+          <MetricCard label="Stereo Correlation" value={null} unit="" min={-1} max={1} status={null} compact={compact} />
+        )}
+        <MetricCard label="Crest Factor" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} compact={compact} />
       </div>
       {metrics.sub_kick_ratio !== undefined && (
-        <div className="mt-3">
-          <SubKickCard value={metrics.sub_kick_ratio} />
+        <div className="mt-2">
+          <SubKickCard value={metrics.sub_kick_ratio} compact={compact} />
         </div>
       )}
     </section>

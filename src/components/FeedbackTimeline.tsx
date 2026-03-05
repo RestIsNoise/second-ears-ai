@@ -55,19 +55,30 @@ interface Props {
   onItemClick: (item: FeedbackItem) => void;
   onAddToDo?: (item: FeedbackItem) => void;
   todoItemIds?: Set<string>;
+  /** Optional external scroll container for scrollIntoView */
+  scrollContainerRef?: React.RefObject<HTMLDivElement>;
 }
 
-const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoItemIds }: Props) => {
+const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoItemIds, scrollContainerRef }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useEffect(() => {
     if (!activeItemId) return;
     const el = itemRefs.current.get(activeItemId);
-    if (el) {
+    if (!el) return;
+    const scrollParent = scrollContainerRef?.current;
+    if (scrollParent) {
+      // Scroll within the fixed-height container
+      const elTop = el.offsetTop;
+      const elHeight = el.offsetHeight;
+      const containerHeight = scrollParent.clientHeight;
+      const scrollTarget = elTop - containerHeight / 2 + elHeight / 2;
+      scrollParent.scrollTo({ top: scrollTarget, behavior: "smooth" });
+    } else {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [activeItemId]);
+  }, [activeItemId, scrollContainerRef]);
 
   const sorted = [...items].sort((a, b) => a.timestampSec - b.timestampSec);
 
