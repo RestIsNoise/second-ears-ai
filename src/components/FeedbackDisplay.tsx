@@ -127,6 +127,7 @@ const FeedbackDisplay = ({
   const n = result.normalized;
   const { mode } = n;
   const waveformRef = useRef<WaveformPlayerHandle>(null);
+  const timelineScrollRef = useRef<HTMLDivElement>(null);
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
@@ -169,7 +170,6 @@ const FeedbackDisplay = ({
       }));
   }, [timelineItems, mode]);
 
-  // User annotation markers from todoItems that have timestamps and no sourceId (manual notes)
   const userAnnotationMarkers: WaveformMarker[] = useMemo(() => {
     return todoItems
       .filter((t) => t.timestampSec > 0 && !t.sourceId)
@@ -346,7 +346,7 @@ const FeedbackDisplay = ({
   return (
     <div className="animate-fade-up">
       {/* ═══════════════════════════════════════════════════════
-          ROW 1 — Full-width: Header + Waveform + Summary
+          ROW 1 — Full-width: Header + Waveform
           ═══════════════════════════════════════════════════════ */}
       <div>
         <Button
@@ -409,31 +409,63 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          ROW 2 — 70/30 split: Timeline (left) + Sidebar (right)
+          ROW 2 — Summary band: Top Issue / Biggest Win / Release
           ═══════════════════════════════════════════════════════ */}
-      <div className="mt-10 md:mt-12 flex flex-col lg:flex-row gap-8 lg:gap-8 items-start">
-        {/* Left column (70%) — timeline feedback cards */}
-        <div className="w-full lg:w-[70%] min-w-0">
-          {/* Timeline Feedback */}
+      {hasExecutiveSummary && (
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {n.topIssue && (
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Top issue</p>
+              <p className="text-[13px] font-medium text-foreground">{n.topIssue}</p>
+            </div>
+          )}
+          {n.biggestWin && (
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Biggest win</p>
+              <p className="text-[13px] font-medium text-foreground">{n.biggestWin}</p>
+            </div>
+          )}
+          {releaseReadiness && (
+            <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
+              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Release</p>
+              <p className="text-[13px] font-medium text-foreground">{releaseReadiness}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════
+          ROW 3 — 3-column workstation (xl) / 2-col (lg) / stack (mobile)
+          ═══════════════════════════════════════════════════════ */}
+      <div className="mt-8 md:mt-10 flex flex-col lg:flex-row gap-6 items-start">
+
+        {/* ─── Column A: Timeline Feedback (scrollable panel) ─── */}
+        <div className="w-full lg:w-[58%] xl:w-[57%] min-w-0">
           {hasTimeline && (
             <section>
-              <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
+              <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
                 Timeline feedback
               </h2>
-              <FeedbackTimeline
-                items={timelineItems}
-                activeItemId={activeItemId}
-                onItemClick={handleItemClick}
-                onAddToDo={handleAddToDoFromFeedback}
-                todoItemIds={todoSourceIds}
-              />
+              <div
+                ref={timelineScrollRef}
+                className="xl:max-h-[620px] xl:overflow-y-auto xl:pr-2 scrollbar-thin"
+              >
+                <FeedbackTimeline
+                  items={timelineItems}
+                  activeItemId={activeItemId}
+                  onItemClick={handleItemClick}
+                  onAddToDo={handleAddToDoFromFeedback}
+                  todoItemIds={todoSourceIds}
+                  scrollContainerRef={timelineScrollRef}
+                />
+              </div>
             </section>
           )}
 
-          {/* Fallback: Top Priorities without timestamps (when no timeline) */}
+          {/* Fallback: Top Priorities without timestamps */}
           {!hasTimeline && n.timelineItems.length > 0 && (
             <section>
-              <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-5">
+              <h2 className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-4">
                 Top priorities
               </h2>
               <div className="space-y-2">
@@ -471,32 +503,15 @@ const FeedbackDisplay = ({
           )}
         </div>
 
-        {/* Right column (30%) — sticky sidebar: Executive Summary + To-Do + Share */}
-        <div className="w-full lg:w-[30%] lg:sticky lg:top-24 space-y-5 order-last" style={{ maxHeight: "calc(100vh - 8rem)" }}>
-          {/* Top Issue / Biggest Win mini cards in sidebar */}
-          {hasExecutiveSummary && (
-            <div className="space-y-3">
-              {n.topIssue && (
-                <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Top issue</p>
-                  <p className="text-[13px] font-medium text-foreground">{n.topIssue}</p>
-                </div>
-              )}
-              {n.biggestWin && (
-                <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Biggest win</p>
-                  <p className="text-[13px] font-medium text-foreground">{n.biggestWin}</p>
-                </div>
-              )}
-              {releaseReadiness && (
-                <div className="rounded-xl border border-border-subtle bg-background px-4 py-3">
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1">Release</p>
-                  <p className="text-[13px] font-medium text-foreground">{releaseReadiness}</p>
-                </div>
-              )}
-            </div>
-          )}
+        {/* ─── Column B: Technical Metrics (compact, center on xl) ─── */}
+        {technicalMetrics && (
+          <div className="w-full lg:w-full xl:w-[22%] min-w-0 order-last lg:order-last xl:order-none">
+            <TechnicalMetrics metrics={technicalMetrics} compact />
+          </div>
+        )}
 
+        {/* ─── Column C: To-Do + Share (sticky sidebar) ─── */}
+        <div className="w-full lg:w-[42%] xl:w-[21%] lg:sticky lg:top-24 space-y-5 order-first lg:order-none" style={{ maxHeight: "calc(100vh - 8rem)" }}>
           <ToDoPanel
             items={todoItems}
             onToggle={handleToggleToDo}
@@ -508,101 +523,99 @@ const FeedbackDisplay = ({
       </div>
 
       {/* ═══════════════════════════════════════════════════════
-          ROW 3 — Full-width collapsible sections
+          ROW 4 — Lower sections: Full Analysis + What Works / Your Focus
           ═══════════════════════════════════════════════════════ */}
       <div className="mt-10 md:mt-14 space-y-6 border-t border-border-subtle pt-8">
-        {/* Technical Metrics */}
-        {technicalMetrics && (
-          <CollapsibleSection title="Technical metrics" defaultOpen={false}>
-            <TechnicalMetrics metrics={technicalMetrics} />
-          </CollapsibleSection>
-        )}
-
-        {/* Full Analysis */}
-        {hasFullAnalysis && (
-          <CollapsibleSection title="Full analysis" defaultOpen={false}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {fullAnalysisCards.map(({ key, label, text }) =>
-                text ? (
-                  <div key={key} className="rounded-xl border border-border-subtle p-4 md:p-5 bg-background flex flex-col">
-                    <h3 className="text-[15px] font-semibold tracking-tight mb-2">{label}</h3>
-                    <AnalysisCardText text={text} />
-                  </div>
-                ) : null
-              )}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {/* What Works */}
-        {n.whatWorks.length > 0 && (
-          <CollapsibleSection title={modeWhatWorksLabel[mode] || "What works"} defaultOpen={false}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {n.whatWorks.map((item, i) => (
-                <div key={i} className={`rounded-xl border border-border-subtle bg-background flex flex-col ${item.description ? "p-4 md:p-5" : "p-4"}`}>
-                  <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
-                  {item.description && (
-                    <p className="text-[13px] text-foreground/55 max-w-[70ch] mt-1.5" style={{ lineHeight: 1.575 }}>{item.description}</p>
+        {/* Two-column lower area on lg+ */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left (70%): Full Analysis + Fix One Thing */}
+          <div className="w-full lg:w-[70%] space-y-6">
+            {hasFullAnalysis && (
+              <CollapsibleSection title="Full analysis" defaultOpen={false}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {fullAnalysisCards.map(({ key, label, text }) =>
+                    text ? (
+                      <div key={key} className="rounded-xl border border-border-subtle p-4 md:p-5 bg-background flex flex-col">
+                        <h3 className="text-[15px] font-semibold tracking-tight mb-2">{label}</h3>
+                        <AnalysisCardText text={text} />
+                      </div>
+                    ) : null
                   )}
                 </div>
-              ))}
-            </div>
-          </CollapsibleSection>
-        )}
+              </CollapsibleSection>
+            )}
 
-        {/* Fix One Thing */}
-        {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
-          <CollapsibleSection title={modeFixOneLabel[mode] || "If you fix only one thing today"} defaultOpen={true}>
-            <div className="rounded-xl border-2 border-foreground/10 p-5 md:p-6 bg-secondary/20 max-w-[70ch]">
-              {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-base text-foreground leading-relaxed">{n.ifFixOneThing.how}</p>
-                  <CopyFixButton text={n.ifFixOneThing.how} />
+            {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
+              <CollapsibleSection title={modeFixOneLabel[mode] || "If you fix only one thing today"} defaultOpen={true}>
+                <div className="rounded-xl border-2 border-foreground/10 p-5 md:p-6 bg-secondary/20 max-w-[70ch]">
+                  {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="text-base text-foreground leading-relaxed">{n.ifFixOneThing.how}</p>
+                      <CopyFixButton text={n.ifFixOneThing.how} />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-xl font-bold tracking-tight mb-2">{n.ifFixOneThing.title}</h3>
+                        <CopyFixButton
+                          text={`${n.ifFixOneThing.title}\nWhy: ${n.ifFixOneThing.why || ""}\nHow: ${n.ifFixOneThing.how || ""}`}
+                        />
+                      </div>
+                      {n.ifFixOneThing.why && (
+                        <p className="text-[13px] text-foreground/55 leading-relaxed mb-3" style={{ lineHeight: 1.55 }}>
+                          {n.ifFixOneThing.why}
+                        </p>
+                      )}
+                      {n.ifFixOneThing.how && (
+                        <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.55 }}>
+                          <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">How</span>
+                          {n.ifFixOneThing.how}
+                        </p>
+                      )}
+                    </>
+                  )}
                 </div>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-xl font-bold tracking-tight mb-2">{n.ifFixOneThing.title}</h3>
-                    <CopyFixButton
-                      text={`${n.ifFixOneThing.title}\nWhy: ${n.ifFixOneThing.why || ""}\nHow: ${n.ifFixOneThing.how || ""}`}
-                    />
-                  </div>
-                  {n.ifFixOneThing.why && (
-                    <p className="text-[13px] text-foreground/55 leading-relaxed mb-3" style={{ lineHeight: 1.55 }}>
-                      {n.ifFixOneThing.why}
-                    </p>
-                  )}
-                  {n.ifFixOneThing.how && (
-                    <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.55 }}>
-                      <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">How</span>
-                      {n.ifFixOneThing.how}
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-          </CollapsibleSection>
-        )}
+              </CollapsibleSection>
+            )}
+          </div>
 
-        {/* Your Focus */}
-        {n.yourFocus.question && (
-          <CollapsibleSection title="Your focus" defaultOpen={false}>
-            <div className="rounded-xl border border-border-subtle p-5 md:p-6 bg-background max-w-[70ch]">
-              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
-                You asked
-              </p>
-              <p className="text-[13px] text-foreground/70 leading-relaxed italic mb-4" style={{ lineHeight: 1.575 }}>
-                &ldquo;{n.yourFocus.question}&rdquo;
-              </p>
-              <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
-                Response
-              </p>
-              <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
-                {n.yourFocus.response || "No direct focus response available for this run."}
-              </p>
-            </div>
-          </CollapsibleSection>
-        )}
+          {/* Right (30%): What Works + Your Focus */}
+          <div className="w-full lg:w-[30%] space-y-6">
+            {n.whatWorks.length > 0 && (
+              <CollapsibleSection title={modeWhatWorksLabel[mode] || "What works"} defaultOpen={false}>
+                <div className="space-y-3">
+                  {n.whatWorks.map((item, i) => (
+                    <div key={i} className={`rounded-xl border border-border-subtle bg-background flex flex-col ${item.description ? "p-4" : "p-3.5"}`}>
+                      <h3 className="text-sm font-semibold tracking-tight">{item.title}</h3>
+                      {item.description && (
+                        <p className="text-[13px] text-foreground/55 mt-1.5" style={{ lineHeight: 1.575 }}>{item.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CollapsibleSection>
+            )}
+
+            {n.yourFocus.question && (
+              <CollapsibleSection title="Your focus" defaultOpen={false}>
+                <div className="rounded-xl border border-border-subtle p-4 md:p-5 bg-background">
+                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
+                    You asked
+                  </p>
+                  <p className="text-[13px] text-foreground/70 leading-relaxed italic mb-4" style={{ lineHeight: 1.575 }}>
+                    &ldquo;{n.yourFocus.question}&rdquo;
+                  </p>
+                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-2">
+                    Response
+                  </p>
+                  <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
+                    {n.yourFocus.response || "No direct focus response available for this run."}
+                  </p>
+                </div>
+              </CollapsibleSection>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
