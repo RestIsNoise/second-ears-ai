@@ -23,6 +23,7 @@ interface Props {
   onTimeUpdate?: (time: number) => void;
   onDurationReady?: (duration: number) => void;
   onAddNote?: (text: string, timestampSec: number) => void;
+  onEditNote?: (markerId: string) => void;
 }
 
 const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
@@ -33,6 +34,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   onTimeUpdate,
   onDurationReady,
   onAddNote,
+  onEditNote,
 }, ref) => {
   const playerARef = useRef<WaveformPlayerHandle>(null);
   const playerBRef = useRef<WaveformPlayerHandle>(null);
@@ -145,6 +147,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onTimeUpdate={handleTimeUpdateA}
           onDurationReady={handleDurationReadyA}
           onAddNote={onAddNote}
+          onEditNote={onEditNote}
         />
         <div className="mt-3">
           <Button
@@ -228,6 +231,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               onTimeUpdate={handleTimeUpdateA}
               onDurationReady={handleDurationReadyA}
               onAddNote={onAddNote}
+              onEditNote={onEditNote}
               hideControls
             />
           </div>
