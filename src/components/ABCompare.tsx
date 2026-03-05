@@ -122,22 +122,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   const maxDuration = Math.max(durationA, durationB);
 
-  // Hidden file input
-  const fileInput = (
-    <input
-      ref={fileInputRef}
-      type="file"
-      accept={ACCEPTED_FORMATS}
-      onChange={handleFileSelect}
-      style={{ display: "none" }}
-    />
-  );
-
-  // If no reference, show single player + upload button
+  // If no reference, show single player + upload label
   if (!referenceFile) {
     return (
       <div>
-        {fileInput}
         <WaveformPlayer
           ref={playerARef}
           audioFile={audioFileA}
@@ -150,15 +138,22 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onEditNote={onEditNote}
         />
         <div className="mt-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => { fileInputRef.current?.click(); }}
-            className="gap-2 text-muted-foreground hover:text-foreground"
+          <label
+            htmlFor="reference-upload"
+            style={{ cursor: "pointer" }}
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground rounded-md border border-input bg-background px-3 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
           >
+            <input
+              id="reference-upload"
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_FORMATS}
+              onChange={handleFileSelect}
+              style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", zIndex: -1 }}
+            />
             <Upload className="w-3.5 h-3.5" />
             Add reference track
-          </Button>
+          </label>
         </div>
       </div>
     );
@@ -167,7 +162,13 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   // Dual waveform mode with vertical crossfader on the left
   return (
     <div className="space-y-0">
-      {fileInput}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={ACCEPTED_FORMATS}
+        onChange={handleFileSelect}
+        style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", zIndex: -1 }}
+      />
       <div className="flex gap-3">
         {/* Vertical crossfader on the left */}
         <div className="flex flex-col items-center gap-1.5 py-2 shrink-0" style={{ width: 28 }}>
