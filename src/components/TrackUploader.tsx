@@ -128,11 +128,11 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     <div className="space-y-6">
       {/* Drop zone — label wraps input for native click association */}
       <label
-        htmlFor="track-upload"
+        htmlFor="main-track-input"
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", display: "block", width: "100%", height: "100%" }}
         className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
           dragOver
             ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
@@ -142,12 +142,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         }`}
       >
         <input
-          id="track-upload"
+          id="main-track-input"
           ref={fileInputRef}
           type="file"
           accept=".mp3,.wav,.flac,audio/*"
           onChange={handleFileChange}
-          style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", zIndex: -1 }}
+          style={{ position: "absolute", top: -9999, left: -9999 }}
         />
         {file ? (
           <>
