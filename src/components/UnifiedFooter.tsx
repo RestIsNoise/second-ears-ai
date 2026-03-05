@@ -7,7 +7,7 @@ const UnifiedFooter = () => (
     {/* ── Minimal CTA block ── */}
     <section className="bg-background py-10 md:py-12 px-6">
       <div className="max-w-xl mx-auto text-center">
-        <Button variant="hero" size="lg" className="h-12 px-10 text-[13px] gap-2" asChild>
+        <Button variant="hero" size="lg" className="h-14 px-14 text-[15px] gap-2.5" asChild>
           <Link to="/analyze">
             <Upload className="w-4 h-4" />
             Start free analysis
