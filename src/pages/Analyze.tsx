@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import AnalysisProgress from "@/components/AnalysisProgress";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import type { NormalizedFeedback } from "@/lib/normalizeFeedback";
 
 export type ListeningMode = "technical" | "musical" | "perception";
 
-// Legacy types kept for TrackUploader's raw processing
 export interface TechnicalMetrics {
   integrated_lufs?: number;
   short_term_lufs?: number;
@@ -40,10 +42,16 @@ export interface FeedbackResult {
 }
 
 const Analyze = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [result, setResult] = useState<FeedbackResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/auth", { replace: true });
+  }, [user, loading, navigate]);
 
   const handleRetry = () => {
     setAnalysisError(null);
@@ -58,6 +66,48 @@ const Analyze = () => {
       setProgressStep(0);
     }
   };
+
+  const handleResult = async (feedbackResult: FeedbackResult) => {
+    setResult(feedbackResult);
+
+    // Auto-save to database
+    if (user) {
+      try {
+        const n = feedbackResult.normalized;
+        const { data: project, error: projErr } = await supabase
+          .from("projects")
+          .insert({ user_id: user.id, name: n.trackName })
+          .select("id")
+          .single();
+
+        if (projErr) throw projErr;
+
+        const { error: analysisErr } = await supabase.from("analyses").insert({
+          project_id: project.id,
+          mode: n.mode,
+          feedback: {
+            overallImpression: n.overallImpression,
+            topIssue: n.topIssue,
+            biggestWin: n.biggestWin,
+            releaseStatus: n.releaseStatus,
+            timelineItems: n.timelineItems,
+            whatWorks: n.whatWorks,
+            ifFixOneThing: n.ifFixOneThing,
+            yourFocus: n.yourFocus,
+            fullAnalysis: n.fullAnalysis,
+          } as any,
+          metrics: n.metrics as any,
+        });
+
+        if (analysisErr) throw analysisErr;
+        console.log("[Analyze] Saved project:", project.id);
+      } catch (err) {
+        console.error("[Analyze] Failed to save analysis:", err);
+      }
+    }
+  };
+
+  if (loading) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,7 +138,7 @@ const Analyze = () => {
                 </h1>
               </div>
               <TrackUploader
-                onResult={setResult}
+                onResult={handleResult}
                 isAnalyzing={isAnalyzing}
                 setIsAnalyzing={handleStartAnalysis}
                 onProgressStep={setProgressStep}
