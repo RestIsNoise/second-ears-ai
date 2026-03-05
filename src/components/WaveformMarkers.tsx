@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from "react";
-import { SlidersHorizontal, LayoutGrid, Ear, Plus, X } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, Ear, Plus, X, User, MapPin } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
@@ -10,12 +10,11 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-const MARKER_ICON_SIZE = 12;
-
 const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
-  technical: <SlidersHorizontal className="w-3 h-3" />,
-  structural: <LayoutGrid className="w-3 h-3" />,
-  perceptual: <Ear className="w-3 h-3" />,
+  technical: <SlidersHorizontal className="w-3 h-3" strokeWidth={2.5} />,
+  structural: <LayoutGrid className="w-3 h-3" strokeWidth={2.5} />,
+  perceptual: <Ear className="w-3 h-3" strokeWidth={2.5} />,
+  user: <User className="w-3 h-3" strokeWidth={2.5} />,
 };
 
 const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string }> = {
@@ -34,6 +33,11 @@ const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: st
     border: "hsl(270 60% 55% / 0.35)",
     text: "hsl(270 60% 55%)",
   },
+  user: {
+    bg: "hsl(40 90% 55% / 0.2)",
+    border: "hsl(40 90% 50% / 0.5)",
+    text: "hsl(40 90% 40%)",
+  },
 };
 
 export const MARKER_ZONE_HEIGHT = 32;
@@ -47,6 +51,7 @@ interface Props {
   hoverX: number | null;
   onMarkerClick?: (marker: WaveformMarker) => void;
   onAddNote?: (text: string, timestampSec: number) => void;
+  onEditNote?: (markerId: string) => void;
 }
 
 const WaveformMarkers = ({
@@ -58,12 +63,12 @@ const WaveformMarkers = ({
   hoverX,
   onMarkerClick,
   onAddNote,
+  onEditNote,
 }: Props) => {
   const [addNoteAt, setAddNoteAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Determine if hover is near any marker but NOT on a marker (show + button)
   const hoverTimeSec = useMemo(() => {
     if (hoverX === null || duration <= 0 || containerWidth <= 0) return null;
     return (hoverX / containerWidth) * duration;
@@ -91,16 +96,20 @@ const WaveformMarkers = ({
     setNoteText("");
   }, []);
 
+  // Split markers into AI and user types
+  const aiMarkers = markers.filter(m => (m.type || "technical") !== "user");
+  const userMarkers = markers.filter(m => m.type === "user");
+
   if (markers.length === 0 && !onAddNote) return null;
 
   return (
     <TooltipProvider delayDuration={200}>
       <div
-        className="absolute left-0 right-0 z-[5]"
+        className="absolute left-0 right-0 z-[5] pointer-events-none"
         style={{ height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
       >
-        {/* Circular markers */}
-        {markers.slice(0, 6).map((m) => {
+        {/* AI markers — circular with type icons */}
+        {aiMarkers.slice(0, 6).map((m) => {
           const isActive = activeMarkerId === m.id;
           const isSnapped = snappedMarkerId === m.id;
           const leftPct = (m.time / duration) * 100;
@@ -125,11 +134,9 @@ const WaveformMarkers = ({
                     style={{
                       width: isActive || isSnapped ? 28 : 24,
                       height: isActive || isSnapped ? 28 : 24,
-                      backgroundColor: isActive
-                        ? colors.border
-                        : colors.bg,
+                      backgroundColor: isActive ? colors.border : colors.bg,
                       border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : "hsl(var(--foreground) / 0.1)"}`,
-                      color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.4)",
+                      color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.55)",
                       boxShadow: isActive ? `0 0 8px ${colors.bg}` : "none",
                     }}
                     aria-label={`${formatTime(m.time)} — ${m.label}`}
@@ -137,16 +144,75 @@ const WaveformMarkers = ({
                     {markerTypeIcon[type]}
                   </button>
                 </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  className="max-w-[200px] text-xs"
-                >
+                <TooltipContent side="top" className="max-w-[200px] text-xs">
                   <p className="font-medium">{m.label}</p>
                   <p
                     className="text-muted-foreground tabular-nums mt-0.5"
                     style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                   >
                     {formatTime(m.time)}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          );
+        })}
+
+        {/* User annotation markers — pin style with User icon in amber */}
+        {userMarkers.map((m) => {
+          const isActive = activeMarkerId === m.id;
+          const isSnapped = snappedMarkerId === m.id;
+          const leftPct = (m.time / duration) * 100;
+          const colors = markerTypeColor.user;
+
+          return (
+            <div
+              key={m.id}
+              className="absolute pointer-events-auto"
+              style={{
+                left: `${leftPct}%`,
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onEditNote?.(m.id)}
+                    className="flex flex-col items-center transition-all duration-150"
+                  >
+                    {/* Pin head */}
+                    <div
+                      className="flex items-center justify-center rounded-full"
+                      style={{
+                        width: isActive || isSnapped ? 26 : 22,
+                        height: isActive || isSnapped ? 26 : 22,
+                        backgroundColor: isActive ? colors.border : colors.bg,
+                        border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
+                        color: isActive || isSnapped ? colors.text : "hsl(40 80% 45%)",
+                        boxShadow: isActive ? `0 0 10px hsl(40 90% 55% / 0.3)` : "none",
+                      }}
+                    >
+                      <User className="w-2.5 h-2.5" strokeWidth={2.5} />
+                    </div>
+                    {/* Pin tail */}
+                    <div
+                      style={{
+                        width: "1.5px",
+                        height: 6,
+                        backgroundColor: isActive ? colors.text : colors.border,
+                        marginTop: -1,
+                      }}
+                    />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[220px] text-xs">
+                  <p className="font-medium">{m.label}</p>
+                  <p
+                    className="text-muted-foreground tabular-nums mt-0.5"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                  >
+                    {formatTime(m.time)} · Your note
                   </p>
                 </TooltipContent>
               </Tooltip>

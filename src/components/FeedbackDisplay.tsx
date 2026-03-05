@@ -157,7 +157,7 @@ const FeedbackDisplay = ({
     perception: "perceptual",
   };
 
-  const markers: WaveformMarker[] = useMemo(() => {
+  const aiMarkers: WaveformMarker[] = useMemo(() => {
     return timelineItems
       .filter((i) => i.timestampSec > 0)
       .map((item) => ({
@@ -168,6 +168,23 @@ const FeedbackDisplay = ({
         type: modeToMarkerType[mode] || "technical",
       }));
   }, [timelineItems, mode]);
+
+  // User annotation markers from todoItems that have timestamps and no sourceId (manual notes)
+  const userAnnotationMarkers: WaveformMarker[] = useMemo(() => {
+    return todoItems
+      .filter((t) => t.timestampSec > 0 && !t.sourceId)
+      .map((t) => ({
+        id: t.id,
+        time: t.timestampSec,
+        label: t.text,
+        severity: "low" as const,
+        type: "user" as const,
+      }));
+  }, [todoItems]);
+
+  const markers: WaveformMarker[] = useMemo(() => {
+    return [...aiMarkers, ...userAnnotationMarkers];
+  }, [aiMarkers, userAnnotationMarkers]);
 
   // To-Do management
   const todoSourceIds = useMemo(() => new Set(todoItems.filter(t => t.sourceId).map(t => t.sourceId!)), [todoItems]);
@@ -225,6 +242,14 @@ const FeedbackDisplay = ({
       if (feedbackItem) setActiveItemId(feedbackItem.id);
     }
   }, [timelineItems]);
+
+  const handleEditAnnotation = useCallback((markerId: string) => {
+    const todo = todoItems.find((t) => t.id === markerId);
+    if (todo) {
+      waveformRef.current?.seekTo(todo.timestampSec);
+      setActiveItemId(markerId);
+    }
+  }, [todoItems]);
 
   const handleMarkerClick = useCallback(
     (marker: WaveformMarker) => {
@@ -357,6 +382,7 @@ const FeedbackDisplay = ({
             onTimeUpdate={handleTimeUpdate}
             onDurationReady={setAudioDuration}
             onAddNote={handleAddNoteFromWaveform}
+            onEditNote={handleEditAnnotation}
           />
         </div>
       )}

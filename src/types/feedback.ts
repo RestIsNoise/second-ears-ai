@@ -10,7 +10,7 @@ export interface FeedbackItem {
   mode: string;
 }
 
-export type MarkerType = "technical" | "structural" | "perceptual";
+export type MarkerType = "technical" | "structural" | "perceptual" | "user";
 
 export interface WaveformMarker {
   id: string;

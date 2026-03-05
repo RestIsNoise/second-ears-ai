@@ -22,6 +22,7 @@ interface Props {
   onTimeUpdate?: (time: number) => void;
   onDurationReady?: (duration: number) => void;
   onAddNote?: (text: string, timestampSec: number) => void;
+  onEditNote?: (markerId: string) => void;
   hideControls?: boolean;
   label?: string;
   /** Custom waveform color (default: "#d0d0d0") */
@@ -186,7 +187,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, hideControls, label, waveColor, progressColor }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onEditNote, hideControls, label, waveColor, progressColor }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -342,10 +343,10 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               style={{ top: 6, bottom: 6 }}
             />
 
-            {/* Markers overlaid and vertically centered on the waveform */}
-            {duration > 0 && containerWidth > 0 && hasMarkers && (
+          {/* Markers overlaid and vertically centered on the waveform */}
+            {duration > 0 && containerWidth > 0 && (markers.length > 0 || onAddNote) && (
               <div
-                className="absolute left-0 right-0 z-[5]"
+                className="absolute left-0 right-0 z-[5] pointer-events-none"
                 style={{
                   top: (WAVEFORM_HEIGHT - MARKER_ZONE_HEIGHT) / 2,
                   height: MARKER_ZONE_HEIGHT,
@@ -360,6 +361,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   hoverX={hoverX}
                   onMarkerClick={onMarkerClick}
                   onAddNote={onAddNote}
+                  onEditNote={onEditNote}
                 />
               </div>
             )}
