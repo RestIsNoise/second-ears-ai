@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check, ChevronDown, FileDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import WaveformPlayer from "@/components/WaveformPlayer";
+import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
 import ShareBlock from "@/components/ShareBlock";
@@ -356,32 +356,19 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
-      {/* Full-width Waveform */}
+      {/* Full-width Waveform with A/B Compare */}
       {audioFile && (
         <div className="mt-7 md:mt-8 w-full overflow-hidden">
-          <WaveformPlayer
+          <ABCompare
             ref={waveformRef}
-            audioFile={audioFile}
-            markers={markers}
+            audioFileA={audioFile}
+            markersA={markers}
             activeMarkerId={activeItemId}
             onMarkerClick={handleMarkerClick}
             onTimeUpdate={handleTimeUpdate}
             onDurationReady={setAudioDuration}
             onAddNote={handleAddNoteFromWaveform}
           />
-          {/* A/B Compare */}
-          <div className="flex items-center gap-2.5 mt-3">
-            <div className="flex items-center rounded-md border border-border-subtle overflow-hidden">
-              <span className="px-2.5 py-1 text-[11px] font-medium text-foreground bg-secondary/60">A</span>
-              <span
-                className="px-2.5 py-1 text-[11px] text-muted-foreground/40 cursor-not-allowed"
-                title="Upload updated bounce to compare"
-              >B</span>
-            </div>
-            <span className="text-[10px] text-muted-foreground/40" title="Upload an updated mix to compare side by side">
-              Original · <span className="underline decoration-dotted underline-offset-2 cursor-help">Compare?</span>
-            </span>
-          </div>
         </div>
       )}
 
