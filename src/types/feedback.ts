@@ -10,11 +10,14 @@ export interface FeedbackItem {
   mode: string;
 }
 
+export type MarkerType = "technical" | "structural" | "perceptual";
+
 export interface WaveformMarker {
   id: string;
   time: number;
   label: string;
   severity: Severity;
+  type?: MarkerType;
 }
 
 export interface ToDoItem {
