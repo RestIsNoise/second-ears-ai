@@ -362,17 +362,17 @@ const FeedbackDisplay = ({
     switch (panelId) {
       case "ai-feedback":
         return (
-          <div className="flex flex-col h-full min-h-0">
+          <div className="relative h-full" style={{ overflowY: "scroll" }} ref={timelineScrollRef}>
             {/* Sticky overall impression */}
             {n.overallImpression && (
-              <div className="shrink-0 border-b border-border-subtle bg-secondary/30 px-4 py-3.5">
+              <div className="sticky top-0 z-10 border-b border-border-subtle bg-background px-4 py-3.5">
                 <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.6 }}>
                   {n.overallImpression}
                 </p>
               </div>
             )}
-            {/* Scrollable cards area */}
-            <div className="flex-1 overflow-y-auto min-h-0 scrollbar-thin p-4" ref={timelineScrollRef}>
+            {/* Cards area */}
+            <div className="p-4">
               {hasTimeline && (
                 <FeedbackTimeline
                   items={timelineItems}
@@ -641,7 +641,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-6 flex border border-border-subtle rounded-xl overflow-hidden" style={{ minHeight: 520 }}>
+      <div className="mt-6 flex border border-border-subtle rounded-xl overflow-hidden" style={{ height: "calc(100vh - 350px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
