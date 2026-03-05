@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { SlidersHorizontal, LayoutGrid, Ear, Plus, X, User, MapPin } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -54,6 +53,78 @@ interface Props {
   onEditNote?: (markerId: string) => void;
 }
 
+/* ── Custom single-tooltip with smart positioning ── */
+const MarkerTooltip = ({
+  marker,
+  leftPct,
+  children,
+  hoveredId,
+  onHover,
+  onLeave,
+}: {
+  marker: WaveformMarker;
+  leftPct: number;
+  children: React.ReactNode;
+  hoveredId: string | null;
+  onHover: (id: string) => void;
+  onLeave: (id: string) => void;
+}) => {
+  const isVisible = hoveredId === marker.id;
+  const isUser = marker.type === "user";
+
+  // Determine tooltip alignment based on position in waveform
+  let align: "left" | "center" | "right" = "center";
+  let translateX = "-50%";
+  if (leftPct < 20) {
+    align = "left";
+    translateX = "0%";
+  } else if (leftPct > 80) {
+    align = "right";
+    translateX = "-100%";
+  }
+
+  return (
+    <div
+      onMouseEnter={() => onHover(marker.id)}
+      onMouseLeave={() => onLeave(marker.id)}
+      style={{ position: "relative", display: "inline-flex" }}
+    >
+      {children}
+      {isVisible && (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            bottom: "calc(100% + 6px)",
+            left: "50%",
+            transform: `translateX(${translateX})`,
+            zIndex: 50,
+            whiteSpace: "nowrap",
+          }}
+        >
+          <div
+            className="rounded-md px-2.5 py-1.5 shadow-lg text-xs"
+            style={{
+              backgroundColor: "hsl(var(--popover))",
+              border: "1px solid hsl(var(--border))",
+              color: "hsl(var(--popover-foreground))",
+              maxWidth: 220,
+              whiteSpace: "normal",
+            }}
+          >
+            <p className="font-medium">{marker.label}</p>
+            <p
+              className="text-muted-foreground tabular-nums mt-0.5"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+            >
+              {formatTime(marker.time)}{isUser ? " · Your note" : ""}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const WaveformMarkers = ({
   markers,
   duration,
@@ -68,6 +139,20 @@ const WaveformMarkers = ({
   const [addNoteAt, setAddNoteAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Single hovered marker with 100ms delay
+  const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMarkerHover = useCallback((id: string) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => setHoveredMarkerId(id), 100);
+  }, []);
+
+  const handleMarkerLeave = useCallback((id: string) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    setHoveredMarkerId((prev) => (prev === id ? null : prev));
+  }, []);
 
   const hoverTimeSec = useMemo(() => {
     if (hoverX === null || duration <= 0 || containerWidth <= 0) return null;
@@ -103,195 +188,181 @@ const WaveformMarkers = ({
   if (markers.length === 0 && !onAddNote) return null;
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div
-        className="absolute left-0 right-0 z-[5] pointer-events-none"
-        style={{ height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
-      >
-        {/* AI markers — circular with type icons */}
-        {aiMarkers.slice(0, 6).map((m) => {
-          const isActive = activeMarkerId === m.id;
-          const isSnapped = snappedMarkerId === m.id;
-          const leftPct = (m.time / duration) * 100;
-          const type = m.type || "technical";
-          const colors = markerTypeColor[type];
+    <div
+      className="absolute left-0 right-0 z-[5] pointer-events-none"
+      style={{ height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
+    >
+      {/* AI markers — circular with type icons */}
+      {aiMarkers.slice(0, 6).map((m) => {
+        const isActive = activeMarkerId === m.id;
+        const isSnapped = snappedMarkerId === m.id;
+        const leftPct = (m.time / duration) * 100;
+        const type = m.type || "technical";
+        const colors = markerTypeColor[type];
 
-          return (
-            <div
-              key={m.id}
-              className="absolute pointer-events-auto"
-              style={{
-                left: `${leftPct}%`,
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => onMarkerClick?.(m)}
-                    className="flex items-center justify-center rounded-full transition-all duration-150"
-                    style={{
-                      width: isActive || isSnapped ? 28 : 24,
-                      height: isActive || isSnapped ? 28 : 24,
-                      backgroundColor: isActive ? colors.border : colors.bg,
-                      border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : "hsl(var(--foreground) / 0.1)"}`,
-                      color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.55)",
-                      boxShadow: isActive ? `0 0 8px ${colors.bg}` : "none",
-                    }}
-                    aria-label={`${formatTime(m.time)} — ${m.label}`}
-                  >
-                    {markerTypeIcon[type]}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[200px] text-xs">
-                  <p className="font-medium">{m.label}</p>
-                  <p
-                    className="text-muted-foreground tabular-nums mt-0.5"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                  >
-                    {formatTime(m.time)}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          );
-        })}
-
-        {/* User annotation markers — pin style with User icon in amber */}
-        {userMarkers.map((m) => {
-          const isActive = activeMarkerId === m.id;
-          const isSnapped = snappedMarkerId === m.id;
-          const leftPct = (m.time / duration) * 100;
-          const colors = markerTypeColor.user;
-
-          return (
-            <div
-              key={m.id}
-              className="absolute pointer-events-auto"
-              style={{
-                left: `${leftPct}%`,
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => onEditNote?.(m.id)}
-                    className="flex flex-col items-center transition-all duration-150"
-                  >
-                    {/* Pin head */}
-                    <div
-                      className="flex items-center justify-center rounded-full"
-                      style={{
-                        width: isActive || isSnapped ? 26 : 22,
-                        height: isActive || isSnapped ? 26 : 22,
-                        backgroundColor: isActive ? colors.border : colors.bg,
-                        border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
-                        color: isActive || isSnapped ? colors.text : "hsl(40 80% 45%)",
-                        boxShadow: isActive ? `0 0 10px hsl(40 90% 55% / 0.3)` : "none",
-                      }}
-                    >
-                      <User className="w-2.5 h-2.5" strokeWidth={2.5} />
-                    </div>
-                    {/* Pin tail */}
-                    <div
-                      style={{
-                        width: "1.5px",
-                        height: 6,
-                        backgroundColor: isActive ? colors.text : colors.border,
-                        marginTop: -1,
-                      }}
-                    />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[220px] text-xs">
-                  <p className="font-medium">{m.label}</p>
-                  <p
-                    className="text-muted-foreground tabular-nums mt-0.5"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                  >
-                    {formatTime(m.time)} · Your note
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          );
-        })}
-
-        {/* "+" button on hover below timeline */}
-        {showPlusButton && hoverX !== null && onAddNote && (
+        return (
           <div
-            className="absolute pointer-events-auto z-[6]"
+            key={m.id}
+            className="absolute pointer-events-auto"
             style={{
-              left: hoverX,
-              top: MARKER_ZONE_HEIGHT + 2,
-              transform: "translateX(-50%)",
+              left: `${leftPct}%`,
+              top: "50%",
+              transform: "translate(-50%, -50%)",
             }}
           >
-            <button
-              onClick={handlePlusClick}
-              className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-100 hover:scale-110"
-              style={{
-                backgroundColor: "hsl(var(--foreground) / 0.08)",
-                border: "1px solid hsl(var(--foreground) / 0.12)",
-                color: "hsl(var(--foreground) / 0.4)",
-              }}
-              title="Add annotation"
+            <MarkerTooltip
+              marker={m}
+              leftPct={leftPct}
+              hoveredId={hoveredMarkerId}
+              onHover={handleMarkerHover}
+              onLeave={handleMarkerLeave}
             >
-              <Plus className="w-3 h-3" />
+              <button
+                onClick={() => onMarkerClick?.(m)}
+                className="flex items-center justify-center rounded-full transition-all duration-150"
+                style={{
+                  width: isActive || isSnapped ? 28 : 24,
+                  height: isActive || isSnapped ? 28 : 24,
+                  backgroundColor: isActive ? colors.border : colors.bg,
+                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : "hsl(var(--foreground) / 0.1)"}`,
+                  color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.55)",
+                  boxShadow: isActive ? `0 0 8px ${colors.bg}` : "none",
+                }}
+                aria-label={`${formatTime(m.time)} — ${m.label}`}
+              >
+                {markerTypeIcon[type]}
+              </button>
+            </MarkerTooltip>
+          </div>
+        );
+      })}
+
+      {/* User annotation markers — pin style with User icon in amber */}
+      {userMarkers.map((m) => {
+        const isActive = activeMarkerId === m.id;
+        const isSnapped = snappedMarkerId === m.id;
+        const leftPct = (m.time / duration) * 100;
+        const colors = markerTypeColor.user;
+
+        return (
+          <div
+            key={m.id}
+            className="absolute pointer-events-auto"
+            style={{
+              left: `${leftPct}%`,
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <MarkerTooltip
+              marker={m}
+              leftPct={leftPct}
+              hoveredId={hoveredMarkerId}
+              onHover={handleMarkerHover}
+              onLeave={handleMarkerLeave}
+            >
+              <button
+                onClick={() => onEditNote?.(m.id)}
+                className="flex flex-col items-center transition-all duration-150"
+              >
+                <div
+                  className="flex items-center justify-center rounded-full"
+                  style={{
+                    width: isActive || isSnapped ? 26 : 22,
+                    height: isActive || isSnapped ? 26 : 22,
+                    backgroundColor: isActive ? colors.border : colors.bg,
+                    border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
+                    color: isActive || isSnapped ? colors.text : "hsl(40 80% 45%)",
+                    boxShadow: isActive ? `0 0 10px hsl(40 90% 55% / 0.3)` : "none",
+                  }}
+                >
+                  <User className="w-2.5 h-2.5" strokeWidth={2.5} />
+                </div>
+                <div
+                  style={{
+                    width: "1.5px",
+                    height: 6,
+                    backgroundColor: isActive ? colors.text : colors.border,
+                    marginTop: -1,
+                  }}
+                />
+              </button>
+            </MarkerTooltip>
+          </div>
+        );
+      })}
+
+      {/* "+" button on hover below timeline */}
+      {showPlusButton && hoverX !== null && onAddNote && (
+        <div
+          className="absolute pointer-events-auto z-[6]"
+          style={{
+            left: hoverX,
+            top: MARKER_ZONE_HEIGHT + 2,
+            transform: "translateX(-50%)",
+          }}
+        >
+          <button
+            onClick={handlePlusClick}
+            className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-100 hover:scale-110"
+            style={{
+              backgroundColor: "hsl(var(--foreground) / 0.08)",
+              border: "1px solid hsl(var(--foreground) / 0.12)",
+              color: "hsl(var(--foreground) / 0.4)",
+            }}
+            title="Add annotation"
+          >
+            <Plus className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+
+      {/* Inline note input */}
+      {addNoteAt && (
+        <div
+          className="absolute z-[10] pointer-events-auto"
+          style={{
+            left: Math.min(Math.max(addNoteAt.x, 100), containerWidth - 100),
+            top: MARKER_ZONE_HEIGHT + 4,
+            transform: "translateX(-50%)",
+          }}
+        >
+          <div
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 shadow-lg"
+            style={{
+              backgroundColor: "hsl(var(--background))",
+              border: "1px solid hsl(var(--border))",
+              minWidth: 200,
+            }}
+          >
+            <span
+              className="text-muted-foreground/50 tabular-nums shrink-0"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+            >
+              {formatTime(addNoteAt.time)}
+            </span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") { e.preventDefault(); handleSubmitNote(); }
+                if (e.key === "Escape") handleCancelNote();
+              }}
+              placeholder="Add a note…"
+              className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none min-w-0"
+            />
+            <button
+              onClick={handleCancelNote}
+              className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0"
+            >
+              <X className="w-3 h-3" />
             </button>
           </div>
-        )}
-
-        {/* Inline note input */}
-        {addNoteAt && (
-          <div
-            className="absolute z-[10] pointer-events-auto"
-            style={{
-              left: Math.min(Math.max(addNoteAt.x, 100), containerWidth - 100),
-              top: MARKER_ZONE_HEIGHT + 4,
-              transform: "translateX(-50%)",
-            }}
-          >
-            <div
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 shadow-lg"
-              style={{
-                backgroundColor: "hsl(var(--background))",
-                border: "1px solid hsl(var(--border))",
-                minWidth: 200,
-              }}
-            >
-              <span
-                className="text-muted-foreground/50 tabular-nums shrink-0"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-              >
-                {formatTime(addNoteAt.time)}
-              </span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={noteText}
-                onChange={(e) => setNoteText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") { e.preventDefault(); handleSubmitNote(); }
-                  if (e.key === "Escape") handleCancelNote();
-                }}
-                placeholder="Add a note…"
-                className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none min-w-0"
-              />
-              <button
-                onClick={handleCancelNote}
-                className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </TooltipProvider>
+        </div>
+      )}
+    </div>
   );
 };
 
