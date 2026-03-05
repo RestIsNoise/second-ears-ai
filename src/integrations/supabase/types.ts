@@ -49,6 +49,41 @@ export type Database = {
           },
         ]
       }
+      comments: {
+        Row: {
+          analysis_id: string
+          created_at: string
+          id: string
+          text: string
+          timestamp_in_track: number
+          user_id: string
+        }
+        Insert: {
+          analysis_id: string
+          created_at?: string
+          id?: string
+          text: string
+          timestamp_in_track?: number
+          user_id: string
+        }
+        Update: {
+          analysis_id?: string
+          created_at?: string
+          id?: string
+          text?: string
+          timestamp_in_track?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           created_at: string

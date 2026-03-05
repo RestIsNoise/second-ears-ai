@@ -48,6 +48,7 @@ const Analyze = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -82,7 +83,7 @@ const Analyze = () => {
 
         if (projErr) throw projErr;
 
-        const { error: analysisErr } = await supabase.from("analyses").insert({
+        const { data: analysisRow, error: analysisErr } = await supabase.from("analyses").insert({
           project_id: project.id,
           mode: n.mode,
           feedback: {
@@ -97,9 +98,10 @@ const Analyze = () => {
             fullAnalysis: n.fullAnalysis,
           } as any,
           metrics: n.metrics as any,
-        });
+        }).select("id").single();
 
         if (analysisErr) throw analysisErr;
+        if (analysisRow) setSavedAnalysisId(analysisRow.id);
         console.log("[Analyze] Saved project:", project.id);
       } catch (err) {
         console.error("[Analyze] Failed to save analysis:", err);
@@ -117,8 +119,9 @@ const Analyze = () => {
           {result ? (
             <FeedbackDisplay
               result={result}
-              onReset={() => setResult(null)}
+              onReset={() => { setResult(null); setSavedAnalysisId(null); }}
               audioFile={result.audioFile}
+              analysisId={savedAnalysisId}
             />
           ) : isAnalyzing || analysisError ? (
             <AnalysisProgress

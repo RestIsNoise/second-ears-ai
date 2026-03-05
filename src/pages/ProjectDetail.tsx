@@ -13,6 +13,7 @@ const ProjectDetail = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [result, setResult] = useState<FeedbackResult | null>(null);
+  const [analysisId, setAnalysisId] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
@@ -30,13 +31,14 @@ const ProjectDetail = () => {
 
       const { data: analysis } = await supabase
         .from("analyses")
-        .select("mode, feedback, metrics")
+        .select("id, mode, feedback, metrics")
         .eq("project_id", id)
         .order("created_at", { ascending: false })
         .limit(1)
         .single();
 
       if (proj && analysis) {
+        setAnalysisId(analysis.id);
         const feedbackData = {
           ...(typeof analysis.feedback === "object" ? analysis.feedback : {}),
           technical_metrics: typeof analysis.metrics === "object" ? analysis.metrics : {},
@@ -72,6 +74,7 @@ const ProjectDetail = () => {
             <FeedbackDisplay
               result={result}
               onReset={() => navigate("/dashboard")}
+              analysisId={analysisId}
             />
           ) : (
             <p className="text-center text-muted-foreground text-sm">Project not found.</p>
