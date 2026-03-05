@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
@@ -362,17 +363,9 @@ const FeedbackDisplay = ({
     switch (panelId) {
       case "ai-feedback":
         return (
-          <div className="p-4 space-y-4">
-            {/* Overall impression summary */}
-            {n.overallImpression && (
-              <div className="rounded-lg border border-border-subtle bg-secondary/20 p-3">
-                <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.55 }}>
-                  {n.overallImpression}
-                </p>
-              </div>
-            )}
+          <div className="flex flex-col h-full">
             {hasTimeline && (
-              <div ref={timelineScrollRef}>
+              <div ref={timelineScrollRef} className="flex-1 overflow-y-auto min-h-0 p-4 space-y-2 scrollbar-thin">
                 <FeedbackTimeline
                   items={timelineItems}
                   activeItemId={activeItemId}
@@ -603,29 +596,53 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-      {/* ═══ COMPACT SUMMARY BADGES ═══ */}
-      {(n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Issue</span>
-              <span className="text-[11px] font-medium text-foreground">{n.topIssue}</span>
-            </span>
-          )}
-          {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Win</span>
-              <span className="text-[11px] font-medium text-foreground">{n.biggestWin}</span>
-            </span>
-          )}
-          {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Release</span>
-              <span className="text-[11px] font-medium text-foreground">{releaseReadiness}</span>
-            </span>
-          )}
-        </div>
+      {/* ═══ OVERALL IMPRESSION ═══ */}
+      {n.overallImpression && (
+        <p className="mt-5 text-[15px] text-foreground/65 leading-relaxed max-w-[75ch]" style={{ lineHeight: 1.65 }}>
+          {n.overallImpression}
+        </p>
       )}
+
+      {/* ═══ COMPACT SUMMARY BADGES ═══ */}
+      <TooltipProvider>
+        {(n.topIssue || n.biggestWin || releaseReadiness) && (
+          <div className="mt-4 flex flex-wrap items-start gap-2">
+            {n.topIssue && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
+                    <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider shrink-0">Issue</span>
+                    <span className="text-[11px] font-medium text-foreground">{n.topIssue}</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs text-xs">{n.topIssue}</TooltipContent>
+              </Tooltip>
+            )}
+            {n.biggestWin && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
+                    <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider shrink-0">Win</span>
+                    <span className="text-[11px] font-medium text-foreground">{n.biggestWin}</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs text-xs">{n.biggestWin}</TooltipContent>
+              </Tooltip>
+            )}
+            {releaseReadiness && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
+                    <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider shrink-0">Release</span>
+                    <span className="text-[11px] font-medium text-foreground">{releaseReadiness}</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs text-xs">{releaseReadiness}</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+        )}
+      </TooltipProvider>
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
       <div className="mt-6 flex border border-border-subtle rounded-xl overflow-hidden" style={{ minHeight: 520 }}>
@@ -688,16 +705,26 @@ const FeedbackDisplay = ({
               Select a panel from the sidebar
             </div>
           )}
-          {orderedActivePanels.map((panel) => (
-            <WorkstationPanel
-              key={panel.id}
-              id={panel.id}
-              title={panelTitles[panel.id] || panel.label}
-              onClose={() => handleTogglePanel(panel.id)}
-            >
-              {renderPanelContent(panel.id)}
-            </WorkstationPanel>
-          ))}
+          {orderedActivePanels.map((panel) => {
+            const flexMap: Record<string, string> = {
+              "ai-feedback": "2.5",
+              "full-analysis": "2",
+              "tech-metrics": "1.5",
+              "human-feedback": "1.5",
+            };
+            const flexVal = flexMap[panel.id] || "1";
+            return (
+              <WorkstationPanel
+                key={panel.id}
+                id={panel.id}
+                title={panelTitles[panel.id] || panel.label}
+                onClose={() => handleTogglePanel(panel.id)}
+                style={{ flex: flexVal }}
+              >
+                {renderPanelContent(panel.id)}
+              </WorkstationPanel>
+            );
+          })}
         </div>
       </div>
     </div>
