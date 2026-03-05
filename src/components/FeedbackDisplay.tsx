@@ -362,17 +362,18 @@ const FeedbackDisplay = ({
     switch (panelId) {
       case "ai-feedback":
         return (
-          <div className="p-4 space-y-4">
-            {/* Overall impression summary */}
+          <div className="flex flex-col h-full min-h-0">
+            {/* Sticky overall impression */}
             {n.overallImpression && (
-              <div className="rounded-lg border border-border-subtle bg-secondary/20 p-3">
-                <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.55 }}>
+              <div className="shrink-0 border-b border-border-subtle bg-secondary/30 px-4 py-3.5">
+                <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.6 }}>
                   {n.overallImpression}
                 </p>
               </div>
             )}
-            {hasTimeline && (
-              <div ref={timelineScrollRef}>
+            {/* Scrollable cards area */}
+            <div className="flex-1 overflow-y-auto min-h-0 scrollbar-thin p-4" ref={timelineScrollRef}>
+              {hasTimeline && (
                 <FeedbackTimeline
                   items={timelineItems}
                   activeItemId={activeItemId}
@@ -381,40 +382,52 @@ const FeedbackDisplay = ({
                   todoItemIds={todoSourceIds}
                   scrollContainerRef={timelineScrollRef}
                 />
-              </div>
-            )}
-            {/* Fallback: Top Priorities without timestamps */}
-            {!hasTimeline && n.timelineItems.length > 0 && (
-              <div className="space-y-2">
-                {n.timelineItems.map((item, i) => {
-                  const copyText = `${item.title}\nWhy: ${item.description}\n${item.actionLabel}: ${item.actionText}`;
-                  return (
-                    <div key={i} className="rounded-xl border border-border-subtle p-3 bg-background">
-                      <div className="flex items-start gap-3">
-                        <span className="font-mono-brand text-lg text-muted-foreground/30 font-medium leading-none pt-0.5">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <h3 className="text-sm font-semibold tracking-tight">{item.title}</h3>
-                            <CopyFixButton text={copyText} />
+              )}
+              {!hasTimeline && n.timelineItems.length > 0 && (
+                <div className="space-y-3">
+                  {n.timelineItems.map((item, i) => {
+                    const copyText = `${item.title}\nWhy: ${item.description}\n${item.actionLabel}: ${item.actionText}`;
+                    return (
+                      <div key={i} className="group relative rounded-lg border-l-2 border-l-amber-400 border border-border-subtle p-4 bg-background">
+                        <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <CopyFixButton text={copyText} />
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="font-mono-brand text-lg text-muted-foreground/30 font-medium leading-none pt-0.5">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <div className="flex-1 min-w-0 pr-12">
+                            <h3 className="text-[15px] font-semibold tracking-tight">{item.title}</h3>
+                            {item.description && (
+                              <p className="text-[13px] text-foreground/55 mt-1.5" style={{ lineHeight: 1.6 }}>{item.description}</p>
+                            )}
+                            {item.actionText && (
+                              <div className="mt-2.5 flex items-start gap-2">
+                                <span
+                                  className="shrink-0 mt-0.5 inline-flex items-center rounded-full bg-foreground text-background px-2 py-0.5"
+                                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, letterSpacing: "0.06em", lineHeight: 1 }}
+                                >
+                                  {item.actionLabel.toUpperCase()}
+                                </span>
+                                <p className="text-[13px] text-foreground/70" style={{ lineHeight: 1.6 }}>{item.actionText}</p>
+                              </div>
+                            )}
                           </div>
-                          {item.description && (
-                            <p className="text-[12px] text-foreground/55 leading-relaxed mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
-                          )}
-                          {item.actionText && (
-                            <p className="text-[12px] text-foreground/70 leading-relaxed mt-1.5" style={{ lineHeight: 1.55 }}>
-                              <span className="font-mono-brand text-[10px] text-muted-foreground uppercase tracking-wider mr-2">{item.actionLabel}</span>
-                              {item.actionText}
-                            </p>
-                          )}
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+              {!hasTimeline && n.timelineItems.length === 0 && (
+                <FeedbackTimeline
+                  items={[]}
+                  activeItemId={null}
+                  onItemClick={() => {}}
+                />
+              )}
+              <div className="h-40" />
+            </div>
           </div>
         );
 
