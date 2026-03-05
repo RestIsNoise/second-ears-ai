@@ -1,5 +1,16 @@
 import { X } from "lucide-react";
 
+/** Flex weight per panel id */
+const PANEL_FLEX: Record<string, number> = {
+  "ai-feedback": 2.5,
+  "full-analysis": 2,
+  "tech-metrics": 1.5,
+  "human-feedback": 1.5,
+  "what-works": 1,
+  "your-focus": 1,
+  "todo": 1,
+};
+
 interface Props {
   id: string;
   title: string;
@@ -8,8 +19,14 @@ interface Props {
 }
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
+  const flex = PANEL_FLEX[id] ?? 1;
+  const minWidth = id === "ai-feedback" ? 380 : 220;
+
   return (
-    <div className="flex flex-col h-full min-w-0 flex-1 border-r border-border-subtle last:border-r-0 bg-background">
+    <div
+      className="flex flex-col h-full min-w-0 border-r border-border-subtle last:border-r-0 bg-background"
+      style={{ flex, minWidth }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle shrink-0">
         <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase truncate">
