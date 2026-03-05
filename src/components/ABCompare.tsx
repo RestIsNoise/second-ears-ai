@@ -137,22 +137,23 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onAddNote={onAddNote}
           onEditNote={onEditNote}
         />
-        <div className="mt-3" style={{ position: "relative" }}>
-          <label
-            htmlFor="reference-upload"
-            style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
-            className="text-muted-foreground hover:text-foreground rounded-md border border-input bg-background px-3 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground select-none"
-          >
+        <div className="mt-3">
+          <label htmlFor="ref-track-input" style={{ cursor: "pointer" }}>
             <input
-              id="reference-upload"
+              id="ref-track-input"
               ref={fileInputRef}
               type="file"
               accept={ACCEPTED_FORMATS}
               onChange={handleFileSelect}
-              style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", pointerEvents: "none" }}
+              style={{ position: "absolute", top: -9999, left: -9999 }}
             />
-            <Upload className="w-3.5 h-3.5" />
-            Add reference track
+            <span
+              style={{ pointerEvents: "none" }}
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground rounded-md border border-input bg-background px-3 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground select-none"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              Add reference track
+            </span>
           </label>
         </div>
       </div>
@@ -163,11 +164,12 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   return (
     <div className="space-y-0">
       <input
+        id="ref-track-replace"
         ref={fileInputRef}
         type="file"
         accept={ACCEPTED_FORMATS}
         onChange={handleFileSelect}
-        style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", zIndex: -1 }}
+        style={{ position: "absolute", top: -9999, left: -9999 }}
       />
       <div className="flex gap-3">
         {/* Vertical crossfader on the left */}
