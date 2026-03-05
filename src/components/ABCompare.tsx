@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
-import { Play, Pause, RotateCcw, Upload, X } from "lucide-react";
+import { Play, Pause, RotateCcw, Upload, X, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import WaveformPlayer from "@/components/WaveformPlayer";
@@ -62,7 +62,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
       setReferenceFile(file);
       setCrossfade(50);
     }
-    // Reset input so same file can be re-selected
     e.target.value = "";
   }, []);
 
@@ -72,10 +71,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     setSyncPlaying(false);
   }, []);
 
+  // Vertical crossfade: 0 = top (full A), 100 = bottom (full B)
   const handleCrossfadeChange = useCallback((value: number[]) => {
     const v = value[0];
     setCrossfade(v);
-    // Volume: A goes from 1→0 as slider goes 0→100
     const volA = 1 - v / 100;
     const volB = v / 100;
     playerARef.current?.setVolume(volA);
@@ -88,10 +87,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
       playerBRef.current?.pause();
       setSyncPlaying(false);
     } else {
-      // Sync positions — start both from A's current position
       const t = playerARef.current?.getCurrentTime() ?? 0;
       playerBRef.current?.seekTo(t);
-      // Set volumes based on crossfade
       const volA = 1 - crossfade / 100;
       const volB = crossfade / 100;
       playerARef.current?.setVolume(volA);
@@ -123,10 +120,22 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   const maxDuration = Math.max(durationA, durationB);
 
+  // Hidden file input (shared)
+  const fileInput = (
+    <input
+      ref={fileInputRef}
+      type="file"
+      accept={ACCEPTED_FORMATS}
+      onChange={handleFileSelect}
+      className="hidden"
+    />
+  );
+
   // If no reference, show single player + upload button
   if (!referenceFile) {
     return (
       <div>
+        {fileInput}
         <WaveformPlayer
           ref={playerARef}
           audioFile={audioFileA}
@@ -138,13 +147,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onAddNote={onAddNote}
         />
         <div className="mt-3">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept={ACCEPTED_FORMATS}
-            onChange={handleFileSelect}
-            className="hidden"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -159,41 +161,15 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     );
   }
 
-  // Dual waveform mode
+  // Dual waveform mode with vertical crossfader on the left
   return (
     <div className="space-y-0">
-      {/* Track A — analyzed track */}
-      <div>
-        <div className="flex items-center gap-2 mb-1.5">
+      {fileInput}
+      <div className="flex gap-3">
+        {/* Vertical crossfader on the left */}
+        <div className="flex flex-col items-center gap-1.5 py-2 shrink-0" style={{ width: 28 }}>
           <span
-            className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold"
-            style={{
-              backgroundColor: "hsl(var(--foreground) / 0.08)",
-              color: "hsl(var(--foreground) / 0.6)",
-            }}
-          >
-            A
-          </span>
-          <span className="text-xs text-muted-foreground truncate">{audioFileA.name}</span>
-        </div>
-        <WaveformPlayer
-          ref={playerARef}
-          audioFile={audioFileA}
-          markers={markersA}
-          activeMarkerId={activeMarkerId}
-          onMarkerClick={onMarkerClick}
-          onTimeUpdate={handleTimeUpdateA}
-          onDurationReady={handleDurationReadyA}
-          onAddNote={onAddNote}
-          hideControls
-        />
-      </div>
-
-      {/* Crossfader */}
-      <div className="py-3 px-1">
-        <div className="flex items-center gap-3">
-          <span
-            className="text-[10px] font-bold tabular-nums shrink-0"
+            className="text-[10px] font-bold tabular-nums"
             style={{
               color: crossfade <= 50
                 ? "hsl(var(--foreground) / 0.8)"
@@ -203,18 +179,19 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           >
             A
           </span>
-          <div className="flex-1">
+          <div className="flex-1 flex items-center justify-center" style={{ minHeight: 120 }}>
             <Slider
               value={[crossfade]}
               onValueChange={handleCrossfadeChange}
               min={0}
               max={100}
               step={1}
-              className="w-full"
+              orientation="vertical"
+              className="h-full"
             />
           </div>
           <span
-            className="text-[10px] font-bold tabular-nums shrink-0"
+            className="text-[10px] font-bold tabular-nums"
             style={{
               color: crossfade >= 50
                 ? "hsl(var(--foreground) / 0.8)"
@@ -225,35 +202,79 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             B
           </span>
         </div>
-      </div>
 
-      {/* Track B — reference track */}
-      <div>
-        <div className="flex items-center gap-2 mb-1.5">
-          <span
-            className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold"
-            style={{
-              backgroundColor: "hsl(var(--foreground) / 0.08)",
-              color: "hsl(var(--foreground) / 0.6)",
-            }}
-          >
-            B
-          </span>
-          <span className="text-xs text-muted-foreground truncate flex-1">{referenceFile.name}</span>
-          <button
-            onClick={handleRemoveReference}
-            className="text-muted-foreground/40 hover:text-destructive transition-colors p-0.5"
-            title="Remove reference track"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
+        {/* Waveforms column */}
+        <div className="flex-1 min-w-0 space-y-2">
+          {/* Track A — analyzed track */}
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold"
+                style={{
+                  backgroundColor: "hsl(var(--foreground) / 0.08)",
+                  color: "hsl(var(--foreground) / 0.6)",
+                }}
+              >
+                A
+              </span>
+              <span className="text-xs text-muted-foreground truncate">{audioFileA.name}</span>
+            </div>
+            <WaveformPlayer
+              ref={playerARef}
+              audioFile={audioFileA}
+              markers={markersA}
+              activeMarkerId={activeMarkerId}
+              onMarkerClick={onMarkerClick}
+              onTimeUpdate={handleTimeUpdateA}
+              onDurationReady={handleDurationReadyA}
+              onAddNote={onAddNote}
+              hideControls
+            />
+          </div>
+
+          {/* Track B — reference track (no markers, different color) */}
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold"
+                style={{
+                  backgroundColor: "hsl(var(--foreground) / 0.08)",
+                  color: "hsl(var(--foreground) / 0.6)",
+                }}
+              >
+                B
+              </span>
+              <span
+                className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mr-1"
+              >
+                Reference Track
+              </span>
+              <span className="text-xs text-muted-foreground truncate flex-1">{referenceFile.name}</span>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="text-muted-foreground/40 hover:text-foreground transition-colors p-0.5"
+                title="Replace reference track"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={handleRemoveReference}
+                className="text-muted-foreground/40 hover:text-destructive transition-colors p-0.5"
+                title="Remove reference track"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <WaveformPlayer
+              ref={playerBRef}
+              audioFile={referenceFile}
+              onDurationReady={(d) => setDurationB(d)}
+              hideControls
+              waveColor="hsl(190 60% 70%)"
+              progressColor="hsl(190 70% 40%)"
+            />
+          </div>
         </div>
-        <WaveformPlayer
-          ref={playerBRef}
-          audioFile={referenceFile}
-          onDurationReady={(d) => setDurationB(d)}
-          hideControls
-        />
       </div>
 
       {/* Synced transport controls */}
@@ -281,14 +302,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           {formatTime(currentTime)}
           <span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>
           {formatTime(maxDuration)}
-        </span>
-
-        {/* Crossfade position indicator */}
-        <span
-          className="text-muted-foreground/40 tabular-nums ml-auto"
-          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-        >
-          {crossfade <= 25 ? "A" : crossfade >= 75 ? "B" : "A+B"}
         </span>
       </div>
     </div>
