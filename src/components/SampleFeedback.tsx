@@ -21,38 +21,27 @@ const feedbackItems = [
   },
 ];
 
-const CHAR_SPEED = 18;   // ms per character
-const LINE_PAUSE = 400;  // pause between lines within an item
-const ITEM_PAUSE = 700;  // pause between items
+const CHAR_SPEED = 22;
+const PHASE_PAUSE = 300;
 
-type Phase = "time" | "mode" | "issue" | "action";
+type Phase = "time" | "mode" | "issue" | "action" | "done";
 
 interface ItemState {
-  visible: boolean;
   time: string;
   mode: string;
   issue: string;
   action: string;
-  cursorPhase: Phase | "done";
+  phase: Phase;
 }
-
-const empty: ItemState = {
-  visible: false,
-  time: "",
-  mode: "",
-  issue: "",
-  action: "",
-  cursorPhase: "time",
-};
 
 const SampleFeedback = () => {
   const [items, setItems] = useState<ItemState[]>(
-    feedbackItems.map(() => ({ ...empty }))
+    feedbackItems.map(() => ({ time: "", mode: "", issue: "", action: "", phase: "time" }))
   );
+  const [activeCursor, setActiveCursor] = useState<Phase>("time");
   const [started, setStarted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Intersection observer — start animation when section enters viewport
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -69,63 +58,40 @@ const SampleFeedback = () => {
     return () => obs.disconnect();
   }, []);
 
-  // Typewriter engine
   useEffect(() => {
     if (!started) return;
     let cancelled = false;
+    const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-    const sleep = (ms: number) =>
-      new Promise<void>((r) => setTimeout(r, ms));
+    const typeAll = async (phase: Phase, getter: (src: typeof feedbackItems[0]) => string, prefix = "") => {
+      const texts = feedbackItems.map((src) => prefix + getter(src));
+      const maxLen = Math.max(...texts.map((t) => t.length));
 
-    const typeText = async (
-      itemIdx: number,
-      phase: Phase,
-      fullText: string
-    ) => {
-      for (let i = 1; i <= fullText.length; i++) {
+      setActiveCursor(phase);
+      setItems((prev) => prev.map((it) => ({ ...it, phase })));
+
+      for (let i = 1; i <= maxLen; i++) {
         if (cancelled) return;
-        const slice = fullText.slice(0, i);
-        setItems((prev) => {
-          const next = [...prev];
-          next[itemIdx] = { ...next[itemIdx], [phase]: slice, cursorPhase: phase };
-          return next;
-        });
+        setItems((prev) =>
+          prev.map((it, idx) => ({
+            ...it,
+            [phase]: texts[idx].slice(0, i),
+          }))
+        );
         await sleep(CHAR_SPEED);
       }
     };
 
     const run = async () => {
-      for (let idx = 0; idx < feedbackItems.length; idx++) {
-        if (cancelled) return;
-        const src = feedbackItems[idx];
-
-        // Make item visible
-        setItems((prev) => {
-          const next = [...prev];
-          next[idx] = { ...next[idx], visible: true, cursorPhase: "time" };
-          return next;
-        });
-
-        await typeText(idx, "time", src.time);
-        await sleep(LINE_PAUSE * 0.5);
-
-        await typeText(idx, "mode", src.mode);
-        await sleep(LINE_PAUSE * 0.5);
-
-        await typeText(idx, "issue", src.issue);
-        await sleep(LINE_PAUSE);
-
-        await typeText(idx, "action", `→ ${src.action}`);
-
-        // Mark done
-        setItems((prev) => {
-          const next = [...prev];
-          next[idx] = { ...next[idx], cursorPhase: "done" };
-          return next;
-        });
-
-        if (idx < feedbackItems.length - 1) await sleep(ITEM_PAUSE);
-      }
+      await typeAll("time", (s) => s.time);
+      await sleep(PHASE_PAUSE);
+      await typeAll("mode", (s) => s.mode);
+      await sleep(PHASE_PAUSE);
+      await typeAll("issue", (s) => s.issue);
+      await sleep(PHASE_PAUSE);
+      await typeAll("action", (s) => s.action, "→ ");
+      setActiveCursor("done");
+      setItems((prev) => prev.map((it) => ({ ...it, phase: "done" })));
     };
 
     run();
@@ -133,10 +99,7 @@ const SampleFeedback = () => {
   }, [started]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-14 md:py-16 px-6 border-t border-border-subtle"
-    >
+    <section ref={sectionRef} className="py-14 md:py-16 px-6 border-t border-border-subtle">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-10">
           <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.3em] uppercase mb-3">
@@ -152,12 +115,9 @@ const SampleFeedback = () => {
 
         <div
           className="max-w-2xl mx-auto rounded-xl border overflow-hidden"
-          style={{
-            borderColor: "hsl(0 0% 100% / 0.08)",
-            background: "hsl(0 0% 7%)",
-          }}
+          style={{ borderColor: "hsl(0 0% 100% / 0.08)", background: "hsl(0 0% 7%)" }}
         >
-          {/* Mock title bar */}
+          {/* Title bar */}
           <div
             className="flex items-center gap-2 px-5 py-3 border-b"
             style={{ borderColor: "hsl(0 0% 100% / 0.06)" }}
@@ -165,68 +125,49 @@ const SampleFeedback = () => {
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
-            <span
-              className="ml-3 text-[11px] font-mono-brand tracking-wide"
-              style={{ color: "hsl(0 0% 38%)" }}
-            >
+            <span className="ml-3 text-[11px] font-mono-brand tracking-wide" style={{ color: "hsl(0 0% 38%)" }}>
               analysis · demo_track.wav
             </span>
           </div>
 
-          {/* Feedback items */}
+          {/* All 3 rows always rendered at fixed size */}
           <div className="divide-y" style={{ borderColor: "hsl(0 0% 100% / 0.05)" }}>
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="px-5 py-4 flex gap-4 transition-opacity duration-300"
-                style={{
-                  borderColor: "hsl(0 0% 100% / 0.05)",
-                  opacity: item.visible ? 1 : 0,
-                  minHeight: item.visible ? undefined : 0,
-                  height: item.visible ? "auto" : 0,
-                  padding: item.visible ? undefined : "0 20px",
-                  overflow: "hidden",
-                }}
+                className="px-5 py-4 flex gap-4"
+                style={{ borderColor: "hsl(0 0% 100% / 0.05)" }}
               >
-                {/* Timestamp */}
                 <span
-                  className="font-mono-brand text-[13px] tabular-nums pt-0.5 shrink-0"
+                  className="font-mono-brand text-[13px] tabular-nums pt-0.5 shrink-0 min-w-[2.5rem]"
                   style={{ color: "hsl(0 0% 50%)" }}
                 >
                   {item.time}
-                  {item.cursorPhase === "time" && <Cursor />}
+                  {activeCursor === "time" && <Cursor />}
                 </span>
 
                 <div className="flex-1 min-w-0 space-y-1.5">
-                  {/* Mode tag */}
-                  {item.mode && (
+                  {item.mode ? (
                     <span
                       className="inline-block text-[10px] font-medium tracking-wider uppercase rounded-full px-2.5 py-0.5"
-                      style={{
-                        background: "hsl(0 0% 14%)",
-                        color: "hsl(0 0% 92%)",
-                      }}
+                      style={{ background: "hsl(0 0% 14%)", color: "hsl(0 0% 92%)" }}
                     >
                       {item.mode}
-                      {item.cursorPhase === "mode" && <Cursor />}
+                      {activeCursor === "mode" && <Cursor />}
                     </span>
+                  ) : (
+                    <span className="inline-block h-[22px]" />
                   )}
 
-                  {/* Issue */}
-                  {item.issue && (
-                    <p className="text-[13px] leading-relaxed" style={{ color: "hsl(0 0% 80%)" }}>
-                      {item.issue}
-                      {item.cursorPhase === "issue" && <Cursor />}
-                    </p>
-                  )}
+                  <p className="text-[13px] leading-relaxed min-h-[1.5em]" style={{ color: "hsl(0 0% 80%)" }}>
+                    {item.issue}
+                    {activeCursor === "issue" && <Cursor />}
+                  </p>
 
-                  {/* Action */}
-                  {item.action && (
-                    <p className="text-[12px] leading-relaxed" style={{ color: "hsl(0 0% 45%)" }}>
-                      {item.action}
-                      {item.cursorPhase === "action" && <Cursor />}
-                    </p>
-                  )}
+                  <p className="text-[12px] leading-relaxed min-h-[1.35em]" style={{ color: "hsl(0 0% 45%)" }}>
+                    {item.action}
+                    {activeCursor === "action" && <Cursor />}
+                  </p>
                 </div>
               </div>
             ))}
@@ -237,7 +178,6 @@ const SampleFeedback = () => {
   );
 };
 
-/** Blinking cursor character */
 const Cursor = () => (
   <span
     className="inline-block w-[2px] h-[0.9em] ml-[1px] align-middle"
