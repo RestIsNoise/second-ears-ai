@@ -28,11 +28,20 @@ const UnifiedFooter = () => (
     {/* ── Dark Contact + Legal area ── */}
     <section
       className="relative overflow-hidden"
-      style={{ background: "hsl(0 0% 5%)" }}
+      style={{ background: "hsl(0 0% 4%)" }}
     >
-      {/* Subtle noise grain */}
+      {/* Smooth transition from white CTA into dark footer */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background: "linear-gradient(to bottom, hsl(var(--background)), hsl(0 0% 4%))",
+        }}
+      />
+
+      {/* Noise grain — matching hero */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
         aria-hidden="true"
         style={{
           backgroundImage:
@@ -40,6 +49,30 @@ const UnifiedFooter = () => (
           backgroundSize: "512px 512px",
         }}
       />
+
+      {/* Ambient halo glows — matching hero language */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="absolute top-[20%] left-[15%] w-[400px] h-[400px] rounded-full blur-[140px]"
+          style={{ background: "hsl(0 0% 16% / 0.3)" }}
+        />
+        <div
+          className="absolute top-[50%] right-[10%] w-[350px] h-[350px] rounded-full blur-[120px]"
+          style={{ background: "hsl(0 0% 22% / 0.25)" }}
+        />
+      </div>
+
+      {/* Diagonal bar motif — matching hero */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="absolute -top-[20%] left-[18%] w-[1px] h-[160%] rotate-[70deg] origin-center"
+          style={{ background: "hsl(0 0% 100% / 0.06)" }}
+        />
+        <div
+          className="absolute -top-[20%] left-[24%] w-[1px] h-[160%] rotate-[70deg] origin-center"
+          style={{ background: "hsl(0 0% 100% / 0.06)" }}
+        />
+      </div>
 
       <div className="relative">
         {/* Contact */}
