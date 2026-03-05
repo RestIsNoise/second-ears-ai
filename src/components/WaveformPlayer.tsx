@@ -29,6 +29,8 @@ interface Props {
   waveColor?: string;
   /** Custom progress color (default: "#1a1a1a") */
   progressColor?: string;
+  /** Render hollow/outline bars instead of solid filled bars */
+  outlineMode?: boolean;
 }
 
 const formatTime = (s: number) => {
@@ -187,7 +189,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onEditNote, hideControls, label, waveColor, progressColor }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onEditNote, hideControls, label, waveColor, progressColor, outlineMode }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -233,7 +235,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         return;
       }
 
-      const ws = WaveSurfer.create({
+      const wsOptions: Record<string, any> = {
         container: containerRef.current,
         waveColor: waveColor || "#d0d0d0",
         progressColor: progressColor || "#1a1a1a",
@@ -245,7 +247,34 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         height: 84,
         normalize: true,
         interact: true,
-      });
+      };
+
+      if (outlineMode) {
+        const outlineColor = waveColor || "#d0d0d0";
+        const outlineProgressColor = progressColor || "#1a1a1a";
+        wsOptions.waveColor = "transparent";
+        wsOptions.progressColor = "transparent";
+        wsOptions.renderFunction = (channels: Float32Array[], ctx: CanvasRenderingContext2D) => {
+          const { width, height } = ctx.canvas;
+          const channel = channels[0];
+          const step = Math.ceil(channel.length / width);
+          const mid = height / 2;
+          ctx.lineWidth = 1;
+
+          for (let i = 0; i < width; i += 2) {
+            let max = 0;
+            for (let j = i * step; j < (i + 1) * step && j < channel.length; j++) {
+              const v = Math.abs(channel[j]);
+              if (v > max) max = v;
+            }
+            const barH = Math.max(1, max * mid);
+            ctx.strokeStyle = outlineColor;
+            ctx.strokeRect(i, mid - barH, 1, barH * 2);
+          }
+        };
+      }
+
+      const ws = WaveSurfer.create(wsOptions as any);
 
       const onResize = () => ws.setOptions({ width: containerRef.current?.clientWidth });
       window.addEventListener("resize", onResize);

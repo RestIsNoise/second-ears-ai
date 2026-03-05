@@ -274,8 +274,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               audioFile={referenceFile}
               onDurationReady={(d) => setDurationB(d)}
               hideControls
-              waveColor="hsl(190 60% 70%)"
-              progressColor="hsl(190 70% 40%)"
+              outlineMode
             />
           </div>
         </div>
