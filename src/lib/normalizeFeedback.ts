@@ -12,7 +12,7 @@ export interface NormalizedTimelineItem {
   timestampSec: number;
   title: string;
   description: string;
-  actionLabel: "FIX" | "ARRANGE" | "SYSTEM";
+  actionLabel: "FIX" | "ARRANGE";
   actionText: string;
 }
 
@@ -230,7 +230,7 @@ export function normalizeFeedbackResponse(
   // ── Timeline items (mode-specific)
   const timelineItems: NormalizedTimelineItem[] = [];
   let rawPriorities: any[] = [];
-  let actionLabel: "FIX" | "ARRANGE" | "SYSTEM" = "FIX";
+  let actionLabel: "FIX" | "ARRANGE" = "FIX";
 
   if (mode === "musical") {
     actionLabel = "ARRANGE";
@@ -242,7 +242,7 @@ export function normalizeFeedbackResponse(
       time: p.timestamp ?? p.timestampSec ?? p.time,
     }));
   } else if (mode === "perception") {
-    actionLabel = "SYSTEM";
+    actionLabel = "FIX";
     const src = fb.systemNotes || fb.system_notes || fb.top_priorities || fb.priorities || [];
     rawPriorities = (Array.isArray(src) ? src : []).map((p: any) => {
       const desc = str(p.observation) || str(p.title) || str(p.description);
