@@ -2,12 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
-
-const floatingChips = [
-  { label: "Timeline feedback", top: "12%", right: "-4%" },
-  { label: "To‑Do list", top: "48%", right: "-8%" },
-  { label: "Sub/Kick ratio", top: "78%", right: "2%" },
-];
+import heroScreenshot from "@/assets/hero-screenshot.png";
 
 const trustItems = [
   "No credit card",
@@ -49,17 +44,17 @@ const Hero = () => {
         }}
       />
 
-      {/* Ambient halo behind product frame */}
+      {/* Ambient halo */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
           data-parallax="-0.02"
           className="absolute top-1/3 right-[15%] w-[500px] h-[500px] rounded-full blur-[140px]"
-          style={{ background: "hsl(0 0% 22% / 0.45)" }}
+          style={{ background: "hsl(0 0% 18% / 0.35)" }}
         />
         <div
           data-parallax="-0.03"
           className="absolute top-[60%] left-[20%] w-[300px] h-[300px] rounded-full blur-[120px]"
-          style={{ background: "hsl(0 0% 16% / 0.3)" }}
+          style={{ background: "hsl(0 0% 14% / 0.25)" }}
         />
       </div>
 
@@ -160,159 +155,70 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right column — Product frame */}
+          {/* Right column — Real product screenshot */}
           <div
             className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0"
             style={{ animationDelay: "0.2s" }}
           >
             {/* Glow behind frame */}
             <div
-              className="absolute -inset-6 sm:-inset-8 rounded-3xl blur-[80px] pointer-events-none"
+              className="absolute -inset-8 sm:-inset-10 rounded-3xl blur-[100px] pointer-events-none"
               aria-hidden="true"
-              style={{ background: "hsl(0 0% 18% / 0.5)" }}
+              style={{ background: "hsl(0 0% 16% / 0.4)" }}
             />
 
-            {/* Mock product frame */}
+            {/* Screenshot frame with float animation */}
             <div
-              className="relative w-full max-w-[360px] sm:max-w-[480px] aspect-[4/3] rounded-xl border overflow-hidden"
+              className="relative w-full max-w-[360px] sm:max-w-[480px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
-                background: "hsl(0 0% 7%)",
+                animation: "hero-float 6s ease-in-out infinite",
               }}
             >
-              {/* Fake window dots */}
+              {/* Window dots bar */}
               <div
-                className="flex items-center gap-1.5 px-4 py-3 border-b"
-                style={{ borderColor: "hsl(0 0% 100% / 0.06)" }}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: "hsl(0 0% 25%)" }}
-                />
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: "hsl(0 0% 25%)" }}
-                />
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: "hsl(0 0% 25%)" }}
-                />
-              </div>
-
-              {/* Skeleton content */}
-              <div className="p-5 space-y-4">
-                {/* Fake waveform bars */}
-                <div className="flex items-end gap-[3px] h-12">
-                  {Array.from({ length: 40 }).map((_, i) => {
-                    const h = 20 + Math.sin(i * 0.5) * 15 + Math.random() * 12;
-                    return (
-                      <div
-                        key={i}
-                        className="flex-1 rounded-sm"
-                        style={{
-                          height: `${h}%`,
-                          background: `hsl(0 0% ${28 + Math.random() * 12}%)`,
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-
-                {/* Fake metric rows */}
-                <div className="grid grid-cols-3 gap-3">
-                  {["LUFS", "Peak", "DR"].map((label) => (
-                    <div
-                      key={label}
-                      className="rounded-lg p-3 space-y-2"
-                      style={{ background: "hsl(0 0% 10%)" }}
-                    >
-                      <div
-                        className="text-[9px] font-mono-brand tracking-wider uppercase"
-                        style={{ color: "hsl(0 0% 40%)" }}
-                      >
-                        {label}
-                      </div>
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{ background: "hsl(0 0% 20%)" }}
-                      >
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${50 + Math.random() * 40}%`,
-                            background: "hsl(0 0% 35%)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Fake timeline cards */}
-                <div className="space-y-2">
-                  {[1, 2].map((n) => (
-                    <div
-                      key={n}
-                      className="flex items-center gap-3 rounded-lg p-2.5"
-                      style={{ background: "hsl(0 0% 10%)" }}
-                    >
-                      <div
-                        className="w-8 h-8 rounded shrink-0"
-                        style={{ background: "hsl(0 0% 18%)" }}
-                      />
-                      <div className="flex-1 space-y-1.5">
-                        <div
-                          className="h-2 rounded-full"
-                          style={{
-                            width: `${55 + n * 15}%`,
-                            background: "hsl(0 0% 22%)",
-                          }}
-                        />
-                        <div
-                          className="h-1.5 rounded-full"
-                          style={{
-                            width: `${35 + n * 10}%`,
-                            background: "hsl(0 0% 16%)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Floating chips */}
-            {floatingChips.map((chip) => (
-              <div
-                key={chip.label}
-                className="absolute hidden md:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-medium tracking-wide border backdrop-blur-sm"
+                className="flex items-center gap-1.5 px-4 py-2.5 border-b"
                 style={{
-                  top: chip.top,
-                  right: chip.right,
-                  borderColor: "hsl(0 0% 100% / 0.1)",
-                  background: "hsl(0 0% 8% / 0.8)",
-                  color: "hsl(0 0% 65%)",
-                  boxShadow: "0 4px 20px hsl(0 0% 0% / 0.4)",
+                  borderColor: "hsl(0 0% 100% / 0.06)",
+                  background: "hsl(0 0% 7%)",
                 }}
               >
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: "hsl(0 0% 45%)" }}
-                />
-                {chip.label}
+                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
               </div>
-            ))}
+
+              {/* Screenshot */}
+              <img
+                src={heroScreenshot}
+                alt="SecondEars analysis showing technical metrics, timeline feedback, and to-do list for a music track"
+                className="w-full h-auto block"
+                loading="eager"
+              />
+            </div>
+
+            {/* Label chip */}
+            <div
+              className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-medium tracking-wide border backdrop-blur-sm"
+              style={{
+                borderColor: "hsl(0 0% 100% / 0.1)",
+                background: "hsl(0 0% 8% / 0.85)",
+                color: "hsl(0 0% 60%)",
+                boxShadow: "0 4px 20px hsl(0 0% 0% / 0.4)",
+              }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(140 50% 45%)" }} />
+              Real feedback example
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom fade into light bg */}
+      {/* Bottom fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
         style={{
-          background:
-            "linear-gradient(to bottom, transparent, hsl(var(--background)))",
+          background: "linear-gradient(to bottom, transparent, hsl(var(--background)))",
         }}
       />
     </section>
