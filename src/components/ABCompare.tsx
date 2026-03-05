@@ -149,7 +149,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               type="file"
               accept={ACCEPTED_FORMATS}
               onChange={handleFileSelect}
-              style={{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", zIndex: -1 }}
+              style={{ position: "fixed", top: -100, left: -100, width: 1, height: 1, opacity: 0 }}
             />
             <Upload className="w-3.5 h-3.5" />
             Add reference track
