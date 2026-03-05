@@ -40,87 +40,13 @@ function subKickStatus(v: number): Status {
   return { label: v < 0.8 ? "Kick Dominant" : "Sub Heavy", color: "orange" };
 }
 
-/* ── LED colors ── */
-const ledStyles: Record<string, { bg: string; glow: string }> = {
-  green: { bg: "#34c759", glow: "0 0 6px #34c75966" },
-  orange: { bg: "#ff9500", glow: "0 0 6px #ff950066" },
-  red: { bg: "#ff3b30", glow: "0 0 6px #ff3b3066" },
+const statusColors: Record<string, { badge: string; bar: string }> = {
+  green: { badge: "bg-emerald-500/15 text-emerald-600", bar: "bg-emerald-500" },
+  orange: { badge: "bg-amber-500/15 text-amber-600", bar: "bg-amber-500" },
+  red: { badge: "bg-red-500/15 text-red-600", bar: "bg-red-500" },
 };
 
-const barFill: Record<string, string> = {
-  green: "#34c759",
-  orange: "#ff9500",
-  red: "#ff3b30",
-};
-
-/* ── VU-style segmented bar ── */
-const VuBar = ({ pct, color }: { pct: number; color: string }) => {
-  const segments = 20;
-  const filled = Math.round((pct / 100) * segments);
-  const fill = barFill[color] || "#34c759";
-
-  return (
-    <div className="flex gap-px mt-2.5">
-      {Array.from({ length: segments }).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            width: 4,
-            height: 4,
-            borderRadius: 0.5,
-            background: i < filled ? fill : "#2a2a2a",
-            opacity: i < filled ? 0.85 : 1,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-/* ── LED badge ── */
-const LedBadge = ({ status }: { status: Status | null }) => {
-  if (!status) {
-    return (
-      <span
-        style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: 9,
-          letterSpacing: "0.06em",
-          textTransform: "uppercase",
-          color: "#555",
-          background: "#1e1e1e",
-          padding: "2px 6px",
-          borderRadius: 3,
-        }}
-      >
-        N/A
-      </span>
-    );
-  }
-
-  const led = ledStyles[status.color];
-
-  return (
-    <span
-      style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 9,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
-        color: "#fff",
-        background: led.bg,
-        boxShadow: led.glow,
-        padding: "2px 6px",
-        borderRadius: 3,
-        lineHeight: 1,
-      }}
-    >
-      {status.label}
-    </span>
-  );
-};
-
-/* ── Metric Card ── */
+/* ── Compact Metric Card ── */
 interface MetricCardProps {
   label: string;
   value: number | null;
@@ -134,59 +60,52 @@ interface MetricCardProps {
 const MetricCard = ({ label, value, unit, min, max, status, decimals = 1 }: MetricCardProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+  const colors = isMissing ? null : statusColors[status.color];
 
   return (
-    <div
-      style={{
-        background: "#141414",
-        border: "1px solid #2a2a2a",
-        borderRadius: 4,
-        padding: "10px 12px",
-      }}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <div className="flex items-baseline gap-1.5">
+    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+      <div className="flex items-start justify-between gap-1.5">
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-1">
             <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 19,
-                color: isMissing ? "#555" : "#e8e8e8",
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
-                fontVariantNumeric: "tabular-nums",
-              }}
+              className="font-semibold text-foreground tabular-nums tracking-tight"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, lineHeight: 1.1 }}
             >
               {isMissing ? "—" : value.toFixed(decimals)}
             </span>
             {!isMissing && (
               <span
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
-                  color: "#888",
-                }}
+                className="text-muted-foreground font-medium"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
               >
                 {unit}
               </span>
             )}
           </div>
           <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10,
-              color: "#666",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginTop: 3,
-            }}
+            className="text-muted-foreground"
+            style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", marginTop: 1, lineHeight: 1.2 }}
           >
             {label}
           </p>
         </div>
-        <LedBadge status={isMissing ? null : status} />
+        <span
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${
+            isMissing ? "bg-muted text-muted-foreground/50" : colors!.badge
+          }`}
+          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
+        >
+          {isMissing ? "N/A" : status.label}
+        </span>
       </div>
-      <VuBar pct={pct} color={status?.color || "green"} />
+      <div className="rounded-full bg-muted/50 overflow-hidden" style={{ height: 3, marginTop: 6 }}>
+        {!isMissing && (
+          <div
+            className={`h-full rounded-full transition-all duration-700 ease-out ${colors!.bar}`}
+            style={{ width: `${pct}%`, opacity: 0.75 }}
+          />
+        )}
+      </div>
     </div>
   );
 };
@@ -194,68 +113,47 @@ const MetricCard = ({ label, value, unit, min, max, status, decimals = 1 }: Metr
 /* ── Correlation Card ── */
 const CorrelationCard = ({ value }: { value: number }) => {
   const status = correlationStatus(value);
+  const colors = statusColors[status.color];
   const pct = ((value + 1) / 2) * 100;
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div
-      style={{
-        background: "#141414",
-        border: "1px solid #2a2a2a",
-        borderRadius: 4,
-        padding: "10px 12px",
-      }}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div>
+    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+      <div className="flex items-start justify-between gap-1.5">
+        <div className="min-w-0">
           <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 19,
-              color: "#e8e8e8",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              fontVariantNumeric: "tabular-nums",
-            }}
+            className="font-semibold text-foreground tabular-nums tracking-tight"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, lineHeight: 1.1 }}
           >
             {value > 0 ? "+" : ""}{value.toFixed(2)}
           </span>
           <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10,
-              color: "#666",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginTop: 3,
-            }}
+            className="text-muted-foreground"
+            style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", marginTop: 1, lineHeight: 1.2 }}
           >
             Stereo Correlation
           </p>
         </div>
-        <LedBadge status={status} />
+        <span
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${colors.badge}`}
+          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
+        >
+          {status.label}
+        </span>
       </div>
-
-      {/* Bipolar VU bar */}
-      <div className="flex gap-px mt-2.5 items-center">
-        {Array.from({ length: 20 }).map((_, i) => {
-          const segPct = (i / 20) * 100;
-          const isFilled = clampedPct >= 50
-            ? segPct >= 50 && segPct < clampedPct
-            : segPct >= clampedPct && segPct < 50;
-          return (
-            <div
-              key={i}
-              style={{
-                width: 4,
-                height: i === 10 ? 6 : 4,
-                borderRadius: 0.5,
-                background: isFilled ? barFill[status.color] : "#2a2a2a",
-                opacity: isFilled ? 0.85 : 1,
-              }}
-            />
-          );
-        })}
+      <div className="relative rounded-full bg-muted/50 overflow-hidden" style={{ height: 3, marginTop: 6 }}>
+        <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
+        {clampedPct >= 50 ? (
+          <div
+            className={`absolute inset-y-0 rounded-full ${colors.bar}`}
+            style={{ left: "50%", width: `${clampedPct - 50}%`, opacity: 0.75 }}
+          />
+        ) : (
+          <div
+            className={`absolute inset-y-0 rounded-full ${colors.bar}`}
+            style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, opacity: 0.75 }}
+          />
+        )}
       </div>
     </div>
   );
@@ -264,100 +162,39 @@ const CorrelationCard = ({ value }: { value: number }) => {
 /* ── Sub/Kick Card ── */
 const SubKickCard = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
+  const colors = statusColors[status.color];
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
-  const led = ledStyles[status.color];
 
   return (
-    <div
-      style={{
-        background: "#141414",
-        border: "1px solid #2a2a2a",
-        borderRadius: 4,
-        padding: "10px 12px",
-      }}
-    >
-      <div className="flex items-start justify-between gap-2">
+    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+      <div className="flex items-start justify-between gap-1.5">
         <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 10,
-            color: "#666",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
+          className="text-muted-foreground"
+          style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 1.2 }}
         >
           Sub / Kick Ratio
         </p>
-        <LedBadge status={status} />
-      </div>
-
-      <div className="mt-3">
-        <div className="flex justify-between mb-1.5">
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9,
-              color: "#555",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-            }}
-          >
-            Kick
-          </span>
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9,
-              color: "#555",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-            }}
-          >
-            Sub
-          </span>
-        </div>
-
-        {/* Track */}
-        <div
-          className="relative"
-          style={{ height: 6, background: "#2a2a2a", borderRadius: 1 }}
-        >
-          {/* Sweet zone indicator */}
-          <div
-            className="absolute inset-y-0"
-            style={{ left: "40%", width: "20%", background: "#34c75910", borderRadius: 1 }}
-          />
-          {/* Center mark */}
-          <div
-            className="absolute top-0 bottom-0"
-            style={{ left: "50%", width: 1, background: "#333" }}
-          />
-          {/* Indicator dot */}
-          <div
-            className="absolute top-1/2"
-            style={{
-              left: `${pct}%`,
-              width: 10,
-              height: 10,
-              borderRadius: "50%",
-              background: "#e8e8e8",
-              transform: "translate(-50%, -50%)",
-              boxShadow: `0 0 8px ${led.bg}88`,
-              border: `2px solid ${led.bg}`,
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="text-center mt-2">
         <span
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 15,
-            color: "#e8e8e8",
-            fontWeight: 600,
-            fontVariantNumeric: "tabular-nums",
-          }}
+          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${colors.badge}`}
+          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
+        >
+          {status.label}
+        </span>
+      </div>
+      <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+        <span className="text-muted-foreground/60 shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em" }}>K</span>
+        <div className="relative flex-1 rounded-full bg-muted/50" style={{ height: 4 }}>
+          <div className="absolute inset-y-0 bg-emerald-500/10 rounded-full" style={{ left: "40%", width: "20%" }} />
+          <div className="absolute top-0 bottom-0 bg-foreground/8" style={{ left: "50%", width: 1 }} />
+          <div
+            className={`absolute top-1/2 rounded-full border border-background ${colors.bar}`}
+            style={{ left: `${pct}%`, width: 8, height: 8, transform: "translate(-50%, -50%)" }}
+          />
+        </div>
+        <span className="text-muted-foreground/60 shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em" }}>S</span>
+        <span
+          className="font-semibold text-foreground tabular-nums shrink-0"
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}
         >
           {value.toFixed(2)}
         </span>
@@ -372,7 +209,7 @@ interface Props {
   compact?: boolean;
 }
 
-const TechnicalMetrics = ({ metrics, compact }: Props) => {
+const TechnicalMetrics = ({ metrics }: Props) => {
   const hasAny =
     metrics.integrated_lufs !== undefined ||
     metrics.short_term_lufs !== undefined ||
@@ -393,20 +230,12 @@ const TechnicalMetrics = ({ metrics, compact }: Props) => {
 
   return (
     <section>
-      <div className="flex items-baseline justify-between mb-3">
-        <h2
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 10,
-            color: "#666",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-          }}
-        >
+      <div className="flex items-baseline justify-between mb-2.5">
+        <h2 className="font-mono-brand text-[10px] text-muted-foreground tracking-widest uppercase">
           Technical metrics
         </h2>
       </div>
-      <div className={`grid gap-2 ${compact ? "grid-cols-1" : "grid-cols-2 gap-2.5"}`}>
+      <div className="grid grid-cols-1 gap-1.5">
         <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
         <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
         <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
@@ -417,12 +246,10 @@ const TechnicalMetrics = ({ metrics, compact }: Props) => {
           <MetricCard label="Stereo Correlation" value={null} unit="" min={-1} max={1} status={null} />
         )}
         <MetricCard label="Crest Factor" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
-      </div>
-      {metrics.sub_kick_ratio !== undefined && (
-        <div className="mt-2">
+        {metrics.sub_kick_ratio !== undefined && (
           <SubKickCard value={metrics.sub_kick_ratio} />
-        </div>
-      )}
+        )}
+      </div>
     </section>
   );
 };

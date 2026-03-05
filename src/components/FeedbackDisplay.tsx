@@ -434,13 +434,11 @@ const FeedbackDisplay = ({
 
       case "tech-metrics":
         return (
-          <div className="p-4" style={{ background: "#0f0f0f" }}>
+          <div className="p-3">
             {technicalMetrics ? (
               <TechnicalMetrics metrics={technicalMetrics} compact />
             ) : (
-              <p style={{ color: "#555", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, textAlign: "center", padding: "32px 0" }}>
-                No metrics available
-              </p>
+              <p className="text-xs text-muted-foreground/50 text-center py-8">No metrics available</p>
             )}
           </div>
         );
