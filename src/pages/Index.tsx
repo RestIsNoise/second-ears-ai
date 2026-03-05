@@ -21,10 +21,10 @@ const Index = () => (
       <ListeningModes />
       <Pricing />
       <TrustStrip />
-      <FinalCta />
       <Contact />
     </main>
     <Footer />
+    <FinalCta />
   </div>
 );
 
