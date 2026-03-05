@@ -32,7 +32,7 @@ const plans = [
 ];
 
 const Pricing = () => (
-  <section id="pricing" className="py-14 md:py-16 px-6 border-t border-border-subtle">
+  <section id="pricing" className="py-10 md:py-12 px-6 border-t border-border-subtle">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-10">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Simple pricing</p>

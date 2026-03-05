@@ -7,7 +7,7 @@ const items = [
 ];
 
 const TrustStrip = () => (
-  <section className="py-8 md:py-10 px-6 border-t border-border-subtle">
+  <section className="py-6 md:py-8 px-6 border-t border-border-subtle">
     <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
       {items.map((item) => (
         <div

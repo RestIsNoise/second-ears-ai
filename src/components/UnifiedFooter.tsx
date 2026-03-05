@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const UnifiedFooter = () => (
   <footer>
     {/* ── White CTA block ── */}
-    <section className="bg-background py-16 md:py-20 px-6">
+    <section className="bg-background py-14 md:py-16 px-6">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-4">
           Your next mix decision is waiting.
@@ -28,63 +28,60 @@ const UnifiedFooter = () => (
     {/* ── Dark Contact + Legal area ── */}
     <section
       className="relative overflow-hidden"
-      style={{ background: "hsl(0 0% 4%)" }}
+      style={{ background: "hsl(0 0% 5%)" }}
     >
-      {/* Smooth transition from white CTA into dark footer */}
+      {/* Subtle top fade — narrow, won't overlap contact text */}
       <div
-        className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+        className="absolute top-0 left-0 right-0 h-16 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, hsl(var(--background)), hsl(0 0% 4%))",
+          background: "linear-gradient(to bottom, hsl(var(--background)), hsl(0 0% 5%))",
         }}
       />
 
-      {/* Noise grain — matching hero */}
+      {/* Noise grain */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        className="absolute inset-0 pointer-events-none opacity-[0.035]"
         aria-hidden="true"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
           backgroundSize: "512px 512px",
         }}
       />
 
-      {/* Ambient halo glows — matching hero language */}
+      {/* Ambient halos — subtle, behind content */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
-          className="absolute top-[20%] left-[15%] w-[400px] h-[400px] rounded-full blur-[140px]"
-          style={{ background: "hsl(0 0% 16% / 0.3)" }}
+          className="absolute top-[40%] left-[10%] w-[350px] h-[350px] rounded-full blur-[160px]"
+          style={{ background: "hsl(0 0% 14% / 0.25)" }}
         />
         <div
-          className="absolute top-[50%] right-[10%] w-[350px] h-[350px] rounded-full blur-[120px]"
-          style={{ background: "hsl(0 0% 22% / 0.25)" }}
-        />
-      </div>
-
-      {/* Diagonal bar motif — matching hero */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div
-          className="absolute -top-[20%] left-[18%] w-[1px] h-[160%] rotate-[70deg] origin-center"
-          style={{ background: "hsl(0 0% 100% / 0.06)" }}
-        />
-        <div
-          className="absolute -top-[20%] left-[24%] w-[1px] h-[160%] rotate-[70deg] origin-center"
-          style={{ background: "hsl(0 0% 100% / 0.06)" }}
+          className="absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full blur-[140px]"
+          style={{ background: "hsl(0 0% 18% / 0.2)" }}
         />
       </div>
 
       <div className="relative">
-        {/* Contact */}
-        <div className="pt-12 md:pt-14 pb-10 md:pb-12 px-6">
+        {/* Contact — sits well below the 16-tall gradient fade */}
+        <div className="pt-14 md:pt-16 pb-10 md:pb-12 px-6">
           <div className="max-w-5xl mx-auto text-center">
-            <p className="font-mono-brand text-xs tracking-widest uppercase mb-3" style={{ color: "hsl(0 0% 50%)" }}>
+            <p
+              className="font-mono-brand text-xs tracking-widest uppercase mb-3"
+              style={{ color: "hsl(0 0% 52%)" }}
+            >
               Get in touch
             </p>
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2" style={{ color: "hsl(0 0% 92%)" }}>
+            <h2
+              className="text-2xl md:text-3xl font-semibold tracking-tight mb-2"
+              style={{ color: "hsl(0 0% 93%)" }}
+            >
               Contact
             </h2>
-            <p className="text-sm max-w-sm mx-auto mb-6 leading-relaxed" style={{ color: "hsl(0 0% 55%)" }}>
+            <p
+              className="text-sm max-w-sm mx-auto mb-6 leading-relaxed"
+              style={{ color: "hsl(0 0% 58%)" }}
+            >
               Billing, feedback quality, feature requests. We read every message.
             </p>
             <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
@@ -93,7 +90,7 @@ const UnifiedFooter = () => (
                 hello@secondears.io
               </a>
             </Button>
-            <p className="text-[11px] mt-3" style={{ color: "hsl(0 0% 42%)" }}>
+            <p className="text-[11px] mt-3" style={{ color: "hsl(0 0% 44%)" }}>
               Response within 24–48h
             </p>
           </div>
@@ -102,27 +99,39 @@ const UnifiedFooter = () => (
         {/* Legal row */}
         <div className="pt-6 pb-10 md:pb-14 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto flex flex-col items-center gap-5">
-            <span className="font-mono-brand text-xs tracking-tight" style={{ color: "hsl(0 0% 35%)" }}>
+            <span
+              className="font-mono-brand text-xs tracking-tight"
+              style={{ color: "hsl(0 0% 38%)" }}
+            >
               SecondEars™
             </span>
             <div className="flex items-center gap-4">
-              <Link to="/privacy" className="text-[10px] tracking-wide transition-colors" style={{ color: "hsl(0 0% 42%)" }}>
-                Privacy Policy
-              </Link>
-              <span style={{ color: "hsl(0 0% 22%)" }}>·</span>
-              <Link to="/terms" className="text-[10px] tracking-wide transition-colors" style={{ color: "hsl(0 0% 42%)" }}>
-                Terms of Service
-              </Link>
-              <span style={{ color: "hsl(0 0% 22%)" }}>·</span>
-              <Link to="/faq" className="text-[10px] tracking-wide transition-colors" style={{ color: "hsl(0 0% 42%)" }}>
-                FAQ
-              </Link>
-              <span style={{ color: "hsl(0 0% 22%)" }}>·</span>
-              <a href="mailto:hello@secondears.io" className="text-[10px] tracking-wide transition-colors" style={{ color: "hsl(0 0% 42%)" }}>
+              {[
+                { to: "/privacy", label: "Privacy Policy" },
+                { to: "/terms", label: "Terms of Service" },
+                { to: "/faq", label: "FAQ" },
+              ].map((link, i) => (
+                <span key={link.to} className="flex items-center gap-4">
+                  {i > 0 && <span style={{ color: "hsl(0 0% 24%)" }}>·</span>}
+                  <Link
+                    to={link.to}
+                    className="text-[10px] tracking-wide transition-colors"
+                    style={{ color: "hsl(0 0% 44%)" }}
+                  >
+                    {link.label}
+                  </Link>
+                </span>
+              ))}
+              <span style={{ color: "hsl(0 0% 24%)" }}>·</span>
+              <a
+                href="mailto:hello@secondears.io"
+                className="text-[10px] tracking-wide transition-colors"
+                style={{ color: "hsl(0 0% 44%)" }}
+              >
                 Contact
               </a>
             </div>
-            <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 30%)" }}>
+            <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 32%)" }}>
               © {new Date().getFullYear()} SecondEars. All rights reserved.
             </p>
           </div>

@@ -33,7 +33,7 @@ const blocks = [
 ];
 
 const Proof = () => (
-  <section id="features" className="py-14 md:py-16 px-6 border-t border-border-subtle scroll-mt-20">
+  <section id="features" className="py-10 md:py-12 px-6 border-t border-border-subtle scroll-mt-20">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-12">
         <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.4em] uppercase mb-3">

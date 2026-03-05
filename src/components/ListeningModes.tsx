@@ -25,7 +25,7 @@ const modes = [
 ];
 
 const ListeningModes = () => (
-  <section id="modes" className="py-14 md:py-16 px-6 bg-secondary/50 overflow-visible">
+  <section id="modes" className="py-10 md:py-12 px-6 bg-secondary/50 overflow-visible">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8 md:mb-10">
         <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Three perspectives</p>
