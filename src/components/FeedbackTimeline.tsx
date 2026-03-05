@@ -159,7 +159,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
               {/* Content */}
               <div className="flex-1 min-w-0 pr-12">
-                <h3 className="text-[15px] font-semibold tracking-tight text-foreground leading-snug">
+                <h3
+                  className="text-[15px] font-semibold tracking-tight text-foreground leading-snug truncate max-w-[28ch]"
+                  title={item.title}
+                >
                   {item.title}
                 </h3>
                 {item.observation && (
