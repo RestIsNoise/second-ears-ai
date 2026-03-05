@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { Link2, Share2, Lock, Globe } from "lucide-react";
+import { Link2, Share2, Lock, Globe, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
-const ShareBlock = () => {
+interface ShareBlockProps {
+  onExportPdf?: () => void;
+}
+
+const ShareBlock = ({ onExportPdf }: ShareBlockProps) => {
   const [isPublic, setIsPublic] = useState(false);
 
   const handleCopyLink = async () => {
@@ -49,6 +53,17 @@ const ShareBlock = () => {
             <Share2 className="w-3 h-3" />
             Share
           </Button>
+          {onExportPdf && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onExportPdf}
+              className="h-8 text-[11px] gap-1.5 text-muted-foreground hover:text-foreground"
+            >
+              <FileDown className="w-3 h-3" />
+              PDF
+            </Button>
+          )}
         </div>
 
         {/* Visibility toggle */}
@@ -91,7 +106,6 @@ const ShareBlock = () => {
       {/* Brand footer */}
       <div className="pt-4 border-t border-border-subtle">
         <div className="flex items-center gap-2">
-          {/* Minimal logo mark */}
           <div className="w-5 h-5 rounded-full border border-foreground/10 flex items-center justify-center">
             <span className="text-[8px] font-bold text-foreground/40 leading-none">SE</span>
           </div>

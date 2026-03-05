@@ -24,6 +24,10 @@ interface Props {
   onAddNote?: (text: string, timestampSec: number) => void;
   hideControls?: boolean;
   label?: string;
+  /** Custom waveform color (default: "#d0d0d0") */
+  waveColor?: string;
+  /** Custom progress color (default: "#1a1a1a") */
+  progressColor?: string;
 }
 
 const formatTime = (s: number) => {
@@ -43,7 +47,7 @@ const formatTimePrecise = (s: number) => {
 
 /* ── Time ruler helpers ── */
 
-const RULER_HEIGHT = 28;
+const RULER_HEIGHT = 22;
 const MIN_LABEL_GAP_PX = 64;
 const MARKER_SNAP_PX = 14;
 
@@ -88,14 +92,11 @@ const TimeRuler = ({
 
   const playheadPct = (currentTime / duration) * 100;
   const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
-  const hasMarkers = markers.length > 0;
-  const totalHeight = RULER_HEIGHT + (hasMarkers ? MARKER_ZONE_HEIGHT : 0);
 
   return (
-    <div className="relative select-none" style={{ height: totalHeight, width: "100%" }}>
-      {/* Ruler area */}
+    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%" }}>
       <div className="absolute top-0 left-0 right-0" style={{ height: RULER_HEIGHT }}>
-        {/* Bottom border line (ruler baseline) */}
+        {/* Bottom border line */}
         <div
           className="absolute bottom-0 left-0 right-0"
           style={{ height: "1px", backgroundColor: "hsl(var(--foreground) / 0.08)" }}
@@ -185,7 +186,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, hideControls, label }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, hideControls, label, waveColor, progressColor }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -233,8 +234,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
       const ws = WaveSurfer.create({
         container: containerRef.current,
-        waveColor: "#d0d0d0",
-        progressColor: "#1a1a1a",
+        waveColor: waveColor || "#d0d0d0",
+        progressColor: progressColor || "#1a1a1a",
         cursorColor: "transparent",
         cursorWidth: 0,
         barWidth: 1,
@@ -263,7 +264,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       wsRef.current = ws;
 
       return () => { window.removeEventListener("resize", onResize); ws.destroy(); wsRef.current = null; };
-    }, [audioFile]);
+    }, [audioFile, waveColor, progressColor]);
 
     const togglePlay = useCallback(() => wsRef.current?.playPause(), []);
     const restart = useCallback(() => { wsRef.current?.seekTo(0); wsRef.current?.play(); }, []);
@@ -292,6 +293,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+    const hasMarkers = markers.length > 0;
+    const WAVEFORM_HEIGHT = 96;
 
     return (
       <div className="rounded-xl border border-border-subtle bg-background p-4 md:p-5 space-y-0">
@@ -305,14 +308,14 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           </div>
         )}
 
-        {/* Ruler + markers + waveform — single hover zone */}
+        {/* Ruler + waveform + markers — single hover zone */}
         <div
           ref={wrapperRef}
           className="relative overflow-visible cursor-crosshair"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Time ruler */}
+          {/* Time ruler — reduced gap */}
           {duration > 0 && containerWidth > 0 && (
             <TimeRuler
               duration={duration}
@@ -326,24 +329,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             />
           )}
 
-          {/* Circular markers layer */}
-          {duration > 0 && containerWidth > 0 && markers.length > 0 && (
-            <div className="relative" style={{ height: MARKER_ZONE_HEIGHT + 8 }}>
-              <WaveformMarkers
-                markers={markers}
-                duration={duration}
-                containerWidth={containerWidth}
-                activeMarkerId={activeMarkerId}
-                snappedMarkerId={snappedMarkerId_hover}
-                hoverX={hoverX}
-                onMarkerClick={onMarkerClick}
-                onAddNote={onAddNote}
-              />
-            </div>
-          )}
-
-          {/* Waveform container */}
-          <div className="relative" style={{ height: 96 }}>
+          {/* Waveform container with markers overlaid */}
+          <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 2 }}>
             {loading && !error && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
                 <div className="w-3 h-3 rounded-full bg-muted-foreground/30 animate-pulse" />
@@ -354,6 +341,28 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               className="absolute left-0 right-0"
               style={{ top: 6, bottom: 6 }}
             />
+
+            {/* Markers overlaid and vertically centered on the waveform */}
+            {duration > 0 && containerWidth > 0 && hasMarkers && (
+              <div
+                className="absolute left-0 right-0 z-[5]"
+                style={{
+                  top: (WAVEFORM_HEIGHT - MARKER_ZONE_HEIGHT) / 2,
+                  height: MARKER_ZONE_HEIGHT,
+                }}
+              >
+                <WaveformMarkers
+                  markers={markers}
+                  duration={duration}
+                  containerWidth={containerWidth}
+                  activeMarkerId={activeMarkerId}
+                  snappedMarkerId={snappedMarkerId_hover}
+                  hoverX={hoverX}
+                  onMarkerClick={onMarkerClick}
+                  onAddNote={onAddNote}
+                />
+              </div>
+            )}
 
             {/* Playhead line spanning waveform */}
             {duration > 0 && (
