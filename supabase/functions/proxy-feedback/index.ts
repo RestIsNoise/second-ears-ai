@@ -7,26 +7,35 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-/** Extract valid JSON from markdown-fenced or raw text, fixing trailing commas */
+/** Extract valid JSON from markdown-fenced or raw text, fixing trailing commas.
+ *  Handles duplicated fence blocks (Gemini sometimes echoes the JSON twice). */
 function trySalvageJson(text: string): Record<string, unknown> | null {
-  // Look for JSON inside code fences first
-  const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)```/);
-  const candidate = fenceMatch ? fenceMatch[1].trim() : text;
+  // Collect ALL fenced blocks and also try the raw text itself
+  const candidates: string[] = [];
 
-  // Also try extracting from an error payload that includes the raw response
-  let jsonStr = candidate;
-  if (!jsonStr.startsWith("{")) {
-    const innerMatch = jsonStr.match(/Raw response:\s*```(?:json)?\s*\n?([\s\S]*?)```/);
-    if (innerMatch) jsonStr = innerMatch[1].trim();
+  // If the text is an error wrapper, unwrap it first
+  let source = text;
+  const rawMatch = source.match(/Raw response:\s*([\s\S]*)/);
+  if (rawMatch) source = rawMatch[1];
+
+  // Grab every fenced block (non-greedy, one at a time)
+  const fenceRe = /```(?:json)?\s*\n?([\s\S]*?)```/g;
+  let m: RegExpExecArray | null;
+  while ((m = fenceRe.exec(source)) !== null) {
+    candidates.push(m[1].trim());
   }
 
-  // Fix trailing commas before } or ] (common Gemini issue)
-  jsonStr = jsonStr.replace(/,\s*([\]}])/g, "$1");
+  // Also try the raw source itself (no fences)
+  if (candidates.length === 0) candidates.push(source.trim());
 
-  try {
-    const parsed = JSON.parse(jsonStr);
-    if (typeof parsed === "object" && parsed !== null) return parsed;
-  } catch { /* not valid JSON */ }
+  for (const raw of candidates) {
+    // Fix trailing commas before } or ] (common Gemini issue)
+    const jsonStr = raw.replace(/,\s*([\]}])/g, "$1");
+    try {
+      const parsed = JSON.parse(jsonStr);
+      if (typeof parsed === "object" && parsed !== null) return parsed;
+    } catch { /* try next candidate */ }
+  }
   return null;
 }
 
