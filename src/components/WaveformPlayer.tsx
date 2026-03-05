@@ -7,6 +7,11 @@ import type { WaveformMarker } from "@/types/feedback";
 export interface WaveformPlayerHandle {
   seekTo: (timeSec: number) => void;
   getCurrentTime: () => number;
+  play: () => void;
+  pause: () => void;
+  isPlaying: () => boolean;
+  setVolume: (v: number) => void;
+  getDuration: () => number;
 }
 
 interface Props {
@@ -17,6 +22,8 @@ interface Props {
   onTimeUpdate?: (time: number) => void;
   onDurationReady?: (duration: number) => void;
   onAddNote?: (text: string, timestampSec: number) => void;
+  hideControls?: boolean;
+  label?: string;
 }
 
 const formatTime = (s: number) => {
@@ -178,7 +185,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, hideControls, label }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -198,6 +205,11 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         }
       },
       getCurrentTime: () => currentTime,
+      play: () => wsRef.current?.play(),
+      pause: () => wsRef.current?.pause(),
+      isPlaying: () => playing,
+      setVolume: (v: number) => wsRef.current?.setVolume(v),
+      getDuration: () => duration,
     }));
 
     useEffect(() => {
@@ -376,34 +388,41 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         </div>
 
         {/* Controls row */}
-        <div className="flex items-center gap-3 pt-2.5">
-          <button
-            onClick={togglePlay}
-            disabled={!!error || loading}
-            className="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-foreground hover:bg-secondary/60 disabled:text-muted-foreground/30 disabled:hover:bg-transparent transition-colors"
-          >
-            {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
-          </button>
-          <button
-            onClick={restart}
-            disabled={!!error || loading}
-            className="w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:text-muted-foreground/30 transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
-          <span
-            className="text-foreground/80 tabular-nums leading-none ml-1"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 13,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {formatTime(currentTime)}
-            <span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>
-            {formatTime(duration)}
-          </span>
-        </div>
+        {!hideControls && (
+          <div className="flex items-center gap-3 pt-2.5">
+            {label && (
+              <span className="text-[10px] font-semibold tracking-wider uppercase text-muted-foreground/50 mr-1">
+                {label}
+              </span>
+            )}
+            <button
+              onClick={togglePlay}
+              disabled={!!error || loading}
+              className="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-foreground hover:bg-secondary/60 disabled:text-muted-foreground/30 disabled:hover:bg-transparent transition-colors"
+            >
+              {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+            </button>
+            <button
+              onClick={restart}
+              disabled={!!error || loading}
+              className="w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:text-muted-foreground/30 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+            <span
+              className="text-foreground/80 tabular-nums leading-none ml-1"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 13,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {formatTime(currentTime)}
+              <span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>
+              {formatTime(duration)}
+            </span>
+          </div>
+        )}
       </div>
     );
   }
