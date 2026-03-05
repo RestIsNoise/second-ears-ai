@@ -5,10 +5,8 @@ import SampleFeedback from "@/components/SampleFeedback";
 import Proof from "@/components/Proof";
 import ListeningModes from "@/components/ListeningModes";
 import Pricing from "@/components/Pricing";
-import Contact from "@/components/Contact";
-import FinalCta from "@/components/FinalCta";
 import TrustStrip from "@/components/TrustStrip";
-import Footer from "@/components/Footer";
+import UnifiedFooter from "@/components/UnifiedFooter";
 
 const Index = () => (
   <div className="min-h-screen bg-background">
@@ -21,10 +19,8 @@ const Index = () => (
       <ListeningModes />
       <Pricing />
       <TrustStrip />
-      <Contact />
     </main>
-    <Footer />
-    <FinalCta />
+    <UnifiedFooter />
   </div>
 );
 
