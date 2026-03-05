@@ -126,13 +126,31 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   return (
     <div className="space-y-6">
-      {/* Drop zone — uses label+input so click-to-browse works in all environments */}
-      <label
-        htmlFor="track-file-input"
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".mp3,.wav,.flac,audio/*"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+
+      {/* Drop zone */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label="Upload track"
+        onClick={() => { fileInputRef.current?.click(); }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }
+        }}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 cursor-pointer select-none transition-all duration-150 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ${
+        className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 cursor-pointer select-none transition-all duration-150 ${
           dragOver
             ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
             : file
@@ -140,15 +158,6 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
         }`}
       >
-        <input
-          id="track-file-input"
-          ref={fileInputRef}
-          type="file"
-          accept=".mp3,.wav,.flac,audio/*"
-          onChange={handleFileChange}
-          className="sr-only"
-          tabIndex={-1}
-        />
         {file ? (
           <>
             <Music className="w-8 h-8 text-foreground/60" />
@@ -168,7 +177,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             </div>
           </>
         )}
-      </label>
+      </div>
 
       {/* Context input */}
       <div>

@@ -122,15 +122,14 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   const maxDuration = Math.max(durationA, durationB);
 
-  // Hidden file input (shared)
+  // Hidden file input
   const fileInput = (
     <input
-      id="reference-file-input"
       ref={fileInputRef}
       type="file"
       accept={ACCEPTED_FORMATS}
       onChange={handleFileSelect}
-      className="sr-only"
+      style={{ display: "none" }}
     />
   );
 
@@ -151,13 +150,15 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onEditNote={onEditNote}
         />
         <div className="mt-3">
-          <label
-            htmlFor="reference-file-input"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground cursor-pointer rounded-md border border-input bg-background px-3 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { fileInputRef.current?.click(); }}
+            className="gap-2 text-muted-foreground hover:text-foreground"
           >
             <Upload className="w-3.5 h-3.5" />
             Add reference track
-          </label>
+          </Button>
         </div>
       </div>
     );
