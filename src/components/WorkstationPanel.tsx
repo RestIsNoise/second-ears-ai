@@ -6,8 +6,6 @@ const PANEL_FLEX: Record<string, number> = {
   "full-analysis": 2,
   "tech-metrics": 1.5,
   "human-feedback": 1.5,
-  "what-works": 1,
-  "your-focus": 1,
   "todo": 1,
 };
 

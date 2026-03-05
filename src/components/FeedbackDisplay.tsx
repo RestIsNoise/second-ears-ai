@@ -93,8 +93,6 @@ const PANELS: PanelConfig[] = [
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
   { id: "full-analysis", label: "Full Analysis" },
-  { id: "what-works", label: "What Works" },
-  { id: "your-focus", label: "Your Focus" },
   { id: "todo", label: "To-Do List" },
 ];
 
@@ -496,48 +494,6 @@ const FeedbackDisplay = ({
           </div>
         );
 
-      case "what-works":
-        return (
-          <div className="p-4 space-y-2">
-            {n.whatWorks.length > 0 ? (
-              n.whatWorks.map((item, i) => (
-                <div key={i} className={`rounded-xl border border-border-subtle bg-background ${item.description ? "p-3.5" : "p-3"}`}>
-                  <h3 className="text-sm font-semibold tracking-tight">{item.title}</h3>
-                  {item.description && (
-                    <p className="text-[12px] text-foreground/55 mt-1" style={{ lineHeight: 1.575 }}>{item.description}</p>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No data</p>
-            )}
-          </div>
-        );
-
-      case "your-focus":
-        return (
-          <div className="p-4">
-            {n.yourFocus.question ? (
-              <div className="space-y-3">
-                <div>
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">You asked</p>
-                  <p className="text-[13px] text-foreground/70 leading-relaxed italic" style={{ lineHeight: 1.575 }}>
-                    &ldquo;{n.yourFocus.question}&rdquo;
-                  </p>
-                </div>
-                <div>
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Response</p>
-                  <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
-                    {n.yourFocus.response || "No direct focus response available for this run."}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No focus question</p>
-            )}
-          </div>
-        );
-
       case "todo":
         return (
           <ToDoPanel
@@ -558,8 +514,6 @@ const FeedbackDisplay = ({
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
     "full-analysis": "Full Analysis",
-    "what-works": modeWhatWorksLabel[mode] || "What Works",
-    "your-focus": "Your Focus",
     "todo": "To-Do List",
   };
 
@@ -714,6 +668,56 @@ const FeedbackDisplay = ({
           ))}
         </div>
       </div>
+
+      {/* ═══ WHAT WORKS & YOUR FOCUS — fixed below panels ═══ */}
+      {(n.whatWorks.length > 0 || n.yourFocus.question) && (
+        <div
+          className="mt-6 grid gap-6 border-t border-border-subtle pt-6"
+          style={{ gridTemplateColumns: n.whatWorks.length > 0 && n.yourFocus.question ? "1fr 1fr" : "1fr" }}
+        >
+          {/* What Works */}
+          {n.whatWorks.length > 0 && (
+            <div>
+              <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase mb-3">
+                {modeWhatWorksLabel[mode] || "What Works"}
+              </h3>
+              <div className="space-y-2">
+                {n.whatWorks.map((item, i) => (
+                  <div key={i} className={`rounded-xl border border-border-subtle bg-card ${item.description ? "p-3.5" : "p-3"}`}>
+                    <h4 className="text-sm font-semibold tracking-tight">{item.title}</h4>
+                    {item.description && (
+                      <p className="text-[12px] text-foreground/55 mt-1" style={{ lineHeight: 1.575 }}>{item.description}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Your Focus */}
+          {n.yourFocus.question && (
+            <div>
+              <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase mb-3">
+                Your Focus
+              </h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">You asked</p>
+                  <p className="text-[13px] text-foreground/70 leading-relaxed italic" style={{ lineHeight: 1.575 }}>
+                    &ldquo;{n.yourFocus.question}&rdquo;
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Response</p>
+                  <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
+                    {n.yourFocus.response || "No direct focus response available for this run."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
