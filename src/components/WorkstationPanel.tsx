@@ -5,11 +5,12 @@ interface Props {
   title: string;
   onClose: () => void;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
+const WorkstationPanel = ({ id, title, onClose, children, style }: Props) => {
   return (
-    <div className="flex flex-col h-full min-w-0 flex-1 border-r border-border-subtle last:border-r-0 bg-background">
+    <div className="flex flex-col h-full min-w-0 border-r border-border-subtle last:border-r-0 bg-background" style={{ flex: 1, ...style }}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle shrink-0">
         <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase truncate">

@@ -123,10 +123,13 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo }: Props) =
       {/* Comments list */}
       <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 scrollbar-thin">
         {comments.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-xs text-muted-foreground/50">No comments yet</p>
-            <p className="text-[10px] text-muted-foreground/35 mt-1">
-              Add notes at any point in the track
+          <div className="flex flex-col items-center justify-center h-full py-12 text-center">
+            <svg className="w-8 h-8 text-muted-foreground/20 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <p className="text-xs text-muted-foreground/50 font-medium">No notes yet</p>
+            <p className="text-[10px] text-muted-foreground/30 mt-1.5 max-w-[180px] leading-relaxed">
+              Click anywhere on the waveform to add a timestamped comment
             </p>
           </div>
         )}
