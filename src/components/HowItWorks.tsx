@@ -6,14 +6,14 @@ const steps = [
     number: "01",
     title: "Upload",
     description: "Drop a WAV, MP3, or FLAC. Analysis starts on upload.",
-    proof: "Up to 100 MB",
+    proof: "No setup required",
   },
   {
     icon: BarChart3,
     number: "02",
     title: "Analyze",
     description: "Three modes flag issues at exact timestamps in your track.",
-    proof: "MM:SS timestamps",
+    proof: "Clear next steps",
   },
   {
     icon: ListChecks,
