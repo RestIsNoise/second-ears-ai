@@ -188,18 +188,21 @@ const Hero = () => {
                 <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
               </div>
 
-              {/* Screenshot */}
-              <img
-                src={heroScreenshot}
-                alt="SecondEars analysis showing technical metrics, timeline feedback, and to-do list for a music track"
-                className="w-full h-auto block"
-                loading="eager"
-              />
+              {/* Screenshot — cropped to waveform + feedback cards */}
+              <div className="w-full overflow-hidden" style={{ height: "clamp(220px, 28vw, 380px)" }}>
+                <img
+                  src={heroScreenshot}
+                  alt="SecondEars waveform timeline with timestamped feedback cards and actionable fix suggestions"
+                  className="w-full h-auto block"
+                  style={{ objectFit: "cover", objectPosition: "top center" }}
+                  loading="eager"
+                />
+              </div>
             </div>
 
             {/* Label chip */}
             <div
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-medium tracking-wide border backdrop-blur-sm"
+              className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] font-medium tracking-wide border backdrop-blur-sm"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.1)",
                 background: "hsl(0 0% 8% / 0.85)",
