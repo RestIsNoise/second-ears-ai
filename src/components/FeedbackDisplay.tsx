@@ -363,14 +363,6 @@ const FeedbackDisplay = ({
       case "ai-feedback":
         return (
           <div className="relative h-full" style={{ overflowY: "scroll" }} ref={timelineScrollRef}>
-            {/* Sticky overall impression */}
-            {n.overallImpression && (
-              <div className="sticky top-0 z-10 border-b border-border-subtle bg-background px-4 py-3.5">
-                <p className="text-[13px] text-foreground/70 leading-relaxed" style={{ lineHeight: 1.6 }}>
-                  {n.overallImpression}
-                </p>
-              </div>
-            )}
             {/* Cards area */}
             <div className="p-4">
               {hasTimeline && (
@@ -615,6 +607,15 @@ const FeedbackDisplay = ({
             onAddNote={handleAddNoteFromWaveform}
             onEditNote={handleEditAnnotation}
           />
+        </div>
+      )}
+
+      {/* ═══ OVERALL IMPRESSION ═══ */}
+      {n.overallImpression && (
+        <div className="mt-5">
+          <p className="text-[13px] text-foreground/60 leading-relaxed max-w-[85ch]" style={{ lineHeight: 1.6 }}>
+            {n.overallImpression}
+          </p>
         </div>
       )}
 
