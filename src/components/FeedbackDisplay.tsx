@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, ChevronDown } from "lucide-react";
+import { ArrowLeft, Copy, Check, ChevronDown, FileDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
@@ -11,6 +11,7 @@ import ToDoPanel from "@/components/ToDoPanel";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem } from "@/types/feedback";
+import { exportAnalysisPdf } from "@/lib/exportPdf";
 
 const modeLabels: Record<string, string> = {
   technical: "Technical",
@@ -314,9 +315,20 @@ const FeedbackDisplay = ({
 
         <div className="space-y-1.5">
           {n.trackName && (
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              {n.trackName}
-            </h1>
+            <div className="flex items-start justify-between gap-4">
+              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                {n.trackName}
+              </h1>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportAnalysisPdf(n, releaseReadiness)}
+                className="gap-1.5 shrink-0 mt-1"
+              >
+                <FileDown className="w-4 h-4" />
+                Export PDF
+              </Button>
+            </div>
           )}
           <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
             {modeLabels[mode]} analysis
