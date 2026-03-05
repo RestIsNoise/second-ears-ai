@@ -10,7 +10,7 @@ import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
-import type { FeedbackItem, WaveformMarker, ToDoItem } from "@/types/feedback";
+import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
 import { exportAnalysisPdf } from "@/lib/exportPdf";
 
 const modeLabels: Record<string, string> = {
@@ -151,6 +151,12 @@ const FeedbackDisplay = ({
 
   const hasTimeline = timelineItems.length > 0;
 
+  const modeToMarkerType: Record<string, MarkerType> = {
+    technical: "technical",
+    musical: "structural",
+    perception: "perceptual",
+  };
+
   const markers: WaveformMarker[] = useMemo(() => {
     return timelineItems
       .filter((i) => i.timestampSec > 0)
@@ -159,8 +165,9 @@ const FeedbackDisplay = ({
         time: item.timestampSec,
         label: item.title,
         severity: item.severity,
+        type: modeToMarkerType[mode] || "technical",
       }));
-  }, [timelineItems]);
+  }, [timelineItems, mode]);
 
   // To-Do management
   const todoSourceIds = useMemo(() => new Set(todoItems.filter(t => t.sourceId).map(t => t.sourceId!)), [todoItems]);
@@ -190,6 +197,19 @@ const FeedbackDisplay = ({
         done: false,
       },
     ]);
+  }, []);
+
+  const handleAddNoteFromWaveform = useCallback((text: string, timestampSec: number) => {
+    setTodoItems((prev) => [
+      ...prev,
+      {
+        id: `wf-note-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        text,
+        timestampSec,
+        done: false,
+      },
+    ]);
+    toast({ title: "Note added to To-Do", duration: 1200 });
   }, []);
 
   const handleToggleToDo = useCallback((id: string) => {
@@ -347,6 +367,7 @@ const FeedbackDisplay = ({
             onMarkerClick={handleMarkerClick}
             onTimeUpdate={handleTimeUpdate}
             onDurationReady={setAudioDuration}
+            onAddNote={handleAddNoteFromWaveform}
           />
           {/* A/B Compare */}
           <div className="flex items-center gap-2.5 mt-3">

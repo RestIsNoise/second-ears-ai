@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef, useMemo } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
+import WaveformMarkers, { MARKER_ZONE_HEIGHT } from "@/components/WaveformMarkers";
 import type { WaveformMarker } from "@/types/feedback";
 
 export interface WaveformPlayerHandle {
@@ -15,6 +16,7 @@ interface Props {
   onMarkerClick?: (marker: WaveformMarker) => void;
   onTimeUpdate?: (time: number) => void;
   onDurationReady?: (duration: number) => void;
+  onAddNote?: (text: string, timestampSec: number) => void;
 }
 
 const formatTime = (s: number) => {
@@ -35,7 +37,6 @@ const formatTimePrecise = (s: number) => {
 /* ── Time ruler helpers ── */
 
 const RULER_HEIGHT = 28;
-const MARKER_ZONE_HEIGHT = 20; // space below ruler for marker triangles + labels
 const MIN_LABEL_GAP_PX = 64;
 const MARKER_SNAP_PX = 14;
 
@@ -59,14 +60,12 @@ interface RulerProps {
   hoverX: number | null;
   hoverTime: number;
   markers: WaveformMarker[];
-  activeMarkerId?: string | null;
   snappedMarkerId: string | null;
-  onMarkerClick?: (marker: WaveformMarker) => void;
 }
 
 const TimeRuler = ({
   duration, containerWidth, currentTime, playing,
-  hoverX, hoverTime, markers, activeMarkerId, snappedMarkerId, onMarkerClick,
+  hoverX, hoverTime, markers, snappedMarkerId,
 }: RulerProps) => {
   const { major, minor } = useMemo(
     () => pickInterval(duration, containerWidth),
@@ -172,76 +171,6 @@ const TimeRuler = ({
           </div>
         )}
       </div>
-
-      {/* Marker zone — anchored directly below ruler baseline */}
-      {hasMarkers && (
-        <div
-          className="absolute left-0 right-0 z-[5]"
-          style={{ top: RULER_HEIGHT, height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
-        >
-          {markers.slice(0, 8).map((m) => {
-            const isActive = activeMarkerId === m.id;
-            const isSnapped = snappedMarkerId === m.id;
-            const leftPct = (m.time / duration) * 100;
-
-            return (
-              <div
-                key={m.id}
-                className="absolute pointer-events-auto"
-                style={{
-                  left: `${leftPct}%`,
-                  top: 0,
-                  transform: "translateX(-50%)",
-                }}
-              >
-                <button
-                  onClick={() => onMarkerClick?.(m)}
-                  className="group flex flex-col items-center"
-                  style={{ padding: "1px 2px" }}
-                  aria-label={`${formatTime(m.time)} — ${m.label}`}
-                >
-                  {/* Triangle pointing down from ruler baseline */}
-                  <svg
-                    width={isActive || isSnapped ? "10" : "8"}
-                    height={isActive || isSnapped ? "6" : "5"}
-                    viewBox={isActive || isSnapped ? "0 0 10 6" : "0 0 8 5"}
-                    className="transition-all duration-150"
-                  >
-                    <polygon
-                      points={isActive || isSnapped ? "5,6 0,0 10,0" : "4,5 0,0 8,0"}
-                      style={{
-                        fill: isActive
-                          ? "hsl(var(--foreground))"
-                          : isSnapped
-                            ? "hsl(var(--foreground) / 0.65)"
-                            : "hsl(var(--foreground) / 0.3)",
-                        transition: "fill 0.15s",
-                      }}
-                    />
-                  </svg>
-                  <span
-                    className="tabular-nums whitespace-nowrap transition-colors duration-150"
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 8,
-                      lineHeight: 1,
-                      marginTop: 1,
-                      color: isActive
-                        ? "hsl(var(--foreground))"
-                        : isSnapped
-                          ? "hsl(var(--foreground) / 0.6)"
-                          : "hsl(var(--foreground) / 0.3)",
-                      fontWeight: isActive ? 500 : 400,
-                    }}
-                  >
-                    {formatTime(m.time)}
-                  </span>
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 };
@@ -249,7 +178,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -371,7 +300,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Time ruler with markers (single layer) */}
+          {/* Time ruler */}
           {duration > 0 && containerWidth > 0 && (
             <TimeRuler
               duration={duration}
@@ -381,13 +310,27 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               hoverX={hoverX}
               hoverTime={hoverTime}
               markers={markers}
-              activeMarkerId={activeMarkerId}
               snappedMarkerId={snappedMarkerId_hover}
-              onMarkerClick={onMarkerClick}
             />
           )}
 
-          {/* Waveform container — NO markers here */}
+          {/* Circular markers layer */}
+          {duration > 0 && containerWidth > 0 && markers.length > 0 && (
+            <div className="relative" style={{ height: MARKER_ZONE_HEIGHT + 8 }}>
+              <WaveformMarkers
+                markers={markers}
+                duration={duration}
+                containerWidth={containerWidth}
+                activeMarkerId={activeMarkerId}
+                snappedMarkerId={snappedMarkerId_hover}
+                hoverX={hoverX}
+                onMarkerClick={onMarkerClick}
+                onAddNote={onAddNote}
+              />
+            </div>
+          )}
+
+          {/* Waveform container */}
           <div className="relative" style={{ height: 96 }}>
             {loading && !error && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
