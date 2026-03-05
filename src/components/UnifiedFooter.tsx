@@ -25,32 +25,8 @@ const UnifiedFooter = () => (
     />
 
     <div className="relative">
-      {/* ── Contact ── */}
-      <div className="pt-14 md:pt-16 pb-10 md:pb-12 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-            Get in touch
-          </p>
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2" style={{ color: "hsl(0 0% 94%)" }}>
-            Contact
-          </h2>
-          <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed">
-            Billing, feedback quality, feature requests. We read every message.
-          </p>
-          <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
-            <a href="mailto:hello@secondears.io">
-              <Mail className="w-4 h-4" />
-              hello@secondears.io
-            </a>
-          </Button>
-          <p className="text-[11px] text-muted-foreground/50 mt-3">
-            Response within 24–48h
-          </p>
-        </div>
-      </div>
-
       {/* ── Final CTA ── */}
-      <div className="pt-6 md:pt-8 pb-10 md:pb-14 px-6">
+      <div className="pt-14 md:pt-16 pb-10 md:pb-12 px-6">
         {/* Ambient halo */}
         <div
           className="absolute left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full blur-[120px] pointer-events-none"
@@ -81,6 +57,30 @@ const UnifiedFooter = () => (
             style={{ color: "hsl(0 0% 38%)" }}
           >
             3 free analyses per month · No credit card required
+          </p>
+        </div>
+      </div>
+
+      {/* ── Contact ── */}
+      <div className="pt-8 md:pt-10 pb-10 md:pb-14 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
+            Get in touch
+          </p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2" style={{ color: "hsl(0 0% 94%)" }}>
+            Contact
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed">
+            Billing, feedback quality, feature requests. We read every message.
+          </p>
+          <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
+            <a href="mailto:hello@secondears.io">
+              <Mail className="w-4 h-4" />
+              hello@secondears.io
+            </a>
+          </Button>
+          <p className="text-[11px] text-muted-foreground/50 mt-3">
+            Response within 24–48h
           </p>
         </div>
       </div>
