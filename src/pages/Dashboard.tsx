@@ -4,13 +4,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Activity, Music, Eye, ArrowRight } from "lucide-react";
+import { Activity, Music, Eye, ArrowRight, MoreVertical, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "@/hooks/use-toast";
 
 const modeIcons: Record<string, typeof Activity> = {
   technical: Activity,
   musical: Music,
   perception: Eye,
+};
+
+const modeColors: Record<string, string> = {
+  technical: "bg-accent text-accent-foreground",
+  musical: "bg-blue-500/15 text-blue-400",
+  perception: "bg-purple-500/15 text-purple-400",
 };
 
 interface ProjectRow {
@@ -47,6 +60,25 @@ const Dashboard = () => {
     };
     load();
   }, [user]);
+
+  const handleDelete = async (e: React.MouseEvent, projectId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const confirmed = window.confirm("Delete this project and its analyses?");
+    if (!confirmed) return;
+
+    // Delete analyses first (child), then project
+    await supabase.from("analyses").delete().eq("project_id", projectId);
+    const { error } = await supabase.from("projects").delete().eq("id", projectId);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
+      return;
+    }
+
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    toast({ title: "Deleted", description: "Project removed." });
+  };
 
   if (loading || fetching) {
     return (
@@ -85,7 +117,9 @@ const Dashboard = () => {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {projects.map((proj) => {
                 const analysis = proj.analyses[0];
-                const ModeIcon = analysis ? modeIcons[analysis.mode] || Activity : Activity;
+                const mode = analysis?.mode || "technical";
+                const ModeIcon = modeIcons[mode] || Activity;
+                const colorClass = modeColors[mode] || modeColors.technical;
                 const impression =
                   analysis?.feedback?.overallImpression ||
                   analysis?.feedback?.overall_impression ||
@@ -96,13 +130,32 @@ const Dashboard = () => {
                   <Link
                     key={proj.id}
                     to={`/project/${proj.id}`}
-                    className="group rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
+                    className="group relative rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <ModeIcon className="w-4 h-4 text-muted-foreground mt-0.5" />
-                      <span className="font-mono-brand text-[10px] text-muted-foreground uppercase">
-                        {analysis?.mode || "—"}
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
+                        <ModeIcon className="w-3 h-3" />
+                        {mode}
                       </span>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          asChild
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        >
+                          <button className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
+                            <MoreVertical className="w-4 h-4 text-muted-foreground" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={(e) => handleDelete(e, proj.id)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     <h3 className="text-sm font-medium mb-1 group-hover:text-foreground/80 transition-colors">
                       {proj.name}
