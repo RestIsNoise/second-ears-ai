@@ -57,68 +57,26 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     if (!file) return;
     setIsAnalyzing(true);
     onProgressStep?.(0);
-
     try {
       const storagePath = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("tracks")
-        .upload(storagePath, file);
-
+      const { error: uploadError } = await supabase.storage.from("tracks").upload(storagePath, file);
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
-
-      console.log("[TrackUploader] Uploaded to bucket: tracks, path:", storagePath);
       onProgressStep?.(1);
-
-      const { data: signedData, error: signedError } = await supabase.storage
-        .from("tracks")
-        .createSignedUrl(storagePath, 3600);
-
-      if (signedError) {
-        console.warn("[TrackUploader] Signed URL failed:", signedError.message);
-      } else {
-        console.log("[TrackUploader] Signed URL created:", signedData?.signedUrl?.substring(0, 80) + "...");
-      }
-
+      const { data: signedData, error: signedError } = await supabase.storage.from("tracks").createSignedUrl(storagePath, 3600);
+      if (signedError) console.warn("[TrackUploader] Signed URL failed:", signedError.message);
       onProgressStep?.(2);
-
       const { data: result, error } = await supabase.functions.invoke("proxy-feedback", {
-        body: {
-          audioUrl: signedData?.signedUrl || undefined,
-          fileName: file.name,
-          mode,
-          userContext: context.trim() || undefined,
-        },
+        body: { audioUrl: signedData?.signedUrl || undefined, fileName: file.name, mode, userContext: context.trim() || undefined },
       });
-
       if (error) throw error;
-
       onProgressStep?.(3);
-
-      console.log("[TrackUploader] Raw API response:", JSON.stringify(result, null, 2));
-
-      // ── Single normalizer call ──
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
-
-      console.log("[TrackUploader] Normalized feedback:", JSON.stringify(normalized, null, 2));
-
-      // Brief pause so user sees "Finalizing report" complete
       await new Promise((r) => setTimeout(r, 600));
-
-      onResult({
-        normalized,
-        audioFile: file,
-      });
-
-      console.log("[TrackUploader] Skipping storage cleanup for:", storagePath);
+      onResult({ normalized, audioFile: file });
     } catch (err: any) {
-      console.error(err);
       const msg = err.message || "Something went wrong. Please try again.";
       onError?.(msg);
-      toast({
-        title: "Analysis failed",
-        description: msg,
-        variant: "destructive",
-      });
+      toast({ title: "Analysis failed", description: msg, variant: "destructive" });
     } finally {
       setIsAnalyzing(false);
     }
@@ -126,18 +84,23 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   return (
     <div className="space-y-6">
-      {/* Drop zone — native <label> for Chrome compatibility */}
+      <input
+        id="track-file-input"
+        ref={fileInputRef}
+        type="file"
+        accept=".mp3,.wav,.flac,audio/*"
+        onChange={handleFileChange}
+        className="sr-only"
+      />
       <label
         htmlFor="track-file-input"
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={`cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
-          dragOver
-            ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
-            : file
-            ? "border border-solid border-foreground/20 bg-secondary/30"
-            : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
+          dragOver ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
+          : file ? "border border-solid border-foreground/20 bg-secondary/30"
+          : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
         }`}
       >
         {file ? (
@@ -145,9 +108,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             <Music className="w-8 h-8 text-foreground/60" />
             <div className="text-center">
               <p className="text-sm font-medium">{file.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {(file.size / (1024 * 1024)).toFixed(1)} MB
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
@@ -160,49 +121,25 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           </>
         )}
       </label>
-      <input
-        id="track-file-input"
-        ref={fileInputRef}
-        type="file"
-        accept=".mp3,.wav,.flac,audio/*"
-        onChange={handleFileChange}
-        className="sr-only"
-      />
-
-      {/* Context input */}
       <div>
         <input
           type="text"
           value={context}
           onChange={(e) => setContext(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && file && !isAnalyzing) {
-              e.preventDefault();
-              analyze();
-            }
-          }}
+          onKeyDown={(e) => { if (e.key === "Enter" && file && !isAnalyzing) { e.preventDefault(); analyze(); } }}
           placeholder="What are you going for?"
           className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
         />
-        <p className="text-[11px] text-muted-foreground/50 mt-1.5 ml-1">
-          Optional: references, goals, or specific concerns.
-        </p>
+        <p className="text-[11px] text-muted-foreground/50 mt-1.5 ml-1">Optional: references, goals, or specific concerns.</p>
       </div>
-
-      {/* Mode selector */}
       <div>
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-          Listening mode
-        </p>
+        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Listening mode</p>
         <div className="grid grid-cols-3 gap-3">
           {modes.map((m) => (
-            <button
-              key={m.id}
-              onClick={() => setMode(m.id)}
+            <button key={m.id} onClick={() => setMode(m.id)}
               className={`rounded-lg border p-4 text-left transition-all duration-150 ${
-                mode === m.id
-                  ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
-                  : "border-border-subtle hover:border-foreground/10"
+                mode === m.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
+                : "border-border-subtle hover:border-foreground/10"
               }`}
             >
               <m.icon className="w-4 h-4 mb-2 text-foreground/70" />
@@ -212,15 +149,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           ))}
         </div>
       </div>
-
-      {/* Analyze button */}
-      <Button
-        variant="hero"
-        size="lg"
-        className="w-full h-12 text-sm"
-        disabled={!file || isAnalyzing}
-        onClick={analyze}
-      >
+      <Button variant="hero" size="lg" className="w-full h-12 text-sm" disabled={!file || isAnalyzing} onClick={analyze}>
         {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
       </Button>
     </div>
