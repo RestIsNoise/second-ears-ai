@@ -126,59 +126,48 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   return (
     <div className="space-y-6">
-      {/* Drop zone with transparent file input overlay */}
-      <div
-        style={{ position: "relative" }}
+      {/* Drop zone — native <label> for Chrome compatibility */}
+      <label
+        htmlFor="track-file-input"
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
+        className={`cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
+          dragOver
+            ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
+            : file
+            ? "border border-solid border-foreground/20 bg-secondary/30"
+            : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
+        }`}
       >
-        <div
-          className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
-            dragOver
-              ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
-              : file
-              ? "border border-solid border-foreground/20 bg-secondary/30"
-              : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
-          }`}
-        >
-          {file ? (
-            <>
-              <Music className="w-8 h-8 text-foreground/60" />
-              <div className="text-center">
-                <p className="text-sm font-medium">{file.name}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {(file.size / (1024 * 1024)).toFixed(1)} MB
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <Upload className="w-8 h-8 text-muted-foreground" />
-              <div className="text-center">
-                <p className="text-sm text-foreground">Drop your track here</p>
-                <p className="text-xs text-muted-foreground mt-1">or click to browse · MP3, WAV, FLAC</p>
-              </div>
-            </>
-          )}
-        </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".mp3,.wav,.flac,audio/*"
-          onChange={handleFileChange}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            opacity: 0,
-            cursor: "pointer",
-            zIndex: 10,
-          }}
-        />
-      </div>
+        {file ? (
+          <>
+            <Music className="w-8 h-8 text-foreground/60" />
+            <div className="text-center">
+              <p className="text-sm font-medium">{file.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {(file.size / (1024 * 1024)).toFixed(1)} MB
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <Upload className="w-8 h-8 text-muted-foreground" />
+            <div className="text-center">
+              <p className="text-sm text-foreground">Drop your track here</p>
+              <p className="text-xs text-muted-foreground mt-1">or click to browse · MP3, WAV, FLAC</p>
+            </div>
+          </>
+        )}
+      </label>
+      <input
+        id="track-file-input"
+        ref={fileInputRef}
+        type="file"
+        accept=".mp3,.wav,.flac,audio/*"
+        onChange={handleFileChange}
+        className="sr-only"
+      />
 
       {/* Context input */}
       <div>
