@@ -6,7 +6,7 @@ import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import AnalysisProgress from "@/components/AnalysisProgress";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import type { NormalizedFeedback } from "@/lib/normalizeFeedback";
 
 export type ListeningMode = "technical" | "musical" | "perception";
