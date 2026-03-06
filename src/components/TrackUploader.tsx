@@ -90,7 +90,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         type="file"
         accept=".mp3,.wav,.flac,audio/*"
         onChange={handleFileChange}
-        className="sr-only"
+        style={{position:"fixed",top:"-9999px",left:"-9999px",width:"1px",height:"1px",opacity:0}}
       />
       <label
         htmlFor="track-file-input"
