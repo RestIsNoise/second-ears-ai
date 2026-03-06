@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Analyze from "./pages/Analyze";
@@ -17,6 +18,23 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+/** Catch OAuth hash fragments that land on any page (e.g. /#access_token=…) */
+function HashRedirect() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (
+      location.pathname !== "/auth/callback" &&
+      window.location.hash.includes("access_token")
+    ) {
+      // Hard redirect to preserve the hash fragment intact
+      window.location.replace("/auth/callback" + window.location.hash);
+    }
+  }, [location]);
+
+  return null;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -24,6 +42,7 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <HashRedirect />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/analyze" element={<Analyze />} />
