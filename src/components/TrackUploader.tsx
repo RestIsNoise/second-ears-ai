@@ -126,32 +126,28 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   return (
     <div className="space-y-6">
-      {/* Drop zone — label wraps input for native click association */}
+      {/* Drop zone */}
       <input
         id="track-file-input"
         ref={fileInputRef}
         type="file"
         accept=".mp3,.wav,.flac,audio/*"
         onChange={handleFileChange}
-        style={{ position: "fixed", top: -9999, left: -9999, opacity: 0 }}
+        style={{ position: "fixed", top: -9999, left: -9999 }}
       />
-      <label
-        htmlFor="track-file-input"
+      <div
+        onClick={() => document.getElementById('track-file-input')?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        style={{ display: "contents" }}
+        className={`cursor-pointer relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
+          dragOver
+            ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
+            : file
+            ? "border border-solid border-foreground/20 bg-secondary/30"
+            : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
+        }`}
       >
-        <div
-          style={{ cursor: "pointer" }}
-          className={`relative flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 w-full ${
-            dragOver
-              ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
-              : file
-              ? "border border-solid border-foreground/20 bg-secondary/30"
-              : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
-          }`}
-        >
         {file ? (
           <>
             <Music className="w-8 h-8 text-foreground/60" />
@@ -171,8 +167,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             </div>
           </>
         )}
-        </div>
-      </label>
+      </div>
 
       {/* Context input */}
       <div>
