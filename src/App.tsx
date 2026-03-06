@@ -40,6 +40,7 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <HashRedirect />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/analyze" element={<Analyze />} />
