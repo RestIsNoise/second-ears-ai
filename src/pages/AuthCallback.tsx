@@ -6,9 +6,21 @@ const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      navigate(session ? "/dashboard" : "/auth", { replace: true });
+    // Supabase client auto-detects hash fragments and exchanges them for a session
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        navigate("/dashboard", { replace: true });
+      } else if (event === "INITIAL_SESSION" && !session) {
+        // No session after processing hash — fallback
+        setTimeout(() => {
+          supabase.auth.getSession().then(({ data: { session: s } }) => {
+            navigate(s ? "/dashboard" : "/auth", { replace: true });
+          });
+        }, 500);
+      }
     });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   return (
