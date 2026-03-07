@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2 } from "lucide-react";
+import { ArrowLeft, Copy, Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
@@ -14,6 +14,8 @@ import HumanFeedbackPanel from "@/components/HumanFeedbackPanel";
 import PanelSidebar from "@/components/PanelSidebar";
 import type { PanelConfig } from "@/components/PanelSidebar";
 import WorkstationPanel from "@/components/WorkstationPanel";
+import VersionPills from "@/components/VersionPills";
+import type { VersionInfo } from "@/components/VersionPills";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
@@ -107,11 +109,15 @@ const FeedbackDisplay = ({
   onReset,
   audioFile,
   analysisId,
+  versions,
+  projectId,
 }: {
   result: FeedbackResult;
   onReset: () => void;
   audioFile?: File;
   analysisId?: string | null;
+  versions?: VersionInfo[];
+  projectId?: string | null;
 }) => {
   const n = result.normalized;
   const { mode } = n;
