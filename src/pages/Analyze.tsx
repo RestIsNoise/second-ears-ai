@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrackUploader from "@/components/TrackUploader";
@@ -45,11 +45,20 @@ export interface FeedbackResult {
 const Analyze = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [result, setResult] = useState<FeedbackResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
+
+  // New-version params from URL
+  const isNewVersion = searchParams.get("newVersion") === "true";
+  const parentProjectId = searchParams.get("projectId");
+  const parentAnalysisId = searchParams.get("parentAnalysisId");
+  const prefillTrackName = searchParams.get("trackName");
+  const prefillMode = searchParams.get("mode") as ListeningMode | null;
+  const nextVersion = parseInt(searchParams.get("nextVersion") || "2", 10);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -76,16 +85,25 @@ const Analyze = () => {
     if (user) {
       try {
         const n = feedbackResult.normalized;
-        const { data: project, error: projErr } = await supabase
-          .from("projects")
-          .insert({ user_id: user.id, name: n.trackName })
-          .select("id")
-          .single();
 
-        if (projErr) throw projErr;
+        let projectId: string;
 
-        const { data: analysisRow, error: analysisErr } = await supabase.from("analyses").insert({
-          project_id: project.id,
+        if (isNewVersion && parentProjectId) {
+          // Re-use existing project for new version
+          projectId = parentProjectId;
+        } else {
+          // Create new project
+          const { data: project, error: projErr } = await supabase
+            .from("projects")
+            .insert({ user_id: user.id, name: n.trackName })
+            .select("id")
+            .single();
+          if (projErr) throw projErr;
+          projectId = project.id;
+        }
+
+        const insertPayload: any = {
+          project_id: projectId,
           mode: n.mode,
           feedback: {
             overallImpression: n.overallImpression,
@@ -97,13 +115,31 @@ const Analyze = () => {
             ifFixOneThing: n.ifFixOneThing,
             yourFocus: n.yourFocus,
             fullAnalysis: n.fullAnalysis,
-          } as any,
-          metrics: n.metrics as any,
-        }).select("id").single();
+          },
+          metrics: n.metrics,
+        };
+
+        if (isNewVersion && parentAnalysisId) {
+          insertPayload.parent_analysis_id = parentAnalysisId;
+          insertPayload.version = nextVersion;
+        }
+
+        const { data: analysisRow, error: analysisErr } = await supabase
+          .from("analyses")
+          .insert(insertPayload)
+          .select("id")
+          .single();
 
         if (analysisErr) throw analysisErr;
-        if (analysisRow) setSavedAnalysisId(analysisRow.id);
-        console.log("[Analyze] Saved project:", project.id);
+        if (analysisRow) {
+          setSavedAnalysisId(analysisRow.id);
+          // If new version, navigate to project page to see version pills
+          if (isNewVersion && parentProjectId) {
+            navigate(`/project/${parentProjectId}?analysis=${analysisRow.id}`, { replace: true });
+            return;
+          }
+        }
+        console.log("[Analyze] Saved project:", projectId);
       } catch (err) {
         console.error("[Analyze] Failed to save analysis:", err);
       }
@@ -135,10 +171,12 @@ const Analyze = () => {
             <>
               <div className="text-center mb-6">
                 <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-                  Upload & analyze
+                  {isNewVersion ? "New version" : "Upload & analyze"}
                 </p>
                 <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-                  Get your mix feedback
+                  {isNewVersion && prefillTrackName
+                    ? `${prefillTrackName} — v${nextVersion}`
+                    : "Get your mix feedback"}
                 </h1>
               </div>
               <TrackUploader
@@ -147,6 +185,7 @@ const Analyze = () => {
                 setIsAnalyzing={handleStartAnalysis}
                 onProgressStep={setProgressStep}
                 onError={(msg) => setAnalysisError(msg)}
+                defaultMode={prefillMode || undefined}
               />
             </>
           )}
