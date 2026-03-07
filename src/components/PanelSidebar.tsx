@@ -17,7 +17,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
   const atMax = activePanels.size >= maxPanels;
 
   return (
-    <div className="flex flex-col h-full w-[180px] shrink-0 border-r border-border-subtle bg-background">
+    <div className="flex flex-col h-full w-[200px] min-w-[200px] shrink-0 border-r border-border-subtle bg-background overflow-visible">
       <div className="flex-1 py-3">
         {panels.map((panel) => {
           const isActive = activePanels.has(panel.id);

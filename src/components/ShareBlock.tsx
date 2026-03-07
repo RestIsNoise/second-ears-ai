@@ -20,13 +20,7 @@ const ShareBlock = ({ onExportPdf }: ShareBlockProps) => {
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "SecondEars Feedback", url: window.location.href });
-      } catch { /* user cancelled */ }
-    } else {
-      handleCopyLink();
-    }
+    await handleCopyLink();
   };
 
   return (
