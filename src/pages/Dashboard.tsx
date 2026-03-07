@@ -36,16 +36,26 @@ const modeColors: Record<string, string> = {
   perception: "bg-purple-500/15 text-purple-400",
 };
 
+interface AnalysisRow {
+  id: string;
+  mode: string;
+  feedback: any;
+  created_at: string;
+  version: number;
+}
+
 interface ProjectRow {
   id: string;
   name: string;
   created_at: string;
-  analyses: {
-    id: string;
-    mode: string;
-    feedback: any;
-    created_at: string;
-  }[];
+  analyses: AnalysisRow[];
+}
+
+/** Grouped display item — one per track, showing latest version */
+interface GroupedProject {
+  project: ProjectRow;
+  latestAnalysis: AnalysisRow;
+  versionCount: number;
 }
 
 const Dashboard = () => {
@@ -65,13 +75,25 @@ const Dashboard = () => {
     const load = async () => {
       const { data } = await supabase
         .from("projects")
-        .select("id, name, created_at, analyses(id, mode, feedback, created_at)")
+        .select("id, name, created_at, analyses(id, mode, feedback, created_at, version)")
         .order("created_at", { ascending: false });
       setProjects((data as unknown as ProjectRow[]) || []);
       setFetching(false);
     };
     load();
   }, [user]);
+
+  // Group: one card per project, show latest version
+  const grouped: GroupedProject[] = projects
+    .filter((p) => p.analyses.length > 0)
+    .map((proj) => {
+      const sorted = [...proj.analyses].sort((a, b) => b.version - a.version);
+      return {
+        project: proj,
+        latestAnalysis: sorted[0],
+        versionCount: sorted.length,
+      };
+    });
 
   const handleDeleteClick = (e: React.MouseEvent, project: ProjectRow) => {
     e.preventDefault();
@@ -85,7 +107,6 @@ const Dashboard = () => {
 
     try {
       const projectId = projectToDelete.id;
-      // Delete analyses first (child), then project
       await supabase.from("analyses").delete().eq("project_id", projectId);
       const { error } = await supabase.from("projects").delete().eq("id", projectId);
 
@@ -155,21 +176,20 @@ const Dashboard = () => {
             </Link>
           </div>
 
-          {projects.length === 0 ? (
+          {grouped.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
               <p className="text-sm">No analyses yet.</p>
               <p className="text-xs mt-1">Upload a track to get started.</p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {projects.map((proj) => {
-                const analysis = proj.analyses[0];
-                const mode = analysis?.mode || "technical";
+              {grouped.map(({ project: proj, latestAnalysis, versionCount }) => {
+                const mode = latestAnalysis.mode || "technical";
                 const ModeIcon = modeIcons[mode] || Activity;
                 const colorClass = modeColors[mode] || modeColors.technical;
                 const impression =
-                  analysis?.feedback?.overallImpression ||
-                  analysis?.feedback?.overall_impression ||
+                  latestAnalysis.feedback?.overallImpression ||
+                  latestAnalysis.feedback?.overall_impression ||
                   "";
                 const preview = impression.length > 120 ? impression.slice(0, 120) + "…" : impression;
 
@@ -180,10 +200,17 @@ const Dashboard = () => {
                     className="group relative rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
-                        <ModeIcon className="w-3 h-3" />
-                        {mode}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
+                          <ModeIcon className="w-3 h-3" />
+                          {mode}
+                        </span>
+                        {versionCount > 1 && (
+                          <span className="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                            v{latestAnalysis.version}
+                          </span>
+                        )}
+                      </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           asChild

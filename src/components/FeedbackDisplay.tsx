@@ -14,6 +14,8 @@ import HumanFeedbackPanel from "@/components/HumanFeedbackPanel";
 import PanelSidebar from "@/components/PanelSidebar";
 import type { PanelConfig } from "@/components/PanelSidebar";
 import WorkstationPanel from "@/components/WorkstationPanel";
+import VersionPills from "@/components/VersionPills";
+import type { VersionInfo } from "@/components/VersionPills";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
@@ -107,11 +109,15 @@ const FeedbackDisplay = ({
   onReset,
   audioFile,
   analysisId,
+  versions,
+  projectId,
 }: {
   result: FeedbackResult;
   onReset: () => void;
   audioFile?: File;
   analysisId?: string | null;
+  versions?: VersionInfo[];
+  projectId?: string | null;
 }) => {
   const n = result.normalized;
   const { mode } = n;
@@ -570,6 +576,15 @@ const FeedbackDisplay = ({
             <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
               {modeLabels[mode]} analysis
             </p>
+            {versions && versions.length > 0 && projectId && analysisId && (
+              <VersionPills
+                versions={versions}
+                currentAnalysisId={analysisId}
+                projectId={projectId}
+                trackName={n.trackName}
+                mode={mode}
+              />
+            )}
           </div>
         </div>
 
