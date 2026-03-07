@@ -254,7 +254,7 @@ const FeedbackDisplay = ({
     setActivePanels((prev) => {
       if (prev.has("human-feedback")) return prev;
       const next = new Set(prev);
-      if (next.size >= 4) {
+      if (next.size >= MAX_PANELS) {
         // Make room by removing the last non-essential panel
         const removable = ["full-analysis", "tech-metrics", "todo"];
         for (const r of removable) {
