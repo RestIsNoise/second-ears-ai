@@ -122,6 +122,7 @@ const FeedbackDisplay = ({
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
+  const [panelOrder, setPanelOrder] = useState<string[]>([...DEFAULT_PANELS]);
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
@@ -132,7 +133,18 @@ const FeedbackDisplay = ({
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
-      } else if (next.size < 4) {
+        setPanelOrder((o) => o.filter((p) => p !== id));
+      } else {
+        if (next.size >= MAX_PANELS) {
+          // Remove the oldest panel
+          setPanelOrder((o) => {
+            const oldest = o[0];
+            next.delete(oldest);
+            return [...o.slice(1), id];
+          });
+        } else {
+          setPanelOrder((o) => [...o, id]);
+        }
         next.add(id);
       }
       return next;
