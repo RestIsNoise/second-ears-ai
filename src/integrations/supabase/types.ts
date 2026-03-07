@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           feedback: Json
           id: string
+          is_public: boolean
           metrics: Json
           mode: string
           project_id: string
@@ -27,6 +28,7 @@ export type Database = {
           created_at?: string
           feedback?: Json
           id?: string
+          is_public?: boolean
           metrics?: Json
           mode: string
           project_id: string
@@ -35,6 +37,7 @@ export type Database = {
           created_at?: string
           feedback?: Json
           id?: string
+          is_public?: boolean
           metrics?: Json
           mode?: string
           project_id?: string
@@ -45,6 +48,44 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collaborators: {
+        Row: {
+          analysis_id: string
+          created_at: string
+          id: string
+          invited_by: string
+          invited_email: string
+          role: Database["public"]["Enums"]["collaborator_role"]
+          user_id: string | null
+        }
+        Insert: {
+          analysis_id: string
+          created_at?: string
+          id?: string
+          invited_by: string
+          invited_email: string
+          role?: Database["public"]["Enums"]["collaborator_role"]
+          user_id?: string | null
+        }
+        Update: {
+          analysis_id?: string
+          created_at?: string
+          id?: string
+          invited_by?: string
+          invited_email?: string
+          role?: Database["public"]["Enums"]["collaborator_role"]
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaborators_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
             referencedColumns: ["id"]
           },
         ]
@@ -164,7 +205,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      collaborator_role: "viewer" | "editor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -291,6 +332,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      collaborator_role: ["viewer", "editor"],
+    },
   },
 } as const
