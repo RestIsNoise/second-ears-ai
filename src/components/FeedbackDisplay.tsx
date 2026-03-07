@@ -120,6 +120,7 @@ const FeedbackDisplay = ({
   versions?: VersionInfo[];
   projectId?: string | null;
 }) => {
+  const { user } = useAuth();
   const n = result.normalized;
   const { mode } = n;
   const waveformRef = useRef<WaveformPlayerHandle>(null);
@@ -133,6 +134,39 @@ const FeedbackDisplay = ({
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
+
+  // Load todos from DB for all versions of this track
+  useEffect(() => {
+    if (!analysisId) return;
+    const loadTodos = async () => {
+      // Collect all analysis IDs for this track (all versions share the same project)
+      let analysisIds: string[] = [];
+      if (versions && versions.length > 0) {
+        analysisIds = versions.map((v) => v.analysisId);
+      } else {
+        analysisIds = [analysisId];
+      }
+
+      const { data, error } = await supabase
+        .from("todos")
+        .select("id, analysis_id, text, timestamp_in_track, is_done, source_id, created_at")
+        .in("analysis_id", analysisIds)
+        .order("created_at", { ascending: true });
+
+      if (!error && data) {
+        setTodoItems(
+          data.map((row: any) => ({
+            id: row.id,
+            text: row.text,
+            timestampSec: row.timestamp_in_track,
+            done: row.is_done,
+            sourceId: row.source_id || undefined,
+          }))
+        );
+      }
+    };
+    loadTodos();
+  }, [analysisId, versions]);
 
   // Panel toggle
   const handleTogglePanel = useCallback((id: string) => {
