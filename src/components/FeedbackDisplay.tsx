@@ -573,6 +573,7 @@ const FeedbackDisplay = ({
             onToggle={handleToggleToDo}
             onAdd={handleAddToDoNote}
             onItemClick={handleToDoItemClick}
+            loading={todosLoading}
           />
         );
 
