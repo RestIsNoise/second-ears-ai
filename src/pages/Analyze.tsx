@@ -19,6 +19,7 @@ export interface TechnicalMetrics {
   stereo_correlation?: number;
   crest_factor?: number;
   sub_kick_ratio?: number;
+  lra?: number;
 }
 
 export interface FullAnalysis {
