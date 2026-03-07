@@ -166,7 +166,52 @@ const Settings = () => {
           {/* ═══ PROFILE ═══ */}
           <section className="mb-10">
             <h2 className="text-sm font-semibold tracking-tight mb-4">Profile</h2>
-            <div className="space-y-3">
+            <div className="space-y-4">
+              {/* Avatar */}
+              <div>
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                  Photo
+                </label>
+                <div className="flex items-center gap-4 mt-2">
+                  <div className="relative group">
+                    <Avatar className="h-16 w-16">
+                      {avatarUrl && <AvatarImage src={avatarUrl} alt="Avatar" />}
+                      <AvatarFallback className="text-lg font-medium bg-secondary text-foreground/60">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="absolute inset-0 flex items-center justify-center rounded-full bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Camera className="w-4 h-4 text-foreground/70" />
+                    </button>
+                  </div>
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="h-8 text-xs gap-1.5"
+                    >
+                      <Camera className="w-3 h-3" />
+                      {uploading ? "Uploading…" : "Upload photo"}
+                    </Button>
+                    <p className="text-[10px] text-muted-foreground/50 mt-1">JPG or PNG, max 2MB</p>
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+
+              {/* Display name */}
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                   Display name
