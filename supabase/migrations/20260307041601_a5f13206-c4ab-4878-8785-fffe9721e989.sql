@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN default_mode text NOT NULL DEFAULT 'technical';
