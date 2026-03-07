@@ -246,48 +246,46 @@ const FeedbackDisplay = ({
     return [...aiMarkers, ...userAnnotationMarkers];
   }, [aiMarkers, userAnnotationMarkers]);
 
-  // To-Do management
+  // To-Do management — persist to DB
   const todoSourceIds = useMemo(() => new Set(todoItems.filter(t => t.sourceId).map(t => t.sourceId!)), [todoItems]);
 
-  const handleAddToDoFromFeedback = useCallback((item: FeedbackItem) => {
+  const persistTodo = useCallback(async (todo: { text: string; timestampSec: number; sourceId?: string }) => {
+    if (!analysisId || !user) return null;
+    const { data, error } = await supabase.from("todos").insert({
+      analysis_id: analysisId,
+      text: todo.text,
+      timestamp_in_track: todo.timestampSec,
+      source_id: todo.sourceId || null,
+      created_by: user.id,
+    } as any).select("id").single();
+    if (error) { console.error("[ToDo] persist failed:", error); return null; }
+    return data?.id || null;
+  }, [analysisId, user]);
+
+  const handleAddToDoFromFeedback = useCallback(async (item: FeedbackItem) => {
     const actionText = item.fix || item.title;
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `todo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text: actionText,
-        timestampSec: item.timestampSec,
-        done: false,
-        sourceId: item.id,
-      },
-    ]);
+    const tempId = `todo-${Date.now()}`;
+    const newItem: ToDoItem = { id: tempId, text: actionText, timestampSec: item.timestampSec, done: false, sourceId: item.id };
+    setTodoItems((prev) => [...prev, newItem]);
     toast({ title: "Added to To-Do", duration: 1200 });
-  }, []);
+    const dbId = await persistTodo({ text: actionText, timestampSec: item.timestampSec, sourceId: item.id });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
-  const handleAddToDoNote = useCallback((text: string) => {
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `note-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text,
-        timestampSec: 0,
-        done: false,
-      },
-    ]);
-  }, []);
+  const handleAddToDoNote = useCallback(async (text: string) => {
+    const tempId = `note-${Date.now()}`;
+    setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec: 0, done: false }]);
+    const dbId = await persistTodo({ text, timestampSec: 0 });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
-  const handleAddToDoWithTimestamp = useCallback((text: string, timestampSec: number) => {
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `ht-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text,
-        timestampSec,
-        done: false,
-      },
-    ]);
+  const handleAddToDoWithTimestamp = useCallback(async (text: string, timestampSec: number) => {
+    const tempId = `ht-${Date.now()}`;
+    setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec, done: false }]);
     toast({ title: "Added to To-Do", duration: 1200 });
-  }, []);
+    const dbId = await persistTodo({ text, timestampSec });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
   const handleAddNoteFromWaveform = useCallback((text: string, timestampSec: number) => {
     // Route to Human Feedback panel and ensure it's visible
