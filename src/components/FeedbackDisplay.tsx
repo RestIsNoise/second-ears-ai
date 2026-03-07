@@ -437,6 +437,8 @@ const FeedbackDisplay = ({
             analysisId={analysisId ?? null}
             currentTime={currentTime}
             onAddToDo={handleAddToDoWithTimestamp}
+            pendingComment={pendingComment}
+            onPendingCommentHandled={() => setPendingComment(null)}
           />
         );
 
