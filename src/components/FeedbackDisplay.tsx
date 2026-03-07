@@ -592,6 +592,7 @@ const FeedbackDisplay = ({
             onTimeUpdate={handleTimeUpdate}
             onDurationReady={setAudioDuration}
             onAddNote={handleAddNoteFromWaveform}
+            onAddToDo={handleAddToDoWithTimestamp}
             onEditNote={handleEditAnnotation}
           />
         </div>
