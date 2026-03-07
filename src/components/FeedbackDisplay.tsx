@@ -99,6 +99,7 @@ const PANELS: PanelConfig[] = [
   { id: "todo", label: "To-Do List" },
 ];
 
+const MAX_PANELS = 3;
 const DEFAULT_PANELS = new Set(["ai-feedback", "tech-metrics", "todo"]);
 
 const FeedbackDisplay = ({
@@ -121,6 +122,7 @@ const FeedbackDisplay = ({
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
+  const [panelOrder, setPanelOrder] = useState<string[]>([...DEFAULT_PANELS]);
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
@@ -131,7 +133,18 @@ const FeedbackDisplay = ({
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
-      } else if (next.size < 4) {
+        setPanelOrder((o) => o.filter((p) => p !== id));
+      } else {
+        if (next.size >= MAX_PANELS) {
+          // Remove the oldest panel
+          setPanelOrder((o) => {
+            const oldest = o[0];
+            next.delete(oldest);
+            return [...o.slice(1), id];
+          });
+        } else {
+          setPanelOrder((o) => [...o, id]);
+        }
         next.add(id);
       }
       return next;
@@ -241,7 +254,7 @@ const FeedbackDisplay = ({
     setActivePanels((prev) => {
       if (prev.has("human-feedback")) return prev;
       const next = new Set(prev);
-      if (next.size >= 4) {
+      if (next.size >= MAX_PANELS) {
         // Make room by removing the last non-essential panel
         const removable = ["full-analysis", "tech-metrics", "todo"];
         for (const r of removable) {
@@ -649,6 +662,7 @@ const FeedbackDisplay = ({
             panels={PANELS}
             activePanels={activePanels}
             onToggle={handleTogglePanel}
+            maxPanels={MAX_PANELS}
             footer={
               <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
             }
