@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, LayoutDashboard } from "lucide-react";
+import { LogOut, LayoutDashboard, Settings } from "lucide-react";
 
 const navItems = [
   { label: "Features", href: "/#features" },
@@ -62,6 +62,12 @@ const Header = () => {
                   <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
                     <LayoutDashboard className="w-4 h-4" />
                     My Projects
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                    <Settings className="w-4 h-4" />
+                    Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer">
