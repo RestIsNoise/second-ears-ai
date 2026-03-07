@@ -31,9 +31,11 @@ interface Props {
   analysisId: string | null;
   currentTime?: number;
   onAddToDo?: (text: string, timestampSec: number) => void;
+  pendingComment?: { text: string; timestampSec: number } | null;
+  onPendingCommentHandled?: () => void;
 }
 
-const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo }: Props) => {
+const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled }: Props) => {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newText, setNewText] = useState("");
@@ -52,6 +54,30 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo }: Props) =
     };
     load();
   }, [analysisId]);
+
+  // Handle external comments from waveform "Add Note"
+  useEffect(() => {
+    if (!pendingComment || !analysisId || !user) return;
+    const insert = async () => {
+      const comment = {
+        analysis_id: analysisId,
+        user_id: user.id,
+        timestamp_in_track: pendingComment.timestampSec,
+        text: pendingComment.text,
+      };
+      const { data, error } = await supabase
+        .from("comments")
+        .insert(comment)
+        .select()
+        .single();
+      if (!error && data) {
+        setComments((prev) => [...prev, data as Comment]);
+        toast({ title: "Comment added", duration: 1200 });
+      }
+      onPendingCommentHandled?.();
+    };
+    insert();
+  }, [pendingComment, analysisId, user, onPendingCommentHandled]);
 
   const handleSubmit = useCallback(async () => {
     const trimmed = newText.trim();

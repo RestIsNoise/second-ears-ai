@@ -122,6 +122,7 @@ const FeedbackDisplay = ({
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
 
   // Panel toggle
   const handleTogglePanel = useCallback((id: string) => {
@@ -234,16 +235,21 @@ const FeedbackDisplay = ({
   }, []);
 
   const handleAddNoteFromWaveform = useCallback((text: string, timestampSec: number) => {
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `wf-note-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text,
-        timestampSec,
-        done: false,
-      },
-    ]);
-    toast({ title: "Note added to To-Do", duration: 1200 });
+    // Route to Human Feedback panel and ensure it's visible
+    setPendingComment({ text, timestampSec });
+    setActivePanels((prev) => {
+      if (prev.has("human-feedback")) return prev;
+      const next = new Set(prev);
+      if (next.size >= 4) {
+        // Make room by removing the last non-essential panel
+        const removable = ["full-analysis", "tech-metrics", "todo"];
+        for (const r of removable) {
+          if (next.has(r)) { next.delete(r); break; }
+        }
+      }
+      next.add("human-feedback");
+      return next;
+    });
   }, []);
 
   const handleToggleToDo = useCallback((id: string) => {
@@ -431,6 +437,8 @@ const FeedbackDisplay = ({
             analysisId={analysisId ?? null}
             currentTime={currentTime}
             onAddToDo={handleAddToDoWithTimestamp}
+            pendingComment={pendingComment}
+            onPendingCommentHandled={() => setPendingComment(null)}
           />
         );
 
