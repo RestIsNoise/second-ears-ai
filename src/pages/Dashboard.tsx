@@ -12,6 +12,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 
 const modeIcons: Record<string, typeof Activity> = {
@@ -43,6 +53,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [fetching, setFetching] = useState(true);
+  const [projectToDelete, setProjectToDelete] = useState<ProjectRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -61,23 +73,35 @@ const Dashboard = () => {
     load();
   }, [user]);
 
-  const handleDelete = async (e: React.MouseEvent, projectId: string) => {
+  const handleDeleteClick = (e: React.MouseEvent, project: ProjectRow) => {
     e.preventDefault();
     e.stopPropagation();
-    const confirmed = window.confirm("Delete this project and its analyses?");
-    if (!confirmed) return;
+    setProjectToDelete(project);
+  };
 
-    // Delete analyses first (child), then project
-    await supabase.from("analyses").delete().eq("project_id", projectId);
-    const { error } = await supabase.from("projects").delete().eq("id", projectId);
+  const confirmDelete = async () => {
+    if (!projectToDelete) return;
+    setDeleting(true);
 
-    if (error) {
+    try {
+      const projectId = projectToDelete.id;
+      // Delete analyses first (child), then project
+      await supabase.from("analyses").delete().eq("project_id", projectId);
+      const { error } = await supabase.from("projects").delete().eq("id", projectId);
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
+        return;
+      }
+
+      setProjects((prev) => prev.filter((p) => p.id !== projectId));
+      toast({ title: "Deleted", description: "Project removed." });
+      setProjectToDelete(null);
+    } catch {
       toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
-      return;
+    } finally {
+      setDeleting(false);
     }
-
-    setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    toast({ title: "Deleted", description: "Project removed." });
   };
 
   if (loading || fetching) {
@@ -91,6 +115,29 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { if (!open && !deleting) setProjectToDelete(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete project?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete <strong>{projectToDelete?.name}</strong> and all its analyses.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deleting}
+              onClick={(e) => {
+                e.preventDefault();
+                void confirmDelete();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Header />
       <main className="pt-24 pb-16 px-6">
         <div className="max-w-4xl mx-auto">
@@ -149,7 +196,7 @@ const Dashboard = () => {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
-                            onClick={(e) => handleDelete(e, proj.id)}
+                            onClick={(e) => handleDeleteClick(e, proj)}
                           >
                             <Trash2 className="w-3.5 h-3.5 mr-2" />
                             Delete
