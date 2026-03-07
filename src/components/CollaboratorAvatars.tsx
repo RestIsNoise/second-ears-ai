@@ -20,12 +20,13 @@ const CollaboratorAvatars = ({ analysisId }: CollaboratorAvatarsProps) => {
   useEffect(() => {
     if (!analysisId) return;
     const load = async () => {
-      const { data } = await supabase
-        .from("collaborators")
-        .select("id, invited_email, user_id")
-        .eq("analysis_id", analysisId);
+      try {
+        const { data, error } = await supabase
+          .from("collaborators")
+          .select("id, invited_email, user_id")
+          .eq("analysis_id", analysisId);
 
-      if (!data || data.length === 0) { setCollabs([]); return; }
+        if (error || !data || data.length === 0) { setCollabs([]); return; }
 
       const userIds = data.filter(c => c.user_id).map(c => c.user_id!);
       let profileMap: Record<string, { display_name: string | null; avatar_url: string | null }> = {};
@@ -44,6 +45,9 @@ const CollaboratorAvatars = ({ analysisId }: CollaboratorAvatarsProps) => {
         display_name: c.user_id ? profileMap[c.user_id]?.display_name || null : null,
         avatar_url: c.user_id ? profileMap[c.user_id]?.avatar_url || null : null,
       })));
+      } catch {
+        setCollabs([]);
+      }
     };
     load();
   }, [analysisId]);

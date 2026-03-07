@@ -202,7 +202,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_email: { Args: { uid: string }; Returns: string }
     }
     Enums: {
       collaborator_role: "viewer" | "editor"
