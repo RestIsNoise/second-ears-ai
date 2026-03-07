@@ -6,7 +6,7 @@ const PANEL_FLEX: Record<string, number> = {
   "full-analysis": 2,
   "tech-metrics": 1.5,
   "human-feedback": 1.5,
-  "todo": 1,
+  "todo": 1.2,
 };
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
   const flex = PANEL_FLEX[id] ?? 1;
-  const minWidth = id === "ai-feedback" ? 380 : 220;
+  const minWidth = id === "ai-feedback" ? 380 : id === "todo" ? 260 : 220;
 
   return (
     <div
