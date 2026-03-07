@@ -638,9 +638,6 @@ const FeedbackDisplay = ({
             panels={PANELS}
             activePanels={activePanels}
             onToggle={handleTogglePanel}
-            footer={
-              <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
-            }
           />
         </div>
 
@@ -678,9 +675,11 @@ const FeedbackDisplay = ({
               </div>
             ))}
           </div>
-          {/* Mobile share */}
+          {/* Mobile share button */}
           <div className="p-3 border-t border-border-subtle">
-            <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
+            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-8 gap-1.5 text-xs">
+              <Share2 className="w-3.5 h-3.5" /> Share
+            </Button>
           </div>
         </div>
 
