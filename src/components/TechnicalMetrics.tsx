@@ -1,6 +1,6 @@
 import type { TechnicalMetrics as TechnicalMetricsType } from "@/pages/Analyze";
 
-type Status = { label: string; color: "green" | "orange" | "red" };
+type Status = { label: string; color: "green" | "orange" | "red" | "blue" };
 
 function lufsStatus(v: number): Status {
   if (v >= -14 && v <= -9) return { label: "Streaming Ready", color: "green" };
@@ -40,10 +40,18 @@ function subKickStatus(v: number): Status {
   return { label: v < 0.8 ? "Kick Dominant" : "Sub Heavy", color: "orange" };
 }
 
+function lraStatus(v: number): Status {
+  if (v < 3) return { label: "Very Compressed", color: "red" };
+  if (v <= 8) return { label: "Compressed", color: "orange" };
+  if (v <= 14) return { label: "Dynamic", color: "green" };
+  return { label: "Very Dynamic", color: "blue" };
+}
+
 const statusColors: Record<string, { badge: string; bar: string }> = {
   green: { badge: "bg-emerald-500/15 text-emerald-600", bar: "bg-emerald-500" },
   orange: { badge: "bg-amber-500/15 text-amber-600", bar: "bg-amber-500" },
   red: { badge: "bg-red-500/15 text-red-600", bar: "bg-red-500" },
+  blue: { badge: "bg-blue-500/15 text-blue-600", bar: "bg-blue-500" },
 };
 
 /* ── Compact Metric Card ── */
@@ -238,6 +246,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
       <div className="grid grid-cols-1 gap-1.5">
         <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
         <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
+        <MetricCard label="LRA · Loudness Range" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} />
         <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
         <MetricCard label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
         {sc !== null ? (
