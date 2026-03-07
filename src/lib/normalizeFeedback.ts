@@ -55,6 +55,7 @@ export interface NormalizedMetrics {
   stereoCorrelation: number | null;
   crestFactor: number | null;
   subKickRatio: number | null;
+  lra: number | null;
 }
 
 export interface NormalizedFeedback {
@@ -362,6 +363,7 @@ export function normalizeFeedbackResponse(
     stereoCorrelation: num(pickFrom(metricSources, "stereo_correlation", "stereoCorrelation", "stereoWidth", "stereo_width")),
     crestFactor: num(pickFrom(metricSources, "crest_factor", "crestFactor", "transientDensity")),
     subKickRatio: num(pickFrom(metricSources, "sub_kick_ratio", "subKickRatio")),
+    lra: num(pickFrom(metricSources, "lra", "loudnessRange", "loudness_range", "LRA")),
   };
 
   const hasAnyMetric = Object.values(metrics).some((v) => v !== null);

@@ -333,6 +333,7 @@ const FeedbackDisplay = ({
       stereo_correlation: m.stereoCorrelation ?? undefined,
       crest_factor: m.crestFactor ?? undefined,
       sub_kick_ratio: m.subKickRatio ?? undefined,
+      lra: m.lra ?? undefined,
     };
   }, [n.metrics]);
 
