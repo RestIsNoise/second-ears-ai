@@ -18,11 +18,12 @@ interface Props {
   setIsAnalyzing: (v: boolean) => void;
   onProgressStep?: (step: number) => void;
   onError?: (msg: string) => void;
+  defaultMode?: ListeningMode;
 }
 
-const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError }: Props) => {
+const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode }: Props) => {
   const [file, setFile] = useState<File | null>(null);
-  const [mode, setMode] = useState<ListeningMode>("technical");
+  const [mode, setMode] = useState<ListeningMode>(defaultMode || "technical");
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
