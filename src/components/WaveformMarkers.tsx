@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback, useMemo } from "react";
-import { SlidersHorizontal, LayoutGrid, Ear, Plus, X, User, MapPin } from "lucide-react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
+import { SlidersHorizontal, LayoutGrid, Ear, Plus, X, User, CheckSquare, MessageCircle } from "lucide-react";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -50,6 +50,7 @@ interface Props {
   hoverX: number | null;
   onMarkerClick?: (marker: WaveformMarker) => void;
   onAddNote?: (text: string, timestampSec: number) => void;
+  onAddToDo?: (text: string, timestampSec: number) => void;
   onEditNote?: (markerId: string) => void;
 }
 
@@ -72,14 +73,10 @@ const MarkerTooltip = ({
   const isVisible = hoveredId === marker.id;
   const isUser = marker.type === "user";
 
-  // Determine tooltip alignment based on position in waveform
-  let align: "left" | "center" | "right" = "center";
   let translateX = "-50%";
   if (leftPct < 20) {
-    align = "left";
     translateX = "0%";
   } else if (leftPct > 80) {
-    align = "right";
     translateX = "-100%";
   }
 
@@ -125,6 +122,8 @@ const MarkerTooltip = ({
   );
 };
 
+type InputMode = "todo" | "note";
+
 const WaveformMarkers = ({
   markers,
   duration,
@@ -134,11 +133,15 @@ const WaveformMarkers = ({
   hoverX,
   onMarkerClick,
   onAddNote,
+  onAddToDo,
   onEditNote,
 }: Props) => {
-  const [addNoteAt, setAddNoteAt] = useState<{ time: number; x: number } | null>(null);
+  const [popoverAt, setPopoverAt] = useState<{ time: number; x: number } | null>(null);
+  const [inputMode, setInputMode] = useState<InputMode | null>(null);
+  const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   // Single hovered marker with 100ms delay
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
@@ -159,25 +162,68 @@ const WaveformMarkers = ({
     return (hoverX / containerWidth) * duration;
   }, [hoverX, duration, containerWidth]);
 
-  const showPlusButton = hoverX !== null && !snappedMarkerId && !addNoteAt;
+  const showPlusButton = hoverX !== null && !snappedMarkerId && !popoverAt && !inputAt;
+  const hasAnyAction = onAddNote || onAddToDo;
+
+  // Close popover on outside click
+  useEffect(() => {
+    if (!popoverAt) return;
+    const handleClick = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setPopoverAt(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [popoverAt]);
 
   const handlePlusClick = useCallback(() => {
-    if (hoverTimeSec === null) return;
-    setAddNoteAt({ time: hoverTimeSec, x: hoverX! });
+    if (hoverTimeSec === null || hoverX === null) return;
+    // If only one action available, go directly to input
+    if (onAddNote && !onAddToDo) {
+      setInputMode("note");
+      setInputAt({ time: hoverTimeSec, x: hoverX });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    if (onAddToDo && !onAddNote) {
+      setInputMode("todo");
+      setInputAt({ time: hoverTimeSec, x: hoverX });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    // Both available — show popover
+    setPopoverAt({ time: hoverTimeSec, x: hoverX });
+  }, [hoverTimeSec, hoverX, onAddNote, onAddToDo]);
+
+  const handleSelectMode = useCallback((mode: InputMode) => {
+    if (!popoverAt) return;
+    setInputMode(mode);
+    setInputAt({ time: popoverAt.time, x: popoverAt.x });
+    setPopoverAt(null);
     setNoteText("");
     setTimeout(() => inputRef.current?.focus(), 50);
-  }, [hoverTimeSec, hoverX]);
+  }, [popoverAt]);
 
-  const handleSubmitNote = useCallback(() => {
+  const handleSubmit = useCallback(() => {
     const trimmed = noteText.trim();
-    if (!trimmed || !addNoteAt) return;
-    onAddNote?.(trimmed, addNoteAt.time);
-    setAddNoteAt(null);
+    if (!trimmed || !inputAt || !inputMode) return;
+    if (inputMode === "todo") {
+      onAddToDo?.(trimmed, inputAt.time);
+    } else {
+      onAddNote?.(trimmed, inputAt.time);
+    }
+    setInputAt(null);
+    setInputMode(null);
     setNoteText("");
-  }, [noteText, addNoteAt, onAddNote]);
+  }, [noteText, inputAt, inputMode, onAddNote, onAddToDo]);
 
-  const handleCancelNote = useCallback(() => {
-    setAddNoteAt(null);
+  const handleCancel = useCallback(() => {
+    setInputAt(null);
+    setInputMode(null);
+    setPopoverAt(null);
     setNoteText("");
   }, []);
 
@@ -185,7 +231,7 @@ const WaveformMarkers = ({
   const aiMarkers = markers.filter(m => (m.type || "technical") !== "user");
   const userMarkers = markers.filter(m => m.type === "user");
 
-  if (markers.length === 0 && !onAddNote) return null;
+  if (markers.length === 0 && !hasAnyAction) return null;
 
   return (
     <div
@@ -237,7 +283,7 @@ const WaveformMarkers = ({
         );
       })}
 
-      {/* User annotation markers — pin style with User icon in amber */}
+      {/* User annotation markers — pin style */}
       {userMarkers.map((m) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
@@ -292,8 +338,8 @@ const WaveformMarkers = ({
         );
       })}
 
-      {/* "+" button on hover below timeline */}
-      {showPlusButton && hoverX !== null && onAddNote && (
+      {/* "+" button on hover */}
+      {showPlusButton && hoverX !== null && hasAnyAction && (
         <div
           className="absolute pointer-events-auto z-[6]"
           style={{
@@ -317,29 +363,74 @@ const WaveformMarkers = ({
         </div>
       )}
 
-      {/* Inline note input */}
-      {addNoteAt && (
+      {/* Popover menu */}
+      {popoverAt && (
+        <div
+          ref={popoverRef}
+          className="absolute z-[12] pointer-events-auto"
+          style={{
+            left: Math.min(Math.max(popoverAt.x, 70), containerWidth - 70),
+            top: MARKER_ZONE_HEIGHT + 6,
+            transform: "translateX(-50%)",
+          }}
+        >
+          <div
+            className="rounded-lg py-1 min-w-[140px]"
+            style={{
+              backgroundColor: "hsl(var(--background))",
+              border: "1px solid hsl(var(--border))",
+              boxShadow: "0 2px 8px hsl(var(--foreground) / 0.06)",
+            }}
+          >
+            <button
+              onClick={() => handleSelectMode("todo")}
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs transition-colors hover:bg-secondary/50"
+              style={{ color: "hsl(var(--foreground) / 0.8)" }}
+            >
+              <CheckSquare className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(var(--foreground) / 0.45)" }} />
+              Add to To-Do
+            </button>
+            <button
+              onClick={() => handleSelectMode("note")}
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs transition-colors hover:bg-secondary/50"
+              style={{ color: "hsl(var(--foreground) / 0.8)" }}
+            >
+              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(var(--foreground) / 0.45)" }} />
+              Add Note
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Inline text input */}
+      {inputAt && inputMode && (
         <div
           className="absolute z-[10] pointer-events-auto"
           style={{
-            left: Math.min(Math.max(addNoteAt.x, 100), containerWidth - 100),
+            left: Math.min(Math.max(inputAt.x, 100), containerWidth - 100),
             top: MARKER_ZONE_HEIGHT + 4,
             transform: "translateX(-50%)",
           }}
         >
           <div
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 shadow-lg"
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5"
             style={{
               backgroundColor: "hsl(var(--background))",
               border: "1px solid hsl(var(--border))",
+              boxShadow: "0 2px 8px hsl(var(--foreground) / 0.06)",
               minWidth: 200,
             }}
           >
+            {inputMode === "todo" ? (
+              <CheckSquare className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
+            ) : (
+              <MessageCircle className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
+            )}
             <span
               className="text-muted-foreground/50 tabular-nums shrink-0"
               style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
             >
-              {formatTime(addNoteAt.time)}
+              {formatTime(inputAt.time)}
             </span>
             <input
               ref={inputRef}
@@ -347,14 +438,14 @@ const WaveformMarkers = ({
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") { e.preventDefault(); handleSubmitNote(); }
-                if (e.key === "Escape") handleCancelNote();
+                if (e.key === "Enter") { e.preventDefault(); handleSubmit(); }
+                if (e.key === "Escape") handleCancel();
               }}
-              placeholder="Add a note…"
+              placeholder={inputMode === "todo" ? "Add a to-do…" : "Add a note…"}
               className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none min-w-0"
             />
             <button
-              onClick={handleCancelNote}
+              onClick={handleCancel}
               className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0"
             >
               <X className="w-3 h-3" />
