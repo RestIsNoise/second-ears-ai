@@ -45,6 +45,9 @@ const CollaboratorAvatars = ({ analysisId }: CollaboratorAvatarsProps) => {
         display_name: c.user_id ? profileMap[c.user_id]?.display_name || null : null,
         avatar_url: c.user_id ? profileMap[c.user_id]?.avatar_url || null : null,
       })));
+      } catch {
+        setCollabs([]);
+      }
     };
     load();
   }, [analysisId]);
