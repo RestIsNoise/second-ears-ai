@@ -15,7 +15,8 @@ const technicalMetricsBlock = `
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
     "crest_factor": <number between 3 and 18>,
-    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>,
+    "lra": <number between 1 and 20, loudness range in LU measuring the difference between loud and quiet passages>
   },
   "fullAnalysis": {
     "mixBalance": "2-3 sentences analyzing the overall mix balance, level relationships between elements, and how well instruments sit together.",
@@ -32,7 +33,8 @@ const musicalMetricsBlock = `
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
     "crest_factor": <number between 3 and 18>,
-    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>,
+    "lra": <number between 1 and 20, loudness range in LU measuring the difference between loud and quiet passages>
   },
   "fullAnalysis": {
     "energyArc": "2-3 sentences analyzing how energy builds, peaks, and releases across the track. Does the arrangement create satisfying momentum?",
@@ -49,7 +51,8 @@ const perceptionMetricsBlock = `
     "peak_dbtp": <number between -6 and 0>,
     "stereo_correlation": <number between -0.2 and 1.0>,
     "crest_factor": <number between 3 and 18>,
-    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>
+    "sub_kick_ratio": <number between 0.3 and 1.8, where 1.0 means perfectly balanced kick and sub>,
+    "lra": <number between 1 and 20, loudness range in LU measuring the difference between loud and quiet passages>
   },
   "fullAnalysis": {
     "subLowTranslation": "2-3 sentences analyzing how sub-bass and low frequencies will translate across playback systems (phone speakers, car, club, earbuds). Flag any elements likely to disappear or distort.",
