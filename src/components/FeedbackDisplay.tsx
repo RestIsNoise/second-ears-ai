@@ -1,11 +1,12 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
-import ShareBlock from "@/components/ShareBlock";
+import ShareModal from "@/components/ShareModal";
+import CollaboratorAvatars from "@/components/CollaboratorAvatars";
 import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
 import HumanFeedbackPanel from "@/components/HumanFeedbackPanel";
@@ -16,6 +17,7 @@ import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
 import { exportAnalysisPdf } from "@/lib/exportPdf";
+import { supabase } from "@/lib/supabaseClient";
 
 const modeLabels: Record<string, string> = {
   technical: "Technical",
@@ -118,6 +120,8 @@ const FeedbackDisplay = ({
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
+  const [shareOpen, setShareOpen] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
 
   // Panel toggle
   const handleTogglePanel = useCallback((id: string) => {
@@ -523,27 +527,58 @@ const FeedbackDisplay = ({
   return (
     <div className="animate-fade-up">
       {/* ═══ HEADER ═══ */}
-      <div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="gap-2 text-muted-foreground mb-5"
-        >
-          <ArrowLeft className="w-4 h-4" /> New analysis
-        </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="gap-2 text-muted-foreground mb-5"
+          >
+            <ArrowLeft className="w-4 h-4" /> New analysis
+          </Button>
 
-        <div className="space-y-1.5">
-          {n.trackName && (
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              {n.trackName}
-            </h1>
-          )}
-          <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
-            {modeLabels[mode]} analysis
-          </p>
+          <div className="space-y-1.5">
+            {n.trackName && (
+              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                {n.trackName}
+              </h1>
+            )}
+            <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+              {modeLabels[mode]} analysis
+            </p>
+          </div>
+        </div>
+
+        {/* Collaborator avatars + Share button */}
+        <div className="flex items-center gap-3 pt-2">
+          <CollaboratorAvatars analysisId={analysisId ?? null} />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShareOpen(true)}
+            className="h-8 gap-1.5 text-xs"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            Share
+          </Button>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        analysisId={analysisId ?? null}
+        isPublic={isPublic}
+        onTogglePublic={async (val) => {
+          setIsPublic(val);
+          if (analysisId) {
+            await supabase.from("analyses").update({ is_public: val } as any).eq("id", analysisId);
+          }
+        }}
+        onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)}
+      />
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
