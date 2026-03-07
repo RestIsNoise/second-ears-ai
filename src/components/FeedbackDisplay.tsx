@@ -99,6 +99,7 @@ const PANELS: PanelConfig[] = [
   { id: "todo", label: "To-Do List" },
 ];
 
+const MAX_PANELS = 3;
 const DEFAULT_PANELS = new Set(["ai-feedback", "tech-metrics", "todo"]);
 
 const FeedbackDisplay = ({
