@@ -305,11 +305,15 @@ const FeedbackDisplay = ({
     });
   }, []);
 
-  const handleToggleToDo = useCallback((id: string) => {
+  const handleToggleToDo = useCallback(async (id: string) => {
+    const item = todoItems.find((t) => t.id === id);
+    if (!item) return;
+    const newDone = !item.done;
     setTodoItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item))
+      prev.map((t) => (t.id === id ? { ...t, done: newDone } : t))
     );
-  }, []);
+    await supabase.from("todos").update({ is_done: newDone } as any).eq("id", id);
+  }, [todoItems]);
 
   const handleToDoItemClick = useCallback((item: ToDoItem) => {
     if (item.timestampSec > 0) {
