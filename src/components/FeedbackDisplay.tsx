@@ -129,6 +129,7 @@ const FeedbackDisplay = ({
   const [audioDuration, setAudioDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
+  const [todosLoading, setTodosLoading] = useState(true);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
   const [panelOrder, setPanelOrder] = useState<string[]>([...DEFAULT_PANELS]);
   const [shareOpen, setShareOpen] = useState(false);
@@ -137,9 +138,9 @@ const FeedbackDisplay = ({
 
   // Load todos from DB for all versions of this track
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId) { setTodosLoading(false); return; }
     const loadTodos = async () => {
-      // Collect all analysis IDs for this track (all versions share the same project)
+      setTodosLoading(true);
       let analysisIds: string[] = [];
       if (versions && versions.length > 0) {
         analysisIds = versions.map((v) => v.analysisId);
@@ -164,6 +165,7 @@ const FeedbackDisplay = ({
           }))
         );
       }
+      setTodosLoading(false);
     };
     loadTodos();
   }, [analysisId, versions]);
@@ -571,6 +573,7 @@ const FeedbackDisplay = ({
             onToggle={handleToggleToDo}
             onAdd={handleAddToDoNote}
             onItemClick={handleToDoItemClick}
+            loading={todosLoading}
           />
         );
 

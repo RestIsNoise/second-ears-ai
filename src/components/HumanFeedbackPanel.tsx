@@ -38,19 +38,22 @@ interface Props {
 const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled }: Props) => {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
+      setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
         .select("*")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
       if (data) setComments(data as Comment[]);
+      setLoadingComments(false);
     };
     load();
   }, [analysisId]);
@@ -148,7 +151,12 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
 
       {/* Comments list */}
       <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 scrollbar-thin">
-        {comments.length === 0 && (
+        {loadingComments && (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="text-xs text-muted-foreground/50 animate-pulse">Loading comments…</p>
+          </div>
+        )}
+        {!loadingComments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="text-xs text-muted-foreground/50">No comments yet</p>
             <p className="text-[10px] text-muted-foreground/35 mt-1">

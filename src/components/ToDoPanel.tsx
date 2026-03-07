@@ -18,9 +18,10 @@ interface Props {
   onToggle: (id: string) => void;
   onAdd: (text: string) => void;
   onItemClick: (item: ToDoItem) => void;
+  loading?: boolean;
 }
 
-const ToDoPanel = ({ items, onToggle, onAdd, onItemClick }: Props) => {
+const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
   const [filter, setFilter] = useState<Filter>("all");
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -100,7 +101,12 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick }: Props) => {
 
       {/* Task list */}
       <div className="flex-1 overflow-y-auto min-h-0 p-2">
-        {filtered.length === 0 && (
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="text-xs text-muted-foreground/50 animate-pulse">Loading tasks…</p>
+          </div>
+        )}
+        {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="text-xs text-muted-foreground/50">
               {filter === "done" ? "No completed tasks yet" : filter === "open" ? "All done!" : "No tasks yet"}
