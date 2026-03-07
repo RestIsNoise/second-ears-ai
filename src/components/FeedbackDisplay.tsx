@@ -576,6 +576,15 @@ const FeedbackDisplay = ({
             <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
               {modeLabels[mode]} analysis
             </p>
+            {versions && versions.length > 0 && projectId && analysisId && (
+              <VersionPills
+                versions={versions}
+                currentAnalysisId={analysisId}
+                projectId={projectId}
+                trackName={n.trackName}
+                mode={mode}
+              />
+            )}
           </div>
         </div>
 
