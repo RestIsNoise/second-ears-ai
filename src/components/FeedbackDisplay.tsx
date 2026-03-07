@@ -129,6 +129,7 @@ const FeedbackDisplay = ({
   const [audioDuration, setAudioDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [todoItems, setTodoItems] = useState<ToDoItem[]>([]);
+  const [todosLoading, setTodosLoading] = useState(true);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
   const [panelOrder, setPanelOrder] = useState<string[]>([...DEFAULT_PANELS]);
   const [shareOpen, setShareOpen] = useState(false);
