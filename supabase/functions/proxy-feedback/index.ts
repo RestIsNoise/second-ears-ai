@@ -52,9 +52,16 @@ serve(async (req) => {
       "https://secondears-backend-production.up.railway.app/api/feedback";
     console.log("Proxying to:", backendUrl, { audioUrl, mode, fileName, userContext });
 
+    // Forward the caller's authorization header to the Railway backend
+    const authHeader = req.headers.get("authorization") || "";
+    const fetchHeaders: Record<string, string> = { "Content-Type": "application/json" };
+    if (authHeader) {
+      fetchHeaders["Authorization"] = authHeader;
+    }
+
     const response = await fetch(backendUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: fetchHeaders,
       body: JSON.stringify({ audioUrl, mode, fileName, userContext }),
     });
 
