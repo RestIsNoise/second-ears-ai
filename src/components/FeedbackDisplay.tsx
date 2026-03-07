@@ -662,6 +662,7 @@ const FeedbackDisplay = ({
             panels={PANELS}
             activePanels={activePanels}
             onToggle={handleTogglePanel}
+            maxPanels={MAX_PANELS}
             footer={
               <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
             }
