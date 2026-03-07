@@ -38,6 +38,7 @@ const Settings = () => {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name || "");
+      setAvatarUrl(profile.avatar_url || null);
     }
     // Load default_mode from DB
     if (user) {
@@ -51,6 +52,60 @@ const Settings = () => {
         });
     }
   }, [profile, user]);
+
+  const initials = (profile?.display_name || user?.email || "U")
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      toast({ title: "Invalid file type", description: "Only JPG and PNG allowed.", variant: "destructive", duration: 2000 });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 2MB.", variant: "destructive", duration: 2000 });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const filePath = `${user.id}/avatar.jpg`;
+
+      const { error: uploadErr } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true, contentType: file.type });
+
+      if (uploadErr) throw uploadErr;
+
+      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
+      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+      const { error: updateErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl } as any)
+        .eq("id", user.id);
+
+      if (updateErr) throw updateErr;
+
+      setAvatarUrl(publicUrl);
+      await refreshProfile();
+      toast({ title: "Avatar updated", duration: 1500 });
+    } catch (err) {
+      console.error("[Settings] Avatar upload failed:", err);
+      toast({ title: "Upload failed", variant: "destructive", duration: 2000 });
+    } finally {
+      setUploading(false);
+      // Reset input so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleSaveProfile = async () => {
     if (!user) return;
