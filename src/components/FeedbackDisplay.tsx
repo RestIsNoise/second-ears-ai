@@ -573,18 +573,9 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Collaborator avatars + Share button */}
+        {/* Collaborator avatars */}
         <div className="flex items-center gap-3 pt-2">
           <CollaboratorAvatars analysisId={analysisId ?? null} />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShareOpen(true)}
-            className="h-8 gap-1.5 text-xs"
-          >
-            <Share2 className="w-3.5 h-3.5" />
-            Share
-          </Button>
         </div>
       </div>
 
