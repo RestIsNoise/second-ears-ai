@@ -52,11 +52,12 @@ serve(async (req) => {
       "https://secondears-backend-production.up.railway.app/api/feedback";
     console.log("Proxying to:", backendUrl, { audioUrl, mode, fileName, userContext });
 
-    // Forward the caller's authorization header to the Railway backend
-    const authHeader = req.headers.get("authorization") || "";
+    // Use the Railway backend's own Supabase anon key for authorization
+    // (the backend validates JWTs against nllfubvokhybmtnnqeuk, not this project)
+    const backendAnonKey = Deno.env.get("RAILWAY_BACKEND_SUPABASE_ANON_KEY") || "";
     const fetchHeaders: Record<string, string> = { "Content-Type": "application/json" };
-    if (authHeader) {
-      fetchHeaders["Authorization"] = authHeader;
+    if (backendAnonKey) {
+      fetchHeaders["Authorization"] = `Bearer ${backendAnonKey}`;
     }
 
     const response = await fetch(backendUrl, {
