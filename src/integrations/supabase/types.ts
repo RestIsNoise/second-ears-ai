@@ -22,7 +22,9 @@ export type Database = {
           is_public: boolean
           metrics: Json
           mode: string
+          parent_analysis_id: string | null
           project_id: string
+          version: number
         }
         Insert: {
           created_at?: string
@@ -31,7 +33,9 @@ export type Database = {
           is_public?: boolean
           metrics?: Json
           mode: string
+          parent_analysis_id?: string | null
           project_id: string
+          version?: number
         }
         Update: {
           created_at?: string
@@ -40,9 +44,18 @@ export type Database = {
           is_public?: boolean
           metrics?: Json
           mode?: string
+          parent_analysis_id?: string | null
           project_id?: string
+          version?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "analyses_parent_analysis_id_fkey"
+            columns: ["parent_analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "analyses_project_id_fkey"
             columns: ["project_id"]
