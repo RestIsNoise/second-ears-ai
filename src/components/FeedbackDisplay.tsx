@@ -649,6 +649,9 @@ const FeedbackDisplay = ({
             panels={PANELS}
             activePanels={activePanels}
             onToggle={handleTogglePanel}
+            footer={
+              <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
+            }
           />
         </div>
 
