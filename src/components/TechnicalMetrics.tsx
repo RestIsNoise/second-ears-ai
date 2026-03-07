@@ -225,7 +225,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
     metrics.peak_dbtp !== undefined ||
     metrics.stereo_correlation !== undefined ||
     metrics.crest_factor !== undefined ||
-    metrics.sub_kick_ratio !== undefined;
+    metrics.sub_kick_ratio !== undefined ||
+    metrics.lra !== undefined;
 
   if (!hasAny) return null;
 
@@ -235,6 +236,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   const peak = metrics.peak_dbtp ?? null;
   const sc = metrics.stereo_correlation ?? null;
   const cf = metrics.crest_factor ?? null;
+  const lra = metrics.lra ?? null;
 
   return (
     <section>
