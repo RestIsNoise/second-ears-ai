@@ -6,6 +6,7 @@ import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
 import ShareModal from "@/components/ShareModal";
+import ShareBlock from "@/components/ShareBlock";
 import CollaboratorAvatars from "@/components/CollaboratorAvatars";
 import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
@@ -648,6 +649,9 @@ const FeedbackDisplay = ({
             panels={PANELS}
             activePanels={activePanels}
             onToggle={handleTogglePanel}
+            footer={
+              <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} />
+            }
           />
         </div>
 
