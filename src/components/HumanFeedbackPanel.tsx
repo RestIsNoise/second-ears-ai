@@ -151,7 +151,12 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
 
       {/* Comments list */}
       <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 scrollbar-thin">
-        {comments.length === 0 && (
+        {loadingComments && (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="text-xs text-muted-foreground/50 animate-pulse">Loading comments…</p>
+          </div>
+        )}
+        {!loadingComments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="text-xs text-muted-foreground/50">No comments yet</p>
             <p className="text-[10px] text-muted-foreground/35 mt-1">
