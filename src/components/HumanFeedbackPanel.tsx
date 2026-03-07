@@ -38,19 +38,22 @@ interface Props {
 const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled }: Props) => {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
+      setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
         .select("*")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
       if (data) setComments(data as Comment[]);
+      setLoadingComments(false);
     };
     load();
   }, [analysisId]);
