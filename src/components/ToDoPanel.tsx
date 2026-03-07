@@ -60,7 +60,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick }: Props) => {
   ];
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-background flex flex-col h-full">
+    <div className="rounded-xl border border-border-subtle bg-background flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header */}
       <div className="p-4 pb-3 border-b border-border-subtle">
         <div className="flex items-center gap-2 mb-3">
