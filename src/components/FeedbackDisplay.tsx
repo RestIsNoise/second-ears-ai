@@ -122,6 +122,7 @@ const FeedbackDisplay = ({
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(DEFAULT_PANELS));
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
 
   // Panel toggle
   const handleTogglePanel = useCallback((id: string) => {
