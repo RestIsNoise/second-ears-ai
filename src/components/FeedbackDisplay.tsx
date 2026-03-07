@@ -138,9 +138,9 @@ const FeedbackDisplay = ({
 
   // Load todos from DB for all versions of this track
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId) { setTodosLoading(false); return; }
     const loadTodos = async () => {
-      // Collect all analysis IDs for this track (all versions share the same project)
+      setTodosLoading(true);
       let analysisIds: string[] = [];
       if (versions && versions.length > 0) {
         analysisIds = versions.map((v) => v.analysisId);
@@ -165,6 +165,7 @@ const FeedbackDisplay = ({
           }))
         );
       }
+      setTodosLoading(false);
     };
     loadTodos();
   }, [analysisId, versions]);
