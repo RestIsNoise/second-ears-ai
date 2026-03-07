@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, Music, Eye, Trash2 } from "lucide-react";
+import { Activity, Music, Eye, Trash2, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
@@ -17,12 +18,15 @@ const modes = [
 ] as const;
 
 const Settings = () => {
-  const { user, profile, loading, signOut } = useAuth();
+  const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
   const [defaultMode, setDefaultMode] = useState("technical");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -34,6 +38,7 @@ const Settings = () => {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name || "");
+      setAvatarUrl(profile.avatar_url || null);
     }
     // Load default_mode from DB
     if (user) {
@@ -47,6 +52,60 @@ const Settings = () => {
         });
     }
   }, [profile, user]);
+
+  const initials = (profile?.display_name || user?.email || "U")
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      toast({ title: "Invalid file type", description: "Only JPG and PNG allowed.", variant: "destructive", duration: 2000 });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 2MB.", variant: "destructive", duration: 2000 });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const filePath = `${user.id}/avatar.jpg`;
+
+      const { error: uploadErr } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true, contentType: file.type });
+
+      if (uploadErr) throw uploadErr;
+
+      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
+      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+      const { error: updateErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl } as any)
+        .eq("id", user.id);
+
+      if (updateErr) throw updateErr;
+
+      setAvatarUrl(publicUrl);
+      await refreshProfile();
+      toast({ title: "Avatar updated", duration: 1500 });
+    } catch (err) {
+      console.error("[Settings] Avatar upload failed:", err);
+      toast({ title: "Upload failed", variant: "destructive", duration: 2000 });
+    } finally {
+      setUploading(false);
+      // Reset input so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleSaveProfile = async () => {
     if (!user) return;
@@ -107,7 +166,52 @@ const Settings = () => {
           {/* ═══ PROFILE ═══ */}
           <section className="mb-10">
             <h2 className="text-sm font-semibold tracking-tight mb-4">Profile</h2>
-            <div className="space-y-3">
+            <div className="space-y-4">
+              {/* Avatar */}
+              <div>
+                <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                  Photo
+                </label>
+                <div className="flex items-center gap-4 mt-2">
+                  <div className="relative group">
+                    <Avatar className="h-16 w-16">
+                      {avatarUrl && <AvatarImage src={avatarUrl} alt="Avatar" />}
+                      <AvatarFallback className="text-lg font-medium bg-secondary text-foreground/60">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="absolute inset-0 flex items-center justify-center rounded-full bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Camera className="w-4 h-4 text-foreground/70" />
+                    </button>
+                  </div>
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="h-8 text-xs gap-1.5"
+                    >
+                      <Camera className="w-3 h-3" />
+                      {uploading ? "Uploading…" : "Upload photo"}
+                    </Button>
+                    <p className="text-[10px] text-muted-foreground/50 mt-1">JPG or PNG, max 2MB</p>
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+
+              {/* Display name */}
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                   Display name
