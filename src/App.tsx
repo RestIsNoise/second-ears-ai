@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import Dashboard from "./pages/Dashboard";
 import ProjectDetail from "./pages/ProjectDetail";
+import SharedView from "./pages/SharedView";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import FaqPage from "./pages/Faq";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/shared/:id" element={<SharedView />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/faq" element={<FaqPage />} />
