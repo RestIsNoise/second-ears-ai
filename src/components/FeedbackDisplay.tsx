@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check, Share2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -119,6 +120,7 @@ const FeedbackDisplay = ({
   versions?: VersionInfo[];
   projectId?: string | null;
 }) => {
+  const { user } = useAuth();
   const n = result.normalized;
   const { mode } = n;
   const waveformRef = useRef<WaveformPlayerHandle>(null);
@@ -132,6 +134,39 @@ const FeedbackDisplay = ({
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
+
+  // Load todos from DB for all versions of this track
+  useEffect(() => {
+    if (!analysisId) return;
+    const loadTodos = async () => {
+      // Collect all analysis IDs for this track (all versions share the same project)
+      let analysisIds: string[] = [];
+      if (versions && versions.length > 0) {
+        analysisIds = versions.map((v) => v.analysisId);
+      } else {
+        analysisIds = [analysisId];
+      }
+
+      const { data, error } = await supabase
+        .from("todos")
+        .select("id, analysis_id, text, timestamp_in_track, is_done, source_id, created_at")
+        .in("analysis_id", analysisIds)
+        .order("created_at", { ascending: true });
+
+      if (!error && data) {
+        setTodoItems(
+          data.map((row: any) => ({
+            id: row.id,
+            text: row.text,
+            timestampSec: row.timestamp_in_track,
+            done: row.is_done,
+            sourceId: row.source_id || undefined,
+          }))
+        );
+      }
+    };
+    loadTodos();
+  }, [analysisId, versions]);
 
   // Panel toggle
   const handleTogglePanel = useCallback((id: string) => {
@@ -211,48 +246,46 @@ const FeedbackDisplay = ({
     return [...aiMarkers, ...userAnnotationMarkers];
   }, [aiMarkers, userAnnotationMarkers]);
 
-  // To-Do management
+  // To-Do management — persist to DB
   const todoSourceIds = useMemo(() => new Set(todoItems.filter(t => t.sourceId).map(t => t.sourceId!)), [todoItems]);
 
-  const handleAddToDoFromFeedback = useCallback((item: FeedbackItem) => {
+  const persistTodo = useCallback(async (todo: { text: string; timestampSec: number; sourceId?: string }) => {
+    if (!analysisId || !user) return null;
+    const { data, error } = await supabase.from("todos").insert({
+      analysis_id: analysisId,
+      text: todo.text,
+      timestamp_in_track: todo.timestampSec,
+      source_id: todo.sourceId || null,
+      created_by: user.id,
+    } as any).select("id").single();
+    if (error) { console.error("[ToDo] persist failed:", error); return null; }
+    return data?.id || null;
+  }, [analysisId, user]);
+
+  const handleAddToDoFromFeedback = useCallback(async (item: FeedbackItem) => {
     const actionText = item.fix || item.title;
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `todo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text: actionText,
-        timestampSec: item.timestampSec,
-        done: false,
-        sourceId: item.id,
-      },
-    ]);
+    const tempId = `todo-${Date.now()}`;
+    const newItem: ToDoItem = { id: tempId, text: actionText, timestampSec: item.timestampSec, done: false, sourceId: item.id };
+    setTodoItems((prev) => [...prev, newItem]);
     toast({ title: "Added to To-Do", duration: 1200 });
-  }, []);
+    const dbId = await persistTodo({ text: actionText, timestampSec: item.timestampSec, sourceId: item.id });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
-  const handleAddToDoNote = useCallback((text: string) => {
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `note-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text,
-        timestampSec: 0,
-        done: false,
-      },
-    ]);
-  }, []);
+  const handleAddToDoNote = useCallback(async (text: string) => {
+    const tempId = `note-${Date.now()}`;
+    setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec: 0, done: false }]);
+    const dbId = await persistTodo({ text, timestampSec: 0 });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
-  const handleAddToDoWithTimestamp = useCallback((text: string, timestampSec: number) => {
-    setTodoItems((prev) => [
-      ...prev,
-      {
-        id: `ht-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        text,
-        timestampSec,
-        done: false,
-      },
-    ]);
+  const handleAddToDoWithTimestamp = useCallback(async (text: string, timestampSec: number) => {
+    const tempId = `ht-${Date.now()}`;
+    setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec, done: false }]);
     toast({ title: "Added to To-Do", duration: 1200 });
-  }, []);
+    const dbId = await persistTodo({ text, timestampSec });
+    if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
+  }, [persistTodo]);
 
   const handleAddNoteFromWaveform = useCallback((text: string, timestampSec: number) => {
     // Route to Human Feedback panel and ensure it's visible
@@ -272,11 +305,15 @@ const FeedbackDisplay = ({
     });
   }, []);
 
-  const handleToggleToDo = useCallback((id: string) => {
+  const handleToggleToDo = useCallback(async (id: string) => {
+    const item = todoItems.find((t) => t.id === id);
+    if (!item) return;
+    const newDone = !item.done;
     setTodoItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item))
+      prev.map((t) => (t.id === id ? { ...t, done: newDone } : t))
     );
-  }, []);
+    await supabase.from("todos").update({ is_done: newDone } as any).eq("id", id);
+  }, [todoItems]);
 
   const handleToDoItemClick = useCallback((item: ToDoItem) => {
     if (item.timestampSec > 0) {

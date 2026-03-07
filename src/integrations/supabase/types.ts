@@ -210,6 +210,47 @@ export type Database = {
         }
         Relationships: []
       }
+      todos: {
+        Row: {
+          analysis_id: string
+          created_at: string
+          created_by: string
+          id: string
+          is_done: boolean
+          source_id: string | null
+          text: string
+          timestamp_in_track: number
+        }
+        Insert: {
+          analysis_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_done?: boolean
+          source_id?: string | null
+          text: string
+          timestamp_in_track?: number
+        }
+        Update: {
+          analysis_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_done?: boolean
+          source_id?: string | null
+          text?: string
+          timestamp_in_track?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todos_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
