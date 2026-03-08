@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, Layers } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
@@ -20,6 +20,9 @@ import type { PanelConfig } from "@/components/PanelSidebar";
 import WorkstationPanel from "@/components/WorkstationPanel";
 import VersionPills from "@/components/VersionPills";
 import type { VersionInfo } from "@/components/VersionPills";
+import ReferenceUploadModal from "@/components/ReferenceUploadModal";
+import AIReferencePanel from "@/components/AIReferencePanel";
+import type { ReferenceResult } from "@/components/AIReferencePanel";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
@@ -98,6 +101,7 @@ function toFeedbackItems(items: NormalizedTimelineItem[], mode: string): Feedbac
 }
 
 const PANELS: PanelConfig[] = [
+  { id: "ai-reference", label: "AI Reference" },
   { id: "ai-feedback", label: "AI Feedback" },
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
@@ -140,6 +144,66 @@ const FeedbackDisplay = ({
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
   const [showArrangement, setShowArrangement] = useState(false);
+  const [refModalOpen, setRefModalOpen] = useState(false);
+  const [refLoading, setRefLoading] = useState(false);
+  const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
+  const [refTrackName, setRefTrackName] = useState("");
+
+  // Reference comparison polling
+  const handleRefComparisonStart = useCallback((jobId: string, refName: string) => {
+    setRefTrackName(refName);
+    setRefLoading(true);
+    setRefResult(null);
+
+    // Auto-open the AI Reference panel
+    setActivePanels((prev) => {
+      const next = new Set(prev);
+      if (!next.has("ai-reference")) {
+        if (next.size >= MAX_PANELS) {
+          // Remove oldest non-essential panel
+          const removable = ["full-analysis", "session", "tech-metrics"];
+          for (const r of removable) {
+            if (next.has(r)) { next.delete(r); break; }
+          }
+        }
+        next.add("ai-reference");
+      }
+      return next;
+    });
+    setPanelOrder((o) => o.includes("ai-reference") ? o : ["ai-reference", ...o]);
+
+    let attempts = 0;
+    const maxAttempts = 90; // 6 minutes
+    const poll = setInterval(async () => {
+      attempts++;
+      if (attempts > maxAttempts) {
+        clearInterval(poll);
+        setRefLoading(false);
+        toast({ title: "Reference comparison timed out", variant: "destructive" });
+        return;
+      }
+      try {
+        const res = await fetch(
+          `https://secondears-backend-production.up.railway.app/api/reference-comparison/status/${jobId}`,
+          { headers: { "x-api-key": "secondears-secret-2024" } }
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.status === "done" && data.result) {
+          clearInterval(poll);
+          setRefResult(data.result);
+          setRefLoading(false);
+          toast({ title: "Reference comparison complete", duration: 2000 });
+        } else if (data.status === "error") {
+          clearInterval(poll);
+          setRefLoading(false);
+          toast({ title: "Comparison failed", description: data.error, variant: "destructive" });
+        }
+      } catch {
+        // silently retry
+      }
+    }, 4000);
+  }, []);
 
   // Load todos from DB for all versions of this track
   useEffect(() => {
@@ -591,12 +655,22 @@ const FeedbackDisplay = ({
           />
         );
 
+      case "ai-reference":
+        return (
+          <AIReferencePanel
+            loading={refLoading}
+            result={refResult}
+            refTrackName={refTrackName}
+          />
+        );
+
       default:
         return null;
     }
   };
 
   const panelTitles: Record<string, string> = {
+    "ai-reference": "AI Reference",
     "ai-feedback": "AI Feedback",
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
@@ -659,9 +733,27 @@ const FeedbackDisplay = ({
             <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
             <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
           </button>
+          <button
+            onClick={() => setRefModalOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+          >
+            <Music className="w-3 h-3" />
+            <span className="hidden sm:inline">Add reference track</span>
+            <span className="sm:hidden">Reference</span>
+          </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
+
+      {/* Reference Upload Modal */}
+      <ReferenceUploadModal
+        open={refModalOpen}
+        onClose={() => setRefModalOpen(false)}
+        onComparisonStart={handleRefComparisonStart}
+        userMetrics={technicalMetrics}
+        userTrackName={n.trackName || audioFile?.name || ""}
+        mode={mode}
+      />
 
       {/* Share Modal */}
       <ShareModal
