@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Activity, Layers } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import AnalysisProgress from "@/components/AnalysisProgress";
+import AlsAnalyzer from "@/components/AlsAnalyzer";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 import type { NormalizedFeedback } from "@/lib/normalizeFeedback";
 
 export type ListeningMode = "technical" | "musical" | "perception";
+type AnalyzeTab = "mix" | "session";
 
 export interface TechnicalMetrics {
   integrated_lufs?: number;
