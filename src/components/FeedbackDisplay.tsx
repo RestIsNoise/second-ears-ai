@@ -745,6 +745,16 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
+      {/* Reference Upload Modal */}
+      <ReferenceUploadModal
+        open={refModalOpen}
+        onClose={() => setRefModalOpen(false)}
+        onComparisonStart={handleRefComparisonStart}
+        userMetrics={technicalMetrics}
+        userTrackName={n.trackName || fileName || ""}
+        mode={mode}
+      />
+
       {/* Share Modal */}
       <ShareModal
         open={shareOpen}

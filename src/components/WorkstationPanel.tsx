@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 /** Flex weight per panel id */
 const PANEL_FLEX: Record<string, number> = {
+  "ai-reference": 2,
   "ai-feedback": 2.5,
   "full-analysis": 2,
   "session": 2,
