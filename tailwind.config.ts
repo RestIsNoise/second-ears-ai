@@ -60,6 +60,9 @@ export default {
         "surface-elevated": "hsl(var(--surface-elevated))",
         "text-tertiary": "hsl(var(--text-tertiary))",
         "border-subtle": "hsl(var(--border-subtle))",
+        "panel-bg": "hsl(var(--panel-bg))",
+        "panel-header": "hsl(var(--panel-header))",
+        "panel-content": "hsl(var(--panel-content))",
       },
       borderRadius: {
         lg: "var(--radius)",
