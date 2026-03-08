@@ -781,7 +781,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-8 w-full overflow-hidden">
+        <div className="mt-8 pb-4 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -806,7 +806,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-8 px-0.5">
+        <div className="mt-10 mb-6 px-0.5">
           <p className="text-[13px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.7 }}>
             {n.overallImpression}
           </p>
@@ -815,39 +815,39 @@ const FeedbackDisplay = ({
 
       {/* ═══ COMPACT SUMMARY BADGES ═══ */}
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <div className="mt-4 mb-8 flex flex-wrap items-center gap-2">
           {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Issue</span>
-              <span className="text-[10px] font-medium text-foreground/70">{n.topIssue}</span>
+              <span className="text-[11px] font-medium text-foreground/70">{n.topIssue}</span>
             </span>
           )}
           {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Win</span>
-              <span className="text-[10px] font-medium text-foreground/70">{n.biggestWin}</span>
+              <span className="text-[11px] font-medium text-foreground/70">{n.biggestWin}</span>
             </span>
           )}
           {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Release</span>
-              <span className="text-[10px] font-medium text-foreground/70">{releaseReadiness}</span>
+              <span className="text-[11px] font-medium text-foreground/70">{releaseReadiness}</span>
             </span>
           )}
         </div>
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-5 flex border border-border-subtle/50 rounded-lg overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 380 }}>
+      <div className="mt-8 flex border border-border-subtle/50 rounded-lg overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 380 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
