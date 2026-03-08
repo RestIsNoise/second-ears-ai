@@ -76,7 +76,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
       const result = await feedbackRes.json();
-      if (error) throw error;
+      
       onProgressStep?.(3);
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
       await new Promise((r) => setTimeout(r, 600));
