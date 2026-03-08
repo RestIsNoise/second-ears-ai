@@ -823,8 +823,13 @@ const FeedbackDisplay = ({
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
           className="mt-6 grid gap-5 pt-5 border-t border-border-subtle/40"
-          style={{ gridTemplateColumns: n.whatWorks.length > 0 && n.yourFocus.question ? "1fr 1fr" : "1fr" }}
+          style={{ gridTemplateColumns: n.whatWorks.length > 0 && n.yourFocus.question ? undefined : "1fr" }}
         >
+          <style>{`@media (min-width: 640px) { .what-works-grid { grid-template-columns: 1fr 1fr; } }`}</style>
+          <div className={cn(
+            "grid gap-5",
+            n.whatWorks.length > 0 && n.yourFocus.question ? "what-works-grid" : ""
+          )} style={{ display: "contents" }}>
           {n.whatWorks.length > 0 && (
             <div>
               <h3
