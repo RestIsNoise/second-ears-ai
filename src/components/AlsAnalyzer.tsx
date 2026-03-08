@@ -1,8 +1,11 @@
-import { useState, useCallback, useRef } from "react";
-import { Upload, Loader2, Music } from "lucide-react";
+import { useState, useCallback, useRef, useMemo } from "react";
+import { Upload, Loader2, Music, Volume2, VolumeX, Headphones } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
+/* ── Types ── */
 interface AlsClip {
   name: string;
   start: number;
@@ -26,30 +29,30 @@ interface AlsSession {
 
 /* ── Color palette by keyword ── */
 const GROUP_COLORS: Record<string, string> = {
-  kick: "hsl(25 95% 55%)",
-  bass: "hsl(25 95% 55%)",
-  drum: "hsl(45 95% 55%)",
-  perc: "hsl(45 80% 50%)",
-  synth: "hsl(175 65% 45%)",
-  pad: "hsl(175 50% 50%)",
-  lead: "hsl(175 65% 45%)",
-  vox: "hsl(270 60% 60%)",
-  vocal: "hsl(270 60% 60%)",
-  fx: "hsl(210 60% 55%)",
+  kick: "25 95% 55%",
+  bass: "25 95% 55%",
+  drum: "45 95% 55%",
+  perc: "45 80% 50%",
+  synth: "175 65% 45%",
+  pad: "175 50% 50%",
+  lead: "175 65% 45%",
+  vox: "270 60% 60%",
+  vocal: "270 60% 60%",
+  fx: "210 60% 55%",
 };
 
 const PALETTE = [
-  "hsl(25 85% 55%)",
-  "hsl(45 90% 52%)",
-  "hsl(175 60% 45%)",
-  "hsl(270 55% 58%)",
-  "hsl(210 55% 52%)",
-  "hsl(340 60% 55%)",
-  "hsl(140 50% 45%)",
-  "hsl(15 70% 50%)",
+  "25 85% 55%",
+  "45 90% 52%",
+  "175 60% 45%",
+  "270 55% 58%",
+  "210 55% 52%",
+  "340 60% 55%",
+  "140 50% 45%",
+  "15 70% 50%",
 ];
 
-function resolveTrackColor(track: AlsTrack, allTracks: AlsTrack[]): string {
+function resolveTrackColorHSL(track: AlsTrack, allTracks: AlsTrack[]): string {
   const names = [track.name];
   if (track.parentId) {
     const parent = allTracks.find((t) => t.name === track.parentId);
@@ -64,15 +67,136 @@ function resolveTrackColor(track: AlsTrack, allTracks: AlsTrack[]): string {
   return PALETTE[track.colorIndex % PALETTE.length];
 }
 
-const TRACK_ROW_HEIGHT = 28;
-const TRACK_NAME_WIDTH = 120;
+/* ── Layout constants ── */
+const TRACK_ROW_HEIGHT = 32;
+const TRACK_HEADER_WIDTH = 160;
+const RULER_HEIGHT = 28;
 
+/* ── Time formatting ── */
+function beatsToTime(beats: number, bpm: number): string {
+  const seconds = (beats / bpm) * 60;
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+/* ── Sub-components ── */
+
+interface TrackHeaderProps {
+  name: string;
+  colorHSL: string;
+  isGroup: boolean;
+  isChild: boolean;
+  isHovered: boolean;
+}
+
+const TrackHeader = ({ name, colorHSL, isGroup, isChild, isHovered }: TrackHeaderProps) => (
+  <div
+    className={cn(
+      "shrink-0 flex items-center gap-2 border-r border-border-subtle/40 transition-colors duration-150",
+      isHovered ? "bg-secondary/60" : "bg-card/30"
+    )}
+    style={{
+      width: TRACK_HEADER_WIDTH,
+      paddingLeft: isChild ? 20 : 10,
+      height: TRACK_ROW_HEIGHT,
+    }}
+  >
+    {/* Color chip */}
+    <div
+      className="shrink-0 rounded-sm"
+      style={{
+        width: 4,
+        height: 16,
+        backgroundColor: `hsl(${colorHSL})`,
+      }}
+    />
+    <span
+      className={cn(
+        "text-[10px] truncate flex-1",
+        isGroup ? "font-semibold text-foreground/80" : "text-muted-foreground/70"
+      )}
+    >
+      {name}
+    </span>
+    {/* Visual affordances (UI only) */}
+    <div className="flex items-center gap-0.5 shrink-0 mr-1.5 opacity-0 group-hover/lane:opacity-60 transition-opacity duration-200">
+      <Volume2 className="w-[10px] h-[10px] text-muted-foreground" />
+      <Headphones className="w-[10px] h-[10px] text-muted-foreground" />
+    </div>
+  </div>
+);
+
+interface ClipBlockProps {
+  name: string;
+  left: number;
+  width: number;
+  colorHSL: string;
+  height: number;
+}
+
+const ClipBlock = ({ name, left, width, colorHSL, height }: ClipBlockProps) => {
+  const showName = width > 40;
+  return (
+    <div
+      className="absolute rounded-[4px] transition-all duration-100 hover:brightness-110 hover:shadow-sm cursor-default"
+      style={{
+        left,
+        width,
+        top: 3,
+        height: height - 6,
+        background: `linear-gradient(180deg, hsl(${colorHSL} / 0.85) 0%, hsl(${colorHSL} / 0.65) 100%)`,
+        boxShadow: `inset 0 1px 0 hsl(${colorHSL} / 0.3), 0 1px 2px hsl(0 0% 0% / 0.08)`,
+      }}
+      title={name}
+    >
+      {showName && (
+        <span
+          className="block truncate text-[8px] font-medium px-1.5 leading-none"
+          style={{
+            color: "hsl(0 0% 100% / 0.9)",
+            lineHeight: `${height - 6}px`,
+          }}
+        >
+          {name.length > 22 ? name.slice(0, 22) + "…" : name}
+        </span>
+      )}
+    </div>
+  );
+};
+
+/* ── Mobile lane card ── */
+interface MobileLaneCardProps {
+  trackName: string;
+  colorHSL: string;
+  isGroup: boolean;
+  clipCount: number;
+}
+
+const MobileLaneCard = ({ trackName, colorHSL, isGroup, clipCount }: MobileLaneCardProps) => (
+  <div className="flex items-center gap-2.5 px-3 py-2 border-b border-border-subtle/30 last:border-0">
+    <div
+      className="shrink-0 rounded-sm"
+      style={{ width: 4, height: 20, backgroundColor: `hsl(${colorHSL})` }}
+    />
+    <span className={cn("text-xs flex-1 truncate", isGroup ? "font-semibold text-foreground/80" : "text-muted-foreground/70")}>
+      {trackName}
+    </span>
+    <Badge variant="outline" className="text-[9px] font-mono-brand shrink-0">
+      {clipCount}
+    </Badge>
+  </div>
+);
+
+/* ── Main component ── */
 const AlsAnalyzer = () => {
   const [session, setSession] = useState<AlsSession | null>(null);
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [hoveredTrack, setHoveredTrack] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const uploadFile = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".als")) {
@@ -112,8 +236,28 @@ const AlsAnalyzer = () => {
     if (file) uploadFile(file);
   };
 
+  /* ── Compute layout data ── */
+  const layoutData = useMemo(() => {
+    if (!session) return null;
+    let maxEnd = 0;
+    const tracksWithEnds = session.tracks
+      .filter((t) => t.clips.length > 0)
+      .map((t) => ({
+        ...t,
+        clips: t.clips.map((c) => {
+          const clipEnd = c.end ?? c.start + (c.duration ?? 0);
+          if (clipEnd > maxEnd) maxEnd = clipEnd;
+          return { ...c, resolvedEnd: clipEnd };
+        }),
+      }));
+    const totalBeats = session.totalBeats || maxEnd || 128;
+    const pxPerBeat = 4;
+    const totalWidth = totalBeats * pxPerBeat;
+    return { tracksWithEnds, totalBeats, pxPerBeat, totalWidth };
+  }, [session]);
+
   /* ── Upload state ── */
-  if (!session) {
+  if (!session || !layoutData) {
     return (
       <div className="space-y-6">
         <input
@@ -128,11 +272,12 @@ const AlsAnalyzer = () => {
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
+          className={cn(
+            "cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-200",
             dragOver
               ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
               : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
-          }`}
+          )}
         >
           {loading ? (
             <>
@@ -156,35 +301,78 @@ const AlsAnalyzer = () => {
     );
   }
 
-  /* ── Compute layout ── */
-  let maxEnd = 0;
-  const tracksWithEnds = session.tracks.filter((t) => t.clips.length > 0).map((t) => ({
-    ...t,
-    clips: t.clips.map((c) => {
-      const clipEnd = c.end ?? c.start + (c.duration ?? 0);
-      if (clipEnd > maxEnd) maxEnd = clipEnd;
-      return { ...c, resolvedEnd: clipEnd };
-    }),
-  }));
-  const totalBeats = session.totalBeats || maxEnd || 128;
-  const pxPerBeat = 4;
-  const totalWidth = totalBeats * pxPerBeat;
+  const { tracksWithEnds, totalBeats, pxPerBeat, totalWidth } = layoutData;
+  const bpm = session.bpm;
 
+  /* ── Ruler marks ── */
+  const barInterval = 4; // beats per bar
+  const barCount = Math.ceil(totalBeats / barInterval);
+
+  /* ── Mobile: simplified stacked cards ── */
+  if (isMobile) {
+    return (
+      <div className="space-y-3">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Music className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-medium truncate max-w-[160px]">{fileName}</span>
+          </div>
+          <button
+            onClick={() => { setSession(null); setFileName(null); }}
+            className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Upload new
+          </button>
+        </div>
+
+        {/* Stats */}
+        <div className="flex items-center gap-2">
+          {bpm > 0 && (
+            <Badge variant="secondary" className="text-[10px] font-mono-brand">{Math.round(bpm)} BPM</Badge>
+          )}
+          <Badge variant="outline" className="text-[10px] font-mono-brand">{tracksWithEnds.length} tracks</Badge>
+        </div>
+
+        {/* Lane cards */}
+        <div className="rounded-xl border border-border-subtle overflow-hidden bg-card/40">
+          {tracksWithEnds.map((track, i) => {
+            const colorHSL = resolveTrackColorHSL(track, session.tracks);
+            const isGroup = track.type === "group";
+            return (
+              <MobileLaneCard
+                key={i}
+                trackName={track.name}
+                colorHSL={colorHSL}
+                isGroup={isGroup}
+                clipCount={track.clips.length}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Desktop: DAW timeline ── */
   return (
-    <div className="space-y-4">
-      {/* Header bar */}
+    <div className="space-y-3">
+      {/* Transport bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Music className="w-4 h-4 text-muted-foreground" />
           <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
-          {session.bpm > 0 && (
+          {bpm > 0 && (
             <Badge variant="secondary" className="text-[10px] font-mono-brand tracking-wider">
-              {Math.round(session.bpm)} BPM
+              {Math.round(bpm)} BPM
             </Badge>
           )}
           <Badge variant="outline" className="text-[10px] font-mono-brand tracking-wider">
             {tracksWithEnds.length} tracks
           </Badge>
+          <span className="text-[10px] text-muted-foreground/50 font-mono-brand">
+            {beatsToTime(totalBeats, bpm)}
+          </span>
         </div>
         <button
           onClick={() => { setSession(null); setFileName(null); }}
@@ -194,84 +382,126 @@ const AlsAnalyzer = () => {
         </button>
       </div>
 
-      {/* DAW-style arranger */}
-      <div className="rounded-xl border border-border-subtle overflow-hidden bg-card/50">
-        {/* Beat ruler */}
-        <div className="flex border-b border-border-subtle/60" style={{ height: 20 }}>
-          <div className="shrink-0 border-r border-border-subtle/40" style={{ width: TRACK_NAME_WIDTH }} />
+      {/* DAW canvas */}
+      <div className="rounded-xl border border-border-subtle overflow-hidden bg-card/30 shadow-sm">
+        {/* Timeline ruler */}
+        <div
+          className="flex border-b border-border-subtle/60 bg-secondary/30"
+          style={{ height: RULER_HEIGHT }}
+        >
+          {/* Empty header corner */}
+          <div
+            className="shrink-0 border-r border-border-subtle/40 flex items-end px-2 pb-1"
+            style={{ width: TRACK_HEADER_WIDTH }}
+          >
+            <span className="text-[8px] text-muted-foreground/40 font-mono-brand uppercase tracking-widest">
+              Tracks
+            </span>
+          </div>
+
+          {/* Ruler ticks */}
           <div className="relative flex-1 overflow-hidden" style={{ minWidth: totalWidth }}>
-            {Array.from({ length: Math.ceil(totalBeats / 4) }, (_, i) => (
-              <div
-                key={i}
-                className="absolute top-0 h-full border-l border-border-subtle/30"
-                style={{ left: i * 4 * pxPerBeat }}
-              >
-                <span className="text-[8px] text-muted-foreground/40 font-mono-brand pl-1 leading-[20px]">
-                  {i * 4 + 1}
-                </span>
-              </div>
-            ))}
+            {Array.from({ length: barCount }, (_, i) => {
+              const beat = i * barInterval;
+              const x = beat * pxPerBeat;
+              const isMajor = i % 4 === 0;
+              return (
+                <div
+                  key={i}
+                  className="absolute top-0 h-full"
+                  style={{ left: x }}
+                >
+                  {/* Tick line */}
+                  <div
+                    className={cn(
+                      "absolute bottom-0 w-px",
+                      isMajor ? "h-3 bg-foreground/15" : "h-2 bg-foreground/8"
+                    )}
+                  />
+                  {/* Label: bar number + time on major ticks */}
+                  {isMajor && (
+                    <div className="absolute top-0.5 left-1 flex flex-col leading-none">
+                      <span className="text-[9px] font-mono-brand text-foreground/40 font-medium">
+                        {i + 1}
+                      </span>
+                      <span className="text-[7px] font-mono-brand text-muted-foreground/30">
+                        {beatsToTime(beat, bpm)}
+                      </span>
+                    </div>
+                  )}
+                  {!isMajor && (
+                    <span className="absolute top-1 left-1 text-[8px] font-mono-brand text-muted-foreground/25">
+                      {i + 1}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Track rows */}
+        {/* Track lanes */}
         <div className="overflow-auto max-h-[60vh] scrollbar-thin">
-          <div style={{ minWidth: TRACK_NAME_WIDTH + totalWidth }}>
+          <div style={{ minWidth: TRACK_HEADER_WIDTH + totalWidth }}>
             {tracksWithEnds.map((track, i) => {
               const isGroup = track.type === "group";
               const isChild = !!track.parentId;
-              const color = resolveTrackColor(track, session.tracks);
+              const colorHSL = resolveTrackColorHSL(track, session.tracks);
+              const isHovered = hoveredTrack === i;
 
               return (
                 <div
                   key={i}
-                  className="flex items-stretch border-b border-border-subtle/30 hover:bg-secondary/20 transition-colors"
+                  className="group/lane flex items-stretch border-b border-border-subtle/20 transition-colors duration-100"
                   style={{ height: TRACK_ROW_HEIGHT }}
+                  onMouseEnter={() => setHoveredTrack(i)}
+                  onMouseLeave={() => setHoveredTrack(null)}
                 >
-                  {/* Track name */}
-                  <div
-                    className="shrink-0 flex items-center overflow-hidden border-r border-border-subtle/30"
-                    style={{
-                      width: TRACK_NAME_WIDTH,
-                      paddingLeft: isChild ? 16 : 8,
-                      borderLeft: `3px solid ${color}`,
-                    }}
-                  >
-                    <span
-                      className={`text-[10px] truncate ${
-                        isGroup ? "font-bold text-foreground/80" : "text-muted-foreground/70"
-                      }`}
-                    >
-                      {track.name}
-                    </span>
-                  </div>
+                  {/* Track header */}
+                  <TrackHeader
+                    name={track.name}
+                    colorHSL={colorHSL}
+                    isGroup={isGroup}
+                    isChild={isChild}
+                    isHovered={isHovered}
+                  />
 
-                  {/* Clips lane */}
-                  <div className="relative flex-1 min-w-0" style={{ width: totalWidth }}>
+                  {/* Clip lane */}
+                  <div
+                    className={cn(
+                      "relative flex-1 min-w-0 transition-colors duration-100",
+                      isHovered ? "bg-secondary/30" : "bg-transparent"
+                    )}
+                    style={{ width: totalWidth }}
+                  >
+                    {/* Subtle bar grid lines */}
+                    {Array.from({ length: barCount }, (_, bi) => {
+                      const isMajor = bi % 4 === 0;
+                      return (
+                        <div
+                          key={bi}
+                          className={cn(
+                            "absolute top-0 h-full w-px",
+                            isMajor ? "bg-foreground/[0.04]" : "bg-foreground/[0.02]"
+                          )}
+                          style={{ left: bi * barInterval * pxPerBeat }}
+                        />
+                      );
+                    })}
+
+                    {/* Clips */}
                     {track.clips.map((clip, ci) => {
                       const left = clip.start * pxPerBeat;
                       const width = Math.max((clip.resolvedEnd - clip.start) * pxPerBeat, 3);
-                      const showName = width > 40;
-
                       return (
-                        <div
+                        <ClipBlock
                           key={ci}
-                          className="absolute top-[3px] rounded-[3px]"
-                          style={{
-                            left,
-                            width,
-                            height: TRACK_ROW_HEIGHT - 6,
-                            backgroundColor: color,
-                            opacity: 0.8,
-                          }}
-                          title={clip.name}
-                        >
-                          {showName && (
-                            <span className="block truncate text-[8px] font-medium text-white/90 px-1.5 leading-[22px]">
-                              {clip.name.length > 20 ? clip.name.slice(0, 20) + "…" : clip.name}
-                            </span>
-                          )}
-                        </div>
+                          name={clip.name}
+                          left={left}
+                          width={width}
+                          colorHSL={colorHSL}
+                          height={TRACK_ROW_HEIGHT}
+                        />
                       );
                     })}
                   </div>
