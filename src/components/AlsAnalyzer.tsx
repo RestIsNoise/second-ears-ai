@@ -415,34 +415,6 @@ const AlsAnalyzer = () => {
   const { tracksWithEnds, totalBeats, pxPerBeat, totalWidth } = layoutData;
   const bpm = session.bpm;
 
-  /* ── Build visible track list with collapse logic ── */
-  const visibleTracks = useMemo(() => {
-    const result: Array<typeof tracksWithEnds[0] & { _index: number }> = [];
-    const hiddenParents = new Set<string>();
-
-    for (let i = 0; i < tracksWithEnds.length; i++) {
-      const t = tracksWithEnds[i];
-      // If this track's parent is collapsed, skip it
-      if (t.parentId && (collapsedGroups.has(t.parentId) || hiddenParents.has(t.parentId))) {
-        hiddenParents.add(t.name); // propagate for nested groups
-        continue;
-      }
-      result.push({ ...t, _index: i });
-    }
-    return result;
-  }, [tracksWithEnds, collapsedGroups]);
-
-  /* ── Child count per group ── */
-  const childCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const t of tracksWithEnds) {
-      if (t.parentId) {
-        counts[t.parentId] = (counts[t.parentId] || 0) + 1;
-      }
-    }
-    return counts;
-  }, [tracksWithEnds]);
-
   /* ── Mobile: simplified stacked cards ── */
   if (isMobile) {
     return (
