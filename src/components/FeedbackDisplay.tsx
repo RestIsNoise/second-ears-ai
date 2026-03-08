@@ -138,6 +138,7 @@ const FeedbackDisplay = ({
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
+  const [showArrangement, setShowArrangement] = useState(false);
 
   // Load todos from DB for all versions of this track
   useEffect(() => {
@@ -635,8 +636,15 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Collaborator avatars */}
+        {/* Collaborator avatars + arrangement toggle */}
         <div className="flex items-center gap-3 pt-2">
+          <button
+            onClick={() => setShowArrangement((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            {showArrangement ? "Hide Arrangement" : "Show Arrangement"}
+          </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
@@ -831,42 +839,14 @@ const FeedbackDisplay = ({
               </div>
             </div>
           )}
-          {/* View Arrangement — collapsible ALS upload */}
-          <ArrangementSection />
         </div>
       )}
-    </div>
-  );
-};
 
-/** Collapsible "View Arrangement" section */
-const ArrangementSection = () => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="border border-border-subtle rounded-xl overflow-hidden">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-secondary/20 transition-colors"
-      >
-        <div className="flex items-center gap-2.5">
-          <Layers className="w-4 h-4 text-muted-foreground" />
-          <span className="text-[13px] font-medium">View Arrangement</span>
-          <span className="text-[10px] text-muted-foreground/50 font-mono-brand tracking-wider uppercase">Ableton</span>
-        </div>
-        <ChevronDown
-          className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <div className="px-4 pb-4 border-t border-border-subtle/50">
-          <div className="pt-4">
-            <AlsAnalyzer />
-          </div>
+      {/* ═══ ARRANGEMENT PANEL ═══ */}
+      {showArrangement && (
+        <div className="mt-6 rounded-xl border border-border-subtle p-4 animate-fade-up">
+          <AlsAnalyzer />
         </div>
       )}
-    </div>
-  );
-};
 
 export default FeedbackDisplay;

@@ -158,7 +158,7 @@ const AlsAnalyzer = () => {
 
   /* ── Compute layout ── */
   let maxEnd = 0;
-  const tracksWithEnds = session.tracks.map((t) => ({
+  const tracksWithEnds = session.tracks.filter((t) => t.clips.length > 0).map((t) => ({
     ...t,
     clips: t.clips.map((c) => {
       const clipEnd = c.end ?? c.start + (c.duration ?? 0);
@@ -177,11 +177,13 @@ const AlsAnalyzer = () => {
         <div className="flex items-center gap-3">
           <Music className="w-4 h-4 text-muted-foreground" />
           <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
-          <Badge variant="secondary" className="text-[10px] font-mono-brand tracking-wider">
-            {Math.round(session.bpm)} BPM
-          </Badge>
+          {session.bpm > 0 && (
+            <Badge variant="secondary" className="text-[10px] font-mono-brand tracking-wider">
+              {Math.round(session.bpm)} BPM
+            </Badge>
+          )}
           <Badge variant="outline" className="text-[10px] font-mono-brand tracking-wider">
-            {session.tracks.length} tracks
+            {tracksWithEnds.length} tracks
           </Badge>
         </div>
         <button
@@ -266,7 +268,7 @@ const AlsAnalyzer = () => {
                         >
                           {showName && (
                             <span className="block truncate text-[8px] font-medium text-white/90 px-1.5 leading-[22px]">
-                              {clip.name}
+                              {clip.name.length > 20 ? clip.name.slice(0, 20) + "…" : clip.name}
                             </span>
                           )}
                         </div>
