@@ -18,11 +18,14 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
   const atMax = activePanels.size >= maxPanels;
 
   return (
-    <div className="flex flex-col h-full w-[148px] min-w-[148px] shrink-0 border-r border-border-subtle/60 bg-secondary/15 overflow-visible">
+    <div
+      className="flex flex-col h-full w-[148px] min-w-[148px] shrink-0 border-r border-border/60 overflow-visible"
+      style={{ backgroundColor: "hsl(var(--panel-header))" }}
+    >
       {/* Section label */}
       <div className="px-3 pt-3 pb-1.5">
         <span
-          className="text-[8px] text-muted-foreground/35 tracking-[0.14em] uppercase select-none"
+          className="text-[9px] text-foreground/35 tracking-[0.1em] uppercase select-none font-medium"
           style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
         >
           Panels
@@ -40,16 +43,24 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               onClick={() => !disabled && onToggle(panel.id)}
               disabled={disabled}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-[7px] text-left transition-all duration-150",
+                "w-full flex items-center gap-2.5 px-3 py-[8px] text-left transition-all duration-150 border-l-2",
                 isActive
-                  ? "bg-secondary/60 text-foreground/80 border-l-2 border-l-foreground/15"
+                  ? "border-l-foreground/30 text-foreground/85"
                   : disabled
-                    ? "text-muted-foreground/20 cursor-not-allowed border-l-2 border-l-transparent"
-                    : "text-muted-foreground/50 hover:text-foreground/70 hover:bg-secondary/30 border-l-2 border-l-transparent"
+                    ? "border-l-transparent text-foreground/18 cursor-not-allowed"
+                    : "border-l-transparent text-foreground/40 hover:text-foreground/65 hover:bg-foreground/[0.03]"
               )}
+              style={{
+                backgroundColor: isActive ? "hsl(var(--panel-content))" : "transparent",
+              }}
             >
-              <LayoutPanelTop className={cn("w-3.5 h-3.5 shrink-0", isActive ? "opacity-60" : "opacity-40")} />
-              <span className="text-[10px] font-medium tracking-tight truncate">
+              <LayoutPanelTop className={cn("w-4 h-4 shrink-0", isActive ? "opacity-55" : "opacity-30")} />
+              <span
+                className={cn(
+                  "text-[11px] tracking-tight truncate",
+                  isActive ? "font-semibold" : "font-medium"
+                )}
+              >
                 {panel.label}
               </span>
             </button>
@@ -58,7 +69,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       </div>
 
       {footer && (
-        <div className="border-t border-border-subtle/40 p-3 bg-secondary/10">
+        <div className="border-t border-border/50 p-3" style={{ backgroundColor: "hsl(var(--panel-header))" }}>
           {footer}
         </div>
       )}
