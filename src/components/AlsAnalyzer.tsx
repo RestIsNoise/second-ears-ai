@@ -323,7 +323,6 @@ const AlsAnalyzer = () => {
   const layoutData = useMemo(() => {
     if (!session) return null;
     let maxEnd = 0;
-    // Keep original order — no sorting applied
     const tracksWithEnds = session.tracks
       .filter((t) => t.clips.length > 0)
       .map((t) => ({
@@ -339,6 +338,34 @@ const AlsAnalyzer = () => {
     const totalWidth = totalBeats * pxPerBeat;
     return { tracksWithEnds, totalBeats, pxPerBeat, totalWidth };
   }, [session]);
+
+  /* ── Build visible track list with collapse logic ── */
+  const visibleTracks = useMemo(() => {
+    if (!layoutData) return [];
+    const result: Array<typeof layoutData.tracksWithEnds[0] & { _index: number }> = [];
+    const hiddenParents = new Set<string>();
+    for (let i = 0; i < layoutData.tracksWithEnds.length; i++) {
+      const t = layoutData.tracksWithEnds[i];
+      if (t.parentId && (collapsedGroups.has(t.parentId) || hiddenParents.has(t.parentId))) {
+        hiddenParents.add(t.name);
+        continue;
+      }
+      result.push({ ...t, _index: i });
+    }
+    return result;
+  }, [layoutData, collapsedGroups]);
+
+  /* ── Child count per group ── */
+  const childCounts = useMemo(() => {
+    if (!layoutData) return {};
+    const counts: Record<string, number> = {};
+    for (const t of layoutData.tracksWithEnds) {
+      if (t.parentId) {
+        counts[t.parentId] = (counts[t.parentId] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [layoutData]);
 
   /* ── Upload state ── */
   if (!session || !layoutData) {
