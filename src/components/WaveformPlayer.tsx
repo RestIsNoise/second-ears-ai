@@ -200,7 +200,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a" }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
