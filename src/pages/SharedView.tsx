@@ -146,8 +146,8 @@ const SharedView = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-6 md:pb-10 px-6">
-        <div className="max-w-6xl mx-auto">
+      <main className="pt-24 pb-6 md:pb-10 px-3 md:px-4">
+        <div className="w-full">
           {/* Sign-up banner for unauthenticated public viewers */}
           {!user && accessLevel === "public" && (
             <div className="mb-6 rounded-xl border border-border-subtle bg-secondary/30 p-4 flex items-center justify-between">

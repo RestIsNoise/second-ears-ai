@@ -17,7 +17,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
   const atMax = activePanels.size >= maxPanels;
 
   return (
-    <div className="flex flex-col h-full w-[200px] min-w-[200px] shrink-0 border-r border-border-subtle bg-background overflow-visible">
+    <div className="flex flex-col h-full w-[140px] min-w-[140px] shrink-0 border-r border-border-subtle bg-background overflow-visible">
       <div className="flex-1 py-3">
         {panels.map((panel) => {
           const isActive = activePanels.has(panel.id);
@@ -28,7 +28,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               key={panel.id}
               onClick={() => !disabled && onToggle(panel.id)}
               disabled={disabled}
-              className={`w-full flex items-center gap-2.5 px-4 py-2 text-left transition-colors ${
+              className={`w-full flex items-center gap-2 px-3 py-1.5 text-left transition-colors ${
                 isActive
                   ? "bg-secondary/50 text-foreground"
                   : disabled
@@ -41,7 +41,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               ) : (
                 <EyeOff className="w-3.5 h-3.5 shrink-0" />
               )}
-              <span className="text-[11px] font-medium tracking-tight truncate">
+              <span className="text-[10px] font-medium tracking-tight truncate">
                 {panel.label}
               </span>
             </button>

@@ -85,8 +85,8 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-6 md:pb-10 px-6">
-        <div className="max-w-6xl mx-auto">
+      <main className="pt-24 pb-6 md:pb-10 px-3 md:px-4">
+        <div className="w-full">
           {result ? (
             <FeedbackDisplay
               result={result}
