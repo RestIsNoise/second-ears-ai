@@ -58,7 +58,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
 
-  const validateAndSetFile = (f: File) => {
+  const validateAndSetFile = useCallback((f: File) => {
     if (!f.type.startsWith("audio/")) {
       toast({ title: "Please upload an audio file", variant: "destructive", duration: 2500 });
       return;
@@ -68,14 +68,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       return;
     }
     setFile(f);
-  };
+  }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     const dropped = e.dataTransfer.files[0];
     if (dropped) validateAndSetFile(dropped);
-  }, []);
+  }, [validateAndSetFile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
