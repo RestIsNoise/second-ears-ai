@@ -144,6 +144,66 @@ const FeedbackDisplay = ({
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
   const [showArrangement, setShowArrangement] = useState(false);
+  const [refModalOpen, setRefModalOpen] = useState(false);
+  const [refLoading, setRefLoading] = useState(false);
+  const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
+  const [refTrackName, setRefTrackName] = useState("");
+
+  // Reference comparison polling
+  const handleRefComparisonStart = useCallback((jobId: string, refName: string) => {
+    setRefTrackName(refName);
+    setRefLoading(true);
+    setRefResult(null);
+
+    // Auto-open the AI Reference panel
+    setActivePanels((prev) => {
+      const next = new Set(prev);
+      if (!next.has("ai-reference")) {
+        if (next.size >= MAX_PANELS) {
+          // Remove oldest non-essential panel
+          const removable = ["full-analysis", "session", "tech-metrics"];
+          for (const r of removable) {
+            if (next.has(r)) { next.delete(r); break; }
+          }
+        }
+        next.add("ai-reference");
+      }
+      return next;
+    });
+    setPanelOrder((o) => o.includes("ai-reference") ? o : ["ai-reference", ...o]);
+
+    let attempts = 0;
+    const maxAttempts = 90; // 6 minutes
+    const poll = setInterval(async () => {
+      attempts++;
+      if (attempts > maxAttempts) {
+        clearInterval(poll);
+        setRefLoading(false);
+        toast({ title: "Reference comparison timed out", variant: "destructive" });
+        return;
+      }
+      try {
+        const res = await fetch(
+          `https://secondears-backend-production.up.railway.app/api/reference-comparison/status/${jobId}`,
+          { headers: { "x-api-key": "secondears-secret-2024" } }
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.status === "done" && data.result) {
+          clearInterval(poll);
+          setRefResult(data.result);
+          setRefLoading(false);
+          toast({ title: "Reference comparison complete", duration: 2000 });
+        } else if (data.status === "error") {
+          clearInterval(poll);
+          setRefLoading(false);
+          toast({ title: "Comparison failed", description: data.error, variant: "destructive" });
+        }
+      } catch {
+        // silently retry
+      }
+    }, 4000);
+  }, []);
 
   // Load todos from DB for all versions of this track
   useEffect(() => {
