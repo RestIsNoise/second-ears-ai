@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
-import { Play, Pause, RotateCcw, X, RefreshCw } from "lucide-react";
+import { Play, Pause, RotateCcw, X, RefreshCw, Headphones, Volume2, VolumeX, Repeat, AudioWaveform } from "lucide-react";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import type { WaveformMarker } from "@/types/feedback";
@@ -63,6 +63,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const [currentTime, setCurrentTime] = useState(0);
   const [durationA, setDurationA] = useState(0);
   const [durationB, setDurationB] = useState(0);
+  const [isMono, setIsMono] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
 
   // Use external ref file or local one
   const activeRefFile = audioFileB || localRefFile;
@@ -83,11 +87,12 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const handleCrossfadeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(e.target.value);
     setCrossfade(v);
-    const volA = 1 - v / 100;
-    const volB = v / 100;
+    const mv = isMuted ? 0 : masterVolume / 100;
+    const volA = (1 - v / 100) * mv;
+    const volB = (v / 100) * mv;
     playerARef.current?.setVolume(volA);
     playerBRef.current?.setVolume(volB);
-  }, []);
+  }, [isMuted, masterVolume]);
 
   const handleSyncPlay = useCallback(() => {
     if (syncPlaying) {
@@ -186,9 +191,9 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         deckVariant="a"
       />
 
-      {/* ── Crossfader strip ── */}
+      {/* ── Compact mixer strip ── */}
       <div
-        className="flex items-center gap-3 px-4 py-2.5"
+        className="flex items-center gap-3 px-4 py-2"
         style={{
           backgroundColor: DARKER_BG,
           borderTop: "1px solid rgba(255,255,255,0.04)",
@@ -198,10 +203,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         {/* Synced transport */}
         <button
           onClick={handleSyncPlay}
-          className="flex items-center justify-center transition-colors shrink-0"
+          className="flex items-center justify-center transition-colors shrink-0 hover:brightness-125"
           style={{
-            width: 32,
-            height: 32,
+            width: 30,
+            height: 30,
             borderRadius: 4,
             backgroundColor: DARK_BG,
             border: "1px solid rgba(255,255,255,0.1)",
@@ -212,79 +217,196 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         </button>
         <button
           onClick={handleSyncRestart}
-          className="flex items-center justify-center transition-colors shrink-0"
-          style={{ width: 28, height: 28, borderRadius: 4, color: "rgba(255,255,255,0.4)" }}
+          className="flex items-center justify-center transition-colors shrink-0 hover:text-white"
+          style={{ width: 26, height: 26, borderRadius: 4, color: "rgba(255,255,255,0.4)" }}
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-3 h-3" />
         </button>
 
         {/* Time */}
         <span
           className="tabular-nums leading-none shrink-0"
-          style={{ fontFamily: MONO, fontSize: 15, letterSpacing: "0.02em", color: "#CCCCCC" }}
+          style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "0.02em", color: "#CCCCCC" }}
         >
           {formatTime(currentTime)}
-          <span style={{ color: "rgba(255,255,255,0.25)" }}>&nbsp;/&nbsp;</span>
-          <span style={{ color: "rgba(255,255,255,0.4)" }}>{formatTime(maxDuration)}</span>
+          <span style={{ color: "rgba(255,255,255,0.2)" }}>&nbsp;/&nbsp;</span>
+          <span style={{ color: "rgba(255,255,255,0.35)" }}>{formatTime(maxDuration)}</span>
         </span>
 
-        {/* Crossfader */}
-        <div className="flex items-center gap-2 flex-1 min-w-0 ml-2">
+        {/* Crossfader — compact, centered, max 300px */}
+        <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 300, width: "100%" }}>
           <span
-            className="shrink-0 uppercase"
             style={{
               fontFamily: MONO,
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              color: crossfade <= 50 ? "#C8820A" : "rgba(255,255,255,0.25)",
+              fontSize: 8,
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              color: "rgba(255,255,255,0.25)",
+              marginBottom: 2,
             }}
           >
-            A
+            A/B
           </span>
-          <div className="flex-1 relative" style={{ height: 20 }}>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={crossfade}
-              onChange={handleCrossfadeChange}
-              className="w-full crossfader-input"
+          <div className="flex items-center gap-2 w-full">
+            <span
+              className="shrink-0 uppercase"
               style={{
-                height: 20,
-                WebkitAppearance: "none",
-                appearance: "none",
-                background: "transparent",
-                cursor: "pointer",
+                fontFamily: MONO,
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                color: crossfade <= 50 ? "#C8820A" : "rgba(255,255,255,0.2)",
               }}
-            />
-            {/* Custom track behind the native input */}
-            <div
-              className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
+            >
+              A
+            </span>
+            <div className="flex-1 relative" style={{ height: 18 }}>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={crossfade}
+                onChange={handleCrossfadeChange}
+                className="w-full crossfader-input"
+                style={{
+                  height: 18,
+                  WebkitAppearance: "none",
+                  appearance: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+              />
+              <div
+                className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
+                style={{
+                  height: 3,
+                  borderRadius: 2,
+                  background: `linear-gradient(to right, #C8820A ${crossfade}%, #1BA8C0 ${crossfade}%)`,
+                  opacity: 0.35,
+                }}
+              />
+            </div>
+            <span
+              className="shrink-0 uppercase"
               style={{
-                height: 4,
-                borderRadius: 2,
-                background: `linear-gradient(to right, #C8820A ${crossfade}%, #1BA8C0 ${crossfade}%)`,
-                opacity: 0.4,
+                fontFamily: MONO,
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                color: crossfade >= 50 ? "#1BA8C0" : "rgba(255,255,255,0.2)",
               }}
-            />
+            >
+              B
+            </span>
           </div>
-          <span
-            className="shrink-0 uppercase"
+        </div>
+
+        {/* Right-side transport icons */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setIsMono(!isMono)}
+            className="flex items-center justify-center transition-colors hover:text-white"
             style={{
-              fontFamily: MONO,
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              color: crossfade >= 50 ? "#1BA8C0" : "rgba(255,255,255,0.25)",
+              width: 28,
+              height: 28,
+              borderRadius: 4,
+              color: isMono ? "#FFFFFF" : "#AAAAAA",
+              backgroundColor: isMono ? "rgba(255,255,255,0.08)" : "transparent",
+            }}
+            title={isMono ? "Mono" : "Stereo"}
+          >
+            <Headphones className="w-3.5 h-3.5" />
+          </button>
+
+          <div className="relative group flex items-center">
+            <button
+              onClick={() => {
+                if (isMuted) {
+                  setIsMuted(false);
+                  playerARef.current?.setVolume((1 - crossfade / 100) * (masterVolume / 100));
+                  playerBRef.current?.setVolume((crossfade / 100) * (masterVolume / 100));
+                } else {
+                  setIsMuted(true);
+                  playerARef.current?.setVolume(0);
+                  playerBRef.current?.setVolume(0);
+                }
+              }}
+              className="flex items-center justify-center transition-colors hover:text-white"
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 4,
+                color: isMuted ? "#FFFFFF" : "#AAAAAA",
+                backgroundColor: isMuted ? "rgba(255,255,255,0.08)" : "transparent",
+              }}
+              title="Master volume"
+            >
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+            </button>
+            {/* Volume slider on hover */}
+            <div
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center p-2 rounded"
+              style={{
+                backgroundColor: "#1A1A1A",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={isMuted ? 0 : masterVolume}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  setMasterVolume(v);
+                  setIsMuted(v === 0);
+                  const volA = (1 - crossfade / 100) * (v / 100);
+                  const volB = (crossfade / 100) * (v / 100);
+                  playerARef.current?.setVolume(volA);
+                  playerBRef.current?.setVolume(volB);
+                }}
+                className="crossfader-input"
+                style={{
+                  writingMode: "vertical-lr",
+                  direction: "rtl",
+                  height: 80,
+                  width: 18,
+                  WebkitAppearance: "none",
+                  appearance: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={() => setIsLooping(!isLooping)}
+            className="flex items-center justify-center transition-colors hover:text-white"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 4,
+              color: isLooping ? "#FFFFFF" : "#AAAAAA",
+              backgroundColor: isLooping ? "rgba(255,255,255,0.08)" : "transparent",
+            }}
+            title="Loop"
+          >
+            <Repeat className="w-3.5 h-3.5" />
+          </button>
+
+          <span
+            className="flex items-center justify-center"
+            style={{
+              width: 28,
+              height: 28,
+              color: "#AAAAAA",
             }}
           >
-            B
+            <AudioWaveform className="w-3.5 h-3.5" />
           </span>
         </div>
       </div>
-
-      {/* Deck B — reference */}
       <div className="relative">
         <WaveformPlayer
           ref={playerBRef}
