@@ -164,7 +164,14 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   // Dual deck mode
   return (
-    <div className="space-y-0">
+    <div
+      className="overflow-hidden"
+      style={{
+        borderRadius: 8,
+        border: "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: DARK_BG,
+      }}
+    >
       <input
         id="ref-track-replace"
         ref={fileInputRef}
