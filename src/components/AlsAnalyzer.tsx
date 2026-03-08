@@ -269,31 +269,6 @@ const AlsAnalyzer = () => {
   const { tracks: allTracks, totalBeats, totalWidth } = layoutData;
   const bpm = session.bpm;
 
-  /* ── Ruler ticks ── */
-  const rulerTicks = useMemo(() => {
-    const beatsPerBar = 4;
-    const barW = beatsPerBar * PX_PER_BEAT;
-    const totalBars = Math.ceil(totalBeats / beatsPerBar);
-    // auto-thin labels
-    let every = 1;
-    if (barW < 18) every = 16;
-    else if (barW < 36) every = 8;
-    else if (barW < 72) every = 4;
-    else if (barW < 140) every = 2;
-
-    const ticks: Array<{ x: number; label: string | null; major: boolean }> = [];
-    for (let i = 0; i < totalBars; i++) {
-      const x = i * beatsPerBar * PX_PER_BEAT;
-      const isMajor = i % every === 0;
-      ticks.push({
-        x,
-        major: isMajor,
-        label: isMajor ? beatsToTime(i * beatsPerBar, bpm) : null,
-      });
-    }
-    return ticks;
-  }, [totalBeats, bpm]);
-
   /* ── Mobile fallback ── */
   if (isMobile) {
     return (
