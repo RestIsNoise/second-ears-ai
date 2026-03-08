@@ -733,6 +733,14 @@ const FeedbackDisplay = ({
             <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
             <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
           </button>
+          <button
+            onClick={() => setRefModalOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+          >
+            <Music className="w-3 h-3" />
+            <span className="hidden sm:inline">Add reference track</span>
+            <span className="sm:hidden">Reference</span>
+          </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
