@@ -1,4 +1,4 @@
-import { Loader2, Copy, Check } from "lucide-react";
+import { Loader2, Copy, Check, Upload } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
@@ -31,6 +31,7 @@ interface Props {
   loading: boolean;
   result: ReferenceResult | null;
   refTrackName: string;
+  onUploadClick?: () => void;
 }
 
 /* ── Metric display names ── */
@@ -85,7 +86,7 @@ const CopyBtn = ({ text }: { text: string }) => {
   );
 };
 
-const AIReferencePanel = ({ loading, result, refTrackName }: Props) => {
+const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Props) => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
@@ -98,9 +99,23 @@ const AIReferencePanel = ({ loading, result, refTrackName }: Props) => {
 
   if (!result) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-1.5 py-16">
-        <span className="text-[10px] text-muted-foreground/30">No reference comparison yet</span>
-        <span className="text-[8px] text-muted-foreground/20">Upload a reference track to compare</span>
+      <div className="flex flex-col items-center justify-center h-full px-5 py-10 gap-3">
+        <Upload className="w-6 h-6 text-muted-foreground/30" />
+        <div className="text-center space-y-1">
+          <p className="text-[11px] font-medium text-foreground/50">Compare against a reference track</p>
+          <p className="text-[9px] text-muted-foreground/40 max-w-[200px] leading-relaxed">
+            Upload a WAV, MP3 or AIFF to compare metrics and get targeted feedback
+          </p>
+        </div>
+        {onUploadClick && (
+          <button
+            onClick={onUploadClick}
+            className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+          >
+            <Upload className="w-3 h-3" />
+            Upload reference track
+          </button>
+        )}
       </div>
     );
   }

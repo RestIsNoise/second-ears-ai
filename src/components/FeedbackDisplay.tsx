@@ -663,6 +663,7 @@ const FeedbackDisplay = ({
             loading={refLoading}
             result={refResult}
             refTrackName={refTrackName}
+            onUploadClick={() => setRefModalOpen(true)}
           />
         );
 
