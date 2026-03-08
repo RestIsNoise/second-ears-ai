@@ -682,6 +682,13 @@ const FeedbackDisplay = ({
         </div>
       )}
 
+      {/* ═══ ARRANGEMENT PANEL ═══ */}
+      {showArrangement && (
+        <div className="mt-6 rounded-xl border border-border-subtle p-4 animate-fade-up">
+          <AlsAnalyzer />
+        </div>
+      )}
+
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-5">
