@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, Layers } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
@@ -20,6 +20,9 @@ import type { PanelConfig } from "@/components/PanelSidebar";
 import WorkstationPanel from "@/components/WorkstationPanel";
 import VersionPills from "@/components/VersionPills";
 import type { VersionInfo } from "@/components/VersionPills";
+import ReferenceUploadModal from "@/components/ReferenceUploadModal";
+import AIReferencePanel from "@/components/AIReferencePanel";
+import type { ReferenceResult } from "@/components/AIReferencePanel";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalizeFeedback";
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
@@ -98,6 +101,7 @@ function toFeedbackItems(items: NormalizedTimelineItem[], mode: string): Feedbac
 }
 
 const PANELS: PanelConfig[] = [
+  { id: "ai-reference", label: "AI Reference" },
   { id: "ai-feedback", label: "AI Feedback" },
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
