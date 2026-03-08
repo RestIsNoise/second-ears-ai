@@ -16,12 +16,14 @@ const severityDot: Record<string, string> = {
   low: "bg-foreground/25",
 };
 
-/** Left border color by mode — technical=amber, structural/musical=blue, perceptual=purple */
+/** Left border color by mode */
 const modeBorderColor: Record<string, string> = {
   technical: "border-l-amber-400",
   musical: "border-l-blue-400",
   perception: "border-l-purple-400",
 };
+
+const MONO = "'IBM Plex Mono', monospace";
 
 const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   const [copied, setCopied] = useState(false);
@@ -112,10 +114,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
             }}
             onClick={() => onItemClick(item)}
             style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
-            className={`group relative w-full text-left rounded-lg border-l-2 ${borderColor} border border-border-subtle p-4 transition-all duration-200 cursor-pointer ${
+            className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 p-4 transition-all duration-200 cursor-pointer ${
               isActive
-                ? "bg-secondary/50 border-r-foreground/10 border-t-foreground/10 border-b-foreground/10"
-                : "bg-background hover:bg-secondary/20"
+                ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
+                : "bg-card/60 hover:bg-secondary/30"
             }`}
           >
             {/* Hover-only action buttons — top right */}
@@ -143,14 +145,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
             <div className="flex items-start gap-3">
               {/* Timestamp column */}
-              <div className="flex flex-col items-center gap-1 pt-0.5 shrink-0">
-                <div className={`w-1.5 h-1.5 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
+              <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
+                <div className={`w-2 h-2 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
                 <span
-                  className="text-muted-foreground tabular-nums"
+                  className="text-foreground/45 tabular-nums"
                   style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontFamily: MONO,
                     fontSize: 11,
-                    letterSpacing: "0.02em",
+                    letterSpacing: "0.01em",
                   }}
                 >
                   @{formatTime(item.timestampSec)}
@@ -158,35 +160,45 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 pr-12">
+              <div className="flex-1 min-w-0 pr-12 max-w-[50ch]">
                 <h3
-                  className="text-[15px] font-semibold tracking-tight text-foreground leading-snug truncate max-w-[28ch]"
+                  className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
                   title={item.title}
                 >
                   {item.title}
                 </h3>
                 {item.observation && (
-                  <p className="text-[13px] text-foreground/55 mt-1.5" style={{ lineHeight: 1.6 }}>
+                  <p className="text-[13px] text-foreground/50 mt-2 max-w-[45ch]" style={{ lineHeight: 1.65 }}>
                     {item.observation}
                   </p>
                 )}
                 {item.fix && (
-                  <div className="mt-2.5 flex items-start gap-2">
-                    <span
-                      className="shrink-0 mt-0.5 inline-flex items-center rounded-full bg-foreground text-background px-2 py-0.5"
-                      style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontSize: 9,
-                        letterSpacing: "0.06em",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
-                    </span>
-                    <p className="text-[13px] text-foreground/70" style={{ lineHeight: 1.6 }}>
-                      {item.fix}
-                    </p>
-                  </div>
+                  <>
+                    {/* Visual separator between observation and fix */}
+                    <div
+                      className="my-3"
+                      style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.4)" }}
+                    />
+                    <div className="flex items-start gap-2">
+                      <span
+                        className="shrink-0 mt-0.5 inline-flex items-center rounded px-2 py-[3px]"
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: 9,
+                          fontWeight: 700,
+                          letterSpacing: "0.05em",
+                          lineHeight: 1,
+                          backgroundColor: "hsl(var(--foreground) / 0.9)",
+                          color: "hsl(var(--background))",
+                        }}
+                      >
+                        {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
+                      </span>
+                      <p className="text-[13px] text-foreground/65 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
+                        {item.fix}
+                      </p>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
