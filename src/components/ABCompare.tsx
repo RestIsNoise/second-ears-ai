@@ -63,6 +63,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const [currentTime, setCurrentTime] = useState(0);
   const [durationA, setDurationA] = useState(0);
   const [durationB, setDurationB] = useState(0);
+  const [isMono, setIsMono] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
 
   // Use external ref file or local one
   const activeRefFile = audioFileB || localRefFile;
