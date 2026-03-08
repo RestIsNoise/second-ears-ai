@@ -233,7 +233,21 @@ export function normalizeFeedbackResponse(
   let rawPriorities: any[] = [];
   let actionLabel: "FIX" | "ARRANGE" = "FIX";
 
-  if (mode === "musical") {
+  // Check for already-normalized timelineItems (e.g. loaded from DB)
+  const preNormalized = fb.timelineItems;
+  if (Array.isArray(preNormalized) && preNormalized.length > 0) {
+    preNormalized.forEach((item: any) => {
+      const sec = parseTimeSec(item.timestampSec ?? item.timestamp ?? item.time);
+      timelineItems.push({
+        timestamp: str(item.timestamp) || formatTimestamp(sec >= 0 ? sec : 0),
+        timestampSec: sec >= 0 ? sec : -1,
+        title: str(item.title) || "Untitled",
+        description: str(item.description),
+        actionLabel: item.actionLabel === "ARRANGE" ? "ARRANGE" : "FIX",
+        actionText: str(item.actionText),
+      });
+    });
+  } else if (mode === "musical") {
     actionLabel = "ARRANGE";
     const src = fb.arrangementNotes || fb.arrangement_notes || fb.top_priorities || fb.priorities || [];
     rawPriorities = (Array.isArray(src) ? src : []).map((p: any) => ({
