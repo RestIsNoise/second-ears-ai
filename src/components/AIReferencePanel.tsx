@@ -121,14 +121,16 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
   const { metrics_diff, gemini_feedback } = result;
   const metricEntries = Object.entries(metrics_diff);
 
+  const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
+
   return (
     <div className="p-3 space-y-4 overflow-y-auto h-full">
-      {/* Reference name */}
-      <div className="flex items-center gap-2">
-        <div className="w-1.5 h-1.5 rounded-full bg-accent-foreground/30 shrink-0" />
+      {/* Reference name — CDJ track ID style */}
+      <div className="flex items-center gap-2.5">
+        <div className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
         <span
-          className="text-[9px] text-muted-foreground/45 tracking-[0.1em] uppercase truncate"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          className="text-[13px] font-bold text-foreground/70 tracking-[0.08em] uppercase truncate"
+          style={{ fontFamily: MONO }}
         >
           vs {result.reference_track_name || refTrackName}
         </span>
@@ -138,8 +140,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
       {metricEntries.length > 0 && (
         <div className="rounded-lg border border-border/40 overflow-hidden">
           {/* Table header */}
-          <div className="grid grid-cols-4 gap-0 text-[8px] uppercase tracking-[0.1em] text-muted-foreground/40 bg-secondary/30 px-2.5 py-1.5"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          <div
+            className="grid grid-cols-4 gap-0 text-[9px] uppercase tracking-[0.1em] font-bold text-muted-foreground/50 bg-secondary/40 px-2.5 py-2"
+            style={{ fontFamily: MONO }}
           >
             <span>Metric</span>
             <span className="text-right">Yours</span>
@@ -161,12 +164,18 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                   deltaBg(d)
                 )}
               >
-                <span className="text-[10px] text-foreground/55 truncate" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                <span
+                  className="text-[10px] font-semibold text-foreground/60 uppercase truncate"
+                  style={{ fontFamily: MONO }}
+                >
                   {label}
                 </span>
-                <span className="text-[10px] text-foreground/60 text-right font-mono">{diff.user}</span>
-                <span className="text-[10px] text-foreground/60 text-right font-mono">{diff.reference}</span>
-                <span className={cn("text-[10px] text-right font-mono font-semibold", deltaColor(d))}>
+                <span className="text-[10px] text-foreground/60 text-right" style={{ fontFamily: MONO }}>{diff.user}</span>
+                <span className="text-[10px] text-foreground/60 text-right" style={{ fontFamily: MONO }}>{diff.reference}</span>
+                <span
+                  className={cn("text-[11px] text-right font-bold", deltaColor(d))}
+                  style={{ fontFamily: MONO }}
+                >
                   {sign}{typeof d === "number" ? d.toFixed(1) : d}
                 </span>
               </div>
@@ -178,9 +187,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
       {/* ── Gemini Comparative Feedback ── */}
       {gemini_feedback && (
         <div className="space-y-2.5">
-          {/* Summary */}
+          {/* Summary — secondary, understated */}
           {gemini_feedback.summary && (
-            <p className="text-[11px] text-foreground/50 leading-relaxed" style={{ lineHeight: 1.6 }}>
+            <p className="text-[12px] text-muted-foreground/45 leading-relaxed" style={{ lineHeight: 1.6 }}>
               {gemini_feedback.summary}
             </p>
           )}
