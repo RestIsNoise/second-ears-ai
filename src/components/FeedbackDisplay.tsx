@@ -750,7 +750,16 @@ const FeedbackDisplay = ({
         open={refModalOpen}
         onClose={() => setRefModalOpen(false)}
         onComparisonStart={handleRefComparisonStart}
-        userMetrics={n.rawTechnicalMetrics || technicalMetrics}
+        userMetrics={n.rawTechnicalMetrics || {
+          integratedLoudness: n.metrics.integratedLufs != null ? String(n.metrics.integratedLufs) : undefined,
+          lra: n.metrics.lra != null ? String(n.metrics.lra) : undefined,
+          rms: n.metrics.shortTermLufs != null ? String(n.metrics.shortTermLufs) : undefined,
+          peakDbTP: n.metrics.peakDbtp != null ? String(n.metrics.peakDbtp) : undefined,
+          dynamicRange: n.metrics.dynamicRange != null ? String(n.metrics.dynamicRange) : undefined,
+          stereoWidth: n.metrics.stereoCorrelation ?? undefined,
+          transientDensity: n.metrics.crestFactor != null ? String(n.metrics.crestFactor) : undefined,
+          subKickRatio: n.metrics.subKickRatio ?? undefined,
+        }}
         userTrackName={n.trackName || audioFile?.name || ""}
         mode={mode}
       />
