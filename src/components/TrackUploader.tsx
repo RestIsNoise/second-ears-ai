@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import { Upload, Music, Activity, Eye } from "lucide-react";
+import { Upload, Music, Activity, Eye, Target, Disc3, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
@@ -10,6 +10,13 @@ const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activ
   { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
   { id: "musical", label: "Musical", tag: "The producer", icon: Music },
   { id: "perception", label: "Perception", tag: "The listener", icon: Eye },
+];
+
+type Goal = "mixing" | "mastering" | "release_check";
+const goals: { id: Goal; label: string; icon: typeof Target }[] = [
+  { id: "mixing", label: "Mixing", icon: Disc3 },
+  { id: "mastering", label: "Mastering", icon: Target },
+  { id: "release_check", label: "Release check", icon: CheckCircle2 },
 ];
 
 interface Props {
@@ -27,6 +34,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
+  const [goal, setGoal] = useState<Goal>("mixing");
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
 
@@ -74,7 +82,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": "secondears-secret-2024" },
-          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined }),
+          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal }),
         }
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
@@ -190,6 +198,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
               <m.icon className="w-4 h-4 mb-2 text-foreground/70" />
               <p className="text-sm font-medium">{m.label}</p>
               <p className="font-mono-brand text-[10px] text-muted-foreground">{m.tag}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Goal</p>
+        <div className="grid grid-cols-3 gap-3">
+          {goals.map((g) => (
+            <button key={g.id} onClick={() => setGoal(g.id)}
+              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
+                goal === g.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
+                : "border-border-subtle hover:border-foreground/10"
+              }`}
+            >
+              <g.icon className="w-4 h-4 mb-2 text-foreground/70" />
+              <p className="text-sm font-medium">{g.label}</p>
             </button>
           ))}
         </div>
