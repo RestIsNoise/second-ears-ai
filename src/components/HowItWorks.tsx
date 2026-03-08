@@ -25,40 +25,47 @@ const steps = [
 ];
 
 const HowItWorks = () => (
-  <section className="relative py-14 md:py-16 px-6 border-t border-border-subtle">
+  <section className="relative py-16 md:py-20 px-6 border-t border-border-subtle/50">
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-10">
-        <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.3em] uppercase mb-3">
+      <div className="text-center mb-12">
+        <p
+          className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+          style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+        >
           How it works
         </p>
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+        <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">
           Upload, analyze, fix
         </h2>
       </div>
 
       <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
         {/* Connector lines — desktop only */}
-        <div className="hidden md:block absolute top-[38px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-border-subtle" aria-hidden="true" />
+        <div className="hidden md:block absolute top-[38px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-border-subtle/50" aria-hidden="true" />
 
-        {steps.map((step, i) => (
+        {steps.map((step) => (
           <div key={step.number} className="relative flex flex-col items-center text-center md:px-8">
             {/* Step number + icon */}
             <div className="relative mb-5">
-              <div className="w-[52px] h-[52px] rounded-xl bg-secondary flex items-center justify-center relative z-10">
-                <step.icon className="w-5 h-5 text-foreground" strokeWidth={1.8} />
+              <div className="w-[52px] h-[52px] rounded-xl bg-secondary/60 flex items-center justify-center relative z-10">
+                <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
               </div>
               <span
-                className="absolute -top-2 -right-3 font-mono-brand text-[10px] font-medium tracking-wider text-muted-foreground/40"
+                className="absolute -top-2 -right-3 text-[10px] font-medium tracking-wider text-muted-foreground/40"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 {step.number}
               </span>
             </div>
 
-            <h3 className="text-base font-semibold tracking-tight mb-2">{step.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-[240px] mb-3">
+            <h3 className="text-[15px] font-semibold tracking-tight mb-2">{step.title}</h3>
+            <p className="text-[13px] text-muted-foreground/70 leading-relaxed max-w-[240px] mb-3">
               {step.description}
             </p>
-            <p className="font-mono-brand text-[10px] text-muted-foreground/50 tracking-wider uppercase">
+            <p
+              className="text-[9px] text-muted-foreground/50 tracking-[0.12em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            >
               {step.proof}
             </p>
           </div>

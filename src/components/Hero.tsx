@@ -77,14 +77,14 @@ const Hero = () => {
           {/* Left column — Copy */}
           <div className="max-w-xl">
             <p
-              className="font-mono-brand text-[11px] font-medium tracking-[0.4em] uppercase mb-6 sm:mb-8 animate-fade-up"
-              style={{ color: "hsl(0 0% 55%)" }}
+              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up"
+              style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               AI speed · Human ears
             </p>
 
             <h1
-              className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold tracking-tight leading-[1.12] mb-5 sm:mb-6 animate-fade-up"
+              className="text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] lg:text-[3rem] font-semibold tracking-tight leading-[1.12] mb-5 sm:mb-6 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
               Actionable mix
@@ -93,8 +93,8 @@ const Hero = () => {
             </h1>
 
             <p
-              className="text-[14px] sm:text-[15px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
-              style={{ color: "hsl(0 0% 58%)", animationDelay: "0.16s" }}
+              className="text-[13px] sm:text-[14px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
+              style={{ color: "hsl(0 0% 60%)", animationDelay: "0.16s" }}
             >
               From upload to a prioritized fix plan in minutes.
             </p>

@@ -99,16 +99,19 @@ const SampleFeedback = () => {
   }, [started]);
 
   return (
-    <section ref={sectionRef} className="py-14 md:py-16 px-6 border-t border-border-subtle">
+    <section ref={sectionRef} className="py-16 md:py-20 px-6 border-t border-border-subtle/50">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="font-mono-brand text-[11px] text-muted-foreground tracking-[0.3em] uppercase mb-3">
+        <div className="text-center mb-12">
+          <p
+            className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
             Real output
           </p>
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2">
+          <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight mb-2.5">
             See what SecondEars hears
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="text-[13px] text-muted-foreground/65 max-w-md mx-auto leading-relaxed">
             Every analysis returns timestamped issues with concrete next steps.
           </p>
         </div>
@@ -125,12 +128,15 @@ const SampleFeedback = () => {
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
             <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
-            <span className="ml-3 text-[11px] font-mono-brand tracking-wide" style={{ color: "hsl(0 0% 38%)" }}>
+            <span
+              className="ml-3 text-[11px] tracking-wide"
+              style={{ color: "hsl(0 0% 42%)", fontFamily: "'IBM Plex Mono', monospace" }}
+            >
               analysis · demo_track.wav
             </span>
           </div>
 
-          {/* All 3 rows always rendered at fixed size */}
+          {/* All 3 rows */}
           <div className="divide-y" style={{ borderColor: "hsl(0 0% 100% / 0.05)" }}>
             {items.map((item, idx) => (
               <div
@@ -139,8 +145,8 @@ const SampleFeedback = () => {
                 style={{ borderColor: "hsl(0 0% 100% / 0.05)" }}
               >
                 <span
-                  className="font-mono-brand text-[13px] tabular-nums pt-0.5 shrink-0 min-w-[2.5rem]"
-                  style={{ color: "hsl(0 0% 50%)" }}
+                  className="text-[13px] tabular-nums pt-0.5 shrink-0 min-w-[2.5rem]"
+                  style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
                 >
                   {item.time}
                   {activeCursor === "time" && <Cursor />}
@@ -159,12 +165,12 @@ const SampleFeedback = () => {
                     <span className="inline-block h-[22px]" />
                   )}
 
-                  <p className="text-[13px] leading-relaxed min-h-[1.5em]" style={{ color: "hsl(0 0% 80%)" }}>
+                  <p className="text-[13px] leading-relaxed min-h-[1.5em]" style={{ color: "hsl(0 0% 82%)" }}>
                     {item.issue}
                     {activeCursor === "issue" && <Cursor />}
                   </p>
 
-                  <p className="text-[12px] leading-relaxed min-h-[1.35em]" style={{ color: "hsl(0 0% 45%)" }}>
+                  <p className="text-[12px] leading-relaxed min-h-[1.35em]" style={{ color: "hsl(0 0% 50%)" }}>
                     {item.action}
                     {activeCursor === "action" && <Cursor />}
                   </p>

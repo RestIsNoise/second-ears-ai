@@ -25,32 +25,42 @@ const modes = [
 ];
 
 const ListeningModes = () => (
-  <section id="modes" className="py-10 md:py-12 px-6 bg-secondary/50 overflow-visible">
+  <section id="modes" className="py-16 md:py-20 px-6 bg-secondary/40 overflow-visible">
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-8 md:mb-10">
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Three perspectives</p>
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Listening modes</h2>
+      <div className="text-center mb-10 md:mb-12">
+        <p
+          className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+          style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+        >
+          Three perspectives
+        </p>
+        <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">Listening modes</h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid md:grid-cols-3 gap-4">
         {modes.map((mode) => (
           <div
             key={mode.name}
-            className="bg-background rounded-xl border border-border-subtle p-7 md:p-8 flex flex-col gap-5 hover:border-foreground/10 transition-colors"
+            className="bg-background rounded-lg border border-border-subtle/50 p-6 md:p-7 flex flex-col gap-4 hover:border-foreground/10 transition-colors"
           >
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                <mode.icon className="w-5 h-5 text-foreground" />
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center">
+                <mode.icon className="w-[18px] h-[18px] text-foreground/80" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold tracking-tight">{mode.name}</h3>
-                <p className="font-mono-brand text-xs text-muted-foreground">{mode.tag}</p>
+                <h3 className="text-[15px] font-semibold tracking-tight">{mode.name}</h3>
+                <p
+                  className="text-[10px] text-muted-foreground/55 tracking-wide"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                >
+                  {mode.tag}
+                </p>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">{mode.description}</p>
+            <p className="text-[13px] text-muted-foreground/70 leading-relaxed">{mode.description}</p>
             <ul className="space-y-2 mt-auto">
               {mode.points.map((point) => (
-                <li key={point} className="text-sm text-foreground flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-foreground/30" />
+                <li key={point} className="text-[13px] text-foreground/80 flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-foreground/20" />
                   {point}
                 </li>
               ))}

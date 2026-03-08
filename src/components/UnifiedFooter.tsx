@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const UnifiedFooter = () => (
   <footer>
     {/* ── Minimal CTA block ── */}
-    <section className="bg-background py-10 md:py-12 px-6">
+    <section className="bg-background py-12 md:py-16 px-6">
       <div className="max-w-xl mx-auto text-center">
         <Button variant="hero" size="lg" className="h-14 px-14 text-[15px] gap-2.5" asChild>
           <Link to="/analyze">
@@ -13,7 +13,7 @@ const UnifiedFooter = () => (
             Start free analysis
           </Link>
         </Button>
-        <p className="mt-4 text-[11px] tracking-wide text-muted-foreground/50">
+        <p className="mt-4 text-[11px] tracking-wide text-muted-foreground/45">
           No credit card required
         </p>
       </div>
@@ -57,23 +57,23 @@ const UnifiedFooter = () => (
       </div>
 
       <div className="relative">
-        {/* Contact — extra top padding to clear gradient */}
+        {/* Contact */}
         <div className="pt-20 md:pt-24 pb-10 md:pb-12 px-6">
           <div className="max-w-5xl mx-auto text-center">
             <p
-              className="font-mono-brand text-xs tracking-widest uppercase mb-3"
-              style={{ color: "hsl(0 0% 52%)" }}
+              className="text-[10px] tracking-[0.18em] uppercase mb-3"
+              style={{ color: "hsl(0 0% 52%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Get in touch
             </p>
             <h2
-              className="text-2xl md:text-3xl font-semibold tracking-tight mb-2"
+              className="text-2xl md:text-[1.75rem] font-semibold tracking-tight mb-2.5"
               style={{ color: "hsl(0 0% 93%)" }}
             >
               Contact
             </h2>
             <p
-              className="text-sm max-w-sm mx-auto mb-6 leading-relaxed"
+              className="text-[13px] max-w-sm mx-auto mb-6 leading-relaxed"
               style={{ color: "hsl(0 0% 58%)" }}
             >
               Billing, feedback quality, feature requests. We read every message.
@@ -84,7 +84,7 @@ const UnifiedFooter = () => (
                 hello@secondears.io
               </a>
             </Button>
-            <p className="text-[11px] mt-3" style={{ color: "hsl(0 0% 44%)" }}>
+            <p className="text-[11px] mt-3" style={{ color: "hsl(0 0% 46%)" }}>
               Response within 24–48h
             </p>
           </div>
@@ -94,8 +94,8 @@ const UnifiedFooter = () => (
         <div className="pt-6 pb-10 md:pb-14 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto flex flex-col items-center gap-5">
             <span
-              className="font-mono-brand text-xs tracking-tight"
-              style={{ color: "hsl(0 0% 38%)" }}
+              className="text-[11px] tracking-tight"
+              style={{ color: "hsl(0 0% 40%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               SecondEars™
             </span>
@@ -106,26 +106,26 @@ const UnifiedFooter = () => (
                 { to: "/faq", label: "FAQ" },
               ].map((link, i) => (
                 <span key={link.to} className="flex items-center gap-4">
-                  {i > 0 && <span style={{ color: "hsl(0 0% 24%)" }}>·</span>}
+                  {i > 0 && <span style={{ color: "hsl(0 0% 26%)" }}>·</span>}
                   <Link
                     to={link.to}
                     className="text-[10px] tracking-wide transition-colors"
-                    style={{ color: "hsl(0 0% 44%)" }}
+                    style={{ color: "hsl(0 0% 46%)" }}
                   >
                     {link.label}
                   </Link>
                 </span>
               ))}
-              <span style={{ color: "hsl(0 0% 24%)" }}>·</span>
+              <span style={{ color: "hsl(0 0% 26%)" }}>·</span>
               <a
                 href="mailto:hello@secondears.io"
                 className="text-[10px] tracking-wide transition-colors"
-                style={{ color: "hsl(0 0% 44%)" }}
+                style={{ color: "hsl(0 0% 46%)" }}
               >
                 Contact
               </a>
             </div>
-            <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 32%)" }}>
+            <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 35%)" }}>
               © {new Date().getFullYear()} SecondEars. All rights reserved.
             </p>
           </div>
