@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 const PANEL_FLEX: Record<string, number> = {
   "ai-feedback": 2.5,
   "full-analysis": 2,
+  "session": 2,
   "tech-metrics": 1.5,
   "human-feedback": 1.5,
   "todo": 1.2,
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
-  const minWidth = id === "ai-feedback" ? 340 : id === "todo" ? 240 : 200;
+  const minWidth = id === "ai-feedback" ? 340 : id === "session" ? 300 : id === "todo" ? 240 : 200;
 
   return (
     <div

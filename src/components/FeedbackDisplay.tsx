@@ -99,6 +99,7 @@ const PANELS: PanelConfig[] = [
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
   { id: "full-analysis", label: "Full Analysis" },
+  { id: "session", label: "Session" },
   { id: "todo", label: "To-Do List" },
 ];
 
@@ -566,6 +567,9 @@ const FeedbackDisplay = ({
           </div>
         );
 
+      case "session":
+        return <SessionPanel />;
+
       case "todo":
         return (
           <ToDoPanel
@@ -587,6 +591,7 @@ const FeedbackDisplay = ({
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
     "full-analysis": "Full Analysis",
+    "session": "Session",
     "todo": "To-Do List",
   };
 
