@@ -164,7 +164,14 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   // Dual deck mode
   return (
-    <div className="space-y-0">
+    <div
+      className="overflow-hidden"
+      style={{
+        borderRadius: 8,
+        border: "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: DARK_BG,
+      }}
+    >
       <input
         id="ref-track-replace"
         ref={fileInputRef}
@@ -189,9 +196,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         hideControls
         label={audioFileA.name}
         deckVariant="a"
+        containerStyle={{ borderRadius: 0, border: "none" }}
       />
-
-      {/* ── Compact mixer strip ── */}
       <div
         className="flex items-center gap-3 px-4 py-2"
         style={{
@@ -416,6 +422,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           label={activeRefName}
           deckVariant="b"
           outlineMode
+          containerStyle={{ borderRadius: 0, border: "none" }}
         />
         {/* Overlay controls */}
         <div className="absolute top-2 right-2 flex items-center gap-1 z-10">

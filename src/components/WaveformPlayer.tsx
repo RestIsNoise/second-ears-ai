@@ -31,6 +31,8 @@ interface Props {
   outlineMode?: boolean;
   /** Deck variant for styling: 'a' = amber, 'b' = cyan */
   deckVariant?: "a" | "b";
+  /** Override container border-radius and border */
+  containerStyle?: React.CSSProperties;
 }
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
@@ -198,7 +200,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a" }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -344,6 +346,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           backgroundColor: DARK_BG,
           borderRadius: 8,
           border: "1px solid rgba(255,255,255,0.08)",
+          ...containerStyle,
         }}
       >
         {/* Label bar */}
