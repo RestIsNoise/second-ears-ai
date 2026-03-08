@@ -183,14 +183,42 @@ const Analyze = () => {
                     : "Get your mix feedback"}
                 </h1>
               </div>
-              <TrackUploader
-                onResult={handleResult}
-                isAnalyzing={isAnalyzing}
-                setIsAnalyzing={handleStartAnalysis}
-                onProgressStep={setProgressStep}
-                onError={(msg) => setAnalysisError(msg)}
-                defaultMode={prefillMode || undefined}
-              />
+
+              {/* Tab switcher */}
+              {!isNewVersion && (
+                <div className="flex items-center gap-1 mb-8 p-1 rounded-xl bg-secondary/40 border border-border-subtle/60 w-fit mx-auto">
+                  {([
+                    { id: "mix" as AnalyzeTab, label: "Mix Feedback", icon: Activity },
+                    { id: "session" as AnalyzeTab, label: "Ableton Session", icon: Layers },
+                  ]).map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-all duration-150 ${
+                        activeTab === tab.id
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground/80"
+                      }`}
+                    >
+                      <tab.icon className="w-3.5 h-3.5" />
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {activeTab === "mix" ? (
+                <TrackUploader
+                  onResult={handleResult}
+                  isAnalyzing={isAnalyzing}
+                  setIsAnalyzing={handleStartAnalysis}
+                  onProgressStep={setProgressStep}
+                  onError={(msg) => setAnalysisError(msg)}
+                  defaultMode={prefillMode || undefined}
+                />
+              ) : (
+                <AlsAnalyzer />
+              )}
             </>
           )}
         </div>
