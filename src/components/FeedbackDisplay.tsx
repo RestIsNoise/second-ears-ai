@@ -834,30 +834,30 @@ const FeedbackDisplay = ({
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
         <div className="mt-4 mb-4 flex flex-wrap items-center gap-2" style={{ marginTop: 16, marginBottom: 16 }}>
           {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card/50 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
-                className="text-muted-foreground/40 uppercase tracking-wider"
+                className="text-foreground/35 uppercase tracking-[0.06em] font-semibold"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Issue</span>
-              <span className="text-[11px] font-medium text-foreground/70">{n.topIssue}</span>
+              <span className="text-[11px] font-medium text-foreground/65">{n.topIssue}</span>
             </span>
           )}
           {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card/50 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
-                className="text-muted-foreground/40 uppercase tracking-wider"
+                className="text-foreground/35 uppercase tracking-[0.06em] font-semibold"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Win</span>
-              <span className="text-[11px] font-medium text-foreground/70">{n.biggestWin}</span>
+              <span className="text-[11px] font-medium text-foreground/65">{n.biggestWin}</span>
             </span>
           )}
           {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card/50 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
-                className="text-muted-foreground/40 uppercase tracking-wider"
+                className="text-foreground/35 uppercase tracking-[0.06em] font-semibold"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Release</span>
-              <span className="text-[11px] font-medium text-foreground/70">{releaseReadiness}</span>
+              <span className="text-[11px] font-medium text-foreground/65">{releaseReadiness}</span>
             </span>
           )}
         </div>
