@@ -512,25 +512,31 @@ const FeedbackDisplay = ({
             {technicalMetrics ? (
               <TechnicalMetrics metrics={technicalMetrics} compact />
             ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No metrics available</p>
+              <div className="flex flex-col items-center justify-center py-14 gap-1.5">
+                <span className="text-[10px] text-muted-foreground/30">No metrics available</span>
+                <span className="text-[8px] text-muted-foreground/20">Metrics appear after analysis</span>
+              </div>
             )}
           </div>
         );
 
       case "full-analysis":
         return (
-          <div className="p-4 space-y-3">
+          <div className="p-3.5 space-y-2">
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div key={key} className="rounded-xl border border-border-subtle p-3 bg-background">
-                    <h3 className="text-[13px] font-semibold tracking-tight mb-1.5">{label}</h3>
+                  <div key={key} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                    <h3 className="text-[12px] font-semibold tracking-tight mb-1 text-foreground/80">{label}</h3>
                     <AnalysisCardText text={text} />
                   </div>
                 ) : null
               )
             ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No analysis data</p>
+              <div className="flex flex-col items-center justify-center py-14 gap-1.5">
+                <span className="text-[10px] text-muted-foreground/30">No analysis data</span>
+                <span className="text-[8px] text-muted-foreground/20">Run an analysis to see results</span>
+              </div>
             )}
 
             {/* Fix One Thing */}
@@ -602,7 +608,7 @@ const FeedbackDisplay = ({
   const orderedActivePanels = PANELS.filter((p) => activePanels.has(p.id));
 
   return (
-    <div className="animate-fade-up">
+    <div className="animate-fade-up space-y-0">
       {/* ═══ HEADER ═══ */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -610,18 +616,21 @@ const FeedbackDisplay = ({
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="gap-2 text-muted-foreground mb-5"
+            className="gap-2 text-muted-foreground mb-4 -ml-2"
           >
             <ArrowLeft className="w-4 h-4" /> New analysis
           </Button>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {n.trackName && (
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 {n.trackName}
               </h1>
             )}
-            <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            <p
+              className="text-[10px] text-muted-foreground/50 tracking-[0.12em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            >
               {modeLabels[mode]} analysis
             </p>
             {versions && versions.length > 0 && projectId && analysisId && (
@@ -637,12 +646,12 @@ const FeedbackDisplay = ({
         </div>
 
         {/* Collaborator avatars + arrangement toggle */}
-        <div className="flex items-center gap-3 pt-2">
+        <div className="flex items-center gap-2.5 pt-2">
           <button
             onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3 h-3" />
             {showArrangement ? "Hide Arrangement" : "Show Arrangement"}
           </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
@@ -666,7 +675,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-7 md:mt-8 w-full overflow-hidden">
+        <div className="mt-6 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -684,15 +693,15 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-6 rounded-xl border border-border-subtle p-4 animate-fade-up">
+        <div className="mt-4 rounded-xl border border-border-subtle/60 bg-card/30 p-4 shadow-sm transition-all duration-200">
           <AlsAnalyzer />
         </div>
       )}
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-5">
-          <p className="text-[13px] text-foreground/60 leading-relaxed max-w-[85ch]" style={{ lineHeight: 1.6 }}>
+        <div className="mt-5 px-0.5">
+          <p className="text-[12px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.65 }}>
             {n.overallImpression}
           </p>
         </div>
@@ -700,30 +709,39 @@ const FeedbackDisplay = ({
 
       {/* ═══ COMPACT SUMMARY BADGES ═══ */}
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Issue</span>
-              <span className="text-[11px] font-medium text-foreground">{n.topIssue}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Issue</span>
+              <span className="text-[10px] font-medium text-foreground/70">{n.topIssue}</span>
             </span>
           )}
           {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Win</span>
-              <span className="text-[11px] font-medium text-foreground">{n.biggestWin}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Win</span>
+              <span className="text-[10px] font-medium text-foreground/70">{n.biggestWin}</span>
             </span>
           )}
           {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Release</span>
-              <span className="text-[11px] font-medium text-foreground">{releaseReadiness}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Release</span>
+              <span className="text-[10px] font-medium text-foreground/70">{releaseReadiness}</span>
             </span>
           )}
         </div>
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-6 flex border border-border-subtle rounded-xl overflow-hidden" style={{ height: "calc(100vh - 350px)", minHeight: 420 }}>
+      <div className="mt-5 flex border border-border-subtle/50 rounded-xl overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
@@ -739,17 +757,17 @@ const FeedbackDisplay = ({
 
         {/* Mobile panel selector */}
         <div className="md:hidden w-full flex flex-col">
-          <div className="flex overflow-x-auto border-b border-border-subtle p-1.5 gap-1 scrollbar-thin">
+          <div className="flex overflow-x-auto border-b border-border-subtle/40 p-1 gap-0.5 scrollbar-thin bg-secondary/15">
             {PANELS.map((panel) => {
               const isActive = activePanels.has(panel.id);
               return (
                 <button
                   key={panel.id}
                   onClick={() => handleTogglePanel(panel.id)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-colors ${
+                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground/50 hover:text-foreground"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground/40 hover:text-foreground/70"
                   }`}
                 >
                   {panel.label}
@@ -758,9 +776,9 @@ const FeedbackDisplay = ({
             })}
           </div>
           {/* Mobile: stack panels vertically */}
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-1 overflow-y-auto">
             {orderedActivePanels.map((panel) => (
-              <div key={panel.id} className="border-b border-border-subtle last:border-b-0">
+              <div key={panel.id} className="border-b border-border-subtle/30 last:border-b-0">
                 <WorkstationPanel
                   id={panel.id}
                   title={panelTitles[panel.id] || panel.label}
@@ -772,9 +790,9 @@ const FeedbackDisplay = ({
             ))}
           </div>
           {/* Mobile share button */}
-          <div className="p-3 border-t border-border-subtle">
-            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-8 gap-1.5 text-xs">
-              <Share2 className="w-3.5 h-3.5" /> Share
+          <div className="p-2.5 border-t border-border-subtle/40 bg-secondary/10">
+            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-7 gap-1.5 text-[10px]">
+              <Share2 className="w-3 h-3" /> Share
             </Button>
           </div>
         </div>
@@ -782,8 +800,9 @@ const FeedbackDisplay = ({
         {/* Desktop panels area */}
         <div className="hidden md:flex flex-1 min-w-0">
           {orderedActivePanels.length === 0 && (
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground/40">
-              Select a panel from the sidebar
+            <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
+              <span className="text-[11px] text-muted-foreground/30">No panels open</span>
+              <span className="text-[9px] text-muted-foreground/20">Select from the sidebar</span>
             </div>
           )}
           {orderedActivePanels.map((panel) => (
@@ -799,24 +818,26 @@ const FeedbackDisplay = ({
         </div>
       </div>
 
-      {/* ═══ WHAT WORKS & YOUR FOCUS — fixed below panels ═══ */}
+      {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
-          className="mt-6 grid gap-6 border-t border-border-subtle pt-6"
+          className="mt-6 grid gap-5 pt-5 border-t border-border-subtle/40"
           style={{ gridTemplateColumns: n.whatWorks.length > 0 && n.yourFocus.question ? "1fr 1fr" : "1fr" }}
         >
-          {/* What Works */}
           {n.whatWorks.length > 0 && (
             <div>
-              <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase mb-3">
+              <h3
+                className="text-[9px] text-muted-foreground/40 tracking-[0.12em] uppercase mb-2.5"
+                style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+              >
                 {modeWhatWorksLabel[mode] || "What Works"}
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {n.whatWorks.map((item, i) => (
-                  <div key={i} className={`rounded-xl border border-border-subtle bg-card ${item.description ? "p-3.5" : "p-3"}`}>
-                    <h4 className="text-sm font-semibold tracking-tight">{item.title}</h4>
+                  <div key={i} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                    <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{item.title}</h4>
                     {item.description && (
-                      <p className="text-[12px] text-foreground/55 mt-1" style={{ lineHeight: 1.575 }}>{item.description}</p>
+                      <p className="text-[11px] text-foreground/45 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
                     )}
                   </div>
                 ))}
@@ -824,22 +845,30 @@ const FeedbackDisplay = ({
             </div>
           )}
 
-          {/* Your Focus */}
           {n.yourFocus.question && (
             <div>
-              <h3 className="font-mono-brand text-[11px] text-muted-foreground tracking-widest uppercase mb-3">
+              <h3
+                className="text-[9px] text-muted-foreground/40 tracking-[0.12em] uppercase mb-2.5"
+                style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+              >
                 Your Focus
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2.5 rounded-lg border border-border-subtle/40 bg-card/30 p-3">
                 <div>
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">You asked</p>
-                  <p className="text-[13px] text-foreground/70 leading-relaxed italic" style={{ lineHeight: 1.575 }}>
+                  <p
+                    className="text-muted-foreground/35 uppercase tracking-wider mb-1"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                  >You asked</p>
+                  <p className="text-[12px] text-foreground/60 leading-relaxed italic" style={{ lineHeight: 1.55 }}>
                     &ldquo;{n.yourFocus.question}&rdquo;
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono-brand text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Response</p>
-                  <p className="text-[13px] text-foreground/60 leading-relaxed" style={{ lineHeight: 1.575 }}>
+                  <p
+                    className="text-muted-foreground/35 uppercase tracking-wider mb-1"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                  >Response</p>
+                  <p className="text-[12px] text-foreground/50 leading-relaxed" style={{ lineHeight: 1.55 }}>
                     {n.yourFocus.response || "No direct focus response available for this run."}
                   </p>
                 </div>

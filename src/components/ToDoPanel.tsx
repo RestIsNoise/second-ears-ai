@@ -1,7 +1,8 @@
 import { useState, useRef, useCallback } from "react";
-import { Check, Plus, ListChecks } from "lucide-react";
+import { Check, Plus, ListChecks, CircleDashed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 import type { ToDoItem } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -61,37 +62,35 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
   ];
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-background flex flex-col h-full min-h-0 overflow-hidden">
+    <div className="flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header */}
-      <div className="p-4 pb-3 border-b border-border-subtle">
-        <div className="flex items-center gap-2 mb-3">
-          <ListChecks className="w-4 h-4 text-muted-foreground" />
-          <h3 className="text-sm font-semibold tracking-tight text-foreground">To-Do List</h3>
-          {totalCount > 0 && (
-            <span
-              className="text-muted-foreground/60 tabular-nums ml-auto"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
-            >
-              {doneCount}/{totalCount}
-            </span>
-          )}
-        </div>
-
+      <div className="px-4 pt-3 pb-2.5">
         {totalCount > 0 && (
-          <Progress value={progressPct} className="h-1 bg-muted/40" />
+          <div className="flex items-center gap-2 mb-2.5">
+            <span
+              className="text-muted-foreground/50 tabular-nums"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+            >
+              {doneCount}/{totalCount} done
+            </span>
+            <div className="flex-1">
+              <Progress value={progressPct} className="h-[3px] bg-muted/30" />
+            </div>
+          </div>
         )}
 
         {/* Filters */}
-        <div className="flex items-center gap-1 mt-3">
+        <div className="flex items-center gap-0.5 rounded-lg bg-secondary/30 p-0.5">
           {filters.map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
+              className={cn(
+                "flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all duration-150",
                 filter === f.key
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground/60 hover:text-foreground hover:bg-secondary/40"
-              }`}
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground/50 hover:text-foreground/70"
+              )}
             >
               {f.label}
             </button>
@@ -100,19 +99,21 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
       </div>
 
       {/* Task list */}
-      <div className="flex-1 overflow-y-auto min-h-0 p-2">
+      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2">
         {loading && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-xs text-muted-foreground/50 animate-pulse">Loading tasks…</p>
+          <div className="flex flex-col items-center justify-center py-12 text-center gap-2">
+            <CircleDashed className="w-5 h-5 text-muted-foreground/20 animate-spin" />
+            <p className="text-[11px] text-muted-foreground/40">Loading tasks…</p>
           </div>
         )}
         {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-xs text-muted-foreground/50">
-              {filter === "done" ? "No completed tasks yet" : filter === "open" ? "All done!" : "No tasks yet"}
+          <div className="flex flex-col items-center justify-center py-12 text-center gap-1.5">
+            <ListChecks className="w-5 h-5 text-muted-foreground/15" />
+            <p className="text-[11px] text-muted-foreground/40">
+              {filter === "done" ? "No completed tasks" : filter === "open" ? "All caught up!" : "No tasks yet"}
             </p>
-            <p className="text-[10px] text-muted-foreground/35 mt-1">
-              Click "Add to To-Do" on any feedback card
+            <p className="text-[9px] text-muted-foreground/25 max-w-[140px]">
+              {filter === "all" && 'Click "Add to To-Do" on feedback cards or add a note below'}
             </p>
           </div>
         )}
@@ -128,36 +129,40 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
                 e.stopPropagation();
                 onToggle(item.id);
               }}
-              className={`mt-0.5 w-4 h-4 rounded border shrink-0 flex items-center justify-center transition-colors ${
+              className={cn(
+                "mt-0.5 w-[14px] h-[14px] rounded border shrink-0 flex items-center justify-center transition-all duration-150",
                 item.done
-                  ? "bg-foreground/10 border-foreground/15"
-                  : "border-border hover:border-foreground/30"
-              }`}
+                  ? "bg-foreground/8 border-foreground/12"
+                  : "border-border-subtle hover:border-foreground/25 hover:bg-secondary/40"
+              )}
             >
-              {item.done && <Check className="w-2.5 h-2.5 text-foreground/50" />}
+              {item.done && <Check className="w-2 h-2 text-foreground/40" />}
             </button>
 
             <div className="flex-1 min-w-0">
               <p
-                className={`text-xs leading-snug ${
-                  item.done ? "text-muted-foreground/40 line-through" : "text-foreground/80"
-                }`}
+                className={cn(
+                  "text-[11px] leading-snug transition-colors",
+                  item.done ? "text-muted-foreground/35 line-through" : "text-foreground/75"
+                )}
               >
                 {item.text}
               </p>
-              <span
-                className="text-muted-foreground/40 tabular-nums mt-0.5 block"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-              >
-                {formatTime(item.timestampSec)}
-              </span>
+              {item.timestampSec > 0 && (
+                <span
+                  className="text-muted-foreground/30 tabular-nums mt-0.5 block"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                >
+                  {formatTime(item.timestampSec)}
+                </span>
+              )}
             </div>
           </button>
         ))}
       </div>
 
       {/* Add note input */}
-      <div className="p-3 border-t border-border-subtle">
+      <div className="px-3 py-2.5 border-t border-border-subtle/40 bg-secondary/10">
         <div className="flex items-center gap-2">
           <input
             ref={inputRef}
@@ -166,16 +171,16 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             onChange={(e) => setNoteText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add a note…"
-            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none"
+            className="flex-1 bg-transparent text-[11px] text-foreground placeholder:text-muted-foreground/30 outline-none"
           />
           <Button
             variant="ghost"
             size="sm"
             onClick={handleSubmitNote}
             disabled={!noteText.trim()}
-            className="h-7 w-7 p-0 text-muted-foreground/50 hover:text-foreground"
+            className="h-6 w-6 p-0 text-muted-foreground/40 hover:text-foreground"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3 h-3" />
           </Button>
         </div>
       </div>
