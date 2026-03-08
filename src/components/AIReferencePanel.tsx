@@ -1,4 +1,4 @@
-import { Loader2, Copy, Check, Upload } from "lucide-react";
+import { Loader2, Copy, Check, AudioWaveform } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
@@ -99,23 +99,21 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
 
   if (!result) {
     return (
-      <div className="flex flex-col items-center justify-center h-full px-5 py-10 gap-3">
-        <Upload className="w-6 h-6 text-muted-foreground/30" />
-        <div className="text-center space-y-1">
-          <p className="text-[11px] font-medium text-foreground/50">Compare against a reference track</p>
-          <p className="text-[9px] text-muted-foreground/40 max-w-[200px] leading-relaxed">
-            Upload a WAV, MP3 or AIFF to compare metrics and get targeted feedback
+      <div className="flex flex-col items-center justify-center h-full px-6 py-12">
+        <div className="flex flex-col items-center gap-5 rounded-xl border-2 border-dashed border-border/50 px-8 py-10 w-full max-w-[260px]">
+          <AudioWaveform className="w-12 h-12 text-muted-foreground/20" strokeWidth={1.5} />
+          <p className="text-lg font-medium text-foreground/50 tracking-tight text-center" style={{ fontSize: 18 }}>
+            Drop a reference track
           </p>
+          {onUploadClick && (
+            <button
+              onClick={onUploadClick}
+              className="rounded-full border border-border/60 px-4 py-1.5 text-[10px] font-medium text-muted-foreground/50 hover:text-foreground/70 hover:border-foreground/15 hover:bg-secondary/20 transition-all duration-150"
+            >
+              Browse file
+            </button>
+          )}
         </div>
-        {onUploadClick && (
-          <button
-            onClick={onUploadClick}
-            className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
-          >
-            <Upload className="w-3 h-3" />
-            Upload reference track
-          </button>
-        )}
       </div>
     );
   }
