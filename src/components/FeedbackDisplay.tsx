@@ -130,6 +130,7 @@ const FeedbackDisplay = ({
   projectId?: string | null;
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const n = result.normalized;
   const { mode } = n;
   const waveformRef = useRef<WaveformPlayerHandle>(null);
