@@ -719,7 +719,7 @@ const FeedbackDisplay = ({
               )
             )}
             <p
-              className="text-[10px] text-muted-foreground/45 tracking-[0.14em] uppercase"
+              className="text-[11px] text-foreground/40 tracking-[0.08em] uppercase"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               {modeLabels[mode]} analysis
@@ -824,7 +824,7 @@ const FeedbackDisplay = ({
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-10 mb-6 px-0.5">
-          <p className="text-[16px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.6 }}>
+          <p className="text-[16px] text-foreground/50 leading-relaxed max-w-[65ch]" style={{ lineHeight: 1.65 }}>
             {n.overallImpression}
           </p>
         </div>
@@ -864,7 +864,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-8 flex border border-border-subtle/50 rounded-lg overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 380 }}>
+      <div className="mt-8 flex border border-border/50 rounded-lg overflow-hidden bg-card/30" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04)" }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
