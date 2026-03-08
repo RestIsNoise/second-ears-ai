@@ -1,7 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Check, Plus, ListChecks, CircleDashed } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Check, Plus, CircleDashed } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ToDoItem } from "@/types/feedback";
 
@@ -21,6 +19,22 @@ interface Props {
   onItemClick: (item: ToDoItem) => void;
   loading?: boolean;
 }
+
+const NOTEBOOK_BG = "#FAFAF7";
+const RULED_LINE = "rgba(180, 170, 155, 0.18)";
+const SERIF_FONT = "'Georgia', 'Palatino', 'Times New Roman', serif";
+
+/* Ruled-lines background as repeating gradient */
+const ruledBg = {
+  backgroundImage: `repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 31px,
+    ${RULED_LINE} 31px,
+    ${RULED_LINE} 32px
+  )`,
+  backgroundPositionY: 8,
+};
 
 const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
   const [filter, setFilter] = useState<Filter>("all");
@@ -62,25 +76,41 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
   ];
 
   return (
-    <div className="flex flex-col h-full min-h-0 overflow-hidden">
+    <div
+      className="flex flex-col h-full min-h-0 overflow-hidden rounded-b-lg"
+      style={{ backgroundColor: NOTEBOOK_BG }}
+    >
       {/* Header */}
-      <div className="px-4 pt-3 pb-2.5">
+      <div className="px-4 pt-3 pb-2.5" style={{ backgroundColor: NOTEBOOK_BG }}>
         {totalCount > 0 && (
           <div className="flex items-center gap-2 mb-2.5">
             <span
-              className="text-muted-foreground/50 tabular-nums"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+              className="tabular-nums"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 10,
+                color: "rgba(120, 110, 95, 0.6)",
+              }}
             >
               {doneCount}/{totalCount} done
             </span>
-            <div className="flex-1">
-              <Progress value={progressPct} className="h-[3px] bg-muted/30" />
+            <div className="flex-1 h-[3px] rounded-full" style={{ backgroundColor: "rgba(180, 170, 155, 0.2)" }}>
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{
+                  width: `${progressPct}%`,
+                  backgroundColor: "rgba(120, 110, 95, 0.35)",
+                }}
+              />
             </div>
           </div>
         )}
 
         {/* Filters */}
-        <div className="flex items-center gap-0.5 rounded-lg bg-secondary/30 p-0.5">
+        <div
+          className="flex items-center gap-0.5 rounded-lg p-0.5"
+          style={{ backgroundColor: "rgba(180, 170, 155, 0.12)" }}
+        >
           {filters.map((f) => (
             <button
               key={f.key}
@@ -88,9 +118,14 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               className={cn(
                 "flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all duration-150",
                 filter === f.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground/50 hover:text-foreground/70"
+                  ? "shadow-sm"
+                  : "hover:opacity-80"
               )}
+              style={{
+                fontFamily: SERIF_FONT,
+                color: filter === f.key ? "rgba(60, 55, 45, 0.85)" : "rgba(120, 110, 95, 0.5)",
+                backgroundColor: filter === f.key ? NOTEBOOK_BG : "transparent",
+              }}
             >
               {f.label}
             </button>
@@ -99,59 +134,97 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
       </div>
 
       {/* Task list */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2">
+      <div
+        className="flex-1 overflow-y-auto min-h-0 px-2 pb-2"
+        style={ruledBg}
+      >
         {loading && (
           <div className="flex flex-col items-center justify-center py-12 text-center gap-2">
-            <CircleDashed className="w-5 h-5 text-muted-foreground/20 animate-spin" />
-            <p className="text-[11px] text-muted-foreground/40">Loading tasks…</p>
+            <CircleDashed className="w-5 h-5 animate-spin" style={{ color: "rgba(150, 140, 125, 0.3)" }} />
+            <p className="text-[11px]" style={{ color: "rgba(120, 110, 95, 0.45)", fontFamily: SERIF_FONT }}>
+              Loading tasks…
+            </p>
           </div>
         )}
+
+        {/* Empty state */}
         {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-center gap-1.5">
-            <ListChecks className="w-5 h-5 text-muted-foreground/15" />
-            <p className="text-[11px] text-muted-foreground/40">
-              {filter === "done" ? "No completed tasks" : filter === "open" ? "All caught up!" : "No tasks yet"}
+          <div
+            className="flex flex-col items-center justify-center py-14 px-6 text-center gap-3"
+            style={ruledBg}
+          >
+            <p
+              className="text-[14px] tracking-tight"
+              style={{ color: "rgba(100, 90, 75, 0.45)", fontFamily: SERIF_FONT }}
+            >
+              {filter === "done"
+                ? "No completed tasks"
+                : filter === "open"
+                ? "All caught up!"
+                : "No tasks yet"}
             </p>
-            <p className="text-[9px] text-muted-foreground/25 max-w-[140px]">
-              {filter === "all" && 'Click "Add to To-Do" on feedback cards or add a note below'}
-            </p>
+            {filter === "all" && (
+              <p
+                className="text-[12px] leading-relaxed max-w-[200px]"
+                style={{ color: "rgba(140, 130, 115, 0.45)", fontFamily: SERIF_FONT }}
+              >
+                Add one from the feedback cards below
+              </p>
+            )}
           </div>
         )}
-        {filtered.map((item) => (
+
+        {filtered.map((item, idx) => (
           <button
             key={item.id}
             onClick={() => onItemClick(item)}
-            className="w-full text-left flex items-start gap-2.5 p-2.5 rounded-lg hover:bg-secondary/30 transition-colors group"
+            className="w-full text-left flex items-start gap-2.5 px-3 py-2 rounded-lg transition-colors group"
+            style={{
+              borderBottom: idx < filtered.length - 1 ? `1px solid ${RULED_LINE}` : "none",
+            }}
           >
-            {/* Checkbox */}
+            {/* Hand-drawn style checkbox */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onToggle(item.id);
               }}
-              className={cn(
-                "mt-0.5 w-[14px] h-[14px] rounded border shrink-0 flex items-center justify-center transition-all duration-150",
-                item.done
-                  ? "bg-foreground/8 border-foreground/12"
-                  : "border-border-subtle hover:border-foreground/25 hover:bg-secondary/40"
-              )}
+              className="mt-0.5 shrink-0 flex items-center justify-center transition-all duration-150"
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 4,
+                border: item.done
+                  ? "1.5px solid rgba(120, 110, 95, 0.2)"
+                  : "1.5px solid rgba(150, 140, 125, 0.35)",
+                backgroundColor: item.done ? "rgba(120, 110, 95, 0.06)" : "transparent",
+                transform: "rotate(-1deg)",
+              }}
             >
-              {item.done && <Check className="w-2 h-2 text-foreground/40" />}
+              {item.done && <Check className="w-2.5 h-2.5" style={{ color: "rgba(100, 90, 75, 0.45)" }} />}
             </button>
 
             <div className="flex-1 min-w-0">
               <p
                 className={cn(
-                  "text-[11px] leading-snug transition-colors",
-                  item.done ? "text-muted-foreground/35 line-through" : "text-foreground/75"
+                  "text-[12px] leading-relaxed transition-colors",
+                  item.done ? "line-through" : ""
                 )}
+                style={{
+                  fontFamily: SERIF_FONT,
+                  color: item.done ? "rgba(140, 130, 115, 0.4)" : "rgba(60, 55, 45, 0.75)",
+                }}
               >
                 {item.text}
               </p>
               {item.timestampSec > 0 && (
                 <span
-                  className="text-muted-foreground/30 tabular-nums mt-0.5 block"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                  className="tabular-nums mt-0.5 block"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 9,
+                    color: "rgba(150, 140, 125, 0.4)",
+                  }}
                 >
                   {formatTime(item.timestampSec)}
                 </span>
@@ -161,8 +234,14 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
         ))}
       </div>
 
-      {/* Add note input */}
-      <div className="px-3 py-2.5 border-t border-border-subtle/40 bg-secondary/10">
+      {/* Add note — styled as text link */}
+      <div
+        className="px-4 py-3"
+        style={{
+          borderTop: `1px solid ${RULED_LINE}`,
+          backgroundColor: NOTEBOOK_BG,
+        }}
+      >
         <div className="flex items-center gap-2">
           <input
             ref={inputRef}
@@ -171,17 +250,27 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             onChange={(e) => setNoteText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add a note…"
-            className="flex-1 bg-transparent text-[11px] text-foreground placeholder:text-muted-foreground/30 outline-none"
+            className="flex-1 bg-transparent text-[12px] outline-none"
+            style={{
+              fontFamily: SERIF_FONT,
+              color: "rgba(60, 55, 45, 0.7)",
+              caretColor: "rgba(120, 110, 95, 0.6)",
+            }}
           />
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={handleSubmitNote}
             disabled={!noteText.trim()}
-            className="h-6 w-6 p-0 text-muted-foreground/40 hover:text-foreground"
+            className="text-[11px] transition-colors disabled:opacity-30"
+            style={{
+              fontFamily: SERIF_FONT,
+              color: "rgba(120, 110, 95, 0.55)",
+            }}
           >
-            <Plus className="w-3 h-3" />
-          </Button>
+            <span className="flex items-center gap-1">
+              <Plus className="w-3 h-3" />
+              add
+            </span>
+          </button>
         </div>
       </div>
     </div>

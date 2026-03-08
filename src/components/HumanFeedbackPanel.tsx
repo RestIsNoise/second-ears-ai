@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, Check, User } from "lucide-react";
+import { Plus, Check, User, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -157,11 +157,14 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           </div>
         )}
         {!loadingComments && comments.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-xs text-muted-foreground/50">No comments yet</p>
-            <p className="text-[10px] text-muted-foreground/35 mt-1">
-              Add notes at any point in the track
-            </p>
+          <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-4">
+            <MessageSquare className="w-10 h-10 text-muted-foreground/25" strokeWidth={1.5} />
+            <div className="space-y-1.5">
+              <p className="text-[15px] font-medium text-foreground/50 tracking-tight">No notes yet</p>
+              <p className="text-[12px] text-muted-foreground/40 leading-relaxed max-w-[220px]">
+                Click on the waveform at any point to add a timestamped comment
+              </p>
+            </div>
           </div>
         )}
         {comments.map((c) => (
