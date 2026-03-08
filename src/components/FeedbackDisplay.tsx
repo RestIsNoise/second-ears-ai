@@ -655,12 +655,22 @@ const FeedbackDisplay = ({
           />
         );
 
+      case "ai-reference":
+        return (
+          <AIReferencePanel
+            loading={refLoading}
+            result={refResult}
+            refTrackName={refTrackName}
+          />
+        );
+
       default:
         return null;
     }
   };
 
   const panelTitles: Record<string, string> = {
+    "ai-reference": "AI Reference",
     "ai-feedback": "AI Feedback",
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
