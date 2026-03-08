@@ -52,12 +52,12 @@ const formatTimePrecise = (s: number) => {
 
 /* ── Deck colors ── */
 const DECK_COLORS = {
-  a: { wave: "#F59E0B", progress: "#F59E0B", dim: "rgba(245, 158, 11, 0.25)" },
-  b: { wave: "#22D3EE", progress: "#22D3EE", dim: "rgba(34, 211, 238, 0.25)" },
+  a: { wave: "#C8820A", progress: "#C8820A", dim: "rgba(200, 130, 10, 0.25)" },
+  b: { wave: "#1BA8C0", progress: "#1BA8C0", dim: "rgba(27, 168, 192, 0.25)" },
 };
 
-const DARK_BG = "#1A1A1A";
-const DARKER_BG = "#111111";
+const DARK_BG = "#252525";
+const DARKER_BG = "#202020";
 
 /* ── Time ruler helpers ── */
 
@@ -342,8 +342,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         className="overflow-hidden"
         style={{
           backgroundColor: DARK_BG,
-          borderRadius: 4,
-          border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 8,
+          border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
         {/* Label bar */}
@@ -358,7 +358,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.5)",
+                color: "#AAAAAA",
               }}
             >
               {label}
