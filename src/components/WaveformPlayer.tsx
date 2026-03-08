@@ -31,6 +31,8 @@ interface Props {
   outlineMode?: boolean;
   /** Deck variant for styling: 'a' = amber, 'b' = cyan */
   deckVariant?: "a" | "b";
+  /** Override container border-radius and border */
+  containerStyle?: React.CSSProperties;
 }
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
