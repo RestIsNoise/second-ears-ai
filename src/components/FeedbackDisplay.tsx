@@ -6,6 +6,7 @@ import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
+import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
 import ShareModal from "@/components/ShareModal";
@@ -150,10 +151,12 @@ const FeedbackDisplay = ({
   const [refLoading, setRefLoading] = useState(false);
   const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
   const [refTrackName, setRefTrackName] = useState("");
+  const [refAudioFile, setRefAudioFile] = useState<File | null>(null);
 
   // Reference comparison polling
-  const handleRefComparisonStart = useCallback((jobId: string, refName: string) => {
+  const handleRefComparisonStart = useCallback((jobId: string, refName: string, refFile: File) => {
     setRefTrackName(refName);
+    setRefAudioFile(refFile);
     setRefLoading(true);
     setRefResult(null);
 
@@ -810,7 +813,27 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-      {/* ═══ ARRANGEMENT PANEL ═══ */}
+      {/* ═══ REFERENCE WAVEFORM ═══ */}
+      {refAudioFile && activePanels.has("ai-reference") && (
+        <div className="mt-2 pb-4 w-full overflow-hidden">
+          <div className="flex items-center gap-2 mb-1.5 px-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+            <span
+              className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-[0.06em] truncate"
+              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            >
+              {refTrackName}
+            </span>
+          </div>
+          <WaveformPlayer
+            audioFile={refAudioFile}
+            waveColor="hsl(var(--muted-foreground) / 0.15)"
+            progressColor="hsl(var(--muted-foreground) / 0.45)"
+          />
+        </div>
+      )}
+
+
       {showArrangement && (
         <div className="mt-5 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
           <AlsAnalyzer />
