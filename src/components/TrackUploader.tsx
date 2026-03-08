@@ -12,6 +12,13 @@ const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activ
   { id: "perception", label: "Perception", tag: "The listener", icon: Eye },
 ];
 
+type Goal = "mixing" | "mastering" | "release_check";
+const goals: { id: Goal; label: string; icon: typeof Target }[] = [
+  { id: "mixing", label: "Mixing", icon: Disc3 },
+  { id: "mastering", label: "Mastering", icon: Target },
+  { id: "release_check", label: "Release check", icon: CheckCircle2 },
+];
+
 interface Props {
   onResult: (result: FeedbackResult) => void;
   isAnalyzing: boolean;
