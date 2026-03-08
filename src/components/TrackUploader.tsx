@@ -65,13 +65,16 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       onProgressStep?.(1);
       const { data: signedData, error: signedError } = await supabase.storage.from("tracks").createSignedUrl(storagePath, 3600);
       if (signedError) console.warn("[TrackUploader] Signed URL failed:", signedError.message);
+      const fullSignedUrl = signedData?.signedUrl
+        ? (signedData.signedUrl.startsWith("http") ? signedData.signedUrl : `https://ltkkcqthnnnyskvomjeb.supabase.co/storage/v1${signedData.signedUrl}`)
+        : undefined;
       onProgressStep?.(2);
       const feedbackRes = await fetch(
         "https://secondears-backend-production.up.railway.app/api/feedback",
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": "secondears-secret-2024" },
-          body: JSON.stringify({ audioUrl: signedData?.signedUrl || undefined, fileName: file.name, mode, userContext: context.trim() || undefined }),
+          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined }),
         }
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
