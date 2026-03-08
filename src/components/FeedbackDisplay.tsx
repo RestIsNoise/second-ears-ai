@@ -150,10 +150,12 @@ const FeedbackDisplay = ({
   const [refLoading, setRefLoading] = useState(false);
   const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
   const [refTrackName, setRefTrackName] = useState("");
+  const [refAudioFile, setRefAudioFile] = useState<File | null>(null);
 
   // Reference comparison polling
-  const handleRefComparisonStart = useCallback((jobId: string, refName: string) => {
+  const handleRefComparisonStart = useCallback((jobId: string, refName: string, refFile: File) => {
     setRefTrackName(refName);
+    setRefAudioFile(refFile);
     setRefLoading(true);
     setRefResult(null);
 
