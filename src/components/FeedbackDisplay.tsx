@@ -751,7 +751,7 @@ const FeedbackDisplay = ({
         onClose={() => setRefModalOpen(false)}
         onComparisonStart={handleRefComparisonStart}
         userMetrics={technicalMetrics}
-        userTrackName={n.trackName || fileName || ""}
+        userTrackName={n.trackName || audioFile?.name || ""}
         mode={mode}
       />
 
