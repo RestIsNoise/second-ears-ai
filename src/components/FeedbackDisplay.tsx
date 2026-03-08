@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, ChevronDown, Layers } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Layers } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
