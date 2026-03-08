@@ -6,7 +6,6 @@ import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
-import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
 import ShareModal from "@/components/ShareModal";
@@ -801,6 +800,8 @@ const FeedbackDisplay = ({
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
+            audioFileB={refAudioFile && activePanels.has("ai-reference") ? refAudioFile : null}
+            refTrackName={refTrackName}
             markersA={markers}
             activeMarkerId={activeItemId}
             onMarkerClick={handleMarkerClick}
@@ -809,26 +810,6 @@ const FeedbackDisplay = ({
             onAddNote={handleAddNoteFromWaveform}
             onAddToDo={handleAddToDoWithTimestamp}
             onEditNote={handleEditAnnotation}
-          />
-        </div>
-      )}
-
-      {/* ═══ REFERENCE WAVEFORM ═══ */}
-      {refAudioFile && activePanels.has("ai-reference") && (
-        <div className="mt-2 pb-4 w-full overflow-hidden">
-          <div className="flex items-center gap-2 mb-1.5 px-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-            <span
-              className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-[0.06em] truncate"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-            >
-              {refTrackName}
-            </span>
-          </div>
-          <WaveformPlayer
-            audioFile={refAudioFile}
-            waveColor="hsl(var(--muted-foreground) / 0.15)"
-            progressColor="hsl(var(--muted-foreground) / 0.45)"
           />
         </div>
       )}
