@@ -735,7 +735,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-6 flex border border-border-subtle rounded-xl overflow-hidden" style={{ height: "calc(100vh - 350px)", minHeight: 420 }}>
+      <div className="mt-5 flex border border-border-subtle/50 rounded-xl overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
@@ -751,17 +751,17 @@ const FeedbackDisplay = ({
 
         {/* Mobile panel selector */}
         <div className="md:hidden w-full flex flex-col">
-          <div className="flex overflow-x-auto border-b border-border-subtle p-1.5 gap-1 scrollbar-thin">
+          <div className="flex overflow-x-auto border-b border-border-subtle/40 p-1 gap-0.5 scrollbar-thin bg-secondary/15">
             {PANELS.map((panel) => {
               const isActive = activePanels.has(panel.id);
               return (
                 <button
                   key={panel.id}
                   onClick={() => handleTogglePanel(panel.id)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-colors ${
+                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground/50 hover:text-foreground"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground/40 hover:text-foreground/70"
                   }`}
                 >
                   {panel.label}
@@ -770,9 +770,9 @@ const FeedbackDisplay = ({
             })}
           </div>
           {/* Mobile: stack panels vertically */}
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-1 overflow-y-auto">
             {orderedActivePanels.map((panel) => (
-              <div key={panel.id} className="border-b border-border-subtle last:border-b-0">
+              <div key={panel.id} className="border-b border-border-subtle/30 last:border-b-0">
                 <WorkstationPanel
                   id={panel.id}
                   title={panelTitles[panel.id] || panel.label}
@@ -784,9 +784,9 @@ const FeedbackDisplay = ({
             ))}
           </div>
           {/* Mobile share button */}
-          <div className="p-3 border-t border-border-subtle">
-            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-8 gap-1.5 text-xs">
-              <Share2 className="w-3.5 h-3.5" /> Share
+          <div className="p-2.5 border-t border-border-subtle/40 bg-secondary/10">
+            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-7 gap-1.5 text-[10px]">
+              <Share2 className="w-3 h-3" /> Share
             </Button>
           </div>
         </div>
@@ -794,8 +794,9 @@ const FeedbackDisplay = ({
         {/* Desktop panels area */}
         <div className="hidden md:flex flex-1 min-w-0">
           {orderedActivePanels.length === 0 && (
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground/40">
-              Select a panel from the sidebar
+            <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
+              <span className="text-[11px] text-muted-foreground/30">No panels open</span>
+              <span className="text-[9px] text-muted-foreground/20">Select from the sidebar</span>
             </div>
           )}
           {orderedActivePanels.map((panel) => (
