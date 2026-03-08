@@ -422,6 +422,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           label={activeRefName}
           deckVariant="b"
           outlineMode
+          containerStyle={{ borderRadius: 0, border: "none" }}
         />
         {/* Overlay controls */}
         <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
