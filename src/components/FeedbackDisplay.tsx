@@ -669,7 +669,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-7 md:mt-8 w-full overflow-hidden">
+        <div className="mt-6 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -687,15 +687,15 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-6 rounded-xl border border-border-subtle p-4 animate-fade-up">
+        <div className="mt-4 rounded-xl border border-border-subtle/60 bg-card/30 p-4 shadow-sm transition-all duration-200">
           <AlsAnalyzer />
         </div>
       )}
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-5">
-          <p className="text-[13px] text-foreground/60 leading-relaxed max-w-[85ch]" style={{ lineHeight: 1.6 }}>
+        <div className="mt-5 px-0.5">
+          <p className="text-[12px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.65 }}>
             {n.overallImpression}
           </p>
         </div>
@@ -703,23 +703,32 @@ const FeedbackDisplay = ({
 
       {/* ═══ COMPACT SUMMARY BADGES ═══ */}
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Issue</span>
-              <span className="text-[11px] font-medium text-foreground">{n.topIssue}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Issue</span>
+              <span className="text-[10px] font-medium text-foreground/70">{n.topIssue}</span>
             </span>
           )}
           {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Win</span>
-              <span className="text-[11px] font-medium text-foreground">{n.biggestWin}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Win</span>
+              <span className="text-[10px] font-medium text-foreground/70">{n.biggestWin}</span>
             </span>
           )}
           {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1">
-              <span className="font-mono-brand text-[9px] text-muted-foreground/50 uppercase tracking-wider">Release</span>
-              <span className="text-[11px] font-medium text-foreground">{releaseReadiness}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-2.5 py-0.5">
+              <span
+                className="text-muted-foreground/40 uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              >Release</span>
+              <span className="text-[10px] font-medium text-foreground/70">{releaseReadiness}</span>
             </span>
           )}
         </div>
