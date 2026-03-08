@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
-import { Play, Pause, RotateCcw, X, RefreshCw } from "lucide-react";
+import { Play, Pause, RotateCcw, X, RefreshCw, Headphones, Volume2, VolumeX, Repeat, AudioWaveform } from "lucide-react";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import type { WaveformMarker } from "@/types/feedback";
