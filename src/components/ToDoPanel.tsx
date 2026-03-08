@@ -149,28 +149,13 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
 
         {/* Empty state */}
         {!loading && filtered.length === 0 && (
-          <div
-            className="flex flex-col items-center justify-center py-14 px-6 text-center gap-3"
-            style={ruledBg}
-          >
+          <div className="flex items-center justify-center py-14 px-6">
             <p
-              className="text-[14px] tracking-tight"
-              style={{ color: "rgba(100, 90, 75, 0.45)", fontFamily: SERIF_FONT }}
+              className="text-[12px]"
+              style={{ color: "rgba(140, 130, 115, 0.45)", fontFamily: SERIF_FONT }}
             >
-              {filter === "done"
-                ? "No completed tasks"
-                : filter === "open"
-                ? "All caught up!"
-                : "No tasks yet"}
+              Your list is empty.
             </p>
-            {filter === "all" && (
-              <p
-                className="text-[12px] leading-relaxed max-w-[200px]"
-                style={{ color: "rgba(140, 130, 115, 0.45)", fontFamily: SERIF_FONT }}
-              >
-                Add one from the feedback cards below
-              </p>
-            )}
           </div>
         )}
 
