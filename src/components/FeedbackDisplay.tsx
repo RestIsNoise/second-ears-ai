@@ -830,7 +830,7 @@ const FeedbackDisplay = ({
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
         <div className="mt-4 mb-4 flex flex-wrap items-center gap-2" style={{ marginTop: 16, marginBottom: 16 }}>
           {n.topIssue && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
@@ -839,7 +839,7 @@ const FeedbackDisplay = ({
             </span>
           )}
           {n.biggestWin && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
@@ -848,7 +848,7 @@ const FeedbackDisplay = ({
             </span>
           )}
           {releaseReadiness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
                 className="text-muted-foreground/40 uppercase tracking-wider"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
