@@ -848,5 +848,8 @@ const FeedbackDisplay = ({
           <AlsAnalyzer />
         </div>
       )}
+    </div>
+  );
+};
 
 export default FeedbackDisplay;
