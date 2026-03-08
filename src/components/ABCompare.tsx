@@ -16,6 +16,8 @@ const formatTime = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
+import type { FrequencyData } from "@/lib/parseFrequencyData";
+
 interface Props {
   audioFileA: File;
   audioFileB?: File | null;
@@ -28,6 +30,8 @@ interface Props {
   onAddNote?: (text: string, timestampSec: number) => void;
   onAddToDo?: (text: string, timestampSec: number) => void;
   onEditNote?: (markerId: string) => void;
+  frequencyDataA?: FrequencyData | null;
+  frequencyDataB?: FrequencyData | null;
 }
 
 const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({

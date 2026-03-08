@@ -2,7 +2,9 @@ import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardR
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import WaveformMarkers, { MARKER_ZONE_HEIGHT } from "@/components/WaveformMarkers";
+import FrequencyEnergyBar from "@/components/FrequencyEnergyBar";
 import type { WaveformMarker } from "@/types/feedback";
+import type { FrequencyData } from "@/lib/parseFrequencyData";
 
 export interface WaveformPlayerHandle {
   seekTo: (timeSec: number) => void;
@@ -33,6 +35,8 @@ interface Props {
   deckVariant?: "a" | "b";
   /** Override container border-radius and border */
   containerStyle?: React.CSSProperties;
+  /** Frequency energy data for spectrum display */
+  frequencyData?: FrequencyData | null;
 }
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
@@ -200,7 +204,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle, frequencyData }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -476,6 +480,20 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               )}
             </div>
           </div>
+
+          {/* Frequency energy bars */}
+          {frequencyData && (
+            <FrequencyEnergyBar
+              bands={[
+                { label: "SUB", value: frequencyData.sub },
+                { label: "LOW", value: frequencyData.low },
+                { label: "MID", value: frequencyData.mid },
+                { label: "HIGH", value: frequencyData.high },
+              ]}
+              color={colors.wave}
+              dimColor={colors.dim}
+            />
+          )}
 
           {/* Controls row — hardware style */}
           {!hideControls && (
