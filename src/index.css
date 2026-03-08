@@ -19,6 +19,39 @@
     background-color: hsl(var(--foreground) / 0.1);
     border-radius: 9999px;
   }
+  }
+
+  /* Crossfader slider */
+  .crossfader-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 20px;
+    border-radius: 3px;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 2;
+  }
+  .crossfader-input::-moz-range-thumb {
+    width: 14px;
+    height: 20px;
+    border-radius: 3px;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .crossfader-input::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 4px;
+  }
+  .crossfader-input::-moz-range-track {
+    background: transparent;
+    height: 4px;
+  }
 }
 
 @layer base {
