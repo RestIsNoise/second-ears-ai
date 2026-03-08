@@ -173,11 +173,14 @@ const Analyze = () => {
             />
           ) : (
             <>
-              <div className="text-center mb-6">
-                <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
+              <div className="text-center mb-8">
+                <p
+                  className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+                >
                   {isNewVersion ? "New version" : "Upload & analyze"}
                 </p>
-                <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                <h1 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">
                   {isNewVersion && prefillTrackName
                     ? `${prefillTrackName} — v${nextVersion}`
                     : "Get your mix feedback"}
