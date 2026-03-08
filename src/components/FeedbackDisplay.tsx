@@ -11,6 +11,7 @@ import ShareBlock from "@/components/ShareBlock";
 import CollaboratorAvatars from "@/components/CollaboratorAvatars";
 import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
+import SessionPanel from "@/components/SessionPanel";
 import HumanFeedbackPanel from "@/components/HumanFeedbackPanel";
 import PanelSidebar from "@/components/PanelSidebar";
 import type { PanelConfig } from "@/components/PanelSidebar";
