@@ -35,25 +35,16 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState<Goal>("mixing");
-  const [inputKey, setInputKey] = useState(0);
 
-  // Reset component state fully on mount
+  // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
     setFile(null);
     setContext("");
     setGoal("mixing");
     setDragOver(false);
-    setInputKey((k) => k + 1);
-    // Reset file input value
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    return () => {
-      // Cleanup on unmount
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    };
   }, []);
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
@@ -158,16 +149,18 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   return (
     <div className="space-y-6">
       <input
-        key={inputKey}
         id="track-file-input"
         ref={fileInputRef}
         type="file"
         accept=".mp3,.wav,.flac,audio/*"
         onChange={handleFileChange}
-        style={{position:"fixed",top:"-9999px",left:"-9999px",width:"1px",height:"1px",opacity:0}}
+        className="sr-only"
       />
-      <label
-        htmlFor="track-file-input"
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => fileInputRef.current?.click()}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -194,7 +187,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             </div>
           </>
         )}
-      </label>
+      </div>
       <div>
         <input
           type="text"
