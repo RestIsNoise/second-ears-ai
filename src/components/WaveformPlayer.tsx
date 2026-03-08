@@ -29,7 +29,11 @@ interface Props {
   waveColor?: string;
   progressColor?: string;
   outlineMode?: boolean;
+  /** Deck variant for styling: 'a' = amber, 'b' = cyan */
+  deckVariant?: "a" | "b";
 }
+
+const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
@@ -45,6 +49,15 @@ const formatTimePrecise = (s: number) => {
   const tenths = Math.floor((s % 1) * 10);
   return `${m}:${sec.toString().padStart(2, "0")}.${tenths}`;
 };
+
+/* ── Deck colors ── */
+const DECK_COLORS = {
+  a: { wave: "#F59E0B", progress: "#F59E0B", dim: "rgba(245, 158, 11, 0.25)" },
+  b: { wave: "#22D3EE", progress: "#22D3EE", dim: "rgba(34, 211, 238, 0.25)" },
+};
+
+const DARK_BG = "#1A1A1A";
+const DARKER_BG = "#111111";
 
 /* ── Time ruler helpers ── */
 
@@ -100,7 +113,7 @@ const TimeRuler = ({
         {/* Bottom border line */}
         <div
           className="absolute bottom-0 left-0 right-0"
-          style={{ height: "1px", backgroundColor: "hsl(var(--foreground) / 0.08)" }}
+          style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }}
         />
 
         {/* Ticks + labels */}
@@ -116,20 +129,18 @@ const TimeRuler = ({
                 style={{
                   width: isMajor ? "1px" : "0.5px",
                   height: isMajor ? 10 : 5,
-                  backgroundColor: isMajor
-                    ? "hsl(var(--foreground) / 0.35)"
-                    : "hsl(var(--foreground) / 0.1)",
+                  backgroundColor: isMajor ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
                 }}
               />
               {isMajor && (
                 <span
                   className="absolute whitespace-nowrap tabular-nums"
                   style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontFamily: MONO,
                     fontSize: 9,
                     lineHeight: 1,
                     letterSpacing: "0.02em",
-                    color: "hsl(var(--foreground) / 0.4)",
+                    color: "rgba(255,255,255,0.35)",
                     bottom: 13,
                     left: 0,
                     transform: time === 0 ? "none" : "translateX(-50%)",
@@ -151,7 +162,7 @@ const TimeRuler = ({
             transition: playing ? "none" : "left 0.1s ease-out",
           }}
         >
-          <div style={{ width: "1px", height: 12, backgroundColor: "hsl(var(--foreground) / 0.7)" }} />
+          <div style={{ width: "1px", height: 12, backgroundColor: "rgba(255,255,255,0.8)" }} />
         </div>
 
         {/* Hover tooltip */}
@@ -163,13 +174,13 @@ const TimeRuler = ({
             <span
               className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
               style={{
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: MONO,
                 fontSize: 9,
                 lineHeight: 1,
                 letterSpacing: "0.02em",
-                color: snappedMarker ? "hsl(var(--foreground) / 0.9)" : "hsl(var(--foreground) / 0.6)",
-                backgroundColor: "hsl(var(--background) / 0.95)",
-                border: `0.5px solid hsl(var(--foreground) / ${snappedMarker ? "0.15" : "0.08"})`,
+                color: snappedMarker ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.6)",
+                backgroundColor: "rgba(0,0,0,0.85)",
+                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.15" : "0.08"})`,
                 fontWeight: snappedMarker ? 500 : 400,
               }}
             >
@@ -187,7 +198,7 @@ const TimeRuler = ({
 /* ── Main component ── */
 
 const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
-  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode }, ref) => {
+  ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a" }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
@@ -199,6 +210,10 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [hoverX, setHoverX] = useState<number | null>(null);
     const [hoverTime, setHoverTime] = useState<number>(0);
     const [containerWidth, setContainerWidth] = useState(0);
+
+    const colors = DECK_COLORS[deckVariant];
+    const resolvedWaveColor = waveColor || colors.dim;
+    const resolvedProgressColor = progressColor || colors.progress;
 
     useImperativeHandle(ref, () => ({
       seekTo: (timeSec: number) => {
@@ -235,8 +250,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
       const wsOptions: Record<string, any> = {
         container: containerRef.current,
-        waveColor: waveColor || "#d0d0d0",
-        progressColor: progressColor || "#1a1a1a",
+        waveColor: resolvedWaveColor,
+        progressColor: resolvedProgressColor,
         cursorColor: "transparent",
         cursorWidth: 0,
         barWidth: 1,
@@ -248,8 +263,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       };
 
       if (outlineMode) {
-        const outlineColor = waveColor || "#d0d0d0";
-        const outlineProgressColor = progressColor || "#1a1a1a";
+        const outlineColor = resolvedWaveColor;
         wsOptions.waveColor = "transparent";
         wsOptions.progressColor = "transparent";
         wsOptions.renderFunction = (channels: Float32Array[], ctx: CanvasRenderingContext2D) => {
@@ -292,7 +306,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
       wsRef.current = ws;
 
       return () => { window.removeEventListener("resize", onResize); ws.destroy(); wsRef.current = null; };
-    }, [audioFile, waveColor, progressColor]);
+    }, [audioFile, resolvedWaveColor, resolvedProgressColor]);
 
     const togglePlay = useCallback(() => wsRef.current?.playPause(), []);
     const restart = useCallback(() => { wsRef.current?.seekTo(0); wsRef.current?.play(); }, []);
@@ -321,147 +335,192 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
-    const hasMarkers = markers.length > 0;
     const WAVEFORM_HEIGHT = 96;
 
     return (
-      <div className="rounded-xl border border-border-subtle bg-background p-4 md:p-5 space-y-0">
-        {error && (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 flex items-start gap-3 mb-2.5">
-            <AlertCircle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-destructive">Waveform failed to load</p>
-              <p className="text-xs text-muted-foreground mt-1 break-all">{error}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Ruler + waveform + markers — single hover zone */}
-        <div
-          ref={wrapperRef}
-          className="relative overflow-visible cursor-crosshair"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Time ruler — reduced gap */}
-          {duration > 0 && containerWidth > 0 && (
-            <TimeRuler
-              duration={duration}
-              containerWidth={containerWidth}
-              currentTime={currentTime}
-              playing={playing}
-              hoverX={hoverX}
-              hoverTime={hoverTime}
-              markers={markers}
-              snappedMarkerId={snappedMarkerId_hover}
-            />
-          )}
-
-          {/* Waveform container with markers overlaid */}
-          <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 2 }}>
-            {loading && !error && (
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="w-3 h-3 rounded-full bg-muted-foreground/30 animate-pulse" />
-              </div>
-            )}
-            <div
-              ref={containerRef}
-              className="absolute left-0 right-0"
-              style={{ top: 6, bottom: 6 }}
-            />
-
-          {/* Markers overlaid and vertically centered on the waveform */}
-            {duration > 0 && containerWidth > 0 && (markers.length > 0 || onAddNote || onAddToDo) && (
-              <div
-                className="absolute left-0 right-0 z-[5] pointer-events-none"
-                style={{
-                  top: (WAVEFORM_HEIGHT - MARKER_ZONE_HEIGHT) / 2,
-                  height: MARKER_ZONE_HEIGHT,
-                }}
-              >
-                <WaveformMarkers
-                  markers={markers}
-                  duration={duration}
-                  containerWidth={containerWidth}
-                  activeMarkerId={activeMarkerId}
-                  snappedMarkerId={snappedMarkerId_hover}
-                  hoverX={hoverX}
-                  onMarkerClick={onMarkerClick}
-                  onAddNote={onAddNote}
-                  onAddToDo={onAddToDo}
-                  onEditNote={onEditNote}
-                />
-              </div>
-            )}
-
-            {/* Playhead line spanning waveform */}
-            {duration > 0 && (
-              <div
-                className="absolute top-0 bottom-0 pointer-events-none z-[3]"
-                style={{
-                  left: `${playheadPct}%`,
-                  width: "1px",
-                  backgroundColor: "hsl(var(--foreground) / 0.5)",
-                  transition: playing ? "none" : "left 0.1s ease-out",
-                }}
-              />
-            )}
-
-            {/* Hover cursor line */}
-            {hoverX !== null && duration > 0 && (
-              <div
-                className="absolute top-0 bottom-0 pointer-events-none z-[3]"
-                style={{
-                  left: snappedMarkerId_hover
-                    ? `${(markers.find(m => m.id === snappedMarkerId_hover)!.time / duration) * 100}%`
-                    : hoverX,
-                  width: snappedMarkerId_hover ? "1px" : "0.5px",
-                  backgroundColor: snappedMarkerId_hover
-                    ? "hsl(var(--foreground) / 0.3)"
-                    : "hsl(var(--foreground) / 0.12)",
-                  transition: "width 0.1s, background-color 0.1s",
-                }}
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Controls row */}
-        {!hideControls && (
-          <div className="flex items-center gap-3 pt-2.5">
-            {label && (
-              <span className="text-[10px] font-semibold tracking-wider uppercase text-muted-foreground/50 mr-1">
-                {label}
-              </span>
-            )}
-            <button
-              onClick={togglePlay}
-              disabled={!!error || loading}
-              className="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-foreground hover:bg-secondary/60 disabled:text-muted-foreground/30 disabled:hover:bg-transparent transition-colors"
-            >
-              {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
-            </button>
-            <button
-              onClick={restart}
-              disabled={!!error || loading}
-              className="w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:text-muted-foreground/30 transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
+      <div
+        className="overflow-hidden"
+        style={{
+          backgroundColor: DARK_BG,
+          borderRadius: 4,
+          border: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        {/* Label bar */}
+        {label && (
+          <div
+            className="px-3 py-1.5"
+            style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+          >
             <span
-              className="text-foreground/80 tabular-nums leading-none ml-1"
+              className="uppercase tracking-[0.1em] truncate block"
               style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 13,
-                letterSpacing: "-0.01em",
+                fontFamily: MONO,
+                fontSize: 10,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.5)",
               }}
             >
-              {formatTime(currentTime)}
-              <span className="text-muted-foreground/40">&nbsp;/&nbsp;</span>
-              {formatTime(duration)}
+              {label}
             </span>
           </div>
         )}
+
+        <div className="p-3 md:p-4">
+          {error && (
+            <div
+              className="rounded flex items-start gap-3 mb-2.5 p-3"
+              style={{
+                backgroundColor: "rgba(239,68,68,0.1)",
+                border: "1px solid rgba(239,68,68,0.2)",
+              }}
+            >
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#ef4444" }} />
+              <div>
+                <p className="text-sm font-medium" style={{ color: "#ef4444" }}>Waveform failed to load</p>
+                <p className="text-xs mt-1 break-all" style={{ color: "rgba(255,255,255,0.4)" }}>{error}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Ruler + waveform + markers — single hover zone */}
+          <div
+            ref={wrapperRef}
+            className="relative overflow-visible cursor-crosshair"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
+            {/* Time ruler */}
+            {duration > 0 && containerWidth > 0 && (
+              <TimeRuler
+                duration={duration}
+                containerWidth={containerWidth}
+                currentTime={currentTime}
+                playing={playing}
+                hoverX={hoverX}
+                hoverTime={hoverTime}
+                markers={markers}
+                snappedMarkerId={snappedMarkerId_hover}
+              />
+            )}
+
+            {/* Waveform container with markers overlaid */}
+            <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 2 }}>
+              {loading && !error && (
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.dim }} />
+                </div>
+              )}
+              <div
+                ref={containerRef}
+                className="absolute left-0 right-0"
+                style={{ top: 6, bottom: 6 }}
+              />
+
+              {/* Markers overlaid and vertically centered on the waveform */}
+              {duration > 0 && containerWidth > 0 && (markers.length > 0 || onAddNote || onAddToDo) && (
+                <div
+                  className="absolute left-0 right-0 z-[5] pointer-events-none"
+                  style={{
+                    top: (WAVEFORM_HEIGHT - MARKER_ZONE_HEIGHT) / 2,
+                    height: MARKER_ZONE_HEIGHT,
+                  }}
+                >
+                  <WaveformMarkers
+                    markers={markers}
+                    duration={duration}
+                    containerWidth={containerWidth}
+                    activeMarkerId={activeMarkerId}
+                    snappedMarkerId={snappedMarkerId_hover}
+                    hoverX={hoverX}
+                    onMarkerClick={onMarkerClick}
+                    onAddNote={onAddNote}
+                    onAddToDo={onAddToDo}
+                    onEditNote={onEditNote}
+                  />
+                </div>
+              )}
+
+              {/* Playhead — bright white */}
+              {duration > 0 && (
+                <div
+                  className="absolute top-0 bottom-0 pointer-events-none z-[3]"
+                  style={{
+                    left: `${playheadPct}%`,
+                    width: "1.5px",
+                    backgroundColor: "#ffffff",
+                    transition: playing ? "none" : "left 0.1s ease-out",
+                    boxShadow: "0 0 6px rgba(255,255,255,0.3)",
+                  }}
+                />
+              )}
+
+              {/* Hover cursor line */}
+              {hoverX !== null && duration > 0 && (
+                <div
+                  className="absolute top-0 bottom-0 pointer-events-none z-[3]"
+                  style={{
+                    left: snappedMarkerId_hover
+                      ? `${(markers.find(m => m.id === snappedMarkerId_hover)!.time / duration) * 100}%`
+                      : hoverX,
+                    width: snappedMarkerId_hover ? "1px" : "0.5px",
+                    backgroundColor: snappedMarkerId_hover
+                      ? "rgba(255,255,255,0.3)"
+                      : "rgba(255,255,255,0.12)",
+                    transition: "width 0.1s, background-color 0.1s",
+                  }}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Controls row — hardware style */}
+          {!hideControls && (
+            <div className="flex items-center gap-3 pt-3">
+              <button
+                onClick={togglePlay}
+                disabled={!!error || loading}
+                className="flex items-center justify-center transition-colors disabled:opacity-30"
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 4,
+                  backgroundColor: DARKER_BG,
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#ffffff",
+                }}
+              >
+                {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+              </button>
+              <button
+                onClick={restart}
+                disabled={!!error || loading}
+                className="flex items-center justify-center transition-colors disabled:opacity-30"
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 4,
+                  color: "rgba(255,255,255,0.4)",
+                }}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+              <span
+                className="tabular-nums leading-none ml-1"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 15,
+                  letterSpacing: "0.02em",
+                  color: "#ffffff",
+                }}
+              >
+                {formatTime(currentTime)}
+                <span style={{ color: "rgba(255,255,255,0.25)" }}>&nbsp;/&nbsp;</span>
+                <span style={{ color: "rgba(255,255,255,0.4)" }}>{formatTime(duration)}</span>
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
