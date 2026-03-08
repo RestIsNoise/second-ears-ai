@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check, Share2, Layers } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import FeedbackTimeline from "@/components/FeedbackTimeline";
@@ -610,25 +611,25 @@ const FeedbackDisplay = ({
   return (
     <div className="animate-fade-up space-y-0">
       {/* ═══ HEADER ═══ */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="gap-2 text-muted-foreground mb-4 -ml-2"
+            className="gap-2 text-muted-foreground mb-3 -ml-2"
           >
             <ArrowLeft className="w-4 h-4" /> New analysis
           </Button>
 
           <div className="space-y-1">
             {n.trackName && (
-              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight truncate">
                 {n.trackName}
               </h1>
             )}
             <p
-              className="text-[10px] text-muted-foreground/50 tracking-[0.12em] uppercase"
+              className="text-[10px] text-muted-foreground/55 tracking-[0.12em] uppercase"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               {modeLabels[mode]} analysis
@@ -646,13 +647,14 @@ const FeedbackDisplay = ({
         </div>
 
         {/* Collaborator avatars + arrangement toggle */}
-        <div className="flex items-center gap-2.5 pt-2">
+        <div className="flex items-center gap-2 sm:gap-2.5 sm:pt-2 shrink-0">
           <button
             onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/60 bg-card/50 px-2.5 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
           >
             <Layers className="w-3 h-3" />
-            {showArrangement ? "Hide Arrangement" : "Show Arrangement"}
+            <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
+            <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
           </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
@@ -693,7 +695,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-4 rounded-xl border border-border-subtle/60 bg-card/30 p-4 shadow-sm transition-all duration-200">
+        <div className="mt-4 rounded-lg border border-border-subtle/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
           <AlsAnalyzer />
         </div>
       )}
@@ -741,7 +743,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-5 flex border border-border-subtle/50 rounded-xl overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 420 }}>
+      <div className="mt-5 flex border border-border-subtle/50 rounded-lg overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 380 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
@@ -820,14 +822,14 @@ const FeedbackDisplay = ({
 
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
-        <div
-          className="mt-6 grid gap-5 pt-5 border-t border-border-subtle/40"
-          style={{ gridTemplateColumns: n.whatWorks.length > 0 && n.yourFocus.question ? "1fr 1fr" : "1fr" }}
-        >
+        <div className={cn(
+          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/40",
+          n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+        )}>
           {n.whatWorks.length > 0 && (
             <div>
               <h3
-                className="text-[9px] text-muted-foreground/40 tracking-[0.12em] uppercase mb-2.5"
+                className="text-[9px] text-muted-foreground/45 tracking-[0.12em] uppercase mb-2.5"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 {modeWhatWorksLabel[mode] || "What Works"}
@@ -837,7 +839,7 @@ const FeedbackDisplay = ({
                   <div key={i} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
                     <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{item.title}</h4>
                     {item.description && (
-                      <p className="text-[11px] text-foreground/45 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
+                      <p className="text-[11px] text-foreground/50 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
                     )}
                   </div>
                 ))}
@@ -848,7 +850,7 @@ const FeedbackDisplay = ({
           {n.yourFocus.question && (
             <div>
               <h3
-                className="text-[9px] text-muted-foreground/40 tracking-[0.12em] uppercase mb-2.5"
+                className="text-[9px] text-muted-foreground/45 tracking-[0.12em] uppercase mb-2.5"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 Your Focus
@@ -856,7 +858,7 @@ const FeedbackDisplay = ({
               <div className="space-y-2.5 rounded-lg border border-border-subtle/40 bg-card/30 p-3">
                 <div>
                   <p
-                    className="text-muted-foreground/35 uppercase tracking-wider mb-1"
+                    className="text-muted-foreground/40 uppercase tracking-wider mb-1"
                     style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
                   >You asked</p>
                   <p className="text-[12px] text-foreground/60 leading-relaxed italic" style={{ lineHeight: 1.55 }}>
@@ -865,10 +867,10 @@ const FeedbackDisplay = ({
                 </div>
                 <div>
                   <p
-                    className="text-muted-foreground/35 uppercase tracking-wider mb-1"
+                    className="text-muted-foreground/40 uppercase tracking-wider mb-1"
                     style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
                   >Response</p>
-                  <p className="text-[12px] text-foreground/50 leading-relaxed" style={{ lineHeight: 1.55 }}>
+                  <p className="text-[12px] text-foreground/55 leading-relaxed" style={{ lineHeight: 1.55 }}>
                     {n.yourFocus.response || "No direct focus response available for this run."}
                   </p>
                 </div>
