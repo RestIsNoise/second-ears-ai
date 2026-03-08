@@ -602,7 +602,7 @@ const FeedbackDisplay = ({
   const orderedActivePanels = PANELS.filter((p) => activePanels.has(p.id));
 
   return (
-    <div className="animate-fade-up">
+    <div className="animate-fade-up space-y-0">
       {/* ═══ HEADER ═══ */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -610,18 +610,21 @@ const FeedbackDisplay = ({
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="gap-2 text-muted-foreground mb-5"
+            className="gap-2 text-muted-foreground mb-4 -ml-2"
           >
             <ArrowLeft className="w-4 h-4" /> New analysis
           </Button>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {n.trackName && (
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 {n.trackName}
               </h1>
             )}
-            <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase">
+            <p
+              className="text-[10px] text-muted-foreground/50 tracking-[0.12em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            >
               {modeLabels[mode]} analysis
             </p>
             {versions && versions.length > 0 && projectId && analysisId && (
@@ -637,12 +640,12 @@ const FeedbackDisplay = ({
         </div>
 
         {/* Collaborator avatars + arrangement toggle */}
-        <div className="flex items-center gap-3 pt-2">
+        <div className="flex items-center gap-2.5 pt-2">
           <button
             onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-background px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3 h-3" />
             {showArrangement ? "Hide Arrangement" : "Show Arrangement"}
           </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
