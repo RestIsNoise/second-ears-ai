@@ -10,7 +10,7 @@ const ACCEPTED = [".wav", ".mp3", ".aiff", ".aif"];
 interface Props {
   open: boolean;
   onClose: () => void;
-  onComparisonStart: (jobId: string, refName: string) => void;
+  onComparisonStart: (jobId: string, refName: string, refFile: File) => void;
   userMetrics: Record<string, any> | undefined;
   userTrackName: string;
   mode: string;
@@ -65,7 +65,7 @@ const ReferenceUploadModal = ({ open, onClose, onComparisonStart, userMetrics, u
       const data = await res.json();
       if (!data.jobId) throw new Error("No jobId returned");
 
-      onComparisonStart(data.jobId, file.name);
+      onComparisonStart(data.jobId, file.name, file);
       onClose();
       toast({ title: "Comparing against reference…", duration: 2000 });
     } catch (err: any) {
