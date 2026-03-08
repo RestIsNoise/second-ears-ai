@@ -694,7 +694,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-4 rounded-xl border border-border-subtle/60 bg-card/30 p-4 shadow-sm transition-all duration-200">
+        <div className="mt-4 rounded-lg border border-border-subtle/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
           <AlsAnalyzer />
         </div>
       )}
@@ -742,7 +742,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-5 flex border border-border-subtle/50 rounded-xl overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 420 }}>
+      <div className="mt-5 flex border border-border-subtle/50 rounded-lg overflow-hidden shadow-sm bg-card/20" style={{ height: "calc(100vh - 340px)", minHeight: 380 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
