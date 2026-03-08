@@ -196,9 +196,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         hideControls
         label={audioFileA.name}
         deckVariant="a"
+        containerStyle={{ borderRadius: 0, border: "none" }}
       />
-
-      {/* ── Compact mixer strip ── */}
       <div
         className="flex items-center gap-3 px-4 py-2"
         style={{
