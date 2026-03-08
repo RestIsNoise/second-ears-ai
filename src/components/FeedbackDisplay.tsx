@@ -512,25 +512,31 @@ const FeedbackDisplay = ({
             {technicalMetrics ? (
               <TechnicalMetrics metrics={technicalMetrics} compact />
             ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No metrics available</p>
+              <div className="flex flex-col items-center justify-center py-14 gap-1.5">
+                <span className="text-[10px] text-muted-foreground/30">No metrics available</span>
+                <span className="text-[8px] text-muted-foreground/20">Metrics appear after analysis</span>
+              </div>
             )}
           </div>
         );
 
       case "full-analysis":
         return (
-          <div className="p-4 space-y-3">
+          <div className="p-3.5 space-y-2">
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div key={key} className="rounded-xl border border-border-subtle p-3 bg-background">
-                    <h3 className="text-[13px] font-semibold tracking-tight mb-1.5">{label}</h3>
+                  <div key={key} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                    <h3 className="text-[12px] font-semibold tracking-tight mb-1 text-foreground/80">{label}</h3>
                     <AnalysisCardText text={text} />
                   </div>
                 ) : null
               )
             ) : (
-              <p className="text-xs text-muted-foreground/50 text-center py-8">No analysis data</p>
+              <div className="flex flex-col items-center justify-center py-14 gap-1.5">
+                <span className="text-[10px] text-muted-foreground/30">No analysis data</span>
+                <span className="text-[8px] text-muted-foreground/20">Run an analysis to see results</span>
+              </div>
             )}
 
             {/* Fix One Thing */}
