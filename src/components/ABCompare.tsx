@@ -140,25 +140,13 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           onAddToDo={onAddToDo}
           onEditNote={onEditNote}
         />
-        <div className="mt-3">
-          <label htmlFor="ref-track-input" style={{ cursor: "pointer" }}>
-            <input
-              id="ref-track-input"
-              ref={fileInputRef}
-              type="file"
-              accept={ACCEPTED_FORMATS}
-              onChange={handleFileSelect}
-              style={{ position: "absolute", top: -9999, left: -9999 }}
-            />
-            <span
-              style={{ pointerEvents: "none" }}
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground rounded-md border border-input bg-background px-3 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground select-none"
-            >
-              <Upload className="w-3.5 h-3.5" />
-              Add reference track
-            </span>
-          </label>
-        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPTED_FORMATS}
+          onChange={handleFileSelect}
+          style={{ position: "absolute", top: -9999, left: -9999 }}
+        />
       </div>
     );
   }
