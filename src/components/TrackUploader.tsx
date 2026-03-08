@@ -158,6 +158,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   return (
     <div className="space-y-6">
       <input
+        key={inputKey}
         id="track-file-input"
         ref={fileInputRef}
         type="file"
