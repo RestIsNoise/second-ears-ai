@@ -78,7 +78,37 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         }
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
-      const result = await feedbackRes.json();
+      const initialRes = await feedbackRes.json();
+
+      // If backend returns a jobId, poll for results
+      let result: any;
+      if (initialRes.jobId) {
+        const POLL_INTERVAL = 4000;
+        const MAX_POLLS = 90; // 6 min max
+        let polls = 0;
+        while (polls < MAX_POLLS) {
+          await new Promise((r) => setTimeout(r, POLL_INTERVAL));
+          polls++;
+          const statusRes = await fetch(
+            `https://secondears-backend-production.up.railway.app/api/feedback/status/${initialRes.jobId}`,
+            { headers: { "x-api-key": "secondears-secret-2024" } }
+          );
+          if (!statusRes.ok) throw new Error(`Status check failed: ${statusRes.status}`);
+          const statusData = await statusRes.json();
+          if (statusData.status === "done") {
+            result = statusData.result;
+            break;
+          }
+          if (statusData.status === "error") {
+            throw new Error(statusData.error || "Analysis failed on the server");
+          }
+          // still processing — continue polling
+        }
+        if (!result) throw new Error("Analysis timed out. Please try again.");
+      } else {
+        // Legacy: backend returned result directly
+        result = initialRes;
+      }
       
       onProgressStep?.(3);
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
