@@ -71,6 +71,7 @@ export interface NormalizedFeedback {
   yourFocus: NormalizedYourFocus;
   fullAnalysis: NormalizedFullAnalysis;
   metrics: NormalizedMetrics;
+  rawTechnicalMetrics: Record<string, any> | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────
