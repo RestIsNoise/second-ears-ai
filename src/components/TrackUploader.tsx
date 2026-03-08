@@ -95,7 +95,10 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           );
           if (!statusRes.ok) throw new Error(`Status check failed: ${statusRes.status}`);
           const statusData = await statusRes.json();
+          console.log("[poll] raw:", JSON.stringify(statusData));
           if (statusData.status === "done") {
+            console.log("[poll] done - result keys:", Object.keys(statusData.result || {}));
+            console.log("[poll] feedback:", JSON.stringify(statusData.result?.feedback));
             result = statusData.result;
             break;
           }
