@@ -212,6 +212,7 @@ const Analyze = () => {
 
               {activeTab === "mix" ? (
                 <TrackUploader
+                  key={result ? "post-result" : "fresh"}
                   onResult={handleResult}
                   isAnalyzing={isAnalyzing}
                   setIsAnalyzing={handleStartAnalysis}
