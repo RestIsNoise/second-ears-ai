@@ -87,11 +87,12 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const handleCrossfadeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(e.target.value);
     setCrossfade(v);
-    const volA = 1 - v / 100;
-    const volB = v / 100;
+    const mv = isMuted ? 0 : masterVolume / 100;
+    const volA = (1 - v / 100) * mv;
+    const volB = (v / 100) * mv;
     playerARef.current?.setVolume(volA);
     playerBRef.current?.setVolume(volB);
-  }, []);
+  }, [isMuted, masterVolume]);
 
   const handleSyncPlay = useCallback(() => {
     if (syncPlaying) {
