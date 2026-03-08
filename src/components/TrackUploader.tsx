@@ -35,25 +35,16 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState<Goal>("mixing");
-  const [inputKey, setInputKey] = useState(0);
 
-  // Reset component state fully on mount
+  // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
     setFile(null);
     setContext("");
     setGoal("mixing");
     setDragOver(false);
-    setInputKey((k) => k + 1);
-    // Reset file input value
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    return () => {
-      // Cleanup on unmount
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    };
   }, []);
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
