@@ -740,7 +740,8 @@ const FeedbackDisplay = ({
         <div className="flex flex-col items-end gap-2 sm:pt-2 shrink-0">
           <button
             onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 uppercase tracking-[0.08em] text-muted-foreground/50 hover:text-foreground/70 hover:border-foreground/15 transition-all duration-150"
+            style={{ fontFamily: "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace", fontSize: 11, fontWeight: 600 }}
           >
             <Layers className="w-3 h-3" />
             <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
@@ -748,7 +749,8 @@ const FeedbackDisplay = ({
           </button>
           <button
             onClick={() => setRefModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 uppercase tracking-[0.08em] text-muted-foreground/50 hover:text-foreground/70 hover:border-foreground/15 transition-all duration-150"
+            style={{ fontFamily: "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace", fontSize: 11, fontWeight: 600 }}
           >
             <Music className="w-3 h-3" />
             <span className="hidden sm:inline">Add reference track</span>
