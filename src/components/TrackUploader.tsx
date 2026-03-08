@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Upload, Music, Activity, Eye, Target, Disc3, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
@@ -35,10 +35,30 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState<Goal>("mixing");
+  const [inputKey, setInputKey] = useState(0);
+
+  // Reset component state fully on mount
+  useEffect(() => {
+    setFile(null);
+    setContext("");
+    setGoal("mixing");
+    setDragOver(false);
+    setInputKey((k) => k + 1);
+    // Reset file input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    return () => {
+      // Cleanup on unmount
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    };
+  }, []);
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
 
-  const validateAndSetFile = (f: File) => {
+  const validateAndSetFile = useCallback((f: File) => {
     if (!f.type.startsWith("audio/")) {
       toast({ title: "Please upload an audio file", variant: "destructive", duration: 2500 });
       return;
@@ -48,14 +68,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       return;
     }
     setFile(f);
-  };
+  }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     const dropped = e.dataTransfer.files[0];
     if (dropped) validateAndSetFile(dropped);
-  }, []);
+  }, [validateAndSetFile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -138,6 +158,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   return (
     <div className="space-y-6">
       <input
+        key={inputKey}
         id="track-file-input"
         ref={fileInputRef}
         type="file"
