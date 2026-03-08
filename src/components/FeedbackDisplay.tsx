@@ -680,7 +680,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-6 w-full overflow-hidden">
+        <div className="mt-8 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -698,15 +698,15 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-4 rounded-lg border border-border-subtle/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
+        <div className="mt-5 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
           <AlsAnalyzer />
         </div>
       )}
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-5 px-0.5">
-          <p className="text-[12px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.65 }}>
+        <div className="mt-8 px-0.5">
+          <p className="text-[13px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.7 }}>
             {n.overallImpression}
           </p>
         </div>
