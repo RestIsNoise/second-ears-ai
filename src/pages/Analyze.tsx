@@ -151,8 +151,8 @@ const Analyze = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-6 md:pb-10 px-6">
-        <div className={result ? "max-w-6xl mx-auto" : "max-w-2xl mx-auto"}>
+      <main className={`pt-24 pb-6 md:pb-10 ${result ? "px-3 md:px-4" : "px-6"}`}>
+        <div className={result ? "w-full" : "max-w-2xl mx-auto"}>
           {result ? (
             <FeedbackDisplay
               result={result}

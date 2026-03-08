@@ -17,7 +17,7 @@ interface Props {
 }
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
-  const minWidth = id === "ai-feedback" ? 380 : id === "todo" ? 260 : 220;
+  const minWidth = id === "ai-feedback" ? 340 : id === "todo" ? 240 : 200;
 
   return (
     <div
