@@ -611,46 +611,49 @@ const FeedbackDisplay = ({
   return (
     <div className="animate-fade-up space-y-0">
       {/* ═══ HEADER ═══ */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
-        <div className="min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+        {/* Left: back + title */}
+        <div className="min-w-0 flex-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="gap-2 text-muted-foreground mb-3 -ml-2"
+            className="gap-2 text-muted-foreground mb-4 -ml-2"
           >
             <ArrowLeft className="w-4 h-4" /> New analysis
           </Button>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             {n.trackName && (
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight truncate">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground">
                 {n.trackName}
               </h1>
             )}
             <p
-              className="text-[10px] text-muted-foreground/55 tracking-[0.12em] uppercase"
+              className="text-[10px] text-muted-foreground/45 tracking-[0.14em] uppercase"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               {modeLabels[mode]} analysis
             </p>
             {versions && versions.length > 0 && projectId && analysisId && (
-              <VersionPills
-                versions={versions}
-                currentAnalysisId={analysisId}
-                projectId={projectId}
-                trackName={n.trackName}
-                mode={mode}
-              />
+              <div className="pt-1">
+                <VersionPills
+                  versions={versions}
+                  currentAnalysisId={analysisId}
+                  projectId={projectId}
+                  trackName={n.trackName}
+                  mode={mode}
+                />
+              </div>
             )}
           </div>
         </div>
 
-        {/* Collaborator avatars + arrangement toggle */}
-        <div className="flex items-center gap-2 sm:gap-2.5 sm:pt-2 shrink-0">
+        {/* Right: buttons stacked vertically */}
+        <div className="flex flex-col items-end gap-2 sm:pt-2 shrink-0">
           <button
             onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/60 bg-card/50 px-2.5 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-[10px] font-medium text-muted-foreground/60 hover:text-foreground hover:border-foreground/15 hover:bg-secondary/30 transition-all duration-150"
           >
             <Layers className="w-3 h-3" />
             <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
@@ -677,7 +680,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-6 w-full overflow-hidden">
+        <div className="mt-8 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -695,15 +698,15 @@ const FeedbackDisplay = ({
 
       {/* ═══ ARRANGEMENT PANEL ═══ */}
       {showArrangement && (
-        <div className="mt-4 rounded-lg border border-border-subtle/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
+        <div className="mt-5 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
           <AlsAnalyzer />
         </div>
       )}
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-5 px-0.5">
-          <p className="text-[12px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.65 }}>
+        <div className="mt-8 px-0.5">
+          <p className="text-[13px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.7 }}>
             {n.overallImpression}
           </p>
         </div>
