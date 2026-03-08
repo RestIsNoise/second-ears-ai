@@ -387,7 +387,7 @@ export function normalizeFeedbackResponse(
   }
 
   // Preserve raw technical_metrics for reference comparison
-  const rawTechnicalMetrics = fb.technical_metrics || fb.metrics || raw?.metrics || null;
+  const rawTechnicalMetrics = fb.technical_metrics || raw?.technical_metrics || fb.metrics || raw?.metrics || null;
 
   return {
     trackName,
