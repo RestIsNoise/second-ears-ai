@@ -5,8 +5,8 @@ import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import type { WaveformMarker } from "@/types/feedback";
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
-const DARK_BG = "#1A1A1A";
-const DARKER_BG = "#111111";
+const DARK_BG = "#252525";
+const DARKER_BG = "#202020";
 const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
 
 const formatTime = (s: number) => {
@@ -205,7 +205,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             borderRadius: 4,
             backgroundColor: DARK_BG,
             border: "1px solid rgba(255,255,255,0.1)",
-            color: "#ffffff",
+            color: "#CCCCCC",
           }}
         >
           {syncPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
@@ -221,7 +221,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         {/* Time */}
         <span
           className="tabular-nums leading-none shrink-0"
-          style={{ fontFamily: MONO, fontSize: 15, letterSpacing: "0.02em", color: "#ffffff" }}
+          style={{ fontFamily: MONO, fontSize: 15, letterSpacing: "0.02em", color: "#CCCCCC" }}
         >
           {formatTime(currentTime)}
           <span style={{ color: "rgba(255,255,255,0.25)" }}>&nbsp;/&nbsp;</span>
@@ -237,7 +237,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               fontSize: 10,
               fontWeight: 700,
               letterSpacing: "0.08em",
-              color: crossfade <= 50 ? "#F59E0B" : "rgba(255,255,255,0.25)",
+              color: crossfade <= 50 ? "#C8820A" : "rgba(255,255,255,0.25)",
             }}
           >
             A
@@ -264,7 +264,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               style={{
                 height: 4,
                 borderRadius: 2,
-                background: `linear-gradient(to right, #F59E0B ${crossfade}%, #22D3EE ${crossfade}%)`,
+                background: `linear-gradient(to right, #C8820A ${crossfade}%, #1BA8C0 ${crossfade}%)`,
                 opacity: 0.4,
               }}
             />
@@ -276,7 +276,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               fontSize: 10,
               fontWeight: 700,
               letterSpacing: "0.08em",
-              color: crossfade >= 50 ? "#22D3EE" : "rgba(255,255,255,0.25)",
+              color: crossfade >= 50 ? "#1BA8C0" : "rgba(255,255,255,0.25)",
             }}
           >
             B
