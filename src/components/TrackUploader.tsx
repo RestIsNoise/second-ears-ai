@@ -149,16 +149,18 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   return (
     <div className="space-y-6">
       <input
-        key={inputKey}
         id="track-file-input"
         ref={fileInputRef}
         type="file"
         accept=".mp3,.wav,.flac,audio/*"
         onChange={handleFileChange}
-        style={{position:"fixed",top:"-9999px",left:"-9999px",width:"1px",height:"1px",opacity:0}}
+        className="sr-only"
       />
-      <label
-        htmlFor="track-file-input"
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => fileInputRef.current?.click()}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
