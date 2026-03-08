@@ -222,7 +222,7 @@ const ProjectDetail = () => {
                     <div className="flex items-center gap-3 shrink-0">
                       {hasAnalysis ? (
                         <>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-500">
+                          <span className="inline-flex items-center gap-1 text-[10px] text-primary/70">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Analyzed
                           </span>

@@ -699,9 +699,19 @@ const FeedbackDisplay = ({
 
           <div className="space-y-2">
             {n.trackName && (
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground">
-                {n.trackName}
-              </h1>
+              projectId ? (
+                <h1
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
+                  onClick={() => navigate(`/project/${projectId}`)}
+                  title="View all versions"
+                >
+                  {n.trackName}
+                </h1>
+              ) : (
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground">
+                  {n.trackName}
+                </h1>
+              )
             )}
             <p
               className="text-[10px] text-muted-foreground/45 tracking-[0.14em] uppercase"
