@@ -187,7 +187,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             </div>
           </>
         )}
-      </label>
+      </div>
       <div>
         <input
           type="text"
