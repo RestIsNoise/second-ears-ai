@@ -205,7 +205,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             borderRadius: 4,
             backgroundColor: DARK_BG,
             border: "1px solid rgba(255,255,255,0.1)",
-            color: "#ffffff",
+            color: "#CCCCCC",
           }}
         >
           {syncPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}

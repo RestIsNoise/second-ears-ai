@@ -487,7 +487,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   borderRadius: 4,
                   backgroundColor: DARKER_BG,
                   border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#ffffff",
+                  color: "#CCCCCC",
                 }}
               >
                 {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
@@ -511,7 +511,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   fontFamily: MONO,
                   fontSize: 15,
                   letterSpacing: "0.02em",
-                  color: "#ffffff",
+                  color: "#CCCCCC",
                 }}
               >
                 {formatTime(currentTime)}
