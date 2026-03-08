@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,7 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, LayoutDashboard, Settings } from "lucide-react";
+import { LogOut, LayoutDashboard, Settings, Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Features", href: "/#features" },
@@ -19,6 +21,7 @@ const navItems = [
 
 const Header = () => {
   const { user, profile, signOut } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
@@ -31,9 +34,16 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-[6px] border-b border-border-subtle">
       <div className="flex items-center justify-between h-14 max-w-5xl mx-auto px-6">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-mono-brand text-sm font-medium tracking-tight">SecondEars</span>
+          <span
+            className="text-[13px] font-medium tracking-tight"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            SecondEars
+          </span>
         </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-8 text-[13px] text-muted-foreground/65">
           {navItems.map((item) =>
             item.href.startsWith("/") && !item.href.startsWith("/#") ? (
               <Link key={item.label} to={item.href} className="hover:text-foreground transition-colors">
@@ -46,7 +56,8 @@ const Header = () => {
             )
           )}
         </nav>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2.5">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -81,8 +92,44 @@ const Header = () => {
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
+
+          {/* Mobile menu toggle */}
+          <button
+            className="md:hidden p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile nav dropdown */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-border-subtle/40 bg-background/98 backdrop-blur-sm px-6 py-4 space-y-3">
+          {navItems.map((item) =>
+            item.href.startsWith("/") && !item.href.startsWith("/#") ? (
+              <Link
+                key={item.label}
+                to={item.href}
+                onClick={() => setMobileOpen(false)}
+                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1"
+              >
+                {item.label}
+              </a>
+            )
+          )}
+        </div>
+      )}
     </header>
   );
 };
