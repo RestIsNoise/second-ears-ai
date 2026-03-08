@@ -42,6 +42,7 @@ const ReferenceUploadModal = ({ open, onClose, onComparisonStart, userMetrics, u
       if (urlErr || !urlData?.signedUrl) throw new Error("Failed to get signed URL");
 
       // 3. POST to reference comparison
+      console.log("[ReferenceUpload] userMetrics being sent:", JSON.stringify(userMetrics, null, 2));
       const res = await fetch(
         "https://secondears-backend-production.up.railway.app/api/reference-comparison",
         {

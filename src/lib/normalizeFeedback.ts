@@ -71,6 +71,7 @@ export interface NormalizedFeedback {
   yourFocus: NormalizedYourFocus;
   fullAnalysis: NormalizedFullAnalysis;
   metrics: NormalizedMetrics;
+  rawTechnicalMetrics: Record<string, any> | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────
@@ -385,6 +386,9 @@ export function normalizeFeedbackResponse(
     console.warn("[normalizeFeedback] No metric values found");
   }
 
+  // Preserve raw technical_metrics for reference comparison
+  const rawTechnicalMetrics = fb.technical_metrics || fb.metrics || raw?.metrics || null;
+
   return {
     trackName,
     mode,
@@ -398,5 +402,6 @@ export function normalizeFeedbackResponse(
     yourFocus,
     fullAnalysis,
     metrics,
+    rawTechnicalMetrics: rawTechnicalMetrics && typeof rawTechnicalMetrics === "object" ? rawTechnicalMetrics as Record<string, any> : null,
   };
 }
