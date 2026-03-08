@@ -56,28 +56,28 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className="space-y-5 overflow-hidden">
         {/* Share section */}
         <div>
           <h4 className="text-xs font-semibold tracking-tight text-foreground mb-3">Share feedback</h4>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-1.5">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className="flex-1 h-8 text-[11px] gap-1.5"
+              className="w-full h-8 text-[11px] gap-1.5 justify-center"
             >
-              <Link2 className="w-3 h-3" />
-              Copy link
+              <Link2 className="w-3 h-3 shrink-0" />
+              <span className="truncate">Copy link</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setModalOpen(true)}
-              className="h-8 text-[11px] gap-1.5 text-muted-foreground hover:text-foreground"
+              className="w-full h-8 text-[11px] gap-1.5 justify-center text-muted-foreground hover:text-foreground"
             >
-              <Share2 className="w-3 h-3" />
-              Share
+              <Share2 className="w-3 h-3 shrink-0" />
+              <span className="truncate">Share</span>
             </Button>
           </div>
 
