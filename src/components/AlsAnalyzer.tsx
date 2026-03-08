@@ -297,6 +297,7 @@ const AlsAnalyzer = () => {
       );
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data: AlsSession = await res.json();
+      console.log("[AlsAnalyzer] Track order from .als:", data.tracks.map((t, i) => `${i}: ${t.name} (type=${t.type ?? "track"}, parent=${t.parentId ?? "none"})`));
       setSession(data);
     } catch (err: any) {
       console.error("[AlsAnalyzer] parse failed:", err);
