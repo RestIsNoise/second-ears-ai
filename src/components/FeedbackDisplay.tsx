@@ -820,7 +820,7 @@ const FeedbackDisplay = ({
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-10 mb-6 px-0.5">
-          <p className="text-[13px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.7 }}>
+          <p className="text-[16px] text-foreground/50 leading-relaxed max-w-[80ch]" style={{ lineHeight: 1.6 }}>
             {n.overallImpression}
           </p>
         </div>
@@ -828,7 +828,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ COMPACT SUMMARY BADGES ═══ */}
       {(n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-4 mb-8 flex flex-wrap items-center gap-2">
+        <div className="mt-4 mb-4 flex flex-wrap items-center gap-2" style={{ marginTop: 16, marginBottom: 16 }}>
           {n.topIssue && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-card/40 px-3.5 py-1">
               <span
