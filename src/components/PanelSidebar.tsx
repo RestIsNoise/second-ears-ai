@@ -1,4 +1,4 @@
-import { PanelLeft } from "lucide-react";
+import { LayoutPanelTop } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface PanelConfig {
@@ -48,7 +48,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                     : "text-muted-foreground/50 hover:text-foreground/70 hover:bg-secondary/30 border-l-2 border-l-transparent"
               )}
             >
-              <PanelLeft className={cn("w-3 h-3 shrink-0", isActive ? "opacity-60" : "opacity-40")} />
+              <LayoutPanelTop className={cn("w-3.5 h-3.5 shrink-0", isActive ? "opacity-60" : "opacity-40")} />
               <span className="text-[10px] font-medium tracking-tight truncate">
                 {panel.label}
               </span>
