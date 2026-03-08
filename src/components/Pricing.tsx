@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const plans = [
   {
@@ -7,7 +8,14 @@ const plans = [
     price: "$0",
     period: "forever",
     description: "First tracks free.",
-    features: ["3 tracks / month", "Technical mode only", "Basic frequency analysis", "48h cooldown between uploads"],
+    features: [
+      { text: "3 tracks / month", included: true },
+      { text: "Technical mode only", included: true },
+      { text: "Basic frequency analysis", included: true },
+      { text: "48h cooldown between uploads", included: true },
+      { text: "All listening modes", included: false },
+      { text: "PDF export", included: false },
+    ],
     cta: "Start free",
     featured: false,
   },
@@ -16,7 +24,14 @@ const plans = [
     price: "$9",
     period: "/ month",
     description: "Unlimited tracks, all modes.",
-    features: ["Unlimited tracks", "All 3 listening modes", "Full detailed reports", "Priority processing", "PDF export"],
+    features: [
+      { text: "Unlimited tracks", included: true },
+      { text: "All 3 listening modes", included: true },
+      { text: "Full detailed reports", included: true },
+      { text: "Priority processing", included: true },
+      { text: "PDF export", included: true },
+      { text: "Human review", included: false },
+    ],
     cta: "Start Pro",
     featured: true,
   },
@@ -25,7 +40,12 @@ const plans = [
     price: "$19",
     period: "/ month",
     description: "Pro plus engineer feedback.",
-    features: ["Everything in Pro", "3 human reviews / month", "Human engineer review notes", "Revision guidance"],
+    features: [
+      { text: "Everything in Pro", included: true },
+      { text: "3 human reviews / month", included: true },
+      { text: "Human engineer review notes", included: true },
+      { text: "Revision guidance", included: true },
+    ],
     cta: "Start Human Review",
     featured: false,
   },
@@ -43,15 +63,16 @@ const Pricing = () => (
         </p>
         <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">Pick your plan</h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4 items-start">
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative rounded-lg border p-6 flex flex-col gap-5 transition-colors ${
+            className={cn(
+              "relative rounded-lg border flex flex-col transition-all duration-200",
               plan.featured
-                ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_24px_-6px_hsl(var(--foreground)/0.12)] scale-[1.02]"
+                ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.1)] md:scale-[1.03] z-10"
                 : "bg-background border-border-subtle/50 hover:border-foreground/10"
-            }`}
+            )}
           >
             {plan.featured && (
               <span
@@ -61,36 +82,70 @@ const Pricing = () => (
                 Most popular
               </span>
             )}
-            <div>
-              <h3 className="font-semibold tracking-tight text-[17px]">{plan.name}</h3>
-              <p className={`text-[13px] mt-1 ${plan.featured ? "text-primary-foreground/65" : "text-muted-foreground/65"}`}>
+
+            {/* Plan header */}
+            <div className="p-5 pb-4">
+              <h3 className="text-[15px] font-semibold tracking-tight">{plan.name}</h3>
+              <p className={cn(
+                "text-[12px] mt-0.5",
+                plan.featured ? "text-primary-foreground/60" : "text-muted-foreground/60"
+              )}>
                 {plan.description}
               </p>
+              <div className="flex items-baseline gap-1 mt-3">
+                <span className="text-[1.75rem] font-semibold tracking-tight leading-none">{plan.price}</span>
+                <span className={cn(
+                  "text-[12px]",
+                  plan.featured ? "text-primary-foreground/50" : "text-muted-foreground/50"
+                )}>
+                  {plan.period}
+                </span>
+              </div>
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-[2rem] font-semibold tracking-tight">{plan.price}</span>
-              <span className={`text-[13px] ${plan.featured ? "text-primary-foreground/55" : "text-muted-foreground/55"}`}>
-                {plan.period}
-              </span>
+
+            {/* Divider */}
+            <div className={cn(
+              "mx-5 h-px",
+              plan.featured ? "bg-primary-foreground/10" : "bg-border-subtle/40"
+            )} />
+
+            {/* Feature list */}
+            <div className="p-5 pt-4 flex-1">
+              <ul className="space-y-2">
+                {plan.features.map((feature) => (
+                  <li key={feature.text} className="flex items-start gap-2.5">
+                    <Check className={cn(
+                      "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
+                      !feature.included && "opacity-0",
+                      plan.featured
+                        ? "text-primary-foreground/50"
+                        : "text-muted-foreground/40"
+                    )} />
+                    <span className={cn(
+                      "text-[12px] leading-snug",
+                      !feature.included && (plan.featured ? "text-primary-foreground/25 line-through" : "text-muted-foreground/30 line-through"),
+                      feature.included && !plan.featured && "text-foreground/75",
+                      feature.included && plan.featured && "text-primary-foreground/85",
+                    )}>
+                      {feature.text}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="space-y-2.5 flex-1">
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2.5 text-[13px]">
-                  <Check className={`w-3.5 h-3.5 flex-shrink-0 ${plan.featured ? "text-primary-foreground/60" : "text-muted-foreground/50"}`} />
-                  <span className={plan.featured ? "" : "text-foreground/80"}>{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <Button
-              variant={plan.featured ? "hero-outline" : "hero"}
-              className={`w-full h-11 text-[13px] rounded-full ${
-                plan.featured
-                  ? "border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 bg-transparent"
-                  : ""
-              }`}
-            >
-              {plan.cta}
-            </Button>
+
+            {/* CTA */}
+            <div className="px-5 pb-5">
+              <Button
+                variant={plan.featured ? "hero-outline" : "hero"}
+                className={cn(
+                  "w-full h-10 text-[12px] rounded-full",
+                  plan.featured && "border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 bg-transparent"
+                )}
+              >
+                {plan.cta}
+              </Button>
+            </div>
           </div>
         ))}
       </div>
