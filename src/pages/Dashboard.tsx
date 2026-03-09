@@ -210,9 +210,8 @@ const Dashboard = () => {
       return { project: proj, latestAnalysis: sorted[0], versionCount: sorted.length, lastUpdated };
     });
 
-  const handleDeleteClick = (e: React.MouseEvent, project: ProjectRow) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDeleteClick = (project: ProjectRow) => {
+    console.log("[DELETE] handleDeleteClick called:", project.id, project.name);
     setProjectToDelete(project);
   };
 
