@@ -271,12 +271,13 @@ const WaveformMarkers = ({
                 onClick={() => onMarkerClick?.(m)}
                 className="flex items-center justify-center rounded-full transition-all duration-150"
                 style={{
-                  width: isActive || isSnapped ? 28 : 24,
-                  height: isActive || isSnapped ? 28 : 24,
+                  width: isActive || isSnapped ? 30 : 26,
+                  height: isActive || isSnapped ? 30 : 26,
                   backgroundColor: isActive ? colors.border : colors.bg,
-                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : "hsl(var(--foreground) / 0.1)"}`,
-                  color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.55)",
-                  boxShadow: isActive ? `0 0 8px ${colors.bg}` : "none",
+                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
+                  color: isActive || isSnapped ? colors.text : colors.icon,
+                  boxShadow: isActive ? `0 0 10px ${colors.bg}` : `0 1px 4px rgba(0,0,0,0.4)`,
+                  backdropFilter: "blur(4px)",
                 }}
                 aria-label={`${formatTime(m.time)} — ${m.label}`}
               >
