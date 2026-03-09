@@ -8,12 +8,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Activity, Music, Eye, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
