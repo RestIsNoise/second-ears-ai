@@ -1,5 +1,5 @@
-import { Loader2, Copy, Check, AudioWaveform } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Copy, Check, AudioWaveform, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
