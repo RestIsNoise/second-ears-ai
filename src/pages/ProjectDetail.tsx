@@ -60,7 +60,7 @@ const ProjectDetail = () => {
 
     const { data: analyses } = await supabase
       .from("analyses")
-      .select("id, mode, feedback, metrics, version, created_at")
+      .select("id, mode, feedback, metrics, version, created_at, storage_path")
       .eq("project_id", id)
       .order("version", { ascending: true });
 
