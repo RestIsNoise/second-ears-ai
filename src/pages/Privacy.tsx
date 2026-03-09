@@ -11,7 +11,7 @@ const sections = [
     content: (
       <>
         <P>
-          When you use SecondEars, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
+          When you use SecondEar, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
         </P>
         <div className="mt-4">
           <P>
