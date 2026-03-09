@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
+import CompactFooter from "@/components/CompactFooter";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ABCompare from "@/components/ABCompare";
@@ -950,20 +951,38 @@ const FeedbackDisplay = ({
           {n.whatWorks.length > 0 && (
             <div>
               <h3
-                className="text-[9px] text-muted-foreground/45 tracking-[0.12em] uppercase mb-2.5"
+                className="text-[9px] text-muted-foreground/50 tracking-[0.12em] uppercase mb-2.5"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 {modeWhatWorksLabel[mode] || "What Works"}
               </h3>
               <div className="space-y-1.5">
-                {n.whatWorks.map((item, i) => (
-                  <div key={i} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
-                    <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{item.title}</h4>
-                    {item.description && (
-                      <p className="text-[11px] text-foreground/50 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
-                    )}
-                  </div>
-                ))}
+                {n.whatWorks.map((item, i) => {
+                  const tags = detectTags(`${item.title} ${item.description || ""}`);
+                  return (
+                    <div key={i} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{item.title}</h4>
+                        {tags.length > 0 && (
+                          <div className="flex items-center gap-1 shrink-0">
+                            {tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="inline-block rounded-full border border-border/50 px-2 py-0.5 text-foreground/40"
+                                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, letterSpacing: "0.04em" }}
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {item.description && (
+                        <p className="text-[11px] text-foreground/55 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
