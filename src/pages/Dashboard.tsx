@@ -190,6 +190,9 @@ const Dashboard = () => {
   const [fetching, setFetching] = useState(true);
   const [projectToDelete, setProjectToDelete] = useState<ProjectRow | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    return (localStorage.getItem("dashboard-view") as "list" | "grid") || "list";
+  });
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
