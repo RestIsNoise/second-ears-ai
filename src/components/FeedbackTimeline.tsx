@@ -224,8 +224,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   {item.fix && (
                     <>
                       <div
-                        className="my-3"
-                        style={{ height: 2, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
+                        className="my-2"
+                        style={{ height: 1, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
                       />
                       <div className="flex items-start gap-2">
                         <span
