@@ -104,7 +104,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       return;
     }
 
-    setComments((prev) => [...prev, { ...data, upvotes: 0, downvotes: 0 } as unknown as Comment]);
+    setComments((prev) => [...prev, data as unknown as Comment]);
     setNewText("");
     inputRef.current?.focus();
   }, [newText, analysisId, user, currentTime]);
