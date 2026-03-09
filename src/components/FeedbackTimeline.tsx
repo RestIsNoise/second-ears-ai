@@ -45,9 +45,9 @@ const ClampedObservation = ({ text }: { text: string }) => {
     <div>
       <p
         ref={textRef}
-        className="text-[13px] text-foreground/60 mt-2 max-w-[45ch]"
+        className="text-[13px] text-foreground/60 mt-1"
         style={{
-          lineHeight: 1.65,
+          lineHeight: 1.55,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
@@ -146,7 +146,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
   return (
     <TooltipProvider>
-      <div ref={containerRef} className="space-y-3">
+      <div ref={containerRef} className="space-y-1.5">
         {sorted.map((item) => {
           const isActive = activeItemId === item.id;
           const alreadyAdded = todoItemIds?.has(item.id);
@@ -161,7 +161,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               }}
               onClick={() => onItemClick(item)}
               style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
-              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 p-4 transition-all duration-200 cursor-pointer ${
+              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 px-3 py-2.5 transition-all duration-200 cursor-pointer ${
                 isActive
                   ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
                   : "bg-card/60 hover:bg-secondary/30"
@@ -207,7 +207,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0 pr-12 max-w-[50ch]">
+                <div className="flex-1 min-w-0 pr-8">
                   <h3
                     className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
                     title={item.title}
@@ -224,8 +224,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   {item.fix && (
                     <>
                       <div
-                        className="my-3"
-                        style={{ height: 2, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
+                        className="my-2"
+                        style={{ height: 1, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
                       />
                       <div className="flex items-start gap-2">
                         <span
@@ -242,7 +242,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         >
                           {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
                         </span>
-                        <p className="text-[13px] text-foreground/70 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
+                        <p className="text-[13px] text-foreground/70" style={{ lineHeight: 1.55 }}>
                           {item.fix}
                         </p>
                       </div>
