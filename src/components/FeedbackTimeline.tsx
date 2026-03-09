@@ -161,7 +161,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               }}
               onClick={() => onItemClick(item)}
               style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
-              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 p-4 transition-all duration-200 cursor-pointer ${
+              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 px-3 py-2.5 transition-all duration-200 cursor-pointer ${
                 isActive
                   ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
                   : "bg-card/60 hover:bg-secondary/30"
