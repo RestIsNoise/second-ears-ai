@@ -345,38 +345,38 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
   */
   return (
     <div ref={containerRef} className="space-y-0">
-      {/* Transport strip — compact, defined */}
+      {/* Transport header */}
       <div
         className="flex items-center justify-between px-3 py-1.5 rounded-t-md"
-        style={{ backgroundColor: "hsl(0 0% 8%)", borderBottom: "1px solid hsl(var(--border) / 0.4)" }}
+        style={{ backgroundColor: BG_HEADER, borderBottom: `1px solid ${BORDER_MAIN}` }}
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          <Music className="w-3 h-3 text-foreground/40 shrink-0" />
+          <Music className="w-3 h-3 shrink-0" style={{ color: TEXT_DIM }} />
           <span
-            className="text-[11px] font-semibold truncate max-w-[200px] text-foreground/90"
-            style={{ fontFamily: MONO_FONT }}
+            className="text-[11px] font-semibold truncate max-w-[200px]"
+            style={{ fontFamily: MONO_FONT, color: TEXT_PRIMARY }}
           >
             {fileName}
           </span>
           {bpm > 0 && (
-            <span className="text-[10px] text-foreground/50 font-mono tabular-nums shrink-0">
+            <span className="text-[10px] font-mono tabular-nums shrink-0" style={{ color: TEXT_SECONDARY }}>
               {Math.round(bpm)} BPM
             </span>
           )}
-          <span className="text-[10px] text-foreground/40 font-mono shrink-0">
+          <span className="text-[10px] font-mono shrink-0" style={{ color: TEXT_DIM }}>
             {allTracks.length} trk · {beatsToTime(totalBeats, bpm)}
           </span>
         </div>
         <div className="flex items-center gap-1.5 shrink-0 ml-2">
           <button
             onClick={() => setDetailMode((v) => !v)}
-            className={cn(
-              "inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] transition-colors border",
-              detailMode
-                ? "bg-foreground/10 text-foreground/80 border-foreground/15"
-                : "text-foreground/50 hover:text-foreground/70 border-transparent hover:border-foreground/10"
-            )}
-            style={{ fontFamily: MONO_FONT }}
+            className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] transition-colors"
+            style={{
+              fontFamily: MONO_FONT,
+              color: detailMode ? TEXT_PRIMARY : TEXT_SECONDARY,
+              backgroundColor: detailMode ? "rgba(255,255,255,0.08)" : "transparent",
+              border: `1px solid ${detailMode ? BORDER_MAIN : "transparent"}`,
+            }}
             title={detailMode ? "Switch to Overview" : "Switch to Detail"}
           >
             {detailMode ? <Maximize2 className="w-3 h-3" /> : <ZoomIn className="w-3 h-3" />}
@@ -384,8 +384,10 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
           </button>
           <button
             onClick={() => { setSession(null); setFileName(null); hasNotified.current = false; }}
-            className="text-[10px] text-foreground/40 hover:text-foreground/70 transition-colors px-1.5 py-0.5"
-            style={{ fontFamily: MONO_FONT }}
+            className="text-[10px] transition-colors px-1.5 py-0.5"
+            style={{ fontFamily: MONO_FONT, color: TEXT_DIM }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = TEXT_PRIMARY)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = TEXT_DIM)}
           >
             Upload new
           </button>
@@ -393,23 +395,19 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
       </div>
 
       {/* ── DAW Container ── */}
-      <div
-        className="rounded-b-md overflow-hidden"
-        style={{ backgroundColor: "hsl(0 0% 6%)" }}
-      >
-        {/* ═══ ROW 1: Ruler bar ═══ */}
+      <div className="rounded-b-md overflow-hidden" style={{ backgroundColor: BG_MAIN }}>
+
+        {/* ═══ Ruler ═══ */}
         <div className="flex" style={{ height: RULER_H }}>
-          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
+          <div className="flex-1 overflow-hidden relative" style={{ backgroundColor: BG_RULER, borderBottom: `1px solid ${BORDER_MAIN}` }}>
             <div className="relative" style={{ width: detailMode ? totalWidth : "100%", height: RULER_H }}>
               {rulerTicks.map((tick, i) => (
                 <div key={i} className="absolute top-0" style={{ left: tick.x, height: RULER_H }}>
                   <div
                     className="absolute bottom-0 w-px"
                     style={{
-                      height: tick.major ? 12 : 4,
-                      backgroundColor: tick.major
-                        ? "hsl(var(--foreground) / 0.4)"
-                        : "hsl(var(--foreground) / 0.1)",
+                      height: tick.major ? 14 : 5,
+                      backgroundColor: tick.major ? TEXT_DIM : GRID_MINOR,
                     }}
                   />
                   {tick.label && (
@@ -419,7 +417,7 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                         fontFamily: MONO_FONT,
                         fontSize: 9,
                         fontWeight: 600,
-                        color: "hsl(var(--foreground) / 0.65)",
+                        color: TEXT_SECONDARY,
                         bottom: 14,
                         left: 3,
                       }}
@@ -431,49 +429,44 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
               ))}
             </div>
           </div>
-
-          {/* Label column header */}
           <div
             className="shrink-0 flex items-end px-2 pb-1"
-            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--foreground) / 0.08)" }}
+            style={{ width: LABEL_W, backgroundColor: BG_RULER, borderLeft: `1px solid ${BORDER_MAIN}`, borderBottom: `1px solid ${BORDER_MAIN}` }}
           >
             <span
-              className="text-[7px] uppercase tracking-[0.14em] text-foreground/40 font-semibold select-none"
-              style={{ fontFamily: MONO_FONT }}
+              className="text-[8px] uppercase tracking-[0.12em] font-semibold select-none"
+              style={{ fontFamily: MONO_FONT, color: TEXT_DIM }}
             >
               Tracks
             </span>
           </div>
         </div>
 
-        {/* ═══ ROW 2: Clips + Labels ═══ */}
+        {/* ═══ Clips + Labels ═══ */}
         <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
           {/* Clip lanes */}
           <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
             <div style={{ width: detailMode ? totalWidth : "100%", height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
+                const laneBg = isGroup ? BG_GROUP : vi % 2 === 0 ? BG_LANE_A : BG_LANE_B;
                 return (
                   <div
                     key={track._i}
                     className="relative"
                     style={{
                       height: ROW_H,
-                      backgroundColor: isGroup
-                        ? "hsl(var(--foreground) / 0.06)"
-                        : vi % 2 === 0
-                          ? "transparent"
-                          : "hsl(var(--foreground) / 0.025)",
-                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                      backgroundColor: laneBg,
+                      borderBottom: `1px solid ${BORDER_SUBTLE}`,
                     }}
                   >
-                    {/* Vertical bar grid */}
+                    {/* Vertical grid lines */}
                     {rulerTicks.map((tick, ti) =>
                       tick.major ? (
                         <div
                           key={ti}
                           className="absolute top-0 h-full w-px"
-                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.05)" }}
+                          style={{ left: tick.x, backgroundColor: GRID_MINOR }}
                         />
                       ) : null
                     )}
@@ -482,20 +475,21 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                     {track.clips.map((clip, ci) => {
                       const left = clip.start * pxPerBeat;
                       const w = Math.max((clip.resolvedEnd - clip.start) * pxPerBeat, 2);
-                      const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
+                      const fills = [CLIP_A, CLIP_B, CLIP_C];
                       const fill = fills[ci % 3];
                       const showName = w > (detailMode ? 38 : 45);
                       return (
                         <div
                           key={ci}
-                          className="absolute rounded-[1px] hover:brightness-130 transition-[filter] duration-75"
+                          className="absolute rounded-[1px] hover:brightness-110 transition-[filter] duration-75"
                           style={{
                             left,
                             width: w,
-                            top: detailMode ? 2 : 1,
-                            height: ROW_H - (detailMode ? 4 : 2),
-                            backgroundColor: `hsl(${fill})`,
-                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.08), 0 0 0 0.5px hsl(0 0% 0% / 0.3)`,
+                            top: 2,
+                            height: ROW_H - 4,
+                            backgroundColor: fill,
+                            borderLeft: `1px solid rgba(255,255,255,0.1)`,
+                            borderTop: `1px solid rgba(255,255,255,0.06)`,
                           }}
                           title={clip.name}
                         >
@@ -503,10 +497,10 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                             <span
                               className="block truncate font-medium px-1 select-none"
                               style={{
-                                color: "hsl(0 0% 100% / 0.65)",
-                                lineHeight: `${ROW_H - (detailMode ? 4 : 2)}px`,
+                                color: "#E8ECF1",
+                                lineHeight: `${ROW_H - 4}px`,
                                 fontFamily: MONO_FONT,
-                                fontSize: detailMode ? 8 : 7,
+                                fontSize: detailMode ? 9 : 7,
                               }}
                             >
                               {clip.name}
@@ -524,16 +518,14 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
           {/* Right: track labels */}
           <div
             className="shrink-0 overflow-y-hidden overflow-x-hidden"
-            style={{
-              width: LABEL_W,
-              borderLeft: "1px solid hsl(var(--foreground) / 0.1)",
-            }}
+            style={{ width: LABEL_W, borderLeft: `1px solid ${BORDER_MAIN}` }}
           >
             <div style={{ height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
                 const isChild = !!track.parentId;
                 const count = childCounts[track.name];
+                const laneBg = isGroup ? BG_GROUP : vi % 2 === 0 ? BG_LANE_A : BG_LANE_B;
 
                 return (
                   <div
@@ -541,39 +533,41 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                     className="flex items-center gap-1 select-none"
                     style={{
                       height: ROW_H,
-                      paddingLeft: isChild ? 16 : 6,
+                      paddingLeft: isChild ? 18 : 6,
                       paddingRight: 6,
-                      backgroundColor: isGroup
-                        ? "hsl(var(--foreground) / 0.06)"
-                        : vi % 2 === 0
-                          ? "transparent"
-                          : "hsl(var(--foreground) / 0.025)",
-                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                      backgroundColor: laneBg,
+                      borderBottom: `1px solid ${BORDER_SUBTLE}`,
                     }}
                   >
                     {isGroup && (
                       <button
                         onClick={() => toggleGroup(track.name)}
-                        className="shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-sm hover:bg-foreground/[0.08] transition-colors"
+                        className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm transition-colors"
+                        style={{ color: TEXT_SECONDARY }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.06)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
                       >
                         {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-2.5 h-2.5 text-foreground/50" />
-                          : <ChevronDown className="w-2.5 h-2.5 text-foreground/50" />}
+                          ? <ChevronRight className="w-3 h-3" />
+                          : <ChevronDown className="w-3 h-3" />}
                       </button>
                     )}
 
                     <span
-                      className={cn(
-                        "truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/90" : "text-foreground/60"
-                      )}
-                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 10 : 8, letterSpacing: "0.01em" }}
+                      className="truncate flex-1 leading-none"
+                      style={{
+                        fontFamily: MONO_FONT,
+                        fontSize: detailMode ? 10 : 9,
+                        fontWeight: isGroup ? 600 : 400,
+                        color: isGroup ? TEXT_PRIMARY : TEXT_SECONDARY,
+                        letterSpacing: "0.01em",
+                      }}
                     >
                       {track.name}
                     </span>
 
                     {isGroup && collapsedGroups.has(track.name) && count != null && count > 0 && (
-                      <span className="text-[7px] text-foreground/30 font-mono shrink-0">{count}</span>
+                      <span className="text-[8px] font-mono shrink-0" style={{ color: TEXT_DIM }}>{count}</span>
                     )}
                   </div>
                 );
