@@ -49,27 +49,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
-        .select("*")
+        .select("id, analysis_id, user_id, timestamp_in_track, text, created_at")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
       if (data) setComments(data as unknown as Comment[]);
-
-      // Load user's votes
-      if (user) {
-        const commentIds = (data || []).map((c: any) => c.id);
-        if (commentIds.length > 0) {
-          const { data: votes } = await supabase
-            .from("comment_votes" as any)
-            .select("comment_id, vote")
-            .eq("user_id", user.id)
-            .in("comment_id", commentIds);
-          if (votes) {
-            const map: UserVoteMap = {};
-            (votes as any[]).forEach((v) => { map[v.comment_id] = v.vote as 1 | -1; });
-            setUserVotes(map);
-          }
-        }
-      }
       setLoadingComments(false);
     };
     load();
