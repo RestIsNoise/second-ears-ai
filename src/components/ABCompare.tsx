@@ -15,6 +15,9 @@ const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
 const DECK_A_COLOR = "#9A9590";  // warm charcoal/smoke
 const DECK_B_COLOR = "#78A8B2";  // desaturated teal
 
+const AMBER = '#C8820A';
+const CYAN = '#1BA8C0';
+
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
   const m = Math.floor(s / 60);
