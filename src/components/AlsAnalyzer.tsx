@@ -27,49 +27,11 @@ interface AlsSession {
   tracks: AlsTrack[];
 }
 
-/* ── Ableton-inspired color palette ── */
-const ABLETON_COLORS = [
-  "0 72% 51%",
-  "25 90% 52%",
-  "45 93% 47%",
-  "142 55% 42%",
-  "175 60% 41%",
-  "199 70% 48%",
-  "262 52% 55%",
-  "330 65% 52%",
-  "16 75% 48%",
-  "88 45% 42%",
-  "210 55% 52%",
-  "280 40% 50%",
-];
-
-const GROUP_COLORS: Record<string, string> = {
-  kick: "0 72% 51%",
-  bass: "25 90% 52%",
-  drum: "45 93% 47%",
-  perc: "45 80% 45%",
-  synth: "175 60% 41%",
-  pad: "199 70% 48%",
-  lead: "142 55% 42%",
-  vox: "262 52% 55%",
-  vocal: "262 52% 55%",
-  fx: "210 55% 52%",
-};
-
-function resolveColor(track: AlsTrack, allTracks: AlsTrack[]): string {
-  const names = [track.name];
-  if (track.parentId) {
-    const parent = allTracks.find((t) => t.name === track.parentId);
-    if (parent) names.push(parent.name);
-  }
-  for (const n of names) {
-    const lower = n.toLowerCase();
-    for (const [key, color] of Object.entries(GROUP_COLORS)) {
-      if (lower.includes(key)) return color;
-    }
-  }
-  return ABLETON_COLORS[track.colorIndex % ABLETON_COLORS.length];
-}
+/* ── Monochrome palette (no rainbow) ── */
+const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
+const CLIP_FILL = "0 0% 24%";
+const CLIP_FILL_ALT = "0 0% 19%";
+const STRIP_COLOR = "hsl(0 0% 100% / 0.07)";
 
 /* ── Constants ── */
 const ROW_H = 28;
@@ -314,28 +276,27 @@ const AlsAnalyzer = () => {
           className="rounded-lg overflow-hidden"
           style={{ backgroundColor: "hsl(var(--secondary))" }}
         >
-          {allTracks.map((track, i) => {
-            const color = resolveColor(track, session.tracks);
-            return (
-              <div
-                key={i}
-                className={cn(
-                  "flex items-center gap-2.5 px-3",
-                  i % 2 === 0 ? "bg-foreground/[0.02]" : "bg-transparent"
-                )}
-                style={{ height: ROW_H }}
-              >
-                <div className="shrink-0 w-[6px] h-[6px] rounded-full" style={{ backgroundColor: `hsl(${color})` }} />
-                <span className={cn("text-[10px] flex-1 truncate", track.type === "group" ? "font-semibold text-foreground/70" : "text-foreground/50")}
-                  style={{ fontFamily: "'DM Mono', monospace" }}
-                >
-                  {track.name}
-                </span>
-                <span className="text-[8px] text-muted-foreground/40 font-mono shrink-0">{track.clips.length}</span>
-              </div>
-            );
-          })}
-        </div>
+           {allTracks.map((track, i) => {
+             return (
+               <div
+                 key={i}
+                 className={cn(
+                   "flex items-center gap-2.5 px-3",
+                   i % 2 === 0 ? "bg-foreground/[0.02]" : "bg-transparent"
+                 )}
+                 style={{ height: ROW_H }}
+               >
+                 <div className="shrink-0 w-[6px] h-[6px] rounded-full" style={{ backgroundColor: STRIP_COLOR }} />
+                 <span className={cn("text-[10px] flex-1 truncate", track.type === "group" ? "font-semibold text-foreground/70" : "text-foreground/50")}
+                   style={{ fontFamily: MONO_FONT }}
+                 >
+                   {track.name}
+                 </span>
+                 <span className="text-[8px] text-muted-foreground/40 font-mono shrink-0">{track.clips.length}</span>
+               </div>
+             );
+           })}
+         </div>
       </div>
     );
   }
@@ -343,15 +304,13 @@ const AlsAnalyzer = () => {
   /* ─────────────────────────────────────────────
      Desktop: Ableton Live arrangement view
      ─────────────────────────────────────────────
-     Layout:
-     ┌──────────┬──────────────────────────┐
-     │ "Tracks" │  Ruler (h-scrolls)       │  <- RULER_H
-     ├──────────┼──────────────────────────┤
-     │ Labels   │  Clips (h+v scrolls)     │  <- MAX_VIEW_H
-     │ (v-sync) │                          │
-     └──────────┴──────────────────────────┘
-     Left column: fixed width, no h-scroll, v-scroll synced.
-     Right area: h+v scroll, ruler h-synced to clips.
+     Layout (labels on RIGHT):
+     ┌──────────────────────────┬──────────┐
+     │  Ruler (h-scrolls)       │ "Tracks" │  <- RULER_H
+     ├──────────────────────────┼──────────┤
+     │  Clips (h+v scrolls)     │ Labels   │  <- MAX_VIEW_H
+     │                          │ (v-sync) │
+     └──────────────────────────┴──────────┘
   */
   return (
     <div className="space-y-2.5">
@@ -387,22 +346,6 @@ const AlsAnalyzer = () => {
       >
         {/* ═══ ROW 1: Ruler bar ═══ */}
         <div className="flex" style={{ height: RULER_H }}>
-          {/* Label column header */}
-          <div
-            className="shrink-0 flex items-end px-3 pb-1"
-            style={{
-              width: LABEL_W,
-              borderRight: "1px solid hsl(var(--border) / 0.25)",
-            }}
-          >
-            <span
-              className="text-[7px] uppercase tracking-[0.14em] text-muted-foreground/35 font-medium select-none"
-              style={{ fontFamily: "'DM Mono', monospace" }}
-            >
-              Tracks
-            </span>
-          </div>
-
           {/* Ruler — syncs horizontally with clip area */}
           <div
             ref={rulerRef}
@@ -424,7 +367,7 @@ const AlsAnalyzer = () => {
                   {tick.label && (
                     <span
                       className="absolute top-[5px] left-[3px] text-[8px] text-muted-foreground/40 select-none whitespace-nowrap"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: MONO_FONT }}
                     >
                       {tick.label}
                     </span>
@@ -433,89 +376,28 @@ const AlsAnalyzer = () => {
               ))}
             </div>
           </div>
-        </div>
 
-        {/* ═══ ROW 2: Labels + Clips ═══ */}
-        <div className="flex" style={{ maxHeight: MAX_VIEW_H }}>
-
-          {/* ── Left: track names (v-scroll synced, no h-scroll) ── */}
+          {/* Label column header (RIGHT) */}
           <div
-            ref={labelColRef}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            className="shrink-0 flex items-end px-3 pb-1"
             style={{
               width: LABEL_W,
-              maxHeight: MAX_VIEW_H,
-              borderRight: "1px solid hsl(var(--border) / 0.25)",
-              /* Hide scrollbar visually — scroll driven by sync */
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
+              borderLeft: "1px solid hsl(var(--border) / 0.25)",
             }}
           >
-            <style>{`.als-label-col::-webkit-scrollbar { display: none; }`}</style>
-            <div className="als-label-col" style={{ height: trackContentH }}>
-              {visibleTracks.map((track, vi) => {
-                const isGroup = track.type === "group";
-                const isChild = !!track.parentId;
-                const color = resolveColor(track, session.tracks);
-                const count = childCounts[track.name];
-
-                return (
-                  <div
-                    key={track._i}
-                    className={cn(
-                      "flex items-center gap-1.5 select-none",
-                      isGroup
-                        ? "bg-foreground/[0.04]"
-                        : vi % 2 === 0
-                          ? "bg-transparent"
-                          : "bg-foreground/[0.018]"
-                    )}
-                    style={{
-                      height: ROW_H,
-                      paddingLeft: isChild ? 26 : 10,
-                      paddingRight: 8,
-                    }}
-                  >
-                    {/* Group chevron */}
-                    {isGroup && (
-                      <button
-                        onClick={() => toggleGroup(track.name)}
-                        className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
-                      >
-                        {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
-                          : <ChevronDown className="w-3 h-3 text-muted-foreground/50" />}
-                      </button>
-                    )}
-
-                    {/* Color dot */}
-                    <div
-                      className="shrink-0 rounded-full"
-                      style={{ width: 6, height: 6, backgroundColor: `hsl(${color})` }}
-                    />
-
-                    {/* Track name */}
-                    <span
-                      className={cn(
-                        "text-[10px] truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/65" : "text-foreground/45"
-                      )}
-                      style={{ fontFamily: "'DM Mono', monospace" }}
-                    >
-                      {track.name}
-                    </span>
-
-                    {/* Child count */}
-                    {isGroup && count != null && count > 0 && (
-                      <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0">{count}</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <span
+              className="text-[7px] uppercase tracking-[0.14em] text-muted-foreground/35 font-medium select-none"
+              style={{ fontFamily: MONO_FONT }}
+            >
+              Tracks
+            </span>
           </div>
+        </div>
 
-          {/* ── Right: clip lanes (h+v scroll, drives all sync) ── */}
+        {/* ═══ ROW 2: Clips + Labels ═══ */}
+        <div className="flex" style={{ maxHeight: MAX_VIEW_H }}>
+
+          {/* ── Left: clip lanes (h+v scroll, drives all sync) ── */}
           <div
             ref={clipAreaRef}
             className="flex-1 overflow-auto scrollbar-thin"
@@ -524,7 +406,6 @@ const AlsAnalyzer = () => {
             <div style={{ width: totalWidth, height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
-                const color = resolveColor(track, session.tracks);
 
                 return (
                   <div
@@ -553,21 +434,22 @@ const AlsAnalyzer = () => {
                       ) : null
                     )}
 
-                    {/* Clips */}
+                    {/* Clips — monochrome gray */}
                     {track.clips.map((clip, ci) => {
                       const left = clip.start * PX_PER_BEAT;
                       const w = Math.max((clip.resolvedEnd - clip.start) * PX_PER_BEAT, 3);
+                      const fill = ci % 2 === 0 ? CLIP_FILL : CLIP_FILL_ALT;
                       return (
                         <div
                           key={ci}
-                          className="absolute rounded-[3px] hover:brightness-110 transition-[filter] duration-75"
+                          className="absolute rounded-[3px] hover:brightness-125 transition-[filter] duration-75"
                           style={{
                             left,
                             width: w,
                             top: 3,
                             height: ROW_H - 6,
-                            backgroundColor: `hsl(${color} / 0.72)`,
-                            boxShadow: `inset 0 1px 0 hsl(${color} / 0.18)`,
+                            backgroundColor: `hsl(${fill})`,
+                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.06)`,
                           }}
                           title={clip.name}
                         >
@@ -575,8 +457,9 @@ const AlsAnalyzer = () => {
                             <span
                               className="block truncate text-[8px] font-medium px-1.5 select-none"
                               style={{
-                                color: "hsl(0 0% 100% / 0.82)",
+                                color: "hsl(0 0% 100% / 0.55)",
                                 lineHeight: `${ROW_H - 6}px`,
+                                fontFamily: MONO_FONT,
                               }}
                             >
                               {clip.name}
@@ -585,6 +468,81 @@ const AlsAnalyzer = () => {
                         </div>
                       );
                     })}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── Right: track names (v-scroll synced, no h-scroll) ── */}
+          <div
+            ref={labelColRef}
+            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            style={{
+              width: LABEL_W,
+              maxHeight: MAX_VIEW_H,
+              borderLeft: "1px solid hsl(var(--border) / 0.25)",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            <style>{`.als-label-col::-webkit-scrollbar { display: none; }`}</style>
+            <div className="als-label-col" style={{ height: trackContentH }}>
+              {visibleTracks.map((track, vi) => {
+                const isGroup = track.type === "group";
+                const isChild = !!track.parentId;
+                const count = childCounts[track.name];
+
+                return (
+                  <div
+                    key={track._i}
+                    className={cn(
+                      "flex items-center gap-1.5 select-none",
+                      isGroup
+                        ? "bg-foreground/[0.04]"
+                        : vi % 2 === 0
+                          ? "bg-transparent"
+                          : "bg-foreground/[0.018]"
+                    )}
+                    style={{
+                      height: ROW_H,
+                      paddingLeft: isChild ? 20 : 8,
+                      paddingRight: 8,
+                    }}
+                  >
+                    {/* Group chevron */}
+                    {isGroup && (
+                      <button
+                        onClick={() => toggleGroup(track.name)}
+                        className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
+                      >
+                        {collapsedGroups.has(track.name)
+                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
+                          : <ChevronDown className="w-3 h-3 text-muted-foreground/50" />}
+                      </button>
+                    )}
+
+                    {/* Monochrome strip dot */}
+                    <div
+                      className="shrink-0 rounded-full"
+                      style={{ width: 5, height: 5, backgroundColor: isGroup ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 100% / 0.08)" }}
+                    />
+
+                    {/* Track name */}
+                    <span
+                      className={cn(
+                        "text-[10px] truncate flex-1 leading-none",
+                        isGroup ? "font-semibold text-foreground/65" : "text-foreground/45"
+                      )}
+                      style={{ fontFamily: MONO_FONT }}
+                    >
+                      {track.name}
+                    </span>
+
+                    {/* Child count badge (collapsed groups) */}
+                    {isGroup && collapsedGroups.has(track.name) && count != null && count > 0 && (
+                      <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0">{count}</span>
+                    )}
                   </div>
                 );
               })}
