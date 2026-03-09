@@ -822,7 +822,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-8 pb-4 w-full overflow-hidden">
+        <div className="mt-6 pb-0 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
