@@ -1,5 +1,5 @@
-import { Loader2, Copy, Check, AudioWaveform } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Copy, Check, AudioWaveform, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
@@ -96,6 +96,17 @@ const CopyBtn = ({ text }: { text: string }) => {
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
 
 const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Props) => {
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
+
+  const toggleCard = useCallback((idx: number) => {
+    setExpandedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  }, []);
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
@@ -259,9 +270,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
 
       {/* ── Gemini Comparative Feedback ── */}
       {gemini_feedback && (
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {gemini_feedback.summary && (
-            <p className="text-[12px] text-foreground/55 leading-relaxed" style={{ lineHeight: 1.6 }}>
+            <p className="text-[13px] text-foreground/65 leading-relaxed" style={{ lineHeight: 1.7 }}>
               {gemini_feedback.summary}
             </p>
           )}
@@ -269,33 +280,56 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
           {/* Priority cards */}
           {gemini_feedback.priorities?.map((p, i) => {
             const copyText = `${p.issue}\nWhy: ${p.whyItMatters}\nFix: ${p.suggestedFix}`;
+            const isExpanded = expandedCards.has(i);
             return (
               <div
                 key={i}
-                className="group rounded-lg border-l-2 border-l-red-400/60 border border-border/40 bg-card/30 p-3"
+                className="group rounded-[10px] border-l-2 border-l-red-400/60 border border-border/50 bg-card/40 p-4"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-2.5 flex-1 min-w-0">
                     <span
                       className="text-foreground/30 font-medium leading-none pt-0.5 shrink-0"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 14 }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 15 }}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{p.issue}</h4>
+                      <h4 className="text-[13px] font-semibold tracking-tight text-foreground/85">{p.issue}</h4>
                       {p.whyItMatters && (
-                        <p className="text-[11px] text-foreground/55 mt-1" style={{ lineHeight: 1.55 }}>{p.whyItMatters}</p>
+                        <p
+                          className={cn(
+                            "text-[12px] text-foreground/60 mt-1.5 transition-all duration-200",
+                            !isExpanded && "line-clamp-4"
+                          )}
+                          style={{ lineHeight: 1.65 }}
+                        >
+                          {p.whyItMatters}
+                        </p>
                       )}
+
+                      {/* Expand/Collapse toggle */}
+                      {p.whyItMatters && p.whyItMatters.length > 180 && (
+                        <button
+                          onClick={() => toggleCard(i)}
+                          className="mt-1 inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-foreground/60 transition-colors"
+                          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                        >
+                          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                          {isExpanded ? "Collapse" : "Expand"}
+                        </button>
+                      )}
+
+                      {/* FIX block — always visible, visually separated */}
                       {p.suggestedFix && (
-                        <div className="mt-2 flex items-start gap-1.5">
+                        <div className="mt-3 pt-2.5 border-t border-border/40 flex items-start gap-1.5">
                           <span
                             className="shrink-0 mt-0.5 inline-flex items-center rounded-full bg-foreground text-background px-1.5 py-0.5"
                             style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, letterSpacing: "0.06em" }}
                           >
                             FIX
                           </span>
-                          <p className="text-[11px] text-foreground/65" style={{ lineHeight: 1.55 }}>{p.suggestedFix}</p>
+                          <p className="text-[12px] text-foreground/70" style={{ lineHeight: 1.6 }}>{p.suggestedFix}</p>
                         </div>
                       )}
                     </div>
@@ -310,18 +344,18 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
 
           {/* What works */}
           {gemini_feedback.whatWorks && gemini_feedback.whatWorks.length > 0 && (
-            <div className="mt-2">
+            <div className="mt-3">
               <span
-                className="text-[8px] text-muted-foreground/45 uppercase tracking-[0.12em] mb-1.5 block"
+                className="text-[9px] text-muted-foreground/50 uppercase tracking-[0.12em] mb-2 block"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 Already matching
               </span>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {gemini_feedback.whatWorks.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2 text-[11px] text-foreground/55">
+                  <div key={i} className="flex items-start gap-2 text-[12px] text-foreground/60">
                     <span className="text-green-500 shrink-0 mt-0.5">✓</span>
-                    <span style={{ lineHeight: 1.5 }}>{item}</span>
+                    <span style={{ lineHeight: 1.55 }}>{item}</span>
                   </div>
                 ))}
               </div>
