@@ -72,7 +72,7 @@ const FeedbackVoteButtons = ({
         <TooltipTrigger asChild>
           <button
             onClick={(e) => { e.stopPropagation(); handleVote(-1); }}
-            disabled={!userId || busy}
+            disabled={!userId}
             aria-label="Mark feedback as not helpful"
             className={cn(
               "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
