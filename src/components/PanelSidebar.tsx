@@ -25,7 +25,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       {/* Section label */}
       <div className="px-3 pt-3 pb-1.5">
         <span
-          className="text-[9px] text-foreground/35 tracking-[0.1em] uppercase select-none font-medium"
+          className="text-[9px] text-foreground/40 tracking-[0.1em] uppercase select-none font-medium"
           style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
         >
           Panels
@@ -43,18 +43,18 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               onClick={() => !disabled && onToggle(panel.id)}
               disabled={disabled}
               className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-[8px] text-left transition-all duration-150 border-l-2",
+                "w-full flex items-center gap-2.5 px-3 py-[8px] text-left transition-all duration-150 border-l-[3px]",
                 isActive
-                  ? "border-l-foreground/30 text-foreground/85"
+                  ? "border-l-foreground/50 text-foreground/90"
                   : disabled
-                    ? "border-l-transparent text-foreground/18 cursor-not-allowed"
-                    : "border-l-transparent text-foreground/40 hover:text-foreground/65 hover:bg-foreground/[0.03]"
+                    ? "border-l-transparent text-foreground/20 cursor-not-allowed"
+                    : "border-l-transparent text-foreground/45 hover:text-foreground/70 hover:bg-foreground/[0.04]"
               )}
               style={{
                 backgroundColor: isActive ? "hsl(var(--panel-content))" : "transparent",
               }}
             >
-              <LayoutPanelTop className={cn("w-4 h-4 shrink-0", isActive ? "opacity-55" : "opacity-30")} />
+              <LayoutPanelTop className={cn("w-[18px] h-[18px] shrink-0", isActive ? "opacity-70" : "opacity-35")} />
               <span
                 className={cn(
                   "text-[11px] tracking-tight truncate",
