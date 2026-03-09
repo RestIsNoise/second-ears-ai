@@ -11,7 +11,7 @@ const sections = [
     content: (
       <>
         <P>
-          SecondEars provides AI-powered mix feedback for audio tracks uploaded by registered users. The service analyzes your audio and returns structured, actionable feedback based on the listening mode you select. We do not master, mix, or modify your audio files.
+          SecondEar provides AI-powered mix feedback for audio tracks uploaded by registered users. The service analyzes your audio and returns structured, actionable feedback based on the listening mode you select. We do not master, mix, or modify your audio files.
         </P>
         <div className="mt-4">
           <P>
