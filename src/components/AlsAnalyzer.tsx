@@ -30,15 +30,15 @@ interface AlsSession {
 
 /* ── Monochrome palette ── */
 const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
-const CLIP_FILL_1 = "0 0% 28%";
-const CLIP_FILL_2 = "0 0% 22%";
-const CLIP_FILL_3 = "0 0% 17%";
+const CLIP_FILL_1 = "0 0% 32%";
+const CLIP_FILL_2 = "0 0% 24%";
+const CLIP_FILL_3 = "0 0% 18%";
 
 /* ── Constants ── */
-const LABEL_W = 160;
-const RULER_H = 28;
-const OVERVIEW_ROW_H = 20;
-const DETAIL_ROW_H = 30;
+const LABEL_W = 150;
+const RULER_H = 24;
+const OVERVIEW_ROW_H = 18;
+const DETAIL_ROW_H = 26;
 
 /* ── Helpers ── */
 function beatsToTime(beats: number, bpm: number): string {

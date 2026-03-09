@@ -1038,11 +1038,11 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-      {/* ═══ ARRANGEMENT — bottom of page, full width ═══ */}
+      {/* ═══ ARRANGEMENT — bottom of page, compact ═══ */}
       <div
         ref={arrangementRef}
         className={cn(
-          "mt-10 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-3 shadow-sm transition-all duration-200 overflow-hidden",
+          "mt-4 rounded-md border border-border/80 bg-background/40 p-0 shadow-sm transition-all duration-200 overflow-hidden",
           !showArrangement && "hidden"
         )}
       >
