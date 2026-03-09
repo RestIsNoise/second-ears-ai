@@ -840,8 +840,8 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-      {/* ═══ TRANSITION DIVIDER ═══ */}
-      <div className="mt-5 mb-0 h-px w-full" style={{ background: "linear-gradient(to right, transparent, hsl(var(--border)) 20%, hsl(var(--border)) 80%, transparent)" }} />
+      {/* ═══ TRANSITION STRIP ═══ */}
+      <div className="mt-3 mb-0 w-full" style={{ height: 6, background: "linear-gradient(to bottom, hsl(var(--foreground) / 0.04), transparent)" }} />
 
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
