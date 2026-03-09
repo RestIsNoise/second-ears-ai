@@ -10,32 +10,36 @@ const formatTime = (s: number) => {
 };
 
 const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
-  technical: <SlidersHorizontal className="w-3 h-3" strokeWidth={2.5} />,
-  structural: <LayoutGrid className="w-3 h-3" strokeWidth={2.5} />,
-  perceptual: <Ear className="w-3 h-3" strokeWidth={2.5} />,
-  user: <User className="w-3 h-3" strokeWidth={2.5} />,
+  technical: <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  structural: <LayoutGrid className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  perceptual: <Ear className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  user: <User className="w-3.5 h-3.5" strokeWidth={2.5} />,
 };
 
-const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string }> = {
+const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string; icon: string }> = {
   technical: {
-    bg: "hsl(var(--accent) / 0.15)",
-    border: "hsl(var(--accent) / 0.3)",
+    bg: "hsl(var(--accent) / 0.25)",
+    border: "hsl(var(--accent) / 0.5)",
     text: "hsl(var(--accent-foreground))",
+    icon: "hsl(var(--accent-foreground))",
   },
   structural: {
-    bg: "hsl(210 80% 55% / 0.15)",
-    border: "hsl(210 80% 55% / 0.35)",
-    text: "hsl(210 80% 55%)",
+    bg: "hsl(210 80% 55% / 0.25)",
+    border: "hsl(210 80% 55% / 0.5)",
+    text: "hsl(210 80% 65%)",
+    icon: "hsl(210 80% 70%)",
   },
   perceptual: {
-    bg: "hsl(270 60% 55% / 0.15)",
-    border: "hsl(270 60% 55% / 0.35)",
-    text: "hsl(270 60% 55%)",
+    bg: "hsl(270 60% 55% / 0.25)",
+    border: "hsl(270 60% 55% / 0.5)",
+    text: "hsl(270 60% 65%)",
+    icon: "hsl(270 60% 70%)",
   },
   user: {
-    bg: "hsl(40 90% 55% / 0.2)",
-    border: "hsl(40 90% 50% / 0.5)",
-    text: "hsl(40 90% 40%)",
+    bg: "hsl(40 90% 55% / 0.3)",
+    border: "hsl(40 90% 50% / 0.6)",
+    text: "hsl(40 90% 45%)",
+    icon: "hsl(40 90% 55%)",
   },
 };
 
@@ -267,12 +271,13 @@ const WaveformMarkers = ({
                 onClick={() => onMarkerClick?.(m)}
                 className="flex items-center justify-center rounded-full transition-all duration-150"
                 style={{
-                  width: isActive || isSnapped ? 28 : 24,
-                  height: isActive || isSnapped ? 28 : 24,
+                  width: isActive || isSnapped ? 30 : 26,
+                  height: isActive || isSnapped ? 30 : 26,
                   backgroundColor: isActive ? colors.border : colors.bg,
-                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : "hsl(var(--foreground) / 0.1)"}`,
-                  color: isActive || isSnapped ? colors.text : "hsl(var(--foreground) / 0.55)",
-                  boxShadow: isActive ? `0 0 8px ${colors.bg}` : "none",
+                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
+                  color: isActive || isSnapped ? colors.text : colors.icon,
+                  boxShadow: isActive ? `0 0 10px ${colors.bg}` : `0 1px 4px rgba(0,0,0,0.4)`,
+                  backdropFilter: "blur(4px)",
                 }}
                 aria-label={`${formatTime(m.time)} — ${m.label}`}
               >
