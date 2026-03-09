@@ -12,8 +12,8 @@ const DIVIDER = "rgba(255,255,255,0.06)";
 const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
 const BEVEL_DARK = "rgba(0,0,0,0.4)";
 const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
-const AMBER = "#D4920E";
-const CYAN = "#1BB8D0";
+const DECK_A_COLOR = "#9A9590";  // warm charcoal/smoke
+const DECK_B_COLOR = "#78A8B2";  // desaturated teal
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
