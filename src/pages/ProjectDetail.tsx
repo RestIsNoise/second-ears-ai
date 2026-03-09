@@ -148,6 +148,7 @@ const ProjectDetail = () => {
             <FeedbackDisplay
               result={result}
               onReset={() => navigate(`/project/${id}`)}
+              audioFile={audioFile || undefined}
               analysisId={analysisId}
               versions={versions}
               projectId={id || null}
