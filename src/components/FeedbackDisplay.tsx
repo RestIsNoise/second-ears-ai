@@ -840,10 +840,13 @@ const FeedbackDisplay = ({
         </div>
       )}
 
+      {/* ═══ TRANSITION DIVIDER ═══ */}
+      <div className="mt-5 mb-0 h-px w-full" style={{ background: "linear-gradient(to right, transparent, hsl(var(--border)) 20%, hsl(var(--border)) 80%, transparent)" }} />
+
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-10 mb-6 px-0.5">
-          <p className="text-[15px] text-foreground/60 leading-relaxed max-w-[54ch]" style={{ lineHeight: 1.7 }}>
+        <div className="mt-5 mb-4 px-0.5">
+          <p className="text-[14px] text-foreground/70 max-w-[48ch]" style={{ lineHeight: 1.75 }}>
             {n.overallImpression}
           </p>
         </div>
