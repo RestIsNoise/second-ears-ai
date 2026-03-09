@@ -116,25 +116,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const [userVotes, setUserVotes] = useState<Record<string, 1 | -1>>({});
-
-  // Load user's existing votes for these feedback items
-  useEffect(() => {
-    if (!user || !analysisId || items.length === 0) return;
-    const load = async () => {
-      const { data } = await supabase
-        .from("feedback_votes" as any)
-        .select("feedback_item_id, vote")
-        .eq("user_id", user.id)
-        .eq("analysis_id", analysisId);
-      if (data) {
-        const map: Record<string, 1 | -1> = {};
-        (data as any[]).forEach((v) => { map[v.feedback_item_id] = v.vote as 1 | -1; });
-        setUserVotes(map);
-      }
-    };
-    load();
-  }, [user, analysisId, items.length]);
 
   useEffect(() => {
     if (!activeItemId) return;
