@@ -3,11 +3,17 @@ import { Play, Pause, RotateCcw, X, RefreshCw, Headphones, Volume2, VolumeX, Rep
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import type { WaveformMarker } from "@/types/feedback";
+import type { FrequencyData } from "@/lib/parseFrequencyData";
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
-const DARK_BG = "#252525";
-const DARKER_BG = "#202020";
+const SHELL_BG = "#141414";
+const MIXER_BG = "#0E0E0E";
+const DIVIDER = "rgba(255,255,255,0.06)";
+const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
+const BEVEL_DARK = "rgba(0,0,0,0.4)";
 const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
+const AMBER = "#D4920E";
+const CYAN = "#1BB8D0";
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
@@ -15,8 +21,6 @@ const formatTime = (s: number) => {
   const sec = Math.floor(s % 60);
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
-
-import type { FrequencyData } from "@/lib/parseFrequencyData";
 
 interface Props {
   audioFileA: File;
@@ -33,6 +37,40 @@ interface Props {
   frequencyDataA?: FrequencyData | null;
   frequencyDataB?: FrequencyData | null;
 }
+
+/* ── Mixer button ── */
+const MixerBtn = ({
+  onClick, active, disabled, title, children, size = 28,
+  activeColor,
+}: {
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  title: string;
+  children: React.ReactNode;
+  size?: number;
+  activeColor?: string;
+}) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className="deck-btn flex items-center justify-center transition-all duration-100"
+    style={{
+      width: size,
+      height: size,
+      borderRadius: 4,
+      backgroundColor: active ? (activeColor || "rgba(255,255,255,0.12)") : "#1A1A1A",
+      border: `1px solid ${active ? (activeColor || "rgba(255,255,255,0.20)") : "rgba(255,255,255,0.08)"}`,
+      color: active ? (activeColor ? "#000" : "#ffffff") : "rgba(255,255,255,0.50)",
+      boxShadow: active
+        ? `0 0 6px ${activeColor || "rgba(255,255,255,0.1)"}, inset 0 1px 0 rgba(255,255,255,0.1)`
+        : `inset 0 1px 0 ${BEVEL_LIGHT}`,
+    }}
+    title={title}
+  >
+    {children}
+  </button>
+);
 
 const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   audioFileA,
@@ -72,7 +110,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
 
-  // Use external ref file or local one
   const activeRefFile = audioFileB || localRefFile;
   const activeRefName = refTrackName || localRefFile?.name || "";
 
@@ -137,7 +174,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
 
   const maxDuration = Math.max(durationA, durationB);
 
-  // Single deck mode — no reference
+  // Single deck mode
   if (!activeRefFile) {
     return (
       <div>
@@ -166,14 +203,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     );
   }
 
-  // Dual deck mode
+  // Dual deck mode — DJ mixer layout
+  const cfPct = crossfade;
+
   return (
     <div
       className="overflow-hidden"
       style={{
-        borderRadius: 8,
-        border: "1px solid rgba(255,255,255,0.08)",
-        backgroundColor: DARK_BG,
+        borderRadius: 6,
+        border: `1px solid ${DIVIDER}`,
+        backgroundColor: SHELL_BG,
+        boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, 0 4px 16px rgba(0,0,0,0.35)`,
       }}
     >
       <input
@@ -200,77 +240,105 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         hideControls
         label={audioFileA.name}
         deckVariant="a"
-        containerStyle={{ borderRadius: 0, border: "none" }}
+        containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none" }}
       />
+
+      {/* ═══ Mixer strip ═══ */}
       <div
-        className="flex items-center gap-3 px-4 py-2"
+        className="flex items-center gap-3 px-3 py-2"
         style={{
-          backgroundColor: DARKER_BG,
-          borderTop: "1px solid rgba(255,255,255,0.04)",
-          borderBottom: "1px solid rgba(255,255,255,0.04)",
+          backgroundColor: MIXER_BG,
+          borderTop: `1px solid ${DIVIDER}`,
+          borderBottom: `1px solid ${DIVIDER}`,
+          boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}`,
         }}
       >
-        {/* Synced transport */}
-        <button
-          onClick={handleSyncPlay}
-          className="flex items-center justify-center transition-colors shrink-0 hover:brightness-125"
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 4,
-            backgroundColor: DARK_BG,
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#CCCCCC",
-          }}
-        >
-          {syncPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
-        </button>
-        <button
-          onClick={handleSyncRestart}
-          className="flex items-center justify-center transition-colors shrink-0 hover:text-white"
-          style={{ width: 26, height: 26, borderRadius: 4, color: "rgba(255,255,255,0.4)" }}
-        >
-          <RotateCcw className="w-3 h-3" />
-        </button>
-
-        {/* Time */}
-        <span
-          className="tabular-nums leading-none shrink-0"
-          style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "0.02em", color: "#CCCCCC" }}
-        >
-          {formatTime(currentTime)}
-          <span style={{ color: "rgba(255,255,255,0.2)" }}>&nbsp;/&nbsp;</span>
-          <span style={{ color: "rgba(255,255,255,0.35)" }}>{formatTime(maxDuration)}</span>
-        </span>
-
-        {/* Crossfader — compact, centered, max 300px */}
-        <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 300, width: "100%" }}>
-          <span
+        {/* LEFT: Transport cluster */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={handleSyncPlay}
+            className="deck-btn deck-btn-primary flex items-center justify-center transition-all duration-100"
             style={{
-              fontFamily: MONO,
-              fontSize: 8,
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              color: "rgba(255,255,255,0.25)",
-              marginBottom: 2,
+              width: 34,
+              height: 30,
+              borderRadius: 4,
+              backgroundColor: syncPlaying ? "#ffffff" : "#1E1E1E",
+              border: `1px solid ${syncPlaying ? "#ffffff" : "rgba(255,255,255,0.12)"}`,
+              color: syncPlaying ? "#000000" : "rgba(255,255,255,0.85)",
+              boxShadow: syncPlaying
+                ? "0 0 10px rgba(255,255,255,0.25), inset 0 1px 0 rgba(255,255,255,0.2)"
+                : `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}`,
             }}
           >
-            A/B
+            {syncPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+          </button>
+          <MixerBtn onClick={handleSyncRestart} title="Restart">
+            <RotateCcw className="w-3 h-3" />
+          </MixerBtn>
+
+          {/* Time */}
+          <span
+            className="tabular-nums leading-none ml-1 shrink-0"
+            style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "0.02em", color: "rgba(255,255,255,0.85)", fontWeight: 500 }}
+          >
+            {formatTime(currentTime)}
+            <span style={{ color: "rgba(255,255,255,0.18)" }}> / </span>
+            <span style={{ color: "rgba(255,255,255,0.35)" }}>{formatTime(maxDuration)}</span>
           </span>
-          <div className="flex items-center gap-2 w-full">
+        </div>
+
+        {/* CENTER: Crossfader */}
+        <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 280, width: "100%" }}>
+          <div className="flex items-center gap-2.5 w-full">
+            {/* A label */}
             <span
-              className="shrink-0 uppercase"
+              className="shrink-0 uppercase tabular-nums"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 10,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
-                color: crossfade <= 50 ? "#C8820A" : "rgba(255,255,255,0.2)",
+                letterSpacing: "0.04em",
+                color: cfPct <= 50 ? AMBER : "rgba(255,255,255,0.18)",
+                textShadow: cfPct <= 50 ? `0 0 6px ${AMBER}44` : "none",
+                transition: "color 0.15s, text-shadow 0.15s",
               }}
             >
               A
             </span>
-            <div className="flex-1 relative" style={{ height: 18 }}>
+
+            {/* Crossfader track */}
+            <div className="flex-1 relative" style={{ height: 22 }}>
+              {/* Track groove */}
+              <div
+                className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
+                style={{
+                  height: 4,
+                  borderRadius: 2,
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                }}
+              />
+              {/* Color fill */}
+              <div
+                className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
+                style={{
+                  height: 4,
+                  borderRadius: 2,
+                  background: `linear-gradient(to right, ${AMBER} ${cfPct}%, ${CYAN} ${cfPct}%)`,
+                  opacity: 0.45,
+                }}
+              />
+              {/* Center detent */}
+              <div
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none"
+                style={{
+                  left: "50%",
+                  width: 1,
+                  height: 10,
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                  borderRadius: 1,
+                }}
+              />
               <input
                 type="range"
                 min={0}
@@ -279,31 +347,28 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 onChange={handleCrossfadeChange}
                 className="w-full crossfader-input"
                 style={{
-                  height: 18,
+                  height: 22,
                   WebkitAppearance: "none",
                   appearance: "none",
                   background: "transparent",
                   cursor: "pointer",
-                }}
-              />
-              <div
-                className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
-                style={{
-                  height: 3,
-                  borderRadius: 2,
-                  background: `linear-gradient(to right, #C8820A ${crossfade}%, #1BA8C0 ${crossfade}%)`,
-                  opacity: 0.35,
+                  position: "relative",
+                  zIndex: 2,
                 }}
               />
             </div>
+
+            {/* B label */}
             <span
-              className="shrink-0 uppercase"
+              className="shrink-0 uppercase tabular-nums"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 10,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
-                color: crossfade >= 50 ? "#1BA8C0" : "rgba(255,255,255,0.2)",
+                letterSpacing: "0.04em",
+                color: cfPct >= 50 ? CYAN : "rgba(255,255,255,0.18)",
+                textShadow: cfPct >= 50 ? `0 0 6px ${CYAN}44` : "none",
+                transition: "color 0.15s, text-shadow 0.15s",
               }}
             >
               B
@@ -311,25 +376,15 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           </div>
         </div>
 
-        {/* Right-side transport icons */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            onClick={() => setIsMono(!isMono)}
-            className="flex items-center justify-center transition-colors hover:text-white"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 4,
-              color: isMono ? "#FFFFFF" : "#AAAAAA",
-              backgroundColor: isMono ? "rgba(255,255,255,0.08)" : "transparent",
-            }}
-            title={isMono ? "Mono" : "Stereo"}
-          >
+        {/* RIGHT: Utility cluster */}
+        <div className="flex items-center gap-1 shrink-0">
+          <MixerBtn onClick={() => setIsMono(!isMono)} active={isMono} title={isMono ? "Mono" : "Stereo"}>
             <Headphones className="w-3.5 h-3.5" />
-          </button>
+          </MixerBtn>
 
+          {/* Volume with hover slider */}
           <div className="relative group flex items-center">
-            <button
+            <MixerBtn
               onClick={() => {
                 if (isMuted) {
                   setIsMuted(false);
@@ -341,24 +396,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                   playerBRef.current?.setVolume(0);
                 }
               }}
-              className="flex items-center justify-center transition-colors hover:text-white"
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 4,
-                color: isMuted ? "#FFFFFF" : "#AAAAAA",
-                backgroundColor: isMuted ? "rgba(255,255,255,0.08)" : "transparent",
-              }}
+              active={isMuted}
               title="Master volume"
             >
               {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-            </button>
-            {/* Volume slider on hover */}
+            </MixerBtn>
             <div
               className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center p-2 rounded"
               style={{
-                backgroundColor: "#1A1A1A",
-                border: "1px solid rgba(255,255,255,0.1)",
+                backgroundColor: "#0A0A0A",
+                border: `1px solid ${DIVIDER}`,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
               }}
             >
               <input
@@ -390,33 +438,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             </div>
           </div>
 
-          <button
-            onClick={() => setIsLooping(!isLooping)}
-            className="flex items-center justify-center transition-colors hover:text-white"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 4,
-              color: isLooping ? "#FFFFFF" : "#AAAAAA",
-              backgroundColor: isLooping ? "rgba(255,255,255,0.08)" : "transparent",
-            }}
-            title="Loop"
-          >
+          <MixerBtn onClick={() => setIsLooping(!isLooping)} active={isLooping} title="Loop">
             <Repeat className="w-3.5 h-3.5" />
-          </button>
+          </MixerBtn>
 
-          <span
-            className="flex items-center justify-center"
-            style={{
-              width: 28,
-              height: 28,
-              color: "#AAAAAA",
-            }}
-          >
+          <span className="flex items-center justify-center" style={{ width: 28, height: 28, color: "rgba(255,255,255,0.25)" }}>
             <AudioWaveform className="w-3.5 h-3.5" />
           </span>
         </div>
       </div>
+
+      {/* Deck B */}
       <div className="relative">
         <WaveformPlayer
           ref={playerBRef}
@@ -426,41 +458,19 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           label={activeRefName}
           deckVariant="b"
           outlineMode
-          containerStyle={{ borderRadius: 0, border: "none" }}
+          containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none" }}
         />
         {/* Overlay controls */}
-        <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
-          {!audioFileB && (
-            <>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center justify-center transition-colors"
-                style={{
-                  width: 24, height: 24, borderRadius: 4,
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "rgba(255,255,255,0.4)",
-                }}
-                title="Replace reference track"
-              >
-                <RefreshCw className="w-3 h-3" />
-              </button>
-              <button
-                onClick={handleRemoveReference}
-                className="flex items-center justify-center transition-colors"
-                style={{
-                  width: 24, height: 24, borderRadius: 4,
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "rgba(255,255,255,0.4)",
-                }}
-                title="Remove reference track"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </>
-          )}
-        </div>
+        {!audioFileB && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+            <MixerBtn onClick={() => fileInputRef.current?.click()} title="Replace reference" size={22}>
+              <RefreshCw className="w-2.5 h-2.5" />
+            </MixerBtn>
+            <MixerBtn onClick={handleRemoveReference} title="Remove reference" size={22}>
+              <X className="w-2.5 h-2.5" />
+            </MixerBtn>
+          </div>
+        )}
       </div>
     </div>
   );
