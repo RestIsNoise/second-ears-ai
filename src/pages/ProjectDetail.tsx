@@ -20,6 +20,7 @@ interface AnalysisRow {
   metrics: any;
   version: number;
   created_at: string;
+  storage_path: string | null;
 }
 
 const ProjectDetail = () => {
