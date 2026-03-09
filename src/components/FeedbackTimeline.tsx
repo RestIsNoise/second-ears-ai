@@ -3,7 +3,6 @@ import { Copy, Check, Plus, AudioLines, ChevronDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FeedbackVoteButtons from "@/components/FeedbackVoteButtons";
-import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
 import type { FeedbackItem } from "@/types/feedback";
 
@@ -117,25 +116,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const [userVotes, setUserVotes] = useState<Record<string, 1 | -1>>({});
-
-  // Load user's existing votes for these feedback items
-  useEffect(() => {
-    if (!user || !analysisId || items.length === 0) return;
-    const load = async () => {
-      const { data } = await supabase
-        .from("feedback_votes" as any)
-        .select("feedback_item_id, vote")
-        .eq("user_id", user.id)
-        .eq("analysis_id", analysisId);
-      if (data) {
-        const map: Record<string, 1 | -1> = {};
-        (data as any[]).forEach((v) => { map[v.feedback_item_id] = v.vote as 1 | -1; });
-        setUserVotes(map);
-      }
-    };
-    load();
-  }, [user, analysisId, items.length]);
 
   useEffect(() => {
     if (!activeItemId) return;
@@ -273,10 +253,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   {analysisId && (
                     <div className="mt-2">
                       <FeedbackVoteButtons
-                        feedbackItemId={item.id}
                         analysisId={analysisId}
+                        priorityIndex={sorted.indexOf(item)}
                         userId={user?.id}
-                        initialUserVote={userVotes[item.id] ?? null}
+                        initialUserVote={null}
                       />
                     </div>
                   )}

@@ -1,67 +1,50 @@
 import { useState, useCallback } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { supabase } from "@/lib/supabaseClient";
 import { cn } from "@/lib/utils";
 
 type VoteDir = 1 | -1 | null;
 
 interface Props {
-  feedbackItemId: string;
   analysisId: string;
+  priorityIndex: number;
   userId: string | undefined;
   initialUserVote: VoteDir;
 }
 
+const BACKEND_URL = "https://secondears-backend-production.up.railway.app/api/feedback-vote";
+
 const FeedbackVoteButtons = ({
-  feedbackItemId,
   analysisId,
+  priorityIndex,
   userId,
   initialUserVote,
 }: Props) => {
   const [userVote, setUserVote] = useState<VoteDir>(initialUserVote);
-  const [busy, setBusy] = useState(false);
 
   const handleVote = useCallback(
-    async (dir: 1 | -1) => {
-      if (!userId || busy) return;
+    (dir: 1 | -1) => {
+      if (!userId) return;
 
-      const prevVote = userVote;
-      const newVote: VoteDir = prevVote === dir ? null : dir;
-
+      const newVote: VoteDir = userVote === dir ? null : dir;
       setUserVote(newVote);
-      setBusy(true);
 
-      try {
-        if (newVote === null) {
-          await supabase
-            .from("feedback_votes" as any)
-            .delete()
-            .eq("feedback_item_id", feedbackItemId)
-            .eq("user_id", userId);
-        } else if (prevVote === null) {
-          await supabase
-            .from("feedback_votes" as any)
-            .insert({
-              feedback_item_id: feedbackItemId,
-              analysis_id: analysisId,
-              user_id: userId,
-              vote: newVote,
-            } as any);
-        } else {
-          await supabase
-            .from("feedback_votes" as any)
-            .update({ vote: newVote } as any)
-            .eq("feedback_item_id", feedbackItemId)
-            .eq("user_id", userId);
-        }
-      } catch {
-        setUserVote(prevVote);
-      } finally {
-        setBusy(false);
-      }
+      // Fire and forget
+      fetch(BACKEND_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "secondears-secret-2024",
+        },
+        body: JSON.stringify({
+          analysis_id: analysisId,
+          priority_index: priorityIndex,
+          user_id: userId,
+          vote: newVote === 1 ? "up" : newVote === -1 ? "down" : null,
+        }),
+      }).catch(() => {/* silent */});
     },
-    [feedbackItemId, analysisId, userId, userVote, busy]
+    [analysisId, priorityIndex, userId, userVote]
   );
 
   return (
@@ -70,7 +53,7 @@ const FeedbackVoteButtons = ({
         <TooltipTrigger asChild>
           <button
             onClick={(e) => { e.stopPropagation(); handleVote(1); }}
-            disabled={!userId || busy}
+            disabled={!userId}
             aria-label="Mark feedback as helpful"
             className={cn(
               "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
@@ -89,7 +72,7 @@ const FeedbackVoteButtons = ({
         <TooltipTrigger asChild>
           <button
             onClick={(e) => { e.stopPropagation(); handleVote(-1); }}
-            disabled={!userId || busy}
+            disabled={!userId}
             aria-label="Mark feedback as not helpful"
             className={cn(
               "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
