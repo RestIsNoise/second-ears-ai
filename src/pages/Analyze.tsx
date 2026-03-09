@@ -41,6 +41,7 @@ export interface FullAnalysis {
 export interface FeedbackResult {
   normalized: NormalizedFeedback;
   audioFile?: File;
+  storagePath?: string;
 }
 
 const Analyze = () => {
