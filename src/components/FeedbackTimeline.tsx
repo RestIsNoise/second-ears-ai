@@ -146,7 +146,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
   return (
     <TooltipProvider>
-      <div ref={containerRef} className="space-y-3">
+      <div ref={containerRef} className="space-y-1.5">
         {sorted.map((item) => {
           const isActive = activeItemId === item.id;
           const alreadyAdded = todoItemIds?.has(item.id);
