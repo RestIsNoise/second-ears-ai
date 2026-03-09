@@ -217,6 +217,7 @@ const Dashboard = () => {
 
   const confirmDelete = async () => {
     if (!projectToDelete) return;
+    console.log("[DELETE] confirmDelete called for:", projectToDelete.id, projectToDelete.name);
     setDeleting(true);
     try {
       const projectId = projectToDelete.id;
