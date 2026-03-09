@@ -16,26 +16,30 @@ const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
   user: <User className="w-3 h-3" strokeWidth={2.5} />,
 };
 
-const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string }> = {
+const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string; icon: string }> = {
   technical: {
-    bg: "hsl(var(--accent) / 0.15)",
-    border: "hsl(var(--accent) / 0.3)",
+    bg: "hsl(var(--accent) / 0.25)",
+    border: "hsl(var(--accent) / 0.5)",
     text: "hsl(var(--accent-foreground))",
+    icon: "hsl(var(--accent-foreground))",
   },
   structural: {
-    bg: "hsl(210 80% 55% / 0.15)",
-    border: "hsl(210 80% 55% / 0.35)",
-    text: "hsl(210 80% 55%)",
+    bg: "hsl(210 80% 55% / 0.25)",
+    border: "hsl(210 80% 55% / 0.5)",
+    text: "hsl(210 80% 65%)",
+    icon: "hsl(210 80% 70%)",
   },
   perceptual: {
-    bg: "hsl(270 60% 55% / 0.15)",
-    border: "hsl(270 60% 55% / 0.35)",
-    text: "hsl(270 60% 55%)",
+    bg: "hsl(270 60% 55% / 0.25)",
+    border: "hsl(270 60% 55% / 0.5)",
+    text: "hsl(270 60% 65%)",
+    icon: "hsl(270 60% 70%)",
   },
   user: {
-    bg: "hsl(40 90% 55% / 0.2)",
-    border: "hsl(40 90% 50% / 0.5)",
-    text: "hsl(40 90% 40%)",
+    bg: "hsl(40 90% 55% / 0.3)",
+    border: "hsl(40 90% 50% / 0.6)",
+    text: "hsl(40 90% 45%)",
+    icon: "hsl(40 90% 55%)",
   },
 };
 
