@@ -10,10 +10,10 @@ const formatTime = (s: number) => {
 };
 
 const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
-  technical: <SlidersHorizontal className="w-3 h-3" strokeWidth={2.5} />,
-  structural: <LayoutGrid className="w-3 h-3" strokeWidth={2.5} />,
-  perceptual: <Ear className="w-3 h-3" strokeWidth={2.5} />,
-  user: <User className="w-3 h-3" strokeWidth={2.5} />,
+  technical: <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  structural: <LayoutGrid className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  perceptual: <Ear className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  user: <User className="w-3.5 h-3.5" strokeWidth={2.5} />,
 };
 
 const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: string; icon: string }> = {
