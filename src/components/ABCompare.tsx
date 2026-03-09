@@ -12,8 +12,8 @@ const DIVIDER = "rgba(255,255,255,0.06)";
 const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
 const BEVEL_DARK = "rgba(0,0,0,0.4)";
 const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
-const AMBER = "#D4920E";
-const CYAN = "#1BB8D0";
+const DECK_A_COLOR = "#9A9590";  // warm charcoal/smoke
+const DECK_B_COLOR = "#78A8B2";  // desaturated teal
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
@@ -298,9 +298,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct <= 50 ? AMBER : "rgba(255,255,255,0.18)",
-                textShadow: cfPct <= 50 ? `0 0 6px ${AMBER}44` : "none",
-                transition: "color 0.15s, text-shadow 0.15s",
+                color: cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)",
+                transition: "color 0.15s",
               }}
             >
               A
@@ -324,8 +323,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 style={{
                   height: 4,
                   borderRadius: 2,
-                  background: `linear-gradient(to right, ${AMBER} ${cfPct}%, ${CYAN} ${cfPct}%)`,
-                  opacity: 0.45,
+                  background: `linear-gradient(to right, ${DECK_A_COLOR} ${cfPct}%, ${DECK_B_COLOR} ${cfPct}%)`,
+                  opacity: 0.50,
                 }}
               />
               {/* Center detent */}
@@ -366,9 +365,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct >= 50 ? CYAN : "rgba(255,255,255,0.18)",
-                textShadow: cfPct >= 50 ? `0 0 6px ${CYAN}44` : "none",
-                transition: "color 0.15s, text-shadow 0.15s",
+                color: cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)",
+                transition: "color 0.15s",
               }}
             >
               B
@@ -449,16 +447,24 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
       </div>
 
       {/* Deck B */}
-      <div className="relative">
+      <div
+        className="relative"
+        style={{
+          borderTop: `1px solid ${DIVIDER}`,
+          borderBottom: "1px solid rgba(255,255,255,0.12)",
+          backgroundColor: "#101010",
+          paddingBottom: 8,
+        }}
+      >
         <WaveformPlayer
           ref={playerBRef}
           audioFile={activeRefFile}
           onDurationReady={(d) => setDurationB(d)}
           hideControls
-          label={activeRefName}
+          label={`Reference Track · ${activeRefName || "Loaded track"}`}
           deckVariant="b"
           outlineMode
-          containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none" }}
+          containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none", paddingBottom: 6 }}
         />
         {/* Overlay controls */}
         {!audioFileB && (

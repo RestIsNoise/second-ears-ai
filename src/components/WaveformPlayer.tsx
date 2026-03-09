@@ -53,21 +53,21 @@ const formatTimePrecise = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}.${tenths}`;
 };
 
-/* ── Deck colors ── */
+/* ── Deck colors — sober palette ── */
 const DECK_COLORS = {
   a: {
-    wave: "rgba(200, 130, 10, 0.30)",
-    progress: "#D4920E",
-    accent: "#D4920E",
-    glow: "rgba(212, 146, 14, 0.15)",
-    dim: "rgba(200, 130, 10, 0.12)",
+    wave: "rgba(160, 155, 145, 0.28)",
+    progress: "#8A8580",
+    accent: "#9A9590",
+    glow: "rgba(140, 135, 125, 0.10)",
+    dim: "rgba(160, 155, 145, 0.10)",
   },
   b: {
-    wave: "rgba(27, 184, 208, 0.30)",
-    progress: "#1BB8D0",
-    accent: "#1BB8D0",
-    glow: "rgba(27, 184, 208, 0.15)",
-    dim: "rgba(27, 184, 208, 0.12)",
+    wave: "rgba(90, 145, 155, 0.28)",
+    progress: "#6A9EA8",
+    accent: "#78A8B2",
+    glow: "rgba(90, 145, 155, 0.12)",
+    dim: "rgba(90, 145, 155, 0.10)",
   },
 };
 
