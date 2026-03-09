@@ -206,6 +206,41 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback_votes: {
+        Row: {
+          analysis_id: string
+          created_at: string
+          feedback_item_id: string
+          id: string
+          user_id: string
+          vote: number
+        }
+        Insert: {
+          analysis_id: string
+          created_at?: string
+          feedback_item_id: string
+          id?: string
+          user_id: string
+          vote: number
+        }
+        Update: {
+          analysis_id?: string
+          created_at?: string
+          feedback_item_id?: string
+          id?: string
+          user_id?: string
+          vote?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_votes_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
