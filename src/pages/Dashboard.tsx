@@ -87,7 +87,7 @@ const TrackRow = ({
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
       <button
-        onClick={(e) => onDelete(e, proj)}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
         className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
         title="Delete project"
       >
