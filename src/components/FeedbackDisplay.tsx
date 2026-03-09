@@ -840,13 +840,6 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-
-      {showArrangement && (
-        <div className="mt-8 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
-          <AlsAnalyzer />
-        </div>
-      )}
-
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-10 mb-6 px-0.5">
