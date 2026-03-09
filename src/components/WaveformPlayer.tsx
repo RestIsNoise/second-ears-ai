@@ -31,11 +31,8 @@ interface Props {
   waveColor?: string;
   progressColor?: string;
   outlineMode?: boolean;
-  /** Deck variant for styling: 'a' = amber, 'b' = cyan */
   deckVariant?: "a" | "b";
-  /** Override container border-radius and border */
   containerStyle?: React.CSSProperties;
-  /** Frequency energy data for spectrum display */
   frequencyData?: FrequencyData | null;
 }
 
@@ -58,16 +55,30 @@ const formatTimePrecise = (s: number) => {
 
 /* ── Deck colors ── */
 const DECK_COLORS = {
-  a: { wave: "#C8820A", progress: "#C8820A", dim: "rgba(200, 130, 10, 0.25)" },
-  b: { wave: "#1BA8C0", progress: "#1BA8C0", dim: "rgba(27, 168, 192, 0.25)" },
+  a: {
+    wave: "rgba(200, 130, 10, 0.30)",
+    progress: "#D4920E",
+    accent: "#D4920E",
+    glow: "rgba(212, 146, 14, 0.15)",
+    dim: "rgba(200, 130, 10, 0.12)",
+  },
+  b: {
+    wave: "rgba(27, 184, 208, 0.30)",
+    progress: "#1BB8D0",
+    accent: "#1BB8D0",
+    glow: "rgba(27, 184, 208, 0.15)",
+    dim: "rgba(27, 184, 208, 0.12)",
+  },
 };
 
-const DARK_BG = "#252525";
-const DARKER_BG = "#202020";
+const SHELL_BG = "#141414";
+const LANE_BG = "#0F0F0F";
+const DIVIDER = "rgba(255,255,255,0.06)";
+const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
+const BEVEL_DARK = "rgba(0,0,0,0.4)";
 
 /* ── Time ruler helpers ── */
-
-const RULER_HEIGHT = 22;
+const RULER_HEIGHT = 20;
 const MIN_LABEL_GAP_PX = 64;
 const MARKER_SNAP_PX = 14;
 
@@ -92,11 +103,12 @@ interface RulerProps {
   hoverTime: number;
   markers: WaveformMarker[];
   snappedMarkerId: string | null;
+  accentColor: string;
 }
 
 const TimeRuler = ({
   duration, containerWidth, currentTime, playing,
-  hoverX, hoverTime, markers, snappedMarkerId,
+  hoverX, hoverTime, markers, snappedMarkerId, accentColor,
 }: RulerProps) => {
   const { major, minor } = useMemo(
     () => pickInterval(duration, containerWidth),
@@ -114,28 +126,20 @@ const TimeRuler = ({
   const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
 
   return (
-    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%" }}>
+    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%", backgroundColor: "rgba(0,0,0,0.3)" }}>
       <div className="absolute top-0 left-0 right-0" style={{ height: RULER_HEIGHT }}>
-        {/* Bottom border line */}
-        <div
-          className="absolute bottom-0 left-0 right-0"
-          style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }}
-        />
+        {/* Bottom border */}
+        <div className="absolute bottom-0 left-0 right-0" style={{ height: "1px", backgroundColor: DIVIDER }} />
 
-        {/* Ticks + labels */}
         {ticks.map(({ time, isMajor }) => {
           const leftPct = (time / duration) * 100;
           return (
-            <div
-              key={time}
-              className="absolute bottom-0"
-              style={{ left: `${leftPct}%`, transform: "translateX(-0.5px)" }}
-            >
+            <div key={time} className="absolute bottom-0" style={{ left: `${leftPct}%`, transform: "translateX(-0.5px)" }}>
               <div
                 style={{
                   width: isMajor ? "1px" : "0.5px",
-                  height: isMajor ? 10 : 5,
-                  backgroundColor: isMajor ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
+                  height: isMajor ? 10 : 4,
+                  backgroundColor: isMajor ? "rgba(255,255,255,0.40)" : "rgba(255,255,255,0.10)",
                 }}
               />
               {isMajor && (
@@ -143,11 +147,12 @@ const TimeRuler = ({
                   className="absolute whitespace-nowrap tabular-nums"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 9,
+                    fontSize: 8,
                     lineHeight: 1,
-                    letterSpacing: "0.02em",
-                    color: "rgba(255,255,255,0.35)",
-                    bottom: 13,
+                    letterSpacing: "0.04em",
+                    color: "rgba(255,255,255,0.45)",
+                    fontWeight: 500,
+                    bottom: 12,
                     left: 0,
                     transform: time === 0 ? "none" : "translateX(-50%)",
                   }}
@@ -159,7 +164,7 @@ const TimeRuler = ({
           );
         })}
 
-        {/* Playhead tick on ruler */}
+        {/* Playhead tick */}
         <div
           className="absolute bottom-0 z-[4] pointer-events-none"
           style={{
@@ -168,15 +173,12 @@ const TimeRuler = ({
             transition: playing ? "none" : "left 0.1s ease-out",
           }}
         >
-          <div style={{ width: "1px", height: 12, backgroundColor: "rgba(255,255,255,0.8)" }} />
+          <div style={{ width: "1.5px", height: 12, backgroundColor: accentColor, boxShadow: `0 0 4px ${accentColor}` }} />
         </div>
 
         {/* Hover tooltip */}
         {hoverX !== null && (
-          <div
-            className="absolute pointer-events-none z-[6]"
-            style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}
-          >
+          <div className="absolute pointer-events-none z-[6]" style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}>
             <span
               className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
               style={{
@@ -184,15 +186,13 @@ const TimeRuler = ({
                 fontSize: 9,
                 lineHeight: 1,
                 letterSpacing: "0.02em",
-                color: snappedMarker ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.6)",
-                backgroundColor: "rgba(0,0,0,0.85)",
-                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.15" : "0.08"})`,
-                fontWeight: snappedMarker ? 500 : 400,
+                color: snappedMarker ? "#ffffff" : "rgba(255,255,255,0.7)",
+                backgroundColor: "rgba(0,0,0,0.9)",
+                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.2" : "0.08"})`,
+                fontWeight: snappedMarker ? 600 : 400,
               }}
             >
-              {snappedMarker
-                ? `▸ ${formatTimePrecise(snappedMarker.time)}`
-                : formatTimePrecise(hoverTime)}
+              {snappedMarker ? `▸ ${formatTimePrecise(snappedMarker.time)}` : formatTimePrecise(hoverTime)}
             </span>
           </div>
         )}
@@ -218,7 +218,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [containerWidth, setContainerWidth] = useState(0);
 
     const colors = DECK_COLORS[deckVariant];
-    const resolvedWaveColor = waveColor || colors.dim;
+    const resolvedWaveColor = waveColor || colors.wave;
     const resolvedProgressColor = progressColor || colors.progress;
 
     useImperativeHandle(ref, () => ({
@@ -263,7 +263,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         barWidth: 1,
         barGap: 1,
         barRadius: 0,
-        height: 84,
+        height: 80,
         normalize: true,
         interact: true,
       };
@@ -341,56 +341,96 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
-    const WAVEFORM_HEIGHT = 96;
+    const WAVEFORM_HEIGHT = 88;
+
+    const deckLabel = deckVariant === "a" ? "A" : "B";
 
     return (
       <div
-        className="overflow-hidden"
+        className="overflow-hidden deck-shell"
         style={{
-          backgroundColor: DARK_BG,
-          borderRadius: 8,
-          border: "1px solid rgba(255,255,255,0.08)",
+          backgroundColor: SHELL_BG,
+          borderRadius: 6,
+          border: `1px solid ${DIVIDER}`,
+          boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}, 0 2px 8px rgba(0,0,0,0.3)`,
           ...containerStyle,
         }}
       >
-        {/* Label bar */}
+        {/* Label bar — track name + deck badge */}
         {label && (
           <div
-            className="px-3 py-1.5"
-            style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+            className="flex items-center gap-2 px-3 py-1.5"
+            style={{
+              borderBottom: `1px solid ${DIVIDER}`,
+              background: `linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)`,
+            }}
           >
+            {/* Deck badge */}
             <span
-              className="uppercase tracking-[0.1em] truncate block"
+              className="shrink-0 flex items-center justify-center"
               style={{
+                width: 18,
+                height: 18,
+                borderRadius: 3,
+                backgroundColor: colors.accent,
                 fontFamily: MONO,
-                fontSize: 10,
-                fontWeight: 600,
-                color: "#AAAAAA",
+                fontSize: 9,
+                fontWeight: 700,
+                color: "#000000",
+                letterSpacing: "0.02em",
               }}
             >
-              {label}
+              {deckLabel}
             </span>
+            <div className="min-w-0 flex-1">
+              <span
+                className="uppercase tracking-[0.06em] truncate block"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "rgba(255,255,255,0.75)",
+                }}
+              >
+                {label}
+              </span>
+              {duration > 0 && (
+                <span
+                  className="tabular-nums block"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 8,
+                    color: "rgba(255,255,255,0.30)",
+                    letterSpacing: "0.04em",
+                    marginTop: 1,
+                  }}
+                >
+                  {formatTime(duration)} · {audioFile?.type?.split("/")?.[1]?.toUpperCase() || "AUDIO"}
+                </span>
+              )}
+            </div>
           </div>
         )}
 
-        <div className="p-3 md:p-4">
+        {/* Waveform lane */}
+        <div style={{ backgroundColor: LANE_BG, padding: "0 10px" }}>
           {error && (
             <div
-              className="rounded flex items-start gap-3 mb-2.5 p-3"
+              className="rounded flex items-start gap-3 m-2 p-2.5"
               style={{
-                backgroundColor: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.2)",
+                backgroundColor: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.15)",
               }}
             >
-              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#ef4444" }} />
+              <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#ef4444" }} />
               <div>
-                <p className="text-sm font-medium" style={{ color: "#ef4444" }}>Waveform failed to load</p>
-                <p className="text-xs mt-1 break-all" style={{ color: "rgba(255,255,255,0.4)" }}>{error}</p>
+                <p className="text-xs font-medium" style={{ color: "#ef4444" }}>Waveform failed</p>
+                <p className="text-[10px] mt-0.5 break-all" style={{ color: "rgba(255,255,255,0.35)" }}>{error}</p>
               </div>
             </div>
           )}
 
-          {/* Ruler + waveform + markers — single hover zone */}
+          {/* Ruler + waveform + markers */}
           <div
             ref={wrapperRef}
             className="relative overflow-visible cursor-crosshair"
@@ -408,23 +448,33 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 hoverTime={hoverTime}
                 markers={markers}
                 snappedMarkerId={snappedMarkerId_hover}
+                accentColor={colors.accent}
               />
             )}
 
-            {/* Waveform container with markers overlaid */}
-            <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 2 }}>
+            {/* Waveform container */}
+            <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 1 }}>
+              {/* Deck glow — subtle bottom gradient */}
+              <div
+                className="absolute bottom-0 left-0 right-0 pointer-events-none"
+                style={{
+                  height: "50%",
+                  background: `linear-gradient(to top, ${colors.glow}, transparent)`,
+                }}
+              />
+
               {loading && !error && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.dim }} />
+                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.accent, opacity: 0.6 }} />
                 </div>
               )}
               <div
                 ref={containerRef}
                 className="absolute left-0 right-0"
-                style={{ top: 6, bottom: 6 }}
+                style={{ top: 4, bottom: 4 }}
               />
 
-              {/* Markers overlaid and vertically centered on the waveform */}
+              {/* Markers */}
               {duration > 0 && containerWidth > 0 && (markers.length > 0 || onAddNote || onAddToDo) && (
                 <div
                   className="absolute left-0 right-0 z-[5] pointer-events-none"
@@ -448,21 +498,21 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 </div>
               )}
 
-              {/* Playhead — bright white */}
+              {/* Playhead — bright accent */}
               {duration > 0 && (
                 <div
                   className="absolute top-0 bottom-0 pointer-events-none z-[3]"
                   style={{
                     left: `${playheadPct}%`,
-                    width: "1.5px",
+                    width: "2px",
                     backgroundColor: "#ffffff",
                     transition: playing ? "none" : "left 0.1s ease-out",
-                    boxShadow: "0 0 6px rgba(255,255,255,0.3)",
+                    boxShadow: `0 0 8px rgba(255,255,255,0.5), 0 0 3px ${colors.accent}`,
                   }}
                 />
               )}
 
-              {/* Hover cursor line */}
+              {/* Hover cursor */}
               {hoverX !== null && duration > 0 && (
                 <div
                   className="absolute top-0 bottom-0 pointer-events-none z-[3]"
@@ -472,8 +522,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                       : hoverX,
                     width: snappedMarkerId_hover ? "1px" : "0.5px",
                     backgroundColor: snappedMarkerId_hover
-                      ? "rgba(255,255,255,0.3)"
-                      : "rgba(255,255,255,0.12)",
+                      ? "rgba(255,255,255,0.35)"
+                      : "rgba(255,255,255,0.15)",
                     transition: "width 0.1s, background-color 0.1s",
                   }}
                 />
@@ -490,25 +540,37 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 { label: "MID", value: frequencyData.mid },
                 { label: "HIGH", value: frequencyData.high },
               ]}
-              color={colors.wave}
+              color={colors.accent}
               dimColor={colors.dim}
             />
           )}
+        </div>
 
-          {/* Controls row — hardware style */}
-          {!hideControls && (
-            <div className="flex items-center gap-3 pt-3">
+        {/* Controls row — industrial cluster */}
+        {!hideControls && (
+          <div
+            className="flex items-center gap-3 px-3 py-2"
+            style={{
+              borderTop: `1px solid ${DIVIDER}`,
+              background: `linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.15) 100%)`,
+            }}
+          >
+            {/* Transport cluster */}
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={togglePlay}
                 disabled={!!error || loading}
-                className="flex items-center justify-center transition-colors disabled:opacity-30"
+                className="deck-btn deck-btn-primary flex items-center justify-center transition-all duration-100 disabled:opacity-30"
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 34,
+                  height: 30,
                   borderRadius: 4,
-                  backgroundColor: DARKER_BG,
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#CCCCCC",
+                  backgroundColor: playing ? colors.accent : "#1E1E1E",
+                  border: `1px solid ${playing ? colors.accent : "rgba(255,255,255,0.12)"}`,
+                  color: playing ? "#000000" : "rgba(255,255,255,0.85)",
+                  boxShadow: playing
+                    ? `0 0 8px ${colors.glow}, inset 0 1px 0 rgba(255,255,255,0.15)`
+                    : `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}`,
                 }}
               >
                 {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
@@ -516,32 +578,38 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               <button
                 onClick={restart}
                 disabled={!!error || loading}
-                className="flex items-center justify-center transition-colors disabled:opacity-30"
+                className="deck-btn flex items-center justify-center transition-all duration-100 disabled:opacity-30"
                 style={{
                   width: 28,
                   height: 28,
                   borderRadius: 4,
-                  color: "rgba(255,255,255,0.4)",
+                  backgroundColor: "#1A1A1A",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "rgba(255,255,255,0.50)",
+                  boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}`,
                 }}
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3 h-3" />
               </button>
-              <span
-                className="tabular-nums leading-none ml-1"
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 15,
-                  letterSpacing: "0.02em",
-                  color: "#CCCCCC",
-                }}
-              >
-                {formatTime(currentTime)}
-                <span style={{ color: "rgba(255,255,255,0.25)" }}>&nbsp;/&nbsp;</span>
-                <span style={{ color: "rgba(255,255,255,0.4)" }}>{formatTime(duration)}</span>
-              </span>
             </div>
-          )}
-        </div>
+
+            {/* Time readout */}
+            <span
+              className="tabular-nums leading-none"
+              style={{
+                fontFamily: MONO,
+                fontSize: 14,
+                letterSpacing: "0.02em",
+                color: "rgba(255,255,255,0.85)",
+                fontWeight: 500,
+              }}
+            >
+              {formatTime(currentTime)}
+              <span style={{ color: "rgba(255,255,255,0.20)" }}> / </span>
+              <span style={{ color: "rgba(255,255,255,0.40)" }}>{formatTime(duration)}</span>
+            </span>
+          </div>
+        )}
       </div>
     );
   }
