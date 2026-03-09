@@ -433,32 +433,33 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
         </div>
 
         {/* ═══ ROW 2: Clips + Labels ═══ */}
-        <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+        <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
           {/* Clip lanes */}
-          <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+          <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
             <div style={{ width: detailMode ? totalWidth : "100%", height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
                 return (
                   <div
                     key={track._i}
-                    className={cn(
-                      "relative",
-                      isGroup
-                        ? "bg-foreground/[0.04]"
+                    className="relative"
+                    style={{
+                      height: ROW_H,
+                      backgroundColor: isGroup
+                        ? "hsl(var(--foreground) / 0.06)"
                         : vi % 2 === 0
-                          ? "bg-transparent"
-                          : "bg-foreground/[0.018]"
-                    )}
-                    style={{ height: ROW_H }}
+                          ? "transparent"
+                          : "hsl(var(--foreground) / 0.025)",
+                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                    }}
                   >
-                    {/* Vertical bar grid — only major ticks */}
+                    {/* Vertical bar grid */}
                     {rulerTicks.map((tick, ti) =>
                       tick.major ? (
                         <div
                           key={ti}
                           className="absolute top-0 h-full w-px"
-                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.035)" }}
+                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.05)" }}
                         />
                       ) : null
                     )}
@@ -469,18 +470,18 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                       const w = Math.max((clip.resolvedEnd - clip.start) * pxPerBeat, 2);
                       const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
                       const fill = fills[ci % 3];
-                      const showName = w > (detailMode ? 38 : 50);
+                      const showName = w > (detailMode ? 38 : 45);
                       return (
                         <div
                           key={ci}
-                          className="absolute rounded-[2px] hover:brightness-125 transition-[filter] duration-75"
+                          className="absolute rounded-[1px] hover:brightness-130 transition-[filter] duration-75"
                           style={{
                             left,
                             width: w,
-                            top: detailMode ? 3 : 2,
-                            height: ROW_H - (detailMode ? 6 : 4),
+                            top: detailMode ? 2 : 1,
+                            height: ROW_H - (detailMode ? 4 : 2),
                             backgroundColor: `hsl(${fill})`,
-                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.06)`,
+                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.08), 0 0 0 0.5px hsl(0 0% 0% / 0.3)`,
                           }}
                           title={clip.name}
                         >
@@ -488,8 +489,8 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                             <span
                               className="block truncate font-medium px-1 select-none"
                               style={{
-                                color: "hsl(0 0% 100% / 0.55)",
-                                lineHeight: `${ROW_H - (detailMode ? 6 : 4)}px`,
+                                color: "hsl(0 0% 100% / 0.65)",
+                                lineHeight: `${ROW_H - (detailMode ? 4 : 2)}px`,
                                 fontFamily: MONO_FONT,
                                 fontSize: detailMode ? 8 : 7,
                               }}
@@ -511,7 +512,7 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
             className="shrink-0 overflow-y-hidden overflow-x-hidden"
             style={{
               width: LABEL_W,
-              borderLeft: "1px solid hsl(var(--border) / 0.25)",
+              borderLeft: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <div style={{ height: trackContentH }}>
@@ -523,48 +524,42 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                 return (
                   <div
                     key={track._i}
-                    className={cn(
-                      "flex items-center gap-1.5 select-none",
-                      isGroup
-                        ? "bg-foreground/[0.04]"
-                        : vi % 2 === 0
-                          ? "bg-transparent"
-                          : "bg-foreground/[0.018]"
-                    )}
+                    className="flex items-center gap-1 select-none"
                     style={{
                       height: ROW_H,
-                      paddingLeft: isChild ? 18 : 8,
-                      paddingRight: 8,
+                      paddingLeft: isChild ? 16 : 6,
+                      paddingRight: 6,
+                      backgroundColor: isGroup
+                        ? "hsl(var(--foreground) / 0.06)"
+                        : vi % 2 === 0
+                          ? "transparent"
+                          : "hsl(var(--foreground) / 0.025)",
+                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
                     }}
                   >
                     {isGroup && (
                       <button
                         onClick={() => toggleGroup(track.name)}
-                        className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
+                        className="shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-sm hover:bg-foreground/[0.08] transition-colors"
                       >
                         {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/60" />
-                          : <ChevronDown className="w-3 h-3 text-muted-foreground/60" />}
+                          ? <ChevronRight className="w-2.5 h-2.5 text-foreground/50" />
+                          : <ChevronDown className="w-2.5 h-2.5 text-foreground/50" />}
                       </button>
                     )}
-
-                    <div
-                      className="shrink-0 rounded-full"
-                      style={{ width: 4, height: 4, backgroundColor: isGroup ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 100% / 0.08)" }}
-                    />
 
                     <span
                       className={cn(
                         "truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/80" : "text-foreground/60"
+                        isGroup ? "font-semibold text-foreground/90" : "text-foreground/60"
                       )}
-                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 11 : 9, letterSpacing: "0.01em" }}
+                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 10 : 8, letterSpacing: "0.01em" }}
                     >
                       {track.name}
                     </span>
 
                     {isGroup && collapsedGroups.has(track.name) && count != null && count > 0 && (
-                      <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0">{count}</span>
+                      <span className="text-[7px] text-foreground/30 font-mono shrink-0">{count}</span>
                     )}
                   </div>
                 );
