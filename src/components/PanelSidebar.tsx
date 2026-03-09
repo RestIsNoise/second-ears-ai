@@ -25,7 +25,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       {/* Section label */}
       <div className="px-3 pt-3 pb-1.5">
         <span
-          className="text-[9px] text-foreground/40 tracking-[0.1em] uppercase select-none font-medium"
+          className="text-[9px] text-foreground/55 tracking-[0.1em] uppercase select-none font-medium"
           style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
         >
           Panels
