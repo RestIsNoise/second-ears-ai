@@ -1037,6 +1037,20 @@ const FeedbackDisplay = ({
           )}
         </div>
       )}
+
+      {/* ═══ ARRANGEMENT — bottom of page, full width ═══ */}
+      {showArrangement && (
+        <div
+          ref={arrangementRef}
+          className="mt-10 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-3 shadow-sm transition-all duration-200 overflow-hidden"
+        >
+          <AlsAnalyzer
+            onLoaded={() => {
+              arrangementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
