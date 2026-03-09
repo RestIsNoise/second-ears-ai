@@ -298,9 +298,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct <= 50 ? AMBER : "rgba(255,255,255,0.18)",
-                textShadow: cfPct <= 50 ? `0 0 6px ${AMBER}44` : "none",
-                transition: "color 0.15s, text-shadow 0.15s",
+                color: cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)",
+                transition: "color 0.15s",
               }}
             >
               A
@@ -324,40 +323,11 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 style={{
                   height: 4,
                   borderRadius: 2,
-                  background: `linear-gradient(to right, ${AMBER} ${cfPct}%, ${CYAN} ${cfPct}%)`,
-                  opacity: 0.45,
+                  background: `linear-gradient(to right, ${DECK_A_COLOR} ${cfPct}%, ${DECK_B_COLOR} ${cfPct}%)`,
+                  opacity: 0.50,
                 }}
               />
-              {/* Center detent */}
-              <div
-                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none"
-                style={{
-                  left: "50%",
-                  width: 1,
-                  height: 10,
-                  backgroundColor: "rgba(255,255,255,0.15)",
-                  borderRadius: 1,
-                }}
-              />
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={crossfade}
-                onChange={handleCrossfadeChange}
-                className="w-full crossfader-input"
-                style={{
-                  height: 22,
-                  WebkitAppearance: "none",
-                  appearance: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              />
-            </div>
-
+...
             {/* B label */}
             <span
               className="shrink-0 uppercase tabular-nums"
@@ -366,9 +336,8 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct >= 50 ? CYAN : "rgba(255,255,255,0.18)",
-                textShadow: cfPct >= 50 ? `0 0 6px ${CYAN}44` : "none",
-                transition: "color 0.15s, text-shadow 0.15s",
+                color: cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)",
+                transition: "color 0.15s",
               }}
             >
               B
