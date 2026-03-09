@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Activity, Layers } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CompactFooter from "@/components/CompactFooter";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import AnalysisProgress from "@/components/AnalysisProgress";
@@ -227,7 +228,7 @@ const Analyze = () => {
           )}
         </div>
       </main>
-      <Footer />
+      {result ? <CompactFooter /> : <Footer />}
     </div>
   );
 };
