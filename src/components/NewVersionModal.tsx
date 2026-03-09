@@ -54,7 +54,7 @@ const NewVersionModal = ({ open, onClose, projectId, trackName, onVersionCreated
       if (urlErr || !urlData?.signedUrl) throw new Error("Failed to get signed URL");
       const audioUrl = urlData.signedUrl.startsWith("http")
         ? urlData.signedUrl
-        : `https://ltkkcqthnnnyskvomjeb.supabase.co/storage/v1${urlData.signedUrl}`;
+        : `https://nllfubvokhybmtnnqeuk.supabase.co/storage/v1${urlData.signedUrl}`;
 
       // 3. POST to versions API
       const res = await fetch("https://secondears-backend-production.up.railway.app/api/versions", {
