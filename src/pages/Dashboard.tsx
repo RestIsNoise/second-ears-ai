@@ -249,8 +249,8 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Delete confirmation */}
-      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { if (!open && !deleting) setProjectToDelete(null); }}>
-        <AlertDialogContent>
+      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { console.log("[DELETE] dialog onOpenChange:", open, "projectToDelete:", projectToDelete?.id); if (!open && !deleting) setProjectToDelete(null); }}>
+        <AlertDialogContent className="z-[200]">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete project?</AlertDialogTitle>
             <AlertDialogDescription>
