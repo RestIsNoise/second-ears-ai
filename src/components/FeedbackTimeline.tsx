@@ -207,7 +207,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0 pr-12 max-w-[50ch]">
+                <div className="flex-1 min-w-0 pr-8">
                   <h3
                     className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
                     title={item.title}
