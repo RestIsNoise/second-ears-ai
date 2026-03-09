@@ -886,7 +886,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-8 flex border border-border/50 rounded-lg overflow-hidden bg-card/30" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04)" }}>
+      <div className="mt-5 flex border border-border/60 rounded-[10px] overflow-hidden bg-card/50" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)" }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
