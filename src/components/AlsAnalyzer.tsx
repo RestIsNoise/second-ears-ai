@@ -27,49 +27,11 @@ interface AlsSession {
   tracks: AlsTrack[];
 }
 
-/* ── Ableton-inspired color palette ── */
-const ABLETON_COLORS = [
-  "0 72% 51%",
-  "25 90% 52%",
-  "45 93% 47%",
-  "142 55% 42%",
-  "175 60% 41%",
-  "199 70% 48%",
-  "262 52% 55%",
-  "330 65% 52%",
-  "16 75% 48%",
-  "88 45% 42%",
-  "210 55% 52%",
-  "280 40% 50%",
-];
-
-const GROUP_COLORS: Record<string, string> = {
-  kick: "0 72% 51%",
-  bass: "25 90% 52%",
-  drum: "45 93% 47%",
-  perc: "45 80% 45%",
-  synth: "175 60% 41%",
-  pad: "199 70% 48%",
-  lead: "142 55% 42%",
-  vox: "262 52% 55%",
-  vocal: "262 52% 55%",
-  fx: "210 55% 52%",
-};
-
-function resolveColor(track: AlsTrack, allTracks: AlsTrack[]): string {
-  const names = [track.name];
-  if (track.parentId) {
-    const parent = allTracks.find((t) => t.name === track.parentId);
-    if (parent) names.push(parent.name);
-  }
-  for (const n of names) {
-    const lower = n.toLowerCase();
-    for (const [key, color] of Object.entries(GROUP_COLORS)) {
-      if (lower.includes(key)) return color;
-    }
-  }
-  return ABLETON_COLORS[track.colorIndex % ABLETON_COLORS.length];
-}
+/* ── Monochrome palette (no rainbow) ── */
+const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
+const CLIP_FILL = "0 0% 24%";
+const CLIP_FILL_ALT = "0 0% 19%";
+const STRIP_COLOR = "hsl(0 0% 100% / 0.07)";
 
 /* ── Constants ── */
 const ROW_H = 28;
