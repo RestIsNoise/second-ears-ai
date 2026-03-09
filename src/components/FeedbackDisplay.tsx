@@ -879,10 +879,10 @@ const FeedbackDisplay = ({
           {releaseReadiness && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card/60 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
               <span
-                className="text-foreground/35 uppercase tracking-[0.06em] font-semibold"
+                className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
                 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
               >Release</span>
-              <span className="text-[11px] font-medium text-foreground/65">{releaseReadiness}</span>
+              <span className="text-[12px] font-medium text-foreground/75">{releaseReadiness}</span>
             </span>
           )}
         </div>
