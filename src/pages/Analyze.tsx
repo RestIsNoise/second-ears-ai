@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import CompactFooter from "@/components/CompactFooter";
 import TrackUploader from "@/components/TrackUploader";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
@@ -42,8 +43,6 @@ export interface FeedbackResult {
   audioFile?: File;
 }
 
-const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
-
 const Analyze = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -54,6 +53,7 @@ const Analyze = () => {
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
 
+  // New-version params from URL
   const isNewVersion = searchParams.get("newVersion") === "true";
   const parentProjectId = searchParams.get("projectId");
   const parentAnalysisId = searchParams.get("parentAnalysisId");
@@ -81,13 +81,19 @@ const Analyze = () => {
 
   const handleResult = async (feedbackResult: FeedbackResult) => {
     setResult(feedbackResult);
+
+    // Auto-save to database
     if (user) {
       try {
         const n = feedbackResult.normalized;
+
         let projectId: string;
+
         if (isNewVersion && parentProjectId) {
+          // Re-use existing project for new version
           projectId = parentProjectId;
         } else {
+          // Create new project
           const { data: project, error: projErr } = await supabase
             .from("projects")
             .insert({ user_id: user.id, name: n.trackName })
@@ -96,6 +102,7 @@ const Analyze = () => {
           if (projErr) throw projErr;
           projectId = project.id;
         }
+
         const insertPayload: any = {
           project_id: projectId,
           mode: n.mode,
@@ -112,18 +119,22 @@ const Analyze = () => {
           },
           metrics: n.metrics,
         };
+
         if (isNewVersion && parentAnalysisId) {
           insertPayload.parent_analysis_id = parentAnalysisId;
           insertPayload.version = nextVersion;
         }
+
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
           .insert(insertPayload)
           .select("id")
           .single();
+
         if (analysisErr) throw analysisErr;
         if (analysisRow) {
           setSavedAnalysisId(analysisRow.id);
+          // If new version, navigate to project page to see version pills
           if (isNewVersion && parentProjectId) {
             navigate(`/project/${parentProjectId}?analysis=${analysisRow.id}`, { replace: true });
             return;
@@ -139,10 +150,10 @@ const Analyze = () => {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
-      <main className={`flex-1 pt-20 pb-4 ${result ? "px-3 md:px-4" : "px-4"}`}>
-        <div className={result ? "w-full" : "max-w-xl mx-auto"}>
+      <main className={`pt-24 pb-6 md:pb-10 ${result ? "px-3 md:px-4" : "px-6"}`}>
+        <div className={result ? "w-full" : "max-w-2xl mx-auto"}>
           {result ? (
             <FeedbackDisplay
               result={result}
@@ -159,20 +170,14 @@ const Analyze = () => {
             />
           ) : (
             <>
-              <div className="text-center mb-6">
+              <div className="text-center mb-8">
                 <p
-                  className="uppercase mb-2"
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 10,
-                    fontWeight: 500,
-                    letterSpacing: "0.12em",
-                    color: "hsl(var(--muted-foreground) / 0.55)",
-                  }}
+                  className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
                 >
                   {isNewVersion ? "New version" : "Upload & analyze"}
                 </p>
-                <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">
                   {isNewVersion && prefillTrackName
                     ? `${prefillTrackName} — v${nextVersion}`
                     : "Get your mix feedback"}
@@ -192,7 +197,7 @@ const Analyze = () => {
           )}
         </div>
       </main>
-      <CompactFooter />
+      {result ? <CompactFooter /> : <Footer />}
     </div>
   );
 };
