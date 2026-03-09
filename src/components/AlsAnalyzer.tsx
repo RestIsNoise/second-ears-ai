@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useMemo, useEffect } from "react";
-import { Upload, Loader2, Music, ChevronRight, ChevronDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Upload, Loader2, Music, ChevronRight, ChevronDown, Maximize2, ZoomIn } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -27,20 +26,17 @@ interface AlsSession {
   tracks: AlsTrack[];
 }
 
-/* ── Monochrome palette (no rainbow) ── */
+/* ── Monochrome palette ── */
 const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
-const CLIP_FILL_1 = "0 0% 28%";   /* lightest */
-const CLIP_FILL_2 = "0 0% 22%";   /* mid */
-const CLIP_FILL_3 = "0 0% 17%";   /* darkest */
-
-const STRIP_COLOR = "hsl(0 0% 100% / 0.07)";
+const CLIP_FILL_1 = "0 0% 28%";
+const CLIP_FILL_2 = "0 0% 22%";
+const CLIP_FILL_3 = "0 0% 17%";
 
 /* ── Constants ── */
-const ROW_H = 30;
-const LABEL_W = 170;
+const LABEL_W = 160;
 const RULER_H = 28;
-const PX_PER_BEAT = 4;
-const MAX_VIEW_H = 420;
+const OVERVIEW_ROW_H = 20;
+const DETAIL_ROW_H = 30;
 
 /* ── Helpers ── */
 function beatsToTime(beats: number, bpm: number): string {
@@ -52,22 +48,44 @@ function beatsToTime(beats: number, bpm: number): string {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
+interface AlsAnalyzerProps {
+  onLoaded?: () => void;
+}
+
 /* ── Main component ── */
-const AlsAnalyzer = () => {
+const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
   const [session, setSession] = useState<AlsSession | null>(null);
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [detailMode, setDetailMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  /* Scroll sync refs */
-  const labelColRef = useRef<HTMLDivElement>(null);
-  const clipAreaRef = useRef<HTMLDivElement>(null);
-  const rulerRef = useRef<HTMLDivElement>(null);
-  const isSyncing = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const hasNotified = useRef(false);
 
   const isMobile = useIsMobile();
+
+  /* Measure container width */
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) setContainerWidth(entry.contentRect.width);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  /* Notify parent when session loads */
+  useEffect(() => {
+    if (session && onLoaded && !hasNotified.current) {
+      hasNotified.current = true;
+      // Small delay so DOM has rendered
+      setTimeout(() => onLoaded(), 150);
+    }
+  }, [session, onLoaded]);
 
   const toggleGroup = useCallback((name: string) => {
     setCollapsedGroups((prev) => {
@@ -77,36 +95,6 @@ const AlsAnalyzer = () => {
     });
   }, []);
 
-  /* ── Sync scroll ── */
-  useEffect(() => {
-    const labelEl = labelColRef.current;
-    const clipEl = clipAreaRef.current;
-    const rulerEl = rulerRef.current;
-    if (!labelEl || !clipEl || !rulerEl) return;
-
-    const onClipScroll = () => {
-      if (isSyncing.current) return;
-      isSyncing.current = true;
-      labelEl.scrollTop = clipEl.scrollTop;
-      rulerEl.scrollLeft = clipEl.scrollLeft;
-      isSyncing.current = false;
-    };
-
-    const onLabelScroll = () => {
-      if (isSyncing.current) return;
-      isSyncing.current = true;
-      clipEl.scrollTop = labelEl.scrollTop;
-      isSyncing.current = false;
-    };
-
-    clipEl.addEventListener("scroll", onClipScroll);
-    labelEl.addEventListener("scroll", onLabelScroll);
-    return () => {
-      clipEl.removeEventListener("scroll", onClipScroll);
-      labelEl.removeEventListener("scroll", onLabelScroll);
-    };
-  });
-
   const uploadFile = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".als")) {
       toast({ title: "Please upload an Ableton Live Set (.als)", variant: "destructive", duration: 2500 });
@@ -115,6 +103,7 @@ const AlsAnalyzer = () => {
     setLoading(true);
     setFileName(file.name);
     setCollapsedGroups(new Set());
+    hasNotified.current = false;
     try {
       const form = new FormData();
       form.append("als", file);
@@ -124,7 +113,6 @@ const AlsAnalyzer = () => {
       );
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data: AlsSession = await res.json();
-      console.log("[AlsAnalyzer] Track order:", data.tracks.map((t, i) => `${i}: ${t.name} (type=${t.type ?? "track"}, parent=${t.parentId ?? "none"})`));
       setSession(data);
     } catch (err: any) {
       console.error("[AlsAnalyzer] parse failed:", err);
@@ -162,8 +150,23 @@ const AlsAnalyzer = () => {
         }),
       }));
     const totalBeats = session.totalBeats || maxEnd || 128;
-    return { tracks, totalBeats, totalWidth: totalBeats * PX_PER_BEAT };
+    return { tracks, totalBeats };
   }, [session]);
+
+  /* ── Dynamic scale: fit-to-width ── */
+  const clipAreaWidth = Math.max(containerWidth - LABEL_W - 2, 100);
+  const pxPerBeat = useMemo(() => {
+    if (!layoutData || clipAreaWidth <= 0) return 4;
+    if (detailMode) return 4; // fixed in detail mode
+    return clipAreaWidth / layoutData.totalBeats;
+  }, [layoutData, clipAreaWidth, detailMode]);
+
+  const totalWidth = useMemo(() => {
+    if (!layoutData) return 0;
+    return layoutData.totalBeats * pxPerBeat;
+  }, [layoutData, pxPerBeat]);
+
+  const ROW_H = detailMode ? DETAIL_ROW_H : OVERVIEW_ROW_H;
 
   /* ── Visible tracks ── */
   const visibleTracks = useMemo(() => {
@@ -191,33 +194,34 @@ const AlsAnalyzer = () => {
     return c;
   }, [layoutData]);
 
-  /* ── Ruler ticks ── */
+  /* ── Ruler ticks (adaptive to actual pixel width) ── */
   const rulerTicks = useMemo(() => {
     if (!layoutData) return [];
     const tb = layoutData.totalBeats;
     const bpmVal = session?.bpm ?? 120;
     const beatsPerBar = 4;
-    const barW = beatsPerBar * PX_PER_BEAT;
+    const barW = beatsPerBar * pxPerBeat;
     const totalBars = Math.ceil(tb / beatsPerBar);
     let every = 1;
-    if (barW < 18) every = 16;
+    if (barW < 12) every = 32;
+    else if (barW < 18) every = 16;
     else if (barW < 36) every = 8;
     else if (barW < 72) every = 4;
     else if (barW < 140) every = 2;
 
     const ticks: Array<{ x: number; label: string | null; major: boolean }> = [];
     for (let i = 0; i < totalBars; i++) {
-      const x = i * beatsPerBar * PX_PER_BEAT;
+      const x = i * beatsPerBar * pxPerBeat;
       const isMajor = i % every === 0;
       ticks.push({ x, major: isMajor, label: isMajor ? beatsToTime(i * beatsPerBar, bpmVal) : null });
     }
     return ticks;
-  }, [layoutData, session?.bpm]);
+  }, [layoutData, session?.bpm, pxPerBeat]);
 
   /* ── Upload dropzone ── */
   if (!session || !layoutData) {
     return (
-      <div className="space-y-6">
+      <div ref={containerRef} className="space-y-6">
         <input ref={fileInputRef} type="file" accept=".als" className="hidden" onChange={handleFileChange} />
         <label
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -253,14 +257,14 @@ const AlsAnalyzer = () => {
     );
   }
 
-  const { tracks: allTracks, totalBeats, totalWidth } = layoutData;
+  const { tracks: allTracks, totalBeats } = layoutData;
   const bpm = session.bpm;
   const trackContentH = visibleTracks.length * ROW_H;
 
   /* ── Mobile fallback ── */
   if (isMobile) {
     return (
-      <div className="space-y-3">
+      <div ref={containerRef} className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Music className="w-4 h-4 text-muted-foreground" />
@@ -270,52 +274,44 @@ const AlsAnalyzer = () => {
             Upload new
           </button>
         </div>
-        <div className="flex items-center gap-2">
-          {bpm > 0 && <Badge variant="secondary" className="text-[10px] font-mono">{Math.round(bpm)} BPM</Badge>}
-          <Badge variant="outline" className="text-[10px] font-mono">{allTracks.length} tracks</Badge>
-        </div>
         <div
           className="rounded-lg overflow-hidden"
           style={{ backgroundColor: "hsl(var(--secondary))" }}
         >
-           {allTracks.map((track, i) => {
-             return (
-               <div
-                 key={i}
-                 className={cn(
-                   "flex items-center gap-2.5 px-3",
-                   i % 2 === 0 ? "bg-foreground/[0.02]" : "bg-transparent"
-                 )}
-                 style={{ height: ROW_H }}
-               >
-                 <div className="shrink-0 w-[6px] h-[6px] rounded-full" style={{ backgroundColor: STRIP_COLOR }} />
-                 <span className={cn("text-[10px] flex-1 truncate", track.type === "group" ? "font-semibold text-foreground/70" : "text-foreground/50")}
-                   style={{ fontFamily: MONO_FONT }}
-                 >
-                   {track.name}
-                 </span>
-                 <span className="text-[8px] text-muted-foreground/40 font-mono shrink-0">{track.clips.length}</span>
-               </div>
-             );
-           })}
-         </div>
+          {allTracks.map((track, i) => (
+            <div
+              key={i}
+              className={cn(
+                "flex items-center gap-2.5 px-3",
+                i % 2 === 0 ? "bg-foreground/[0.02]" : "bg-transparent"
+              )}
+              style={{ height: ROW_H }}
+            >
+              <div className="shrink-0 w-[6px] h-[6px] rounded-full" style={{ backgroundColor: "hsl(0 0% 100% / 0.07)" }} />
+              <span className={cn("text-[10px] flex-1 truncate", track.type === "group" ? "font-semibold text-foreground/70" : "text-foreground/50")}
+                style={{ fontFamily: MONO_FONT }}
+              >
+                {track.name}
+              </span>
+              <span className="text-[8px] text-muted-foreground/40 font-mono shrink-0">{track.clips.length}</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   /* ─────────────────────────────────────────────
-     Desktop: Ableton Live arrangement view
-     ─────────────────────────────────────────────
+     Desktop: Full-width overview arrangement
      Layout (labels on RIGHT):
      ┌──────────────────────────┬──────────┐
-     │  Ruler (h-scrolls)       │ "Tracks" │  <- RULER_H
+     │  Ruler                   │ "Tracks" │
      ├──────────────────────────┼──────────┤
-     │  Clips (h+v scrolls)     │ Labels   │  <- MAX_VIEW_H
-     │                          │ (v-sync) │
+     │  Clips (fit-to-width)    │ Labels   │
      └──────────────────────────┴──────────┘
   */
   return (
-    <div className="space-y-0">
+    <div ref={containerRef} className="space-y-0">
       {/* Transport strip — clean row */}
       <div
         className="flex items-center justify-between px-3 py-2.5 rounded-t-lg"
@@ -338,29 +334,41 @@ const AlsAnalyzer = () => {
             {allTracks.length} tracks · {beatsToTime(totalBeats, bpm)}
           </span>
         </div>
-        <button
-          onClick={() => { setSession(null); setFileName(null); }}
-          className="text-[11px] text-muted-foreground/50 hover:text-foreground/70 transition-colors shrink-0 ml-3"
-          style={{ fontFamily: MONO_FONT }}
-        >
-          Upload new
-        </button>
+        <div className="flex items-center gap-2 shrink-0 ml-3">
+          {/* View mode toggle */}
+          <button
+            onClick={() => setDetailMode((v) => !v)}
+            className={cn(
+              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors",
+              detailMode
+                ? "bg-foreground/10 text-foreground/70"
+                : "text-muted-foreground/50 hover:text-foreground/60"
+            )}
+            style={{ fontFamily: MONO_FONT }}
+            title={detailMode ? "Switch to Overview" : "Switch to Detail"}
+          >
+            {detailMode ? <Maximize2 className="w-3 h-3" /> : <ZoomIn className="w-3 h-3" />}
+            {detailMode ? "Overview" : "Detail"}
+          </button>
+          <button
+            onClick={() => { setSession(null); setFileName(null); hasNotified.current = false; }}
+            className="text-[11px] text-muted-foreground/50 hover:text-foreground/70 transition-colors"
+            style={{ fontFamily: MONO_FONT }}
+          >
+            Upload new
+          </button>
+        </div>
       </div>
 
       {/* ── DAW Container ── */}
       <div
-        className="rounded-lg overflow-hidden"
+        className="rounded-b-lg overflow-hidden"
         style={{ backgroundColor: "hsl(var(--secondary))" }}
       >
         {/* ═══ ROW 1: Ruler bar ═══ */}
         <div className="flex" style={{ height: RULER_H }}>
-          {/* Ruler — syncs horizontally with clip area */}
-          <div
-            ref={rulerRef}
-            className="flex-1 overflow-hidden relative"
-            style={{ borderBottom: "1px solid hsl(var(--border) / 0.2)" }}
-          >
-            <div className="relative" style={{ width: totalWidth, height: RULER_H }}>
+          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--border) / 0.2)" }}>
+            <div className="relative" style={{ width: detailMode ? totalWidth : "100%", height: RULER_H }}>
               {rulerTicks.map((tick, i) => (
                 <div key={i} className="absolute top-0" style={{ left: tick.x, height: RULER_H }}>
                   <div
@@ -392,13 +400,10 @@ const AlsAnalyzer = () => {
             </div>
           </div>
 
-          {/* Label column header (RIGHT) */}
+          {/* Label column header */}
           <div
             className="shrink-0 flex items-end px-3 pb-1.5"
-            style={{
-              width: LABEL_W,
-              borderLeft: "1px solid hsl(var(--border) / 0.2)",
-            }}
+            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--border) / 0.2)" }}
           >
             <span
               className="text-[8px] uppercase tracking-[0.12em] text-muted-foreground/45 font-medium select-none"
@@ -410,18 +415,12 @@ const AlsAnalyzer = () => {
         </div>
 
         {/* ═══ ROW 2: Clips + Labels ═══ */}
-        <div className="flex" style={{ maxHeight: MAX_VIEW_H }}>
-
-          {/* ── Left: clip lanes (h+v scroll, drives all sync) ── */}
-          <div
-            ref={clipAreaRef}
-            className="flex-1 overflow-auto scrollbar-thin"
-            style={{ maxHeight: MAX_VIEW_H }}
-          >
-            <div style={{ width: totalWidth, height: trackContentH }}>
+        <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+          {/* Clip lanes */}
+          <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+            <div style={{ width: detailMode ? totalWidth : "100%", height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
-
                 return (
                   <div
                     key={track._i}
@@ -435,47 +434,46 @@ const AlsAnalyzer = () => {
                     )}
                     style={{ height: ROW_H }}
                   >
-                    {/* Vertical bar grid */}
+                    {/* Vertical bar grid — only major ticks */}
                     {rulerTicks.map((tick, ti) =>
                       tick.major ? (
                         <div
                           key={ti}
                           className="absolute top-0 h-full w-px"
-                          style={{
-                            left: tick.x,
-                            backgroundColor: "hsl(var(--foreground) / 0.035)",
-                          }}
+                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.035)" }}
                         />
                       ) : null
                     )}
 
-                    {/* Clips — monochrome gray */}
+                    {/* Clips */}
                     {track.clips.map((clip, ci) => {
-                      const left = clip.start * PX_PER_BEAT;
-                      const w = Math.max((clip.resolvedEnd - clip.start) * PX_PER_BEAT, 3);
+                      const left = clip.start * pxPerBeat;
+                      const w = Math.max((clip.resolvedEnd - clip.start) * pxPerBeat, 2);
                       const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
                       const fill = fills[ci % 3];
+                      const showName = w > (detailMode ? 38 : 50);
                       return (
                         <div
                           key={ci}
-                          className="absolute rounded-[3px] hover:brightness-125 transition-[filter] duration-75"
+                          className="absolute rounded-[2px] hover:brightness-125 transition-[filter] duration-75"
                           style={{
                             left,
                             width: w,
-                            top: 3,
-                            height: ROW_H - 6,
+                            top: detailMode ? 3 : 2,
+                            height: ROW_H - (detailMode ? 6 : 4),
                             backgroundColor: `hsl(${fill})`,
                             boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.06)`,
                           }}
                           title={clip.name}
                         >
-                          {w > 38 && (
+                          {showName && (
                             <span
-                              className="block truncate text-[8px] font-medium px-1.5 select-none"
+                              className="block truncate font-medium px-1 select-none"
                               style={{
                                 color: "hsl(0 0% 100% / 0.55)",
-                                lineHeight: `${ROW_H - 6}px`,
+                                lineHeight: `${ROW_H - (detailMode ? 6 : 4)}px`,
                                 fontFamily: MONO_FONT,
+                                fontSize: detailMode ? 8 : 7,
                               }}
                             >
                               {clip.name}
@@ -490,20 +488,15 @@ const AlsAnalyzer = () => {
             </div>
           </div>
 
-          {/* ── Right: track names (v-scroll synced, no h-scroll) ── */}
+          {/* Right: track labels */}
           <div
-            ref={labelColRef}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            className="shrink-0 overflow-y-hidden overflow-x-hidden"
             style={{
               width: LABEL_W,
-              maxHeight: MAX_VIEW_H,
               borderLeft: "1px solid hsl(var(--border) / 0.25)",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
             }}
           >
-            <style>{`.als-label-col::-webkit-scrollbar { display: none; }`}</style>
-            <div className="als-label-col" style={{ height: trackContentH }}>
+            <div style={{ height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
                 const isChild = !!track.parentId;
@@ -522,11 +515,10 @@ const AlsAnalyzer = () => {
                     )}
                     style={{
                       height: ROW_H,
-                      paddingLeft: isChild ? 20 : 8,
+                      paddingLeft: isChild ? 18 : 8,
                       paddingRight: 8,
                     }}
                   >
-                    {/* Group chevron */}
                     {isGroup && (
                       <button
                         onClick={() => toggleGroup(track.name)}
@@ -538,24 +530,21 @@ const AlsAnalyzer = () => {
                       </button>
                     )}
 
-                    {/* Monochrome strip dot */}
                     <div
                       className="shrink-0 rounded-full"
-                      style={{ width: 5, height: 5, backgroundColor: isGroup ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 100% / 0.08)" }}
+                      style={{ width: 4, height: 4, backgroundColor: isGroup ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 100% / 0.08)" }}
                     />
 
-                    {/* Track name */}
                     <span
                       className={cn(
-                        "text-[11px] truncate flex-1 leading-none",
+                        "truncate flex-1 leading-none",
                         isGroup ? "font-semibold text-foreground/80" : "text-foreground/60"
                       )}
-                      style={{ fontFamily: MONO_FONT, letterSpacing: "0.01em" }}
+                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 11 : 9, letterSpacing: "0.01em" }}
                     >
                       {track.name}
                     </span>
 
-                    {/* Child count badge (collapsed groups) */}
                     {isGroup && collapsedGroups.has(track.name) && count != null && count > 0 && (
                       <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0">{count}</span>
                     )}
