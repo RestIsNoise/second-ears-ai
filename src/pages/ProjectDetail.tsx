@@ -89,6 +89,22 @@ const ProjectDetail = () => {
             proj?.name || "",
           );
           setResult({ normalized });
+
+          // Fetch audio file from storage if available
+          if (target.storage_path) {
+            try {
+              const { data: blob } = await supabase.storage
+                .from("tracks")
+                .download(target.storage_path);
+              if (blob) {
+                const fileName = target.storage_path.replace(/^\d+-/, "");
+                const file = new File([blob], fileName, { type: blob.type || "audio/mpeg" });
+                setAudioFile(file);
+              }
+            } catch (err) {
+              console.warn("[ProjectDetail] Failed to load audio:", err);
+            }
+          }
         }
       }
     }
