@@ -330,13 +330,13 @@ const Dashboard = () => {
                   {viewMode === "list" ? (
                     <div className="grid gap-3">
                       {grouped.map((g) => (
-                        <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                        <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {grouped.map((g) => (
-                        <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                        <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   )}
