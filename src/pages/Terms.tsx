@@ -79,7 +79,7 @@ const sections = [
         </P>
         <div className="mt-4">
           <P>
-            To the maximum extent permitted by law, SecondEars' total liability is limited to the amount you paid for the service in the 12 months preceding the claim.
+            To the maximum extent permitted by law, SecondEar's total liability is limited to the amount you paid for the service in the 12 months preceding the claim.
           </P>
         </div>
       </>
