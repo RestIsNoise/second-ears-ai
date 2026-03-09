@@ -380,22 +380,22 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
 
       {/* ── DAW Container ── */}
       <div
-        className="rounded-b-lg overflow-hidden"
-        style={{ backgroundColor: "hsl(var(--secondary))" }}
+        className="rounded-b-md overflow-hidden"
+        style={{ backgroundColor: "hsl(0 0% 6%)" }}
       >
         {/* ═══ ROW 1: Ruler bar ═══ */}
         <div className="flex" style={{ height: RULER_H }}>
-          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--border) / 0.2)" }}>
+          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
             <div className="relative" style={{ width: detailMode ? totalWidth : "100%", height: RULER_H }}>
               {rulerTicks.map((tick, i) => (
                 <div key={i} className="absolute top-0" style={{ left: tick.x, height: RULER_H }}>
                   <div
                     className="absolute bottom-0 w-px"
                     style={{
-                      height: tick.major ? 14 : 5,
+                      height: tick.major ? 12 : 4,
                       backgroundColor: tick.major
-                        ? "hsl(var(--foreground) / 0.25)"
-                        : "hsl(var(--foreground) / 0.07)",
+                        ? "hsl(var(--foreground) / 0.4)"
+                        : "hsl(var(--foreground) / 0.1)",
                     }}
                   />
                   {tick.label && (
@@ -404,9 +404,9 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                       style={{
                         fontFamily: MONO_FONT,
                         fontSize: 9,
-                        fontWeight: 500,
-                        color: "hsl(var(--foreground) / 0.55)",
-                        bottom: 16,
+                        fontWeight: 600,
+                        color: "hsl(var(--foreground) / 0.65)",
+                        bottom: 14,
                         left: 3,
                       }}
                     >
@@ -420,11 +420,11 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
 
           {/* Label column header */}
           <div
-            className="shrink-0 flex items-end px-3 pb-1.5"
-            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--border) / 0.2)" }}
+            className="shrink-0 flex items-end px-2 pb-1"
+            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--foreground) / 0.08)" }}
           >
             <span
-              className="text-[8px] uppercase tracking-[0.12em] text-muted-foreground/45 font-medium select-none"
+              className="text-[7px] uppercase tracking-[0.14em] text-foreground/40 font-semibold select-none"
               style={{ fontFamily: MONO_FONT }}
             >
               Tracks
