@@ -30,15 +30,15 @@ interface AlsSession {
 
 /* ── Monochrome palette ── */
 const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
-const CLIP_FILL_1 = "0 0% 28%";
-const CLIP_FILL_2 = "0 0% 22%";
-const CLIP_FILL_3 = "0 0% 17%";
+const CLIP_FILL_1 = "0 0% 32%";
+const CLIP_FILL_2 = "0 0% 24%";
+const CLIP_FILL_3 = "0 0% 18%";
 
 /* ── Constants ── */
-const LABEL_W = 160;
-const RULER_H = 28;
-const OVERVIEW_ROW_H = 20;
-const DETAIL_ROW_H = 30;
+const LABEL_W = 150;
+const RULER_H = 24;
+const OVERVIEW_ROW_H = 18;
+const DETAIL_ROW_H = 26;
 
 /* ── Helpers ── */
 function beatsToTime(beats: number, bpm: number): string {
@@ -331,37 +331,36 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
   */
   return (
     <div ref={containerRef} className="space-y-0">
-      {/* Transport strip — clean row */}
+      {/* Transport strip — compact, defined */}
       <div
-        className="flex items-center justify-between px-3 py-2.5 rounded-t-lg"
-        style={{ backgroundColor: "hsl(var(--secondary) / 0.6)", borderBottom: "1px solid hsl(var(--border) / 0.2)" }}
+        className="flex items-center justify-between px-3 py-1.5 rounded-t-md"
+        style={{ backgroundColor: "hsl(0 0% 8%)", borderBottom: "1px solid hsl(var(--border) / 0.4)" }}
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <Music className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Music className="w-3 h-3 text-foreground/40 shrink-0" />
           <span
-            className="text-[12px] font-semibold truncate max-w-[220px] text-foreground/80"
+            className="text-[11px] font-semibold truncate max-w-[200px] text-foreground/90"
             style={{ fontFamily: MONO_FONT }}
           >
             {fileName}
           </span>
           {bpm > 0 && (
-            <span className="text-[10px] text-muted-foreground/60 font-mono tabular-nums shrink-0">
+            <span className="text-[10px] text-foreground/50 font-mono tabular-nums shrink-0">
               {Math.round(bpm)} BPM
             </span>
           )}
-          <span className="text-[10px] text-muted-foreground/40 font-mono shrink-0">
-            {allTracks.length} tracks · {beatsToTime(totalBeats, bpm)}
+          <span className="text-[10px] text-foreground/40 font-mono shrink-0">
+            {allTracks.length} trk · {beatsToTime(totalBeats, bpm)}
           </span>
         </div>
-        <div className="flex items-center gap-2 shrink-0 ml-3">
-          {/* View mode toggle */}
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
           <button
             onClick={() => setDetailMode((v) => !v)}
             className={cn(
-              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors",
+              "inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] transition-colors border",
               detailMode
-                ? "bg-foreground/10 text-foreground/70"
-                : "text-muted-foreground/50 hover:text-foreground/60"
+                ? "bg-foreground/10 text-foreground/80 border-foreground/15"
+                : "text-foreground/50 hover:text-foreground/70 border-transparent hover:border-foreground/10"
             )}
             style={{ fontFamily: MONO_FONT }}
             title={detailMode ? "Switch to Overview" : "Switch to Detail"}
@@ -371,7 +370,7 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
           </button>
           <button
             onClick={() => { setSession(null); setFileName(null); hasNotified.current = false; }}
-            className="text-[11px] text-muted-foreground/50 hover:text-foreground/70 transition-colors"
+            className="text-[10px] text-foreground/40 hover:text-foreground/70 transition-colors px-1.5 py-0.5"
             style={{ fontFamily: MONO_FONT }}
           >
             Upload new
@@ -381,22 +380,22 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
 
       {/* ── DAW Container ── */}
       <div
-        className="rounded-b-lg overflow-hidden"
-        style={{ backgroundColor: "hsl(var(--secondary))" }}
+        className="rounded-b-md overflow-hidden"
+        style={{ backgroundColor: "hsl(0 0% 6%)" }}
       >
         {/* ═══ ROW 1: Ruler bar ═══ */}
         <div className="flex" style={{ height: RULER_H }}>
-          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--border) / 0.2)" }}>
+          <div className="flex-1 overflow-hidden relative" style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.1)" }}>
             <div className="relative" style={{ width: detailMode ? totalWidth : "100%", height: RULER_H }}>
               {rulerTicks.map((tick, i) => (
                 <div key={i} className="absolute top-0" style={{ left: tick.x, height: RULER_H }}>
                   <div
                     className="absolute bottom-0 w-px"
                     style={{
-                      height: tick.major ? 14 : 5,
+                      height: tick.major ? 12 : 4,
                       backgroundColor: tick.major
-                        ? "hsl(var(--foreground) / 0.25)"
-                        : "hsl(var(--foreground) / 0.07)",
+                        ? "hsl(var(--foreground) / 0.4)"
+                        : "hsl(var(--foreground) / 0.1)",
                     }}
                   />
                   {tick.label && (
@@ -405,9 +404,9 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                       style={{
                         fontFamily: MONO_FONT,
                         fontSize: 9,
-                        fontWeight: 500,
-                        color: "hsl(var(--foreground) / 0.55)",
-                        bottom: 16,
+                        fontWeight: 600,
+                        color: "hsl(var(--foreground) / 0.65)",
+                        bottom: 14,
                         left: 3,
                       }}
                     >
@@ -421,11 +420,11 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
 
           {/* Label column header */}
           <div
-            className="shrink-0 flex items-end px-3 pb-1.5"
-            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--border) / 0.2)" }}
+            className="shrink-0 flex items-end px-2 pb-1"
+            style={{ width: LABEL_W, borderLeft: "1px solid hsl(var(--foreground) / 0.08)" }}
           >
             <span
-              className="text-[8px] uppercase tracking-[0.12em] text-muted-foreground/45 font-medium select-none"
+              className="text-[7px] uppercase tracking-[0.14em] text-foreground/40 font-semibold select-none"
               style={{ fontFamily: MONO_FONT }}
             >
               Tracks
@@ -434,32 +433,33 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
         </div>
 
         {/* ═══ ROW 2: Clips + Labels ═══ */}
-        <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+        <div className={cn("flex", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
           {/* Clip lanes */}
-          <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 500 } : undefined}>
+          <div className={cn("flex-1 min-w-0", detailMode && "overflow-auto scrollbar-thin")} style={detailMode ? { maxHeight: 400 } : undefined}>
             <div style={{ width: detailMode ? totalWidth : "100%", height: trackContentH }}>
               {visibleTracks.map((track, vi) => {
                 const isGroup = track.type === "group";
                 return (
                   <div
                     key={track._i}
-                    className={cn(
-                      "relative",
-                      isGroup
-                        ? "bg-foreground/[0.04]"
+                    className="relative"
+                    style={{
+                      height: ROW_H,
+                      backgroundColor: isGroup
+                        ? "hsl(var(--foreground) / 0.06)"
                         : vi % 2 === 0
-                          ? "bg-transparent"
-                          : "bg-foreground/[0.018]"
-                    )}
-                    style={{ height: ROW_H }}
+                          ? "transparent"
+                          : "hsl(var(--foreground) / 0.025)",
+                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                    }}
                   >
-                    {/* Vertical bar grid — only major ticks */}
+                    {/* Vertical bar grid */}
                     {rulerTicks.map((tick, ti) =>
                       tick.major ? (
                         <div
                           key={ti}
                           className="absolute top-0 h-full w-px"
-                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.035)" }}
+                          style={{ left: tick.x, backgroundColor: "hsl(var(--foreground) / 0.05)" }}
                         />
                       ) : null
                     )}
@@ -470,18 +470,18 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                       const w = Math.max((clip.resolvedEnd - clip.start) * pxPerBeat, 2);
                       const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
                       const fill = fills[ci % 3];
-                      const showName = w > (detailMode ? 38 : 50);
+                      const showName = w > (detailMode ? 38 : 45);
                       return (
                         <div
                           key={ci}
-                          className="absolute rounded-[2px] hover:brightness-125 transition-[filter] duration-75"
+                          className="absolute rounded-[1px] hover:brightness-130 transition-[filter] duration-75"
                           style={{
                             left,
                             width: w,
-                            top: detailMode ? 3 : 2,
-                            height: ROW_H - (detailMode ? 6 : 4),
+                            top: detailMode ? 2 : 1,
+                            height: ROW_H - (detailMode ? 4 : 2),
                             backgroundColor: `hsl(${fill})`,
-                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.06)`,
+                            boxShadow: `inset 0 1px 0 hsl(0 0% 100% / 0.08), 0 0 0 0.5px hsl(0 0% 0% / 0.3)`,
                           }}
                           title={clip.name}
                         >
@@ -489,8 +489,8 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                             <span
                               className="block truncate font-medium px-1 select-none"
                               style={{
-                                color: "hsl(0 0% 100% / 0.55)",
-                                lineHeight: `${ROW_H - (detailMode ? 6 : 4)}px`,
+                                color: "hsl(0 0% 100% / 0.65)",
+                                lineHeight: `${ROW_H - (detailMode ? 4 : 2)}px`,
                                 fontFamily: MONO_FONT,
                                 fontSize: detailMode ? 8 : 7,
                               }}
@@ -512,7 +512,7 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
             className="shrink-0 overflow-y-hidden overflow-x-hidden"
             style={{
               width: LABEL_W,
-              borderLeft: "1px solid hsl(var(--border) / 0.25)",
+              borderLeft: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <div style={{ height: trackContentH }}>
@@ -524,48 +524,42 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
                 return (
                   <div
                     key={track._i}
-                    className={cn(
-                      "flex items-center gap-1.5 select-none",
-                      isGroup
-                        ? "bg-foreground/[0.04]"
-                        : vi % 2 === 0
-                          ? "bg-transparent"
-                          : "bg-foreground/[0.018]"
-                    )}
+                    className="flex items-center gap-1 select-none"
                     style={{
                       height: ROW_H,
-                      paddingLeft: isChild ? 18 : 8,
-                      paddingRight: 8,
+                      paddingLeft: isChild ? 16 : 6,
+                      paddingRight: 6,
+                      backgroundColor: isGroup
+                        ? "hsl(var(--foreground) / 0.06)"
+                        : vi % 2 === 0
+                          ? "transparent"
+                          : "hsl(var(--foreground) / 0.025)",
+                      borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
                     }}
                   >
                     {isGroup && (
                       <button
                         onClick={() => toggleGroup(track.name)}
-                        className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
+                        className="shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-sm hover:bg-foreground/[0.08] transition-colors"
                       >
                         {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/60" />
-                          : <ChevronDown className="w-3 h-3 text-muted-foreground/60" />}
+                          ? <ChevronRight className="w-2.5 h-2.5 text-foreground/50" />
+                          : <ChevronDown className="w-2.5 h-2.5 text-foreground/50" />}
                       </button>
                     )}
-
-                    <div
-                      className="shrink-0 rounded-full"
-                      style={{ width: 4, height: 4, backgroundColor: isGroup ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 100% / 0.08)" }}
-                    />
 
                     <span
                       className={cn(
                         "truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/80" : "text-foreground/60"
+                        isGroup ? "font-semibold text-foreground/90" : "text-foreground/60"
                       )}
-                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 11 : 9, letterSpacing: "0.01em" }}
+                      style={{ fontFamily: MONO_FONT, fontSize: detailMode ? 10 : 8, letterSpacing: "0.01em" }}
                     >
                       {track.name}
                     </span>
 
                     {isGroup && collapsedGroups.has(track.name) && count != null && count > 0 && (
-                      <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0">{count}</span>
+                      <span className="text-[7px] text-foreground/30 font-mono shrink-0">{count}</span>
                     )}
                   </div>
                 );
