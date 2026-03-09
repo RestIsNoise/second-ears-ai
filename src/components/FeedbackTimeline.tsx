@@ -253,10 +253,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   {analysisId && (
                     <div className="mt-2">
                       <FeedbackVoteButtons
-                        feedbackItemId={item.id}
                         analysisId={analysisId}
+                        priorityIndex={sorted.indexOf(item)}
                         userId={user?.id}
-                        initialUserVote={userVotes[item.id] ?? null}
+                        initialUserVote={null}
                       />
                     </div>
                   )}
