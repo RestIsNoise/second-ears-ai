@@ -25,7 +25,7 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
   return (
     <div
-      className="flex flex-col h-full min-w-0 border-r border-border/60 last:border-r-0"
+      className="flex flex-col h-full min-w-0 border-r border-border/70 last:border-r-0"
       style={{ flex, minWidth }}
     >
       {/* Header — tinted surface for clear layer separation */}

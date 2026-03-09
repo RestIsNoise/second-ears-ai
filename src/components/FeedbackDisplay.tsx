@@ -966,7 +966,7 @@ const FeedbackDisplay = ({
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div className={cn(
-          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/40",
+          "mt-5 grid gap-4 pt-4 border-t border-border-subtle/50",
           n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
         )}>
           {n.whatWorks.length > 0 && (
