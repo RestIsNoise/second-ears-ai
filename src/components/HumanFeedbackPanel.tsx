@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import CommentVoteButtons from "@/components/CommentVoteButtons";
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
