@@ -13,10 +13,12 @@ interface AlsClip {
 }
 
 interface AlsTrack {
+  id?: number;
   name: string;
   colorIndex: number;
   type?: string;
   parentId?: string | null;
+  groupId?: number | null;
   clips: AlsClip[];
 }
 
@@ -139,16 +141,33 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
   const layoutData = useMemo(() => {
     if (!session) return null;
     let maxEnd = 0;
+
+    // Build a map from track id to track name for groupId resolution
+    const idToName: Record<number, string> = {};
+    for (const t of session.tracks) {
+      if (t.id != null) idToName[t.id] = t.name;
+    }
+
     const tracks = session.tracks
-      .filter((t) => t.clips.length > 0)
-      .map((t) => ({
-        ...t,
-        clips: t.clips.map((c) => {
-          const end = c.end ?? c.start + (c.duration ?? 0);
-          if (end > maxEnd) maxEnd = end;
-          return { ...c, resolvedEnd: end };
-        }),
-      }));
+      .filter((t) => t.clips.length > 0 || t.type === "GroupTrack" || t.type === "group")
+      .map((t) => {
+        // Resolve parentId from groupId if not already set
+        let resolvedParentId = t.parentId ?? null;
+        if (!resolvedParentId && t.groupId != null) {
+          resolvedParentId = idToName[t.groupId] ?? null;
+        }
+        return {
+          ...t,
+          parentId: resolvedParentId,
+          // Normalize type: "GroupTrack" → "group"
+          type: t.type === "GroupTrack" ? "group" : t.type,
+          clips: t.clips.map((c) => {
+            const end = c.end ?? c.start + (c.duration ?? 0);
+            if (end > maxEnd) maxEnd = end;
+            return { ...c, resolvedEnd: end };
+          }),
+        };
+      });
     const totalBeats = session.totalBeats || maxEnd || 128;
     return { tracks, totalBeats };
   }, [session]);

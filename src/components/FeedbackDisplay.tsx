@@ -826,7 +826,7 @@ const FeedbackDisplay = ({
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
-            audioFileB={refAudioFile && activePanels.has("ai-reference") ? refAudioFile : null}
+            audioFileB={refAudioFile || null}
             refTrackName={refTrackName}
             markersA={markers}
             activeMarkerId={activeItemId}
@@ -1039,18 +1039,19 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ ARRANGEMENT — bottom of page, full width ═══ */}
-      {showArrangement && (
-        <div
-          ref={arrangementRef}
-          className="mt-10 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-3 shadow-sm transition-all duration-200 overflow-hidden"
-        >
-          <AlsAnalyzer
-            onLoaded={() => {
-              arrangementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
-        </div>
-      )}
+      <div
+        ref={arrangementRef}
+        className={cn(
+          "mt-10 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-3 shadow-sm transition-all duration-200 overflow-hidden",
+          !showArrangement && "hidden"
+        )}
+      >
+        <AlsAnalyzer
+          onLoaded={() => {
+            arrangementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        />
+      </div>
     </div>
   );
 };
