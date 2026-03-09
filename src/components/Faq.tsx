@@ -7,7 +7,7 @@ import {
 
 const items = [
   {
-    q: "What does SecondEars analyze?",
+    q: "What does SecondEar analyze?",
     a: "We evaluate frequency balance, dynamic range, stereo image, loudness (LUFS/dBTP), and overall tonal quality. Depending on the listening mode you choose, feedback also covers arrangement density, vocal-instrument balance, emotional impact, and commercial readiness. Each analysis returns actionable priorities, not just observations.",
   },
   {
