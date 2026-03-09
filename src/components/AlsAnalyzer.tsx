@@ -331,37 +331,36 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
   */
   return (
     <div ref={containerRef} className="space-y-0">
-      {/* Transport strip — clean row */}
+      {/* Transport strip — compact, defined */}
       <div
-        className="flex items-center justify-between px-3 py-2.5 rounded-t-lg"
-        style={{ backgroundColor: "hsl(var(--secondary) / 0.6)", borderBottom: "1px solid hsl(var(--border) / 0.2)" }}
+        className="flex items-center justify-between px-3 py-1.5 rounded-t-md"
+        style={{ backgroundColor: "hsl(0 0% 8%)", borderBottom: "1px solid hsl(var(--border) / 0.4)" }}
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <Music className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Music className="w-3 h-3 text-foreground/40 shrink-0" />
           <span
-            className="text-[12px] font-semibold truncate max-w-[220px] text-foreground/80"
+            className="text-[11px] font-semibold truncate max-w-[200px] text-foreground/90"
             style={{ fontFamily: MONO_FONT }}
           >
             {fileName}
           </span>
           {bpm > 0 && (
-            <span className="text-[10px] text-muted-foreground/60 font-mono tabular-nums shrink-0">
+            <span className="text-[10px] text-foreground/50 font-mono tabular-nums shrink-0">
               {Math.round(bpm)} BPM
             </span>
           )}
-          <span className="text-[10px] text-muted-foreground/40 font-mono shrink-0">
-            {allTracks.length} tracks · {beatsToTime(totalBeats, bpm)}
+          <span className="text-[10px] text-foreground/40 font-mono shrink-0">
+            {allTracks.length} trk · {beatsToTime(totalBeats, bpm)}
           </span>
         </div>
-        <div className="flex items-center gap-2 shrink-0 ml-3">
-          {/* View mode toggle */}
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
           <button
             onClick={() => setDetailMode((v) => !v)}
             className={cn(
-              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors",
+              "inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] transition-colors border",
               detailMode
-                ? "bg-foreground/10 text-foreground/70"
-                : "text-muted-foreground/50 hover:text-foreground/60"
+                ? "bg-foreground/10 text-foreground/80 border-foreground/15"
+                : "text-foreground/50 hover:text-foreground/70 border-transparent hover:border-foreground/10"
             )}
             style={{ fontFamily: MONO_FONT }}
             title={detailMode ? "Switch to Overview" : "Switch to Detail"}
@@ -371,7 +370,7 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
           </button>
           <button
             onClick={() => { setSession(null); setFileName(null); hasNotified.current = false; }}
-            className="text-[11px] text-muted-foreground/50 hover:text-foreground/70 transition-colors"
+            className="text-[10px] text-foreground/40 hover:text-foreground/70 transition-colors px-1.5 py-0.5"
             style={{ fontFamily: MONO_FONT }}
           >
             Upload new
