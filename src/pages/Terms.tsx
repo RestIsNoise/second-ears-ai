@@ -59,7 +59,7 @@ const sections = [
     content: (
       <>
         <P>
-          You retain full ownership of all audio files you upload. SecondEars does not claim any rights to your content. We do not use your tracks to train AI models or share them with third parties beyond what is required to deliver the analysis.
+          You retain full ownership of all audio files you upload. SecondEar does not claim any rights to your content. We do not use your tracks to train AI models or share them with third parties beyond what is required to deliver the analysis.
         </P>
         <div className="mt-4">
           <P>
