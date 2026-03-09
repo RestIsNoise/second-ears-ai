@@ -171,6 +171,7 @@ const FeedbackDisplay = ({
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
   const [showArrangement, setShowArrangement] = useState(false);
+  const arrangementRef = useRef<HTMLDivElement>(null);
   const [refModalOpen, setRefModalOpen] = useState(false);
   const [refLoading, setRefLoading] = useState(false);
   const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
