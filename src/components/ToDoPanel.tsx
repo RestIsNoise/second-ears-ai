@@ -149,14 +149,14 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
 
         {/* Empty state — card with icon + CTA */}
         {!loading && filtered.length === 0 && (
-          <div className="flex items-center justify-center py-6 px-3">
+          <div className="flex items-center justify-center py-4 px-3">
             <div
-              className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-4 py-5 w-full max-w-[200px]"
+              className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed px-4 py-4 w-full max-w-[190px]"
               style={{ borderColor: "rgba(180, 170, 155, 0.3)", backgroundColor: "rgba(245, 242, 238, 0.4)" }}
             >
-              <ClipboardList className="w-5 h-5" style={{ color: "rgba(140, 130, 115, 0.35)" }} />
+              <ClipboardList className="w-4 h-4" style={{ color: "rgba(140, 130, 115, 0.35)" }} />
               <p
-                className="text-[11px] text-center leading-snug"
+                className="text-[10px] text-center leading-snug"
                 style={{ color: "rgba(90, 82, 70, 0.6)", fontFamily: SERIF_FONT }}
               >
                 {filter === "done" ? "No completed tasks yet" : filter === "open" ? "All tasks done!" : "Track your mix fixes"}

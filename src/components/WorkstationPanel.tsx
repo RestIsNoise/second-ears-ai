@@ -34,7 +34,7 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         style={{ backgroundColor: "hsl(var(--panel-header))" }}
       >
         <h3
-          className="text-[10px] text-foreground/50 tracking-[0.08em] uppercase truncate select-none font-semibold"
+          className="text-[10px] text-foreground/60 tracking-[0.08em] uppercase truncate select-none font-semibold"
           style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
         >
           {title}

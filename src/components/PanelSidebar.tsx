@@ -45,16 +45,16 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               className={cn(
                 "w-full flex items-center gap-2.5 px-3 py-[8px] text-left transition-all duration-150 border-l-[3px]",
                 isActive
-                  ? "border-l-foreground/50 text-foreground/90"
+                  ? "border-l-foreground/70 text-foreground"
                   : disabled
-                    ? "border-l-transparent text-foreground/20 cursor-not-allowed"
-                    : "border-l-transparent text-foreground/45 hover:text-foreground/70 hover:bg-foreground/[0.04]"
+                    ? "border-l-transparent text-foreground/25 cursor-not-allowed"
+                    : "border-l-transparent text-foreground/55 hover:text-foreground/75 hover:bg-foreground/[0.04]"
               )}
               style={{
                 backgroundColor: isActive ? "hsl(var(--panel-content))" : "transparent",
               }}
             >
-              <LayoutPanelTop className={cn("w-[18px] h-[18px] shrink-0", isActive ? "opacity-70" : "opacity-35")} />
+              <LayoutPanelTop className={cn("w-[18px] h-[18px] shrink-0", isActive ? "opacity-80" : "opacity-45")} />
               <span
                 className={cn(
                   "text-[11px] tracking-tight truncate",
