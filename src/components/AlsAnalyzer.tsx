@@ -13,10 +13,12 @@ interface AlsClip {
 }
 
 interface AlsTrack {
+  id?: number;
   name: string;
   colorIndex: number;
   type?: string;
   parentId?: string | null;
+  groupId?: number | null;
   clips: AlsClip[];
 }
 
