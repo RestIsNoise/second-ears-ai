@@ -40,7 +40,6 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments + user votes
   useEffect(() => {
