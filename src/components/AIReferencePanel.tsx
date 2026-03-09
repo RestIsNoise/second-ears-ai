@@ -96,6 +96,17 @@ const CopyBtn = ({ text }: { text: string }) => {
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
 
 const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Props) => {
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
+
+  const toggleCard = useCallback((idx: number) => {
+    setExpandedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  }, []);
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
