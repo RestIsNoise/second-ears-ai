@@ -103,9 +103,11 @@ const TrackRow = ({
 const TrackGridCard = ({
   grouped,
   onDelete,
+  onNavigate,
 }: {
   grouped: GroupedProject;
-  onDelete: (e: React.MouseEvent, p: ProjectRow) => void;
+  onDelete: (project: ProjectRow) => void;
+  onNavigate: (path: string) => void;
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
@@ -113,9 +115,9 @@ const TrackGridCard = ({
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
-    <Link
-      to={`/project/${proj.id}`}
-      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden"
+    <div
+      onClick={() => onNavigate(`/project/${proj.id}`)}
+      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden cursor-pointer"
     >
       {/* Waveform placeholder */}
       <div className="h-20 bg-muted/40 flex items-center justify-center border-b border-border/40">
@@ -137,7 +139,7 @@ const TrackGridCard = ({
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
           <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
+            onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked grid:", proj.id, proj.name); onDelete(proj); }}
             className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
             title="Delete project"
           >
@@ -156,7 +158,7 @@ const TrackGridCard = ({
 
         <p className="text-[11px] text-muted-foreground/50 mt-auto pt-2">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
-    </Link>
+    </div>
   );
 };
 
