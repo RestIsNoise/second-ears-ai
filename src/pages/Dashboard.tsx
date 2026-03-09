@@ -5,14 +5,8 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Activity, Music, Eye, ArrowRight, MoreVertical, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
+import { Activity, Music, Eye, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,18 +86,13 @@ const TrackRow = ({
         </div>
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-          <button className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
-            <MoreVertical className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => onDelete(e, proj)}>
-            <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <button
+        onClick={(e) => onDelete(e, proj)}
+        className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
+        title="Delete project"
+      >
+        <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
+      </button>
     </Link>
   );
 };
@@ -145,18 +134,13 @@ const TrackGridCard = ({
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-              <button className="p-0.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all shrink-0">
-                <MoreVertical className="w-3.5 h-3.5 text-muted-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => onDelete(e, proj)}>
-                <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <button
+            onClick={(e) => onDelete(e, proj)}
+            className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
+            title="Delete project"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
+          </button>
         </div>
 
         <div className="flex items-center gap-1.5 flex-wrap">
