@@ -37,6 +37,30 @@ const modeLabels: Record<string, string> = {
   perception: "Perception",
 };
 
+/* Tag detection for What Works items */
+const TAG_KEYWORDS: Record<string, string[]> = {
+  Dynamics: ["dynamic", "loudness", "compressor", "limiter", "punch"],
+  "Low End": ["bass", "sub", "low end", "kick", "low frequency"],
+  Stereo: ["stereo", "width", "panning", "spatial", "imaging"],
+  Clarity: ["clarity", "clean", "transparent", "clear", "definition"],
+  Energy: ["energy", "drive", "momentum", "intensity"],
+  Translation: ["translation", "translate", "mono", "fold-down", "device"],
+  Midrange: ["mid", "midrange", "vocal", "presence"],
+  Highs: ["treble", "high", "brightness", "air", "shimmer"],
+  Groove: ["groove", "rhythm", "timing", "feel", "swing"],
+  Balance: ["balance", "mix balance", "level", "proportion"],
+};
+
+function detectTags(text: string): string[] {
+  const lower = text.toLowerCase();
+  const tags: string[] = [];
+  for (const [tag, keywords] of Object.entries(TAG_KEYWORDS)) {
+    if (keywords.some((kw) => lower.includes(kw))) tags.push(tag);
+    if (tags.length >= 2) break;
+  }
+  return tags;
+}
+
 const modeWhatWorksLabel: Record<string, string> = {
   technical: "What works",
   musical: "What lands",
