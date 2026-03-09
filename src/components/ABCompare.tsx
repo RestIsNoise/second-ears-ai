@@ -447,16 +447,24 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
       </div>
 
       {/* Deck B */}
-      <div className="relative">
+      <div
+        className="relative"
+        style={{
+          borderTop: `1px solid ${DIVIDER}`,
+          borderBottom: "1px solid rgba(255,255,255,0.12)",
+          backgroundColor: "#101010",
+          paddingBottom: 8,
+        }}
+      >
         <WaveformPlayer
           ref={playerBRef}
           audioFile={activeRefFile}
           onDurationReady={(d) => setDurationB(d)}
           hideControls
-          label={activeRefName}
+          label={`Reference Track · ${activeRefName || "Loaded track"}`}
           deckVariant="b"
           outlineMode
-          containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none" }}
+          containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none", paddingBottom: 6 }}
         />
         {/* Overlay controls */}
         {!audioFileB && (
