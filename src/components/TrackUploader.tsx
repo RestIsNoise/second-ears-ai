@@ -1,15 +1,16 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Upload, Music, Activity, Eye, Target, Disc3, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Upload, Music, Activity, Eye, Target, Disc3, CheckCircle2, ArrowRight, Shield } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
-const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
-  { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
-  { id: "musical", label: "Musical", tag: "The producer", icon: Music },
-  { id: "perception", label: "Perception", tag: "The listener", icon: Eye },
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
+
+const modes: { id: ListeningMode; label: string; desc: string; icon: typeof Activity }[] = [
+  { id: "technical", label: "Technical", desc: "Mix balance, spectrum, dynamics", icon: Activity },
+  { id: "musical", label: "Musical", desc: "Energy, arrangement, emotion", icon: Music },
+  { id: "perception", label: "Perception", desc: "First impression, fatigue, clarity", icon: Eye },
 ];
 
 type Goal = "mixing" | "mastering" | "release_check";
@@ -36,15 +37,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState<Goal>("mixing");
 
-  // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
     setFile(null);
     setContext("");
     setGoal("mixing");
     setDragOver(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
   const MAX_FILE_SIZE = 200 * 1024 * 1024;
@@ -99,11 +97,10 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
       const initialRes = await feedbackRes.json();
 
-      // If backend returns a jobId, poll for results
       let result: any;
       if (initialRes.jobId) {
         const POLL_INTERVAL = 4000;
-        const MAX_POLLS = 90; // 6 min max
+        const MAX_POLLS = 90;
         let polls = 0;
         while (polls < MAX_POLLS) {
           await new Promise((r) => setTimeout(r, POLL_INTERVAL));
@@ -124,17 +121,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           if (statusData.status === "error") {
             throw new Error(statusData.error || "Analysis failed on the server");
           }
-          // still processing — continue polling
         }
         if (!result) throw new Error("Analysis timed out. Please try again.");
       } else {
-        // Legacy: backend returned result directly
         result = initialRes;
       }
-      
+
       onProgressStep?.(3);
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
-      // Give step 3 "Finalizing" enough time to animate to ~95%+ before switching view
       await new Promise((r) => setTimeout(r, 1800));
       onResult({ normalized, audioFile: file });
     } catch (err: any) {
@@ -147,7 +141,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* ═══ UPLOAD ZONE ═══ */}
       <input
         id="track-file-input"
         ref={fileInputRef}
@@ -164,77 +159,243 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
-          dragOver ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
-          : file ? "border border-solid border-foreground/20 bg-secondary/30"
-          : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
-        }`}
+        className="cursor-pointer select-none transition-all duration-150 rounded-lg overflow-hidden"
+        style={{
+          border: dragOver
+            ? "2px solid hsl(var(--foreground) / 0.35)"
+            : file
+              ? "1px solid hsl(var(--foreground) / 0.20)"
+              : "2px dashed hsl(var(--border-subtle))",
+          backgroundColor: dragOver
+            ? "hsl(var(--foreground) / 0.06)"
+            : file
+              ? "hsl(var(--foreground) / 0.03)"
+              : "hsl(var(--secondary) / 0.3)",
+          padding: file ? "16px 20px" : "32px 20px",
+        }}
       >
         {file ? (
-          <>
-            <Music className="w-8 h-8 text-foreground/60" />
-            <div className="text-center">
-              <p className="text-sm font-medium">{file.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+          <div className="flex items-center gap-3">
+            <div
+              className="shrink-0 flex items-center justify-center rounded-md"
+              style={{
+                width: 40,
+                height: 40,
+                backgroundColor: "hsl(var(--foreground) / 0.08)",
+              }}
+            >
+              <Music className="w-5 h-5" style={{ color: "hsl(var(--foreground) / 0.65)" }} />
             </div>
-          </>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate" style={{ color: "hsl(var(--foreground))" }}>{file.name}</p>
+              <p className="text-xs mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
+                {(file.size / (1024 * 1024)).toFixed(1)} MB · Click to replace
+              </p>
+            </div>
+          </div>
         ) : (
-          <>
-            <Upload className="w-8 h-8 text-muted-foreground" />
-            <div className="text-center">
-              <p className="text-sm text-foreground">Drop your track here</p>
-              <p className="text-xs text-muted-foreground mt-1">or click to browse · MP3, WAV, FLAC</p>
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="flex items-center justify-center rounded-lg"
+              style={{
+                width: 52,
+                height: 52,
+                backgroundColor: "hsl(var(--foreground) / 0.06)",
+                border: "1px solid hsl(var(--border-subtle) / 0.5)",
+              }}
+            >
+              <Upload className="w-6 h-6" style={{ color: "hsl(var(--foreground) / 0.45)" }} />
             </div>
-          </>
+            <div className="text-center">
+              <p className="text-sm font-medium" style={{ color: "hsl(var(--foreground) / 0.85)" }}>
+                Drop your mix here
+              </p>
+              <p className="text-xs mt-1.5" style={{ color: "hsl(var(--muted-foreground) / 0.7)" }}>
+                or <span className="underline underline-offset-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>browse files</span> · MP3, WAV, FLAC up to 200 MB
+              </p>
+            </div>
+          </div>
         )}
       </div>
+
+      {/* ═══ MODE + GOAL SELECTORS ═══ */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Listening mode */}
+        <div>
+          <p
+            className="uppercase mb-2"
+            style={{
+              fontFamily: MONO,
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: "0.10em",
+              color: "hsl(var(--foreground) / 0.50)",
+            }}
+          >
+            Listening mode
+          </p>
+          <div className="grid grid-cols-3 gap-1.5">
+            {modes.map((m) => {
+              const active = mode === m.id;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setMode(m.id)}
+                  className="rounded-md text-left transition-all duration-100 p-3"
+                  style={{
+                    border: active
+                      ? "1.5px solid hsl(var(--foreground) / 0.30)"
+                      : "1px solid hsl(var(--border-subtle) / 0.6)",
+                    backgroundColor: active
+                      ? "hsl(var(--foreground) / 0.08)"
+                      : "transparent",
+                    boxShadow: active
+                      ? "inset 0 0 0 1px hsl(var(--foreground) / 0.06)"
+                      : "none",
+                  }}
+                >
+                  <m.icon
+                    className="w-3.5 h-3.5 mb-1.5"
+                    style={{ color: active ? "hsl(var(--foreground) / 0.85)" : "hsl(var(--foreground) / 0.35)" }}
+                  />
+                  <p
+                    className="text-xs font-medium"
+                    style={{ color: active ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.70)" }}
+                  >
+                    {m.label}
+                  </p>
+                  <p
+                    className="mt-0.5"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 9,
+                      color: active ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground) / 0.5)",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {m.desc}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Goal */}
+        <div>
+          <p
+            className="uppercase mb-2"
+            style={{
+              fontFamily: MONO,
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: "0.10em",
+              color: "hsl(var(--foreground) / 0.50)",
+            }}
+          >
+            Goal
+          </p>
+          <div className="grid grid-cols-3 gap-1.5">
+            {goals.map((g) => {
+              const active = goal === g.id;
+              return (
+                <button
+                  key={g.id}
+                  onClick={() => setGoal(g.id)}
+                  className="rounded-md text-left transition-all duration-100 p-3"
+                  style={{
+                    border: active
+                      ? "1.5px solid hsl(var(--foreground) / 0.30)"
+                      : "1px solid hsl(var(--border-subtle) / 0.6)",
+                    backgroundColor: active
+                      ? "hsl(var(--foreground) / 0.08)"
+                      : "transparent",
+                    boxShadow: active
+                      ? "inset 0 0 0 1px hsl(var(--foreground) / 0.06)"
+                      : "none",
+                  }}
+                >
+                  <g.icon
+                    className="w-3.5 h-3.5 mb-1.5"
+                    style={{ color: active ? "hsl(var(--foreground) / 0.85)" : "hsl(var(--foreground) / 0.35)" }}
+                  />
+                  <p
+                    className="text-xs font-medium"
+                    style={{ color: active ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.70)" }}
+                  >
+                    {g.label}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ CONTEXT INPUT ═══ */}
       <div>
+        <p
+          className="uppercase mb-2"
+          style={{
+            fontFamily: MONO,
+            fontSize: 10,
+            fontWeight: 500,
+            letterSpacing: "0.10em",
+            color: "hsl(var(--foreground) / 0.50)",
+          }}
+        >
+          Context <span style={{ color: "hsl(var(--muted-foreground) / 0.4)", fontWeight: 400 }}>· optional</span>
+        </p>
         <input
           type="text"
           value={context}
           onChange={(e) => setContext(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && file && !isAnalyzing) { e.preventDefault(); analyze(); } }}
-          placeholder="What are you going for?"
-          className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
+          placeholder="What are you going for? References, goals, concerns…"
+          className="w-full rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          style={{
+            border: "1px solid hsl(var(--border-subtle) / 0.6)",
+            backgroundColor: "hsl(var(--background))",
+            padding: "10px 14px",
+            color: "hsl(var(--foreground))",
+          }}
         />
-        <p className="text-[11px] text-muted-foreground/50 mt-1.5 ml-1">Optional: references, goals, or specific concerns.</p>
       </div>
+
+      {/* ═══ CTA ═══ */}
       <div>
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Listening mode</p>
-        <div className="grid grid-cols-3 gap-3">
-          {modes.map((m) => (
-            <button key={m.id} onClick={() => setMode(m.id)}
-              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
-                mode === m.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
-                : "border-border-subtle hover:border-foreground/10"
-              }`}
-            >
-              <m.icon className="w-4 h-4 mb-2 text-foreground/70" />
-              <p className="text-sm font-medium">{m.label}</p>
-              <p className="font-mono-brand text-[10px] text-muted-foreground">{m.tag}</p>
-            </button>
-          ))}
+        <button
+          disabled={!file || isAnalyzing}
+          onClick={analyze}
+          className="w-full flex items-center justify-center gap-2 rounded-md font-medium transition-all duration-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{
+            height: 48,
+            fontSize: 14,
+            backgroundColor: file ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.15)",
+            color: file ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground) / 0.40)",
+            border: "1px solid transparent",
+            boxShadow: file ? "0 1px 3px hsl(var(--foreground) / 0.15)" : "none",
+          }}
+        >
+          {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
+          {!isAnalyzing && file && <ArrowRight className="w-4 h-4" />}
+        </button>
+        <div
+          className="flex items-center justify-center gap-3 mt-2.5"
+          style={{
+            fontFamily: MONO,
+            fontSize: 10,
+            color: "hsl(var(--muted-foreground) / 0.5)",
+          }}
+        >
+          <span>~2 min processing</span>
+          <span style={{ color: "hsl(var(--border-subtle))" }}>·</span>
+          <span className="flex items-center gap-1">
+            <Shield className="w-3 h-3" />
+            Audio never stored permanently
+          </span>
         </div>
       </div>
-      <div>
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Goal</p>
-        <div className="grid grid-cols-3 gap-3">
-          {goals.map((g) => (
-            <button key={g.id} onClick={() => setGoal(g.id)}
-              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
-                goal === g.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
-                : "border-border-subtle hover:border-foreground/10"
-              }`}
-            >
-              <g.icon className="w-4 h-4 mb-2 text-foreground/70" />
-              <p className="text-sm font-medium">{g.label}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-      <Button variant="hero" size="lg" className="w-full h-12 text-sm" disabled={!file || isAnalyzing} onClick={analyze}>
-        {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
-      </Button>
     </div>
   );
 };
