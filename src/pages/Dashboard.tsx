@@ -57,9 +57,11 @@ interface GroupedProject {
 const TrackRow = ({
   grouped,
   onDelete,
+  onNavigate,
 }: {
   grouped: GroupedProject;
-  onDelete: (e: React.MouseEvent, p: ProjectRow) => void;
+  onDelete: (project: ProjectRow) => void;
+  onNavigate: (path: string) => void;
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
@@ -67,9 +69,9 @@ const TrackRow = ({
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
-    <Link
-      to={`/project/${proj.id}`}
-      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
+    <div
+      onClick={() => onNavigate(`/project/${proj.id}`)}
+      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all cursor-pointer"
     >
       <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-10 h-10 rounded-lg bg-muted/60">
         <AudioLines className="w-5 h-5 text-muted-foreground" />
@@ -87,13 +89,13 @@ const TrackRow = ({
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
       <button
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
+        onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked row:", proj.id, proj.name); onDelete(proj); }}
         className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
         title="Delete project"
       >
         <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
       </button>
-    </Link>
+    </div>
   );
 };
 
