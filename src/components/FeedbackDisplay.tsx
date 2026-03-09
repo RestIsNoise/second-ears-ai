@@ -974,31 +974,31 @@ const FeedbackDisplay = ({
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div className={cn(
-          "mt-5 grid gap-4 pt-4 border-t border-border-subtle/50",
-          n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/50",
+          n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
         )}>
           {n.whatWorks.length > 0 && (
-            <div>
+            <div className="flex flex-col">
               <h3
-                className="text-[9px] text-muted-foreground/50 tracking-[0.12em] uppercase mb-2.5"
+                className="text-[11px] text-muted-foreground/70 tracking-[0.14em] uppercase mb-3 font-medium"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 {modeWhatWorksLabel[mode] || "What Works"}
               </h3>
-              <div className="space-y-1.5">
+              <div className="space-y-2.5 flex-1 flex flex-col">
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
-                    <div key={i} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                    <div key={i} className="flex-1 rounded-lg border border-border-subtle/50 bg-card/40 p-4">
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="text-[12px] font-semibold tracking-tight text-foreground/80">{item.title}</h4>
+                        <h4 className="text-[14px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
                         {tags.length > 0 && (
-                          <div className="flex items-center gap-1 shrink-0">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             {tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="inline-block rounded-full border border-border/50 px-2 py-0.5 text-foreground/40"
-                                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, letterSpacing: "0.04em" }}
+                                className="inline-block rounded-full border border-border/60 px-2.5 py-0.5 text-foreground/50"
+                                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, letterSpacing: "0.04em" }}
                               >
                                 {tag}
                               </span>
@@ -1007,7 +1007,7 @@ const FeedbackDisplay = ({
                         )}
                       </div>
                       {item.description && (
-                        <p className="text-[11px] text-foreground/55 mt-1" style={{ lineHeight: 1.55 }}>{item.description}</p>
+                        <p className="text-[13px] text-foreground/65 mt-2" style={{ lineHeight: 1.6 }}>{item.description}</p>
                       )}
                     </div>
                   );
@@ -1017,29 +1017,32 @@ const FeedbackDisplay = ({
           )}
 
           {n.yourFocus.question && (
-            <div>
+            <div className="flex flex-col">
               <h3
-                className="text-[9px] text-muted-foreground/45 tracking-[0.12em] uppercase mb-2.5"
+                className="text-[11px] text-muted-foreground/70 tracking-[0.14em] uppercase mb-3 font-medium"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 Your Focus
               </h3>
-              <div className="space-y-2.5 rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+              <div className="flex-1 flex flex-col gap-4 rounded-lg border border-border-subtle/50 bg-card/40 p-5">
                 <div>
                   <p
-                    className="text-muted-foreground/40 uppercase tracking-wider mb-1"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                    className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                   >You asked</p>
-                  <p className="text-[12px] text-foreground/60 leading-relaxed italic" style={{ lineHeight: 1.55 }}>
+                  <p className="text-[14px] text-foreground/70 leading-relaxed italic" style={{ lineHeight: 1.6 }}>
                     &ldquo;{n.yourFocus.question}&rdquo;
                   </p>
                 </div>
+                <div
+                  style={{ height: 1, background: "linear-gradient(to right, hsl(var(--foreground) / 0.06), transparent)" }}
+                />
                 <div>
                   <p
-                    className="text-muted-foreground/40 uppercase tracking-wider mb-1"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                    className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                   >Response</p>
-                  <p className="text-[12px] text-foreground/55 leading-relaxed" style={{ lineHeight: 1.55 }}>
+                  <p className="text-[13px] text-foreground/65 leading-relaxed" style={{ lineHeight: 1.65 }}>
                     {n.yourFocus.response || "No direct focus response available for this run."}
                   </p>
                 </div>
