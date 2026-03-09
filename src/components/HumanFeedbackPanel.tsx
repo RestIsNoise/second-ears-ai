@@ -74,7 +74,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         .select()
         .single();
       if (!error && data) {
-        setComments((prev) => [...prev, { ...data, upvotes: 0, downvotes: 0 } as unknown as Comment]);
+        setComments((prev) => [...prev, data as unknown as Comment]);
         toast({ title: "Comment added", duration: 1200 });
       }
       onPendingCommentHandled?.();
