@@ -744,7 +744,7 @@ const FeedbackDisplay = ({
               )
             )}
             <p
-              className="text-[11px] text-foreground/40 tracking-[0.08em] uppercase"
+              className="text-[11px] text-foreground/50 tracking-[0.08em] uppercase"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               {modeLabels[mode]} analysis
@@ -849,7 +849,7 @@ const FeedbackDisplay = ({
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-10 mb-6 px-0.5">
-          <p className="text-[16px] text-foreground/50 leading-relaxed max-w-[65ch]" style={{ lineHeight: 1.65 }}>
+          <p className="text-[16px] text-foreground/55 leading-relaxed max-w-[65ch]" style={{ lineHeight: 1.65 }}>
             {n.overallImpression}
           </p>
         </div>
