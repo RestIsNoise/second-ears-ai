@@ -5,7 +5,7 @@ const Footer = () => (
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-col items-center gap-5">
         <span className="font-mono-brand text-xs tracking-tight text-foreground/40">
-          SecondEars™
+          SecondEar™
         </span>
         <div className="flex items-center gap-4">
           <Link
@@ -37,7 +37,7 @@ const Footer = () => (
           </a>
         </div>
         <p className="text-[10px] text-muted-foreground/30 tracking-wide">
-          © {new Date().getFullYear()} SecondEars. All rights reserved.
+          © {new Date().getFullYear()} SecondEar. All rights reserved.
         </p>
       </div>
     </div>

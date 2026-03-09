@@ -4,7 +4,7 @@ const CompactFooter = () => (
       className="text-[10px] text-foreground/30 tracking-[0.06em]"
       style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
     >
-      © {new Date().getFullYear()} Second Ears · AI mix feedback
+      © {new Date().getFullYear()} SecondEar · AI mix feedback
     </p>
   </footer>
 );

@@ -11,7 +11,7 @@ const sections = [
     content: (
       <>
         <P>
-          SecondEars provides AI-powered mix feedback for audio tracks uploaded by registered users. The service analyzes your audio and returns structured, actionable feedback based on the listening mode you select. We do not master, mix, or modify your audio files.
+          SecondEar provides AI-powered mix feedback for audio tracks uploaded by registered users. The service analyzes your audio and returns structured, actionable feedback based on the listening mode you select. We do not master, mix, or modify your audio files.
         </P>
         <div className="mt-4">
           <P>
@@ -59,11 +59,11 @@ const sections = [
     content: (
       <>
         <P>
-          You retain full ownership of all audio files you upload. SecondEars does not claim any rights to your content. We do not use your tracks to train AI models or share them with third parties beyond what is required to deliver the analysis.
+          You retain full ownership of all audio files you upload. SecondEar does not claim any rights to your content. We do not use your tracks to train AI models or share them with third parties beyond what is required to deliver the analysis.
         </P>
         <div className="mt-4">
           <P>
-            The SecondEars name, logo, interface design, and generated feedback format are our intellectual property and may not be reproduced without permission.
+            The SecondEar name, logo, interface design, and generated feedback format are our intellectual property and may not be reproduced without permission.
           </P>
         </div>
       </>
@@ -75,11 +75,11 @@ const sections = [
     content: (
       <>
         <P>
-          SecondEars is provided "as is" without warranties of any kind. We do not guarantee that feedback will be error-free, complete, or suitable for any particular purpose. AI-generated analysis is advisory — final creative decisions remain yours.
+          SecondEar is provided "as is" without warranties of any kind. We do not guarantee that feedback will be error-free, complete, or suitable for any particular purpose. AI-generated analysis is advisory — final creative decisions remain yours.
         </P>
         <div className="mt-4">
           <P>
-            To the maximum extent permitted by law, SecondEars' total liability is limited to the amount you paid for the service in the 12 months preceding the claim.
+            To the maximum extent permitted by law, SecondEar's total liability is limited to the amount you paid for the service in the 12 months preceding the claim.
           </P>
         </div>
       </>
@@ -123,7 +123,7 @@ const Terms = () => (
   <LegalPageShell
     title="Terms of Service"
     sections={sections}
-    footnote="These terms may be updated from time to time. Continued use of SecondEars after changes constitutes acceptance."
+    footnote="These terms may be updated from time to time. Continued use of SecondEar after changes constitutes acceptance."
   />
 );
 

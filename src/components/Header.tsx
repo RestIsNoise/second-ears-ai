@@ -38,7 +38,7 @@ const Header = () => {
             className="text-[13px] font-medium tracking-tight"
             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
           >
-            SecondEars
+            SecondEar
           </span>
         </Link>
 

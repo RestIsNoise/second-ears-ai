@@ -97,7 +97,7 @@ const UnifiedFooter = () => (
               className="text-[11px] tracking-tight"
               style={{ color: "hsl(0 0% 40%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
-              SecondEars™
+              SecondEar™
             </span>
             <div className="flex items-center gap-4">
               {[
@@ -126,7 +126,7 @@ const UnifiedFooter = () => (
               </a>
             </div>
             <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 35%)" }}>
-              © {new Date().getFullYear()} SecondEars. All rights reserved.
+              © {new Date().getFullYear()} SecondEar. All rights reserved.
             </p>
           </div>
         </div>

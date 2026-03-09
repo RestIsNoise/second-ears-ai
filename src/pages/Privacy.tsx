@@ -11,7 +11,7 @@ const sections = [
     content: (
       <>
         <P>
-          When you use SecondEars, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
+          When you use SecondEar, we collect the audio files you upload, the listening mode you select, and any context text you provide alongside your track. We also collect basic usage data — timestamps, file metadata (name, format, duration), and session identifiers — to operate and improve the service.
         </P>
         <div className="mt-4">
           <P>
@@ -58,7 +58,7 @@ const sections = [
     title: "Third-party processors",
     content: (
       <>
-        <P>SecondEars relies on a small number of infrastructure providers to operate:</P>
+        <P>SecondEar relies on a small number of infrastructure providers to operate:</P>
         <ul className="mt-3 space-y-2 text-[15px] md:text-[17px] leading-[1.65] text-muted-foreground list-disc list-inside">
           <li><span className="text-foreground font-medium">Supabase</span> — authentication, database, and file storage</li>
           <li><span className="text-foreground font-medium">Railway</span> — backend compute and hosting</li>
