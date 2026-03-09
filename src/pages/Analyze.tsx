@@ -41,6 +41,7 @@ export interface FullAnalysis {
 export interface FeedbackResult {
   normalized: NormalizedFeedback;
   audioFile?: File;
+  storagePath?: string;
 }
 
 const Analyze = () => {
@@ -106,6 +107,7 @@ const Analyze = () => {
         const insertPayload: any = {
           project_id: projectId,
           mode: n.mode,
+          storage_path: feedbackResult.storagePath || null,
           feedback: {
             overallImpression: n.overallImpression,
             topIssue: n.topIssue,

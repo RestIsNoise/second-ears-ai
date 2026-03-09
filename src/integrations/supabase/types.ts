@@ -24,6 +24,7 @@ export type Database = {
           mode: string
           parent_analysis_id: string | null
           project_id: string
+          storage_path: string | null
           version: number
         }
         Insert: {
@@ -35,6 +36,7 @@ export type Database = {
           mode: string
           parent_analysis_id?: string | null
           project_id: string
+          storage_path?: string | null
           version?: number
         }
         Update: {
@@ -46,6 +48,7 @@ export type Database = {
           mode?: string
           parent_analysis_id?: string | null
           project_id?: string
+          storage_path?: string | null
           version?: number
         }
         Relationships: [

@@ -20,6 +20,7 @@ interface AnalysisRow {
   metrics: any;
   version: number;
   created_at: string;
+  storage_path: string | null;
 }
 
 const ProjectDetail = () => {
@@ -33,6 +34,7 @@ const ProjectDetail = () => {
   const [allAnalyses, setAllAnalyses] = useState<AnalysisRow[]>([]);
   const [result, setResult] = useState<FeedbackResult | null>(null);
   const [analysisId, setAnalysisId] = useState<string | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [versions, setVersions] = useState<VersionInfo[]>([]);
   const [fetching, setFetching] = useState(true);
   const [showVersionModal, setShowVersionModal] = useState(false);
@@ -58,7 +60,7 @@ const ProjectDetail = () => {
 
     const { data: analyses } = await supabase
       .from("analyses")
-      .select("id, mode, feedback, metrics, version, created_at")
+      .select("id, mode, feedback, metrics, version, created_at, storage_path")
       .eq("project_id", id)
       .order("version", { ascending: true });
 
@@ -87,6 +89,22 @@ const ProjectDetail = () => {
             proj?.name || "",
           );
           setResult({ normalized });
+
+          // Fetch audio file from storage if available
+          if (target.storage_path) {
+            try {
+              const { data: blob } = await supabase.storage
+                .from("tracks")
+                .download(target.storage_path);
+              if (blob) {
+                const fileName = target.storage_path.replace(/^\d+-/, "");
+                const file = new File([blob], fileName, { type: blob.type || "audio/mpeg" });
+                setAudioFile(file);
+              }
+            } catch (err) {
+              console.warn("[ProjectDetail] Failed to load audio:", err);
+            }
+          }
         }
       }
     }
@@ -130,6 +148,7 @@ const ProjectDetail = () => {
             <FeedbackDisplay
               result={result}
               onReset={() => navigate(`/project/${id}`)}
+              audioFile={audioFile || undefined}
               analysisId={analysisId}
               versions={versions}
               projectId={id || null}
