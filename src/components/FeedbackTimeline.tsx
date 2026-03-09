@@ -242,7 +242,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         >
                           {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
                         </span>
-                        <p className="text-[13px] text-foreground/70 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
+                        <p className="text-[13px] text-foreground/70" style={{ lineHeight: 1.55 }}>
                           {item.fix}
                         </p>
                       </div>
