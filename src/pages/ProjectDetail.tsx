@@ -136,7 +136,6 @@ const ProjectDetail = () => {
             />
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
