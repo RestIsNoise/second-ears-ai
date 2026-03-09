@@ -92,18 +92,13 @@ const TrackRow = ({
         </div>
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-          <button className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
-            <MoreVertical className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => onDelete(e, proj)}>
-            <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <button
+        onClick={(e) => onDelete(e, proj)}
+        className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
+        title="Delete project"
+      >
+        <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
+      </button>
     </Link>
   );
 };
