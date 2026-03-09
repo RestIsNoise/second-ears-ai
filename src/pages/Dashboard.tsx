@@ -57,9 +57,11 @@ interface GroupedProject {
 const TrackRow = ({
   grouped,
   onDelete,
+  onNavigate,
 }: {
   grouped: GroupedProject;
-  onDelete: (e: React.MouseEvent, p: ProjectRow) => void;
+  onDelete: (project: ProjectRow) => void;
+  onNavigate: (path: string) => void;
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
@@ -67,9 +69,9 @@ const TrackRow = ({
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
-    <Link
-      to={`/project/${proj.id}`}
-      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
+    <div
+      onClick={() => onNavigate(`/project/${proj.id}`)}
+      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all cursor-pointer"
     >
       <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-10 h-10 rounded-lg bg-muted/60">
         <AudioLines className="w-5 h-5 text-muted-foreground" />
@@ -87,13 +89,13 @@ const TrackRow = ({
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
       <button
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
+        onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked row:", proj.id, proj.name); onDelete(proj); }}
         className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
         title="Delete project"
       >
         <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
       </button>
-    </Link>
+    </div>
   );
 };
 
@@ -101,9 +103,11 @@ const TrackRow = ({
 const TrackGridCard = ({
   grouped,
   onDelete,
+  onNavigate,
 }: {
   grouped: GroupedProject;
-  onDelete: (e: React.MouseEvent, p: ProjectRow) => void;
+  onDelete: (project: ProjectRow) => void;
+  onNavigate: (path: string) => void;
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
@@ -111,9 +115,9 @@ const TrackGridCard = ({
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
-    <Link
-      to={`/project/${proj.id}`}
-      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden"
+    <div
+      onClick={() => onNavigate(`/project/${proj.id}`)}
+      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden cursor-pointer"
     >
       {/* Waveform placeholder */}
       <div className="h-20 bg-muted/40 flex items-center justify-center border-b border-border/40">
@@ -135,7 +139,7 @@ const TrackGridCard = ({
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
           <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
+            onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked grid:", proj.id, proj.name); onDelete(proj); }}
             className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
             title="Delete project"
           >
@@ -154,7 +158,7 @@ const TrackGridCard = ({
 
         <p className="text-[11px] text-muted-foreground/50 mt-auto pt-2">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
-    </Link>
+    </div>
   );
 };
 
@@ -206,14 +210,14 @@ const Dashboard = () => {
       return { project: proj, latestAnalysis: sorted[0], versionCount: sorted.length, lastUpdated };
     });
 
-  const handleDeleteClick = (e: React.MouseEvent, project: ProjectRow) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDeleteClick = (project: ProjectRow) => {
+    console.log("[DELETE] handleDeleteClick called:", project.id, project.name);
     setProjectToDelete(project);
   };
 
   const confirmDelete = async () => {
     if (!projectToDelete) return;
+    console.log("[DELETE] confirmDelete called for:", projectToDelete.id, projectToDelete.name);
     setDeleting(true);
     try {
       const projectId = projectToDelete.id;
@@ -245,8 +249,8 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Delete confirmation */}
-      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { if (!open && !deleting) setProjectToDelete(null); }}>
-        <AlertDialogContent>
+      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { console.log("[DELETE] dialog onOpenChange:", open, "projectToDelete:", projectToDelete?.id); if (!open && !deleting) setProjectToDelete(null); }}>
+        <AlertDialogContent className="z-[200]">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete project?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -327,13 +331,13 @@ const Dashboard = () => {
                   {viewMode === "list" ? (
                     <div className="grid gap-3">
                       {grouped.map((g) => (
-                        <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                        <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {grouped.map((g) => (
-                        <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                        <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   )}
