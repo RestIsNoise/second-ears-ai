@@ -8,7 +8,7 @@ const DemoVideo = () => (
           Product demo
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-          See SecondEars in action
+          See SecondEar in action
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
           Upload → Analyze → Fix in minutes

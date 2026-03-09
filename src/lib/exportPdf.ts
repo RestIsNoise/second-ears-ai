@@ -83,7 +83,7 @@ export function exportAnalysisPdf(n: NormalizedFeedback, releaseReadiness: strin
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(150, 150, 150);
-  doc.text("SecondEars", MARGIN, y);
+  doc.text("SecondEar", MARGIN, y);
   const dateStr = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

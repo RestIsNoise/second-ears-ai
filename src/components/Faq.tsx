@@ -20,7 +20,7 @@ const items = [
   },
   {
     q: "Is this feedback for mastering or mixing?",
-    a: "SecondEars is designed primarily for mix-stage evaluation: balance, dynamics, spatial placement, and frequency distribution. That said, many users find it useful for pre-master checks — identifying issues before sending a track to a mastering engineer. We don't replace mastering; we help you arrive with a stronger mix.",
+    a: "SecondEar is designed primarily for mix-stage evaluation: balance, dynamics, spatial placement, and frequency distribution. That said, many users find it useful for pre-master checks — identifying issues before sending a track to a mastering engineer. We don't replace mastering; we help you arrive with a stronger mix.",
   },
   {
     q: "Can I add reference context?",

@@ -37,7 +37,7 @@ const Footer = () => (
           </a>
         </div>
         <p className="text-[10px] text-muted-foreground/30 tracking-wide">
-          © {new Date().getFullYear()} SecondEars. All rights reserved.
+          © {new Date().getFullYear()} SecondEar. All rights reserved.
         </p>
       </div>
     </div>

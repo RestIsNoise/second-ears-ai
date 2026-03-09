@@ -123,7 +123,7 @@ const Terms = () => (
   <LegalPageShell
     title="Terms of Service"
     sections={sections}
-    footnote="These terms may be updated from time to time. Continued use of SecondEars after changes constitutes acceptance."
+    footnote="These terms may be updated from time to time. Continued use of SecondEar after changes constitutes acceptance."
   />
 );
 
