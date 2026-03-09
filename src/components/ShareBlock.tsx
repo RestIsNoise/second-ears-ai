@@ -125,7 +125,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
               <span className="text-[8px] font-bold text-foreground/40 leading-none">SE</span>
             </div>
             <p className="text-[10px] text-muted-foreground/40 tracking-wide">
-              SecondEars — AI speed, human ears
+              SecondEar — AI speed, human ears
             </p>
           </div>
         </div>

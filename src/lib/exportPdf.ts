@@ -282,7 +282,7 @@ export function exportAnalysisPdf(n: NormalizedFeedback, releaseReadiness: strin
   }
 
   const safeName = n.trackName.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40);
-  doc.save(`SecondEars_${safeName}.pdf`);
+  doc.save(`SecondEar_${safeName}.pdf`);
 }
 
 // ── Helpers

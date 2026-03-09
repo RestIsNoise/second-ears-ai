@@ -109,7 +109,7 @@ const SampleFeedback = () => {
             Real output
           </p>
           <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight mb-2.5">
-            See what SecondEars hears
+            See what SecondEar hears
           </h2>
           <p className="text-[13px] text-muted-foreground/65 max-w-md mx-auto leading-relaxed">
             Every analysis returns timestamped issues with concrete next steps.
