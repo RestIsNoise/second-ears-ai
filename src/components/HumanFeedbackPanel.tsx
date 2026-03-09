@@ -24,12 +24,6 @@ interface Comment {
   timestamp_in_track: number;
   text: string;
   created_at: string;
-  upvotes: number;
-  downvotes: number;
-}
-
-interface UserVoteMap {
-  [commentId: string]: 1 | -1;
 }
 
 interface Props {
