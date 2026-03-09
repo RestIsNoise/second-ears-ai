@@ -63,7 +63,7 @@ const sections = [
         </P>
         <div className="mt-4">
           <P>
-            The SecondEars name, logo, interface design, and generated feedback format are our intellectual property and may not be reproduced without permission.
+            The SecondEar name, logo, interface design, and generated feedback format are our intellectual property and may not be reproduced without permission.
           </P>
         </div>
       </>
