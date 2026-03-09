@@ -135,7 +135,7 @@ const TrackGridCard = ({
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
           <button
-            onClick={(e) => onDelete(e, proj)}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(e, proj); }}
             className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
             title="Delete project"
           >
