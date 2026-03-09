@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { AlertCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
+
 const steps = [
   "Uploading track",
   "Reading audio",
@@ -94,28 +96,27 @@ function useSmoothedProgress(targetPercent: number, stopped: boolean) {
   return display;
 }
 
-function useStableRemaining(displayPercent: number) {
-  const [stable, setStable] = useState<number | null>(null);
-  const lastUpdate = useRef(0);
-  const lastValue = useRef<number | null>(null);
+function useElapsedTime(running: boolean) {
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(Date.now());
 
   useEffect(() => {
-    const now = Date.now();
-    if (now - lastUpdate.current < 1200) return;
-    const raw = Math.max(0, Math.round(30 * (1 - displayPercent / 100)));
-    if (lastValue.current === null) {
-      lastValue.current = raw;
-      setStable(raw);
-      lastUpdate.current = now;
-      return;
-    }
-    const clamped = raw > lastValue.current ? Math.min(raw, lastValue.current + 1) : raw;
-    lastValue.current = clamped;
-    setStable(clamped);
-    lastUpdate.current = now;
-  }, [displayPercent]);
+    if (!running) return;
+    startRef.current = Date.now();
+    setElapsed(0);
+    const id = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
 
-  return stable;
+  return elapsed;
+}
+
+function formatElapsed(s: number) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
 interface AnalysisProgressProps {
@@ -129,135 +130,263 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
   const crawlPercent = useProcessingCrawl(currentStep);
   const isProcessing = currentStep === 2;
   const rotatingMessage = useRotatingMessage(isProcessing);
+  const elapsed = useElapsedTime(!error);
 
   const baseTarget = stepBaseTargets[Math.min(currentStep, 3)];
   const targetPercent = error ? 0 : currentStep === 2 ? baseTarget + crawlPercent : baseTarget;
   const displayPercent = useSmoothedProgress(targetPercent, !!error);
-  const stableRemaining = useStableRemaining(displayPercent);
   const activeStep = getActiveStep(displayPercent);
-
-  const remainingStr = (() => {
-    if (stableRemaining === null || stableRemaining <= 0) return "";
-    if (stableRemaining > 60) return `~${Math.ceil(stableRemaining / 60)}m remaining`;
-    return `~${stableRemaining}s remaining`;
-  })();
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 md:py-28 animate-fade-in">
-        <div className="w-20 h-20 rounded-full border border-border-subtle flex items-center justify-center mb-7">
-          <AlertCircle className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+      <div className="flex flex-col items-center justify-center py-16 md:py-20 animate-fade-in">
+        <div
+          className="w-full max-w-md rounded-lg overflow-hidden"
+          style={{
+            border: "1px solid hsl(var(--border-subtle) / 0.6)",
+            backgroundColor: "hsl(var(--card))",
+          }}
+        >
+          {/* Error header */}
+          <div
+            className="px-5 py-3 flex items-center gap-2"
+            style={{ borderBottom: "1px solid hsl(var(--border-subtle) / 0.4)" }}
+          >
+            <AlertCircle className="w-4 h-4 text-destructive" strokeWidth={1.5} />
+            <span
+              className="text-sm font-medium"
+              style={{ color: "hsl(var(--destructive))" }}
+            >
+              Analysis failed
+            </span>
+          </div>
+          <div className="px-5 py-5 flex flex-col items-center">
+            <p className="text-xs text-center mb-5 leading-relaxed" style={{ color: "hsl(var(--muted-foreground))", maxWidth: 280 }}>
+              {error || "Something went wrong. Please try again."}
+            </p>
+            <Button variant="outline" size="sm" className="h-9 px-6 text-xs" onClick={onRetry}>
+              Try again
+            </Button>
+          </div>
         </div>
-        <p className="text-sm font-medium text-foreground mb-1.5">Analysis failed</p>
-        <p className="text-xs text-muted-foreground max-w-[260px] text-center mb-8 leading-relaxed">
-          {error || "Something went wrong. Please try again."}
-        </p>
-        <Button variant="outline" size="sm" className="h-9 px-6 text-xs" onClick={onRetry}>
-          Try again
-        </Button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-20 md:py-24 animate-fade-in">
-      <div className="w-full max-w-[340px] rounded-2xl border border-border-subtle/60 bg-card/80 backdrop-blur-sm px-7 py-9 flex flex-col items-center">
-
-        {/* Title + subtitle */}
-        <div className="flex flex-col items-center mb-6 w-full">
-          <p className="text-[13px] font-medium text-foreground mb-1">
-            Analyzing your mix<DotAnimation />
-          </p>
-          <div className="h-4 flex items-center">
-            {rotatingMessage ? (
-              <p key={rotatingMessage} className="text-[11px] text-muted-foreground/60 animate-fade-in">
-                {rotatingMessage}
-              </p>
-            ) : (
-              <p className="text-[11px] text-muted-foreground/60">Preparing…</p>
-            )}
-          </div>
-        </div>
-
-        {/* Progress bar + percentage */}
-        <div className="w-full flex items-center gap-3 mb-7">
-          <div className="flex-1 h-[3px] rounded-full bg-border-subtle/80 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-foreground transition-[width] duration-300 ease-out"
-              style={{ width: `${displayPercent}%` }}
-            />
+    <div className="flex flex-col items-center justify-center py-12 md:py-16 animate-fade-in">
+      <div
+        className="w-full max-w-md rounded-lg overflow-hidden"
+        style={{
+          border: "1px solid hsl(var(--border-subtle) / 0.6)",
+          backgroundColor: "hsl(var(--card))",
+        }}
+      >
+        {/* ── Header bar ── */}
+        <div
+          className="px-5 py-3 flex items-center justify-between"
+          style={{ borderBottom: "1px solid hsl(var(--border-subtle) / 0.4)" }}
+        >
+          <div className="flex items-center gap-2.5">
+            {/* Pulse indicator */}
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ backgroundColor: "hsl(var(--foreground) / 0.4)" }} />
+              <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: "hsl(var(--foreground) / 0.6)" }} />
+            </span>
+            <span
+              className="text-[13px] font-medium"
+              style={{ color: "hsl(var(--foreground))" }}
+            >
+              Analyzing your mix
+            </span>
           </div>
           <span
-            className="text-foreground/70 tabular-nums shrink-0"
+            className="tabular-nums"
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
+              fontFamily: MONO,
               fontSize: 11,
-              letterSpacing: "-0.01em",
-              minWidth: 32,
-              textAlign: "right",
+              color: "hsl(var(--muted-foreground) / 0.5)",
+              letterSpacing: "0.02em",
             }}
           >
-            {displayPercent}%
+            {formatElapsed(elapsed)}
           </span>
         </div>
 
-        {/* Step checklist */}
-        <div className="space-y-1.5 w-full max-w-[200px] mb-5">
-          {steps.map((label, i) => {
-            const isComplete = i < activeStep;
-            const isActive = i === activeStep;
-            return (
-              <div key={label} className="flex items-center gap-2.5 h-6">
-                <div className="w-4 h-4 flex items-center justify-center shrink-0">
-                  {isComplete ? (
-                    <Check className="w-3 h-3 text-foreground/50" strokeWidth={2} />
-                  ) : (
-                    <div
-                      className={`w-[5px] h-[5px] rounded-full transition-all duration-500 ${
-                        isActive
-                          ? "bg-foreground scale-110"
-                          : "bg-muted-foreground/30"
-                      }`}
-                    />
-                  )}
-                </div>
-                <span
-                  className={`text-[12px] leading-none transition-colors duration-500 ${
-                    isComplete
-                      ? "text-foreground/50"
-                      : isActive
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground/50"
-                  }`}
+        {/* ── Progress module ── */}
+        <div className="px-5 pt-5 pb-4">
+          {/* Percentage + status */}
+          <div className="flex items-baseline justify-between mb-2">
+            <span
+              className="tabular-nums"
+              style={{
+                fontFamily: MONO,
+                fontSize: 28,
+                fontWeight: 600,
+                letterSpacing: "-0.02em",
+                color: "hsl(var(--foreground))",
+                lineHeight: 1,
+              }}
+            >
+              {displayPercent}
+              <span style={{ fontSize: 16, fontWeight: 500, color: "hsl(var(--muted-foreground) / 0.5)" }}>%</span>
+            </span>
+            <div className="h-4 flex items-center">
+              {rotatingMessage ? (
+                <p
+                  key={rotatingMessage}
+                  className="animate-fade-in"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 10,
+                    color: "hsl(var(--muted-foreground) / 0.55)",
+                    letterSpacing: "0.02em",
+                  }}
                 >
-                  {label}
-                </span>
-              </div>
-            );
-          })}
+                  {rotatingMessage}
+                </p>
+              ) : (
+                <p style={{ fontFamily: MONO, fontSize: 10, color: "hsl(var(--muted-foreground) / 0.4)" }}>
+                  Preparing…
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div
+            className="w-full overflow-hidden rounded-full"
+            style={{
+              height: 4,
+              backgroundColor: "hsl(var(--border-subtle) / 0.5)",
+            }}
+          >
+            <div
+              className="h-full rounded-full transition-[width] duration-300 ease-out"
+              style={{
+                width: `${displayPercent}%`,
+                backgroundColor: "hsl(var(--foreground))",
+              }}
+            />
+          </div>
         </div>
 
-        {/* Cancel */}
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="mt-1 h-[40px] px-5 text-[12px] font-medium text-foreground/55 rounded-[11px] border border-foreground/[0.18] bg-transparent hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-150 tracking-wide"
+        {/* ── Divider ── */}
+        <div style={{ height: 1, backgroundColor: "hsl(var(--border-subtle) / 0.3)", margin: "0 20px" }} />
+
+        {/* ── Step checklist ── */}
+        <div className="px-5 py-4">
+          <div className="space-y-0.5">
+            {steps.map((label, i) => {
+              const isComplete = i < activeStep;
+              const isActive = i === activeStep;
+              return (
+                <div
+                  key={label}
+                  className="flex items-center gap-3 rounded-md px-2 py-1.5 transition-all duration-300"
+                  style={{
+                    backgroundColor: isActive ? "hsl(var(--foreground) / 0.04)" : "transparent",
+                  }}
+                >
+                  {/* Indicator */}
+                  <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                    {isComplete ? (
+                      <div
+                        className="w-4 h-4 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: "hsl(var(--foreground) / 0.10)" }}
+                      >
+                        <Check className="w-2.5 h-2.5" style={{ color: "hsl(var(--foreground) / 0.60)" }} strokeWidth={2.5} />
+                      </div>
+                    ) : isActive ? (
+                      <span className="relative flex h-2 w-2">
+                        <span
+                          className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-50"
+                          style={{ backgroundColor: "hsl(var(--foreground) / 0.5)" }}
+                        />
+                        <span
+                          className="relative inline-flex rounded-full h-2 w-2"
+                          style={{ backgroundColor: "hsl(var(--foreground) / 0.7)" }}
+                        />
+                      </span>
+                    ) : (
+                      <div
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: "hsl(var(--muted-foreground) / 0.25)" }}
+                      />
+                    )}
+                  </div>
+
+                  {/* Step number + label */}
+                  <span
+                    className="tabular-nums shrink-0"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 9,
+                      fontWeight: 500,
+                      color: isActive
+                        ? "hsl(var(--foreground) / 0.45)"
+                        : isComplete
+                          ? "hsl(var(--foreground) / 0.30)"
+                          : "hsl(var(--muted-foreground) / 0.25)",
+                      letterSpacing: "0.04em",
+                      width: 14,
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className="text-[12px] transition-colors duration-300"
+                    style={{
+                      fontWeight: isActive ? 500 : 400,
+                      color: isComplete
+                        ? "hsl(var(--foreground) / 0.55)"
+                        : isActive
+                          ? "hsl(var(--foreground) / 0.90)"
+                          : "hsl(var(--muted-foreground) / 0.40)",
+                    }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Footer ── */}
+        <div
+          className="px-5 py-3 flex items-center justify-between"
+          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.3)" }}
+        >
+          <span
+            style={{
+              fontFamily: MONO,
+              fontSize: 10,
+              color: "hsl(var(--muted-foreground) / 0.40)",
+              letterSpacing: "0.02em",
+            }}
           >
-            Cancel analysis
-          </button>
-        )}
+            Usually completes in under 60s
+          </span>
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="text-[11px] font-medium transition-colors duration-100"
+              style={{
+                color: "hsl(var(--muted-foreground) / 0.50)",
+                fontFamily: MONO,
+                letterSpacing: "0.02em",
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "hsl(var(--foreground) / 0.70)"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "hsl(var(--muted-foreground) / 0.50)"}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-const DotAnimation = () => {
-  const [dotCount, setDotCount] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setDotCount((c) => (c + 1) % 4), 500);
-    return () => clearInterval(id);
-  }, []);
-  return <span className="inline-block w-[1.2em] text-left">{".".repeat(dotCount)}</span>;
 };
 
 export default AnalysisProgress;
