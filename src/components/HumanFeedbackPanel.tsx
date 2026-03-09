@@ -39,7 +39,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
-  const [userVotes, setUserVotes] = useState<UserVoteMap>({});
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments + user votes
