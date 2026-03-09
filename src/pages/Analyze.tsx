@@ -107,6 +107,7 @@ const Analyze = () => {
         const insertPayload: any = {
           project_id: projectId,
           mode: n.mode,
+          storage_path: feedbackResult.storagePath || null,
           feedback: {
             overallImpression: n.overallImpression,
             topIssue: n.topIssue,
