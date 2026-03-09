@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Activity, Music, Eye, ArrowRight, MoreVertical, Trash2, AudioLines, Inbox, Archive } from "lucide-react";
+import { Activity, Music, Eye, ArrowRight, MoreVertical, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
   DropdownMenu,
