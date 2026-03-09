@@ -75,7 +75,7 @@ const sections = [
     content: (
       <>
         <P>
-          SecondEars is provided "as is" without warranties of any kind. We do not guarantee that feedback will be error-free, complete, or suitable for any particular purpose. AI-generated analysis is advisory — final creative decisions remain yours.
+          SecondEar is provided "as is" without warranties of any kind. We do not guarantee that feedback will be error-free, complete, or suitable for any particular purpose. AI-generated analysis is advisory — final creative decisions remain yours.
         </P>
         <div className="mt-4">
           <P>
