@@ -540,6 +540,7 @@ const FeedbackDisplay = ({
                   onAddToDo={handleAddToDoFromFeedback}
                   todoItemIds={todoSourceIds}
                   scrollContainerRef={timelineScrollRef}
+                  analysisId={analysisId}
                 />
               )}
               {!hasTimeline && n.timelineItems.length > 0 && (

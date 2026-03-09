@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import CommentVoteButtons from "@/components/CommentVoteButtons";
 
 const formatTime = (s: number) => {
   if (!Number.isFinite(s) || s < 0) return "0:00";
@@ -25,12 +24,6 @@ interface Comment {
   timestamp_in_track: number;
   text: string;
   created_at: string;
-  upvotes: number;
-  downvotes: number;
-}
-
-interface UserVoteMap {
-  [commentId: string]: 1 | -1;
 }
 
 interface Props {
@@ -46,7 +39,6 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
-  const [userVotes, setUserVotes] = useState<UserVoteMap>({});
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments + user votes
@@ -56,27 +48,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
-        .select("*")
+        .select("id, analysis_id, user_id, timestamp_in_track, text, created_at")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
       if (data) setComments(data as unknown as Comment[]);
-
-      // Load user's votes
-      if (user) {
-        const commentIds = (data || []).map((c: any) => c.id);
-        if (commentIds.length > 0) {
-          const { data: votes } = await supabase
-            .from("comment_votes" as any)
-            .select("comment_id, vote")
-            .eq("user_id", user.id)
-            .in("comment_id", commentIds);
-          if (votes) {
-            const map: UserVoteMap = {};
-            (votes as any[]).forEach((v) => { map[v.comment_id] = v.vote as 1 | -1; });
-            setUserVotes(map);
-          }
-        }
-      }
       setLoadingComments(false);
     };
     load();
@@ -98,7 +73,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         .select()
         .single();
       if (!error && data) {
-        setComments((prev) => [...prev, { ...data, upvotes: 0, downvotes: 0 } as unknown as Comment]);
+        setComments((prev) => [...prev, data as unknown as Comment]);
         toast({ title: "Comment added", duration: 1200 });
       }
       onPendingCommentHandled?.();
@@ -128,7 +103,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       return;
     }
 
-    setComments((prev) => [...prev, { ...data, upvotes: 0, downvotes: 0 } as unknown as Comment]);
+    setComments((prev) => [...prev, data as unknown as Comment]);
     setNewText("");
     inputRef.current?.focus();
   }, [newText, analysisId, user, currentTime]);
@@ -215,16 +190,6 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 <p className="text-xs text-foreground/80 leading-relaxed mt-0.5">
                   {c.text}
                 </p>
-                {/* Vote buttons */}
-                <div className="mt-1">
-                  <CommentVoteButtons
-                    commentId={c.id}
-                    userId={user?.id}
-                    initialUpvotes={c.upvotes ?? 0}
-                    initialDownvotes={c.downvotes ?? 0}
-                    initialUserVote={userVotes[c.id] ?? null}
-                  />
-                </div>
               </div>
               {onAddToDo && (
                 <button
