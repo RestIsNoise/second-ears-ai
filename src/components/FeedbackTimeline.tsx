@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { Copy, Check, Plus, AudioLines } from "lucide-react";
+import { Copy, Check, Plus, AudioLines, ChevronDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import type { FeedbackItem } from "@/types/feedback";
 
@@ -24,6 +24,47 @@ const modeBorderColor: Record<string, string> = {
 };
 
 const MONO = "'IBM Plex Mono', monospace";
+
+/* ── Observation with 3-line clamp + expand ── */
+const ClampedObservation = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [isClamped, setIsClamped] = useState(false);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 2);
+    }
+  }, [text]);
+
+  return (
+    <div>
+      <p
+        ref={textRef}
+        className="text-[13px] text-foreground/60 mt-2 max-w-[45ch]"
+        style={{
+          lineHeight: 1.65,
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: expanded ? "unset" : 3,
+          overflow: expanded ? "visible" : "hidden",
+        }}
+      >
+        {text}
+      </p>
+      {isClamped && !expanded && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
+          className="inline-flex items-center gap-0.5 mt-1 text-[11px] text-foreground/40 hover:text-foreground/65 transition-colors"
+        >
+          <ChevronDown className="w-3 h-3" />
+          Expand
+        </button>
+      )}
+    </div>
+  );
+};
 
 const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   const [copied, setCopied] = useState(false);
@@ -148,7 +189,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
                 <div className={`w-2 h-2 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
                 <span
-                  className="text-foreground/45 tabular-nums"
+                  className="text-foreground/50 tabular-nums"
                   style={{
                     fontFamily: MONO,
                     fontSize: 11,
@@ -167,17 +208,18 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 >
                   {item.title}
                 </h3>
+
+                {/* Observation — clamped to 3 lines */}
                 {item.observation && (
-                  <p className="text-[13px] text-foreground/50 mt-2 max-w-[45ch]" style={{ lineHeight: 1.65 }}>
-                    {item.observation}
-                  </p>
+                  <ClampedObservation text={item.observation} />
                 )}
+
+                {/* FIX block — always visible, stronger separator */}
                 {item.fix && (
                   <>
-                    {/* Visual separator between observation and fix */}
                     <div
                       className="my-3"
-                      style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.4)" }}
+                      style={{ height: 2, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
                     />
                     <div className="flex items-start gap-2">
                       <span
@@ -194,7 +236,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       >
                         {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
                       </span>
-                      <p className="text-[13px] text-foreground/65 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
+                      <p className="text-[13px] text-foreground/70 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
                         {item.fix}
                       </p>
                     </div>
