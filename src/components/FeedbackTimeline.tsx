@@ -45,9 +45,9 @@ const ClampedObservation = ({ text }: { text: string }) => {
     <div>
       <p
         ref={textRef}
-        className="text-[13px] text-foreground/60 mt-2 max-w-[45ch]"
+        className="text-[13px] text-foreground/60 mt-1"
         style={{
-          lineHeight: 1.65,
+          lineHeight: 1.55,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
