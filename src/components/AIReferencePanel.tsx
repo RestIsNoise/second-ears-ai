@@ -146,18 +146,57 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
         </span>
       </div>
 
-      {/* ── Metrics Comparison Table ── */}
+      {/* ── Metrics Analysis Block ── */}
       {metricEntries.length > 0 && (
-        <div className="rounded-lg overflow-hidden">
-          {/* Table header */}
+        <div className="rounded-xl border-2 border-border bg-card/50 overflow-hidden">
+          {/* Section Header */}
+          <div className="bg-secondary/30 border-b border-border px-4 py-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/75" style={{ fontFamily: MONO }}>
+              Metric Comparison
+            </h3>
+          </div>
+
+          {/* Summary Strip */}
+          <div className="px-4 py-2.5 bg-secondary/15 border-b border-border/50">
+            {(() => {
+              const deltas = metricEntries.map(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0));
+              const maxDelta = Math.max(...deltas);
+              const minDelta = Math.min(...deltas.filter(d => d > 0));
+              const biggestGapMetric = metricEntries.find(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0) === maxDelta)?.[0];
+              const closestMatch = metricEntries.find(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0) === minDelta)?.[0];
+              
+              return (
+                <div className="flex items-center gap-3 flex-wrap">
+                  {biggestGapMetric && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
+                      <span className="text-[10px] text-foreground/60" style={{ fontFamily: MONO }}>
+                        Biggest gap: <span className="text-foreground/80 font-semibold">{METRIC_LABELS[biggestGapMetric] || biggestGapMetric}</span>
+                      </span>
+                    </div>
+                  )}
+                  {closestMatch && closestMatch !== biggestGapMetric && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400/60" />
+                      <span className="text-[10px] text-foreground/60" style={{ fontFamily: MONO }}>
+                        Closest match: <span className="text-foreground/80 font-semibold">{METRIC_LABELS[closestMatch] || closestMatch}</span>
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Table Header */}
           <div
-            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 text-[9px] uppercase tracking-[0.1em] font-bold text-muted-foreground/50 px-3 py-2"
-            style={{ fontFamily: MONO, borderBottom: "1px solid hsl(var(--border) / 0.3)" }}
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 text-[10px] uppercase tracking-[0.12em] font-bold text-foreground/70 px-4 py-3 bg-secondary/20"
+            style={{ fontFamily: MONO }}
           >
             <span>Metric</span>
-            <span className="text-right w-[52px]">Yours</span>
-            <span className="text-right w-[52px]">Ref</span>
-            <span className="text-right w-[52px]">Δ</span>
+            <span className="text-right w-[60px]">Yours</span>
+            <span className="text-right w-[60px]">Reference</span>
+            <span className="text-right w-[60px] font-black">Delta</span>
           </div>
 
           {/* Rows */}
@@ -166,44 +205,48 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
             const d = typeof diff.delta === "number" ? diff.delta : parseFloat(String(diff.delta)) || 0;
             const sign = d > 0 ? "+" : "";
             const barWidth = Math.min(100, (Math.abs(d) / maxAbsDelta) * 100);
+            const isEven = idx % 2 === 0;
 
             return (
               <div
                 key={key}
-                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[7px] transition-colors relative"
+                className={`grid grid-cols-[1fr_auto_auto_auto] gap-x-4 items-center px-4 py-3 transition-colors relative ${
+                  isEven ? "bg-secondary/8" : "bg-transparent"
+                }`}
                 style={{
-                  borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--border) / 0.15)" : "none",
+                  borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--border) / 0.1)" : "none",
                 }}
               >
-                {/* Mini delta bar — background indicator */}
+                {/* Mini delta bar */}
                 <div
                   className="absolute inset-y-0 left-0 pointer-events-none"
                   style={{
-                    width: `${barWidth * 0.4}%`,
-                    backgroundColor: deltaBgColor(d),
-                    borderRadius: "0 3px 3px 0",
+                    width: `${Math.max(4, barWidth * 0.35)}%`,
+                    backgroundColor: deltaBarColor(d),
+                    opacity: 0.4,
+                    borderRadius: "0 2px 2px 0",
                   }}
                 />
                 <span
-                  className="text-[10px] font-medium text-foreground/65 uppercase truncate relative z-[1]"
+                  className="text-[11px] font-semibold text-foreground/80 uppercase truncate relative z-[1]"
                   style={{ fontFamily: MONO }}
                 >
                   {label}
                 </span>
                 <span
-                  className="text-[10px] text-foreground/55 text-right tabular-nums w-[52px] relative z-[1]"
+                  className="text-[11px] text-foreground/70 text-right tabular-nums w-[60px] relative z-[1] font-medium"
                   style={{ fontFamily: MONO }}
                 >
                   {diff.user}
                 </span>
                 <span
-                  className="text-[10px] text-foreground/55 text-right tabular-nums w-[52px] relative z-[1]"
+                  className="text-[11px] text-foreground/70 text-right tabular-nums w-[60px] relative z-[1] font-medium"
                   style={{ fontFamily: MONO }}
                 >
                   {diff.reference}
                 </span>
                 <span
-                  className={cn("text-[11px] text-right font-bold tabular-nums w-[52px] relative z-[1]", deltaColor(d))}
+                  className={cn("text-[13px] text-right font-black tabular-nums w-[60px] relative z-[1]", deltaColor(d))}
                   style={{ fontFamily: MONO }}
                 >
                   {sign}{typeof d === "number" ? d.toFixed(1) : d}
