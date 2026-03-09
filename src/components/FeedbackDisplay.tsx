@@ -171,6 +171,7 @@ const FeedbackDisplay = ({
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
   const [showArrangement, setShowArrangement] = useState(false);
+  const arrangementRef = useRef<HTMLDivElement>(null);
   const [refModalOpen, setRefModalOpen] = useState(false);
   const [refLoading, setRefLoading] = useState(false);
   const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
@@ -839,13 +840,6 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-
-      {showArrangement && (
-        <div className="mt-8 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-4 shadow-sm transition-all duration-200 overflow-hidden">
-          <AlsAnalyzer />
-        </div>
-      )}
-
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
         <div className="mt-10 mb-6 px-0.5">
@@ -1041,6 +1035,20 @@ const FeedbackDisplay = ({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ═══ ARRANGEMENT — bottom of page, full width ═══ */}
+      {showArrangement && (
+        <div
+          ref={arrangementRef}
+          className="mt-10 rounded-lg border border-border/60 bg-card/30 p-2 sm:p-3 shadow-sm transition-all duration-200 overflow-hidden"
+        >
+          <AlsAnalyzer
+            onLoaded={() => {
+              arrangementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          />
         </div>
       )}
     </div>
