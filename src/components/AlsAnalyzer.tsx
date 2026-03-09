@@ -533,8 +533,8 @@ const AlsAnalyzer = () => {
                         className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
                       >
                         {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
-                          : <ChevronDown className="w-3 h-3 text-muted-foreground/50" />}
+                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/60" />
+                          : <ChevronDown className="w-3 h-3 text-muted-foreground/60" />}
                       </button>
                     )}
 
@@ -547,10 +547,10 @@ const AlsAnalyzer = () => {
                     {/* Track name */}
                     <span
                       className={cn(
-                        "text-[10px] truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/65" : "text-foreground/45"
+                        "text-[11px] truncate flex-1 leading-none",
+                        isGroup ? "font-semibold text-foreground/80" : "text-foreground/60"
                       )}
-                      style={{ fontFamily: MONO_FONT }}
+                      style={{ fontFamily: MONO_FONT, letterSpacing: "0.01em" }}
                     >
                       {track.name}
                     </span>
