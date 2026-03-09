@@ -29,14 +29,16 @@ interface AlsSession {
 
 /* ── Monochrome palette (no rainbow) ── */
 const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
-const CLIP_FILL = "0 0% 24%";
-const CLIP_FILL_ALT = "0 0% 19%";
+const CLIP_FILL_1 = "0 0% 28%";   /* lightest */
+const CLIP_FILL_2 = "0 0% 22%";   /* mid */
+const CLIP_FILL_3 = "0 0% 17%";   /* darkest */
+
 const STRIP_COLOR = "hsl(0 0% 100% / 0.07)";
 
 /* ── Constants ── */
-const ROW_H = 28;
-const LABEL_W = 160;
-const RULER_H = 26;
+const ROW_H = 30;
+const LABEL_W = 170;
+const RULER_H = 28;
 const PX_PER_BEAT = 4;
 const MAX_VIEW_H = 420;
 
@@ -313,27 +315,33 @@ const AlsAnalyzer = () => {
      └──────────────────────────┴──────────┘
   */
   return (
-    <div className="space-y-2.5">
-      {/* Transport strip */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Music className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
+    <div className="space-y-0">
+      {/* Transport strip — clean row */}
+      <div
+        className="flex items-center justify-between px-3 py-2.5 rounded-t-lg"
+        style={{ backgroundColor: "hsl(var(--secondary) / 0.6)", borderBottom: "1px solid hsl(var(--border) / 0.2)" }}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <Music className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+          <span
+            className="text-[12px] font-semibold truncate max-w-[220px] text-foreground/80"
+            style={{ fontFamily: MONO_FONT }}
+          >
+            {fileName}
+          </span>
           {bpm > 0 && (
-            <Badge variant="secondary" className="text-[10px] font-mono tracking-wider">
+            <span className="text-[10px] text-muted-foreground/60 font-mono tabular-nums shrink-0">
               {Math.round(bpm)} BPM
-            </Badge>
+            </span>
           )}
-          <Badge variant="outline" className="text-[10px] font-mono tracking-wider">
-            {allTracks.length} tracks
-          </Badge>
-          <span className="text-[10px] text-muted-foreground/45 font-mono">
-            {beatsToTime(totalBeats, bpm)}
+          <span className="text-[10px] text-muted-foreground/40 font-mono shrink-0">
+            {allTracks.length} tracks · {beatsToTime(totalBeats, bpm)}
           </span>
         </div>
         <button
           onClick={() => { setSession(null); setFileName(null); }}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="text-[11px] text-muted-foreground/50 hover:text-foreground/70 transition-colors shrink-0 ml-3"
+          style={{ fontFamily: MONO_FONT }}
         >
           Upload new
         </button>
@@ -350,7 +358,7 @@ const AlsAnalyzer = () => {
           <div
             ref={rulerRef}
             className="flex-1 overflow-hidden relative"
-            style={{ borderBottom: "1px solid hsl(var(--border) / 0.15)" }}
+            style={{ borderBottom: "1px solid hsl(var(--border) / 0.2)" }}
           >
             <div className="relative" style={{ width: totalWidth, height: RULER_H }}>
               {rulerTicks.map((tick, i) => (
@@ -358,16 +366,23 @@ const AlsAnalyzer = () => {
                   <div
                     className="absolute bottom-0 w-px"
                     style={{
-                      height: tick.major ? 10 : 4,
+                      height: tick.major ? 14 : 5,
                       backgroundColor: tick.major
-                        ? "hsl(var(--foreground) / 0.12)"
-                        : "hsl(var(--foreground) / 0.05)",
+                        ? "hsl(var(--foreground) / 0.25)"
+                        : "hsl(var(--foreground) / 0.07)",
                     }}
                   />
                   {tick.label && (
                     <span
-                      className="absolute top-[5px] left-[3px] text-[8px] text-muted-foreground/40 select-none whitespace-nowrap"
-                      style={{ fontFamily: MONO_FONT }}
+                      className="absolute whitespace-nowrap tabular-nums select-none"
+                      style={{
+                        fontFamily: MONO_FONT,
+                        fontSize: 9,
+                        fontWeight: 500,
+                        color: "hsl(var(--foreground) / 0.55)",
+                        bottom: 16,
+                        left: 3,
+                      }}
                     >
                       {tick.label}
                     </span>
@@ -379,14 +394,14 @@ const AlsAnalyzer = () => {
 
           {/* Label column header (RIGHT) */}
           <div
-            className="shrink-0 flex items-end px-3 pb-1"
+            className="shrink-0 flex items-end px-3 pb-1.5"
             style={{
               width: LABEL_W,
-              borderLeft: "1px solid hsl(var(--border) / 0.25)",
+              borderLeft: "1px solid hsl(var(--border) / 0.2)",
             }}
           >
             <span
-              className="text-[7px] uppercase tracking-[0.14em] text-muted-foreground/35 font-medium select-none"
+              className="text-[8px] uppercase tracking-[0.12em] text-muted-foreground/45 font-medium select-none"
               style={{ fontFamily: MONO_FONT }}
             >
               Tracks
@@ -438,7 +453,8 @@ const AlsAnalyzer = () => {
                     {track.clips.map((clip, ci) => {
                       const left = clip.start * PX_PER_BEAT;
                       const w = Math.max((clip.resolvedEnd - clip.start) * PX_PER_BEAT, 3);
-                      const fill = ci % 2 === 0 ? CLIP_FILL : CLIP_FILL_ALT;
+                      const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
+                      const fill = fills[ci % 3];
                       return (
                         <div
                           key={ci}
@@ -517,8 +533,8 @@ const AlsAnalyzer = () => {
                         className="shrink-0 w-4 h-4 flex items-center justify-center rounded-sm hover:bg-foreground/[0.06] transition-colors"
                       >
                         {collapsedGroups.has(track.name)
-                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
-                          : <ChevronDown className="w-3 h-3 text-muted-foreground/50" />}
+                          ? <ChevronRight className="w-3 h-3 text-muted-foreground/60" />
+                          : <ChevronDown className="w-3 h-3 text-muted-foreground/60" />}
                       </button>
                     )}
 
@@ -531,10 +547,10 @@ const AlsAnalyzer = () => {
                     {/* Track name */}
                     <span
                       className={cn(
-                        "text-[10px] truncate flex-1 leading-none",
-                        isGroup ? "font-semibold text-foreground/65" : "text-foreground/45"
+                        "text-[11px] truncate flex-1 leading-none",
+                        isGroup ? "font-semibold text-foreground/80" : "text-foreground/60"
                       )}
-                      style={{ fontFamily: MONO_FONT }}
+                      style={{ fontFamily: MONO_FONT, letterSpacing: "0.01em" }}
                     >
                       {track.name}
                     </span>
