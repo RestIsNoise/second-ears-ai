@@ -453,7 +453,8 @@ const AlsAnalyzer = () => {
                     {track.clips.map((clip, ci) => {
                       const left = clip.start * PX_PER_BEAT;
                       const w = Math.max((clip.resolvedEnd - clip.start) * PX_PER_BEAT, 3);
-                      const fill = ci % 2 === 0 ? CLIP_FILL : CLIP_FILL_ALT;
+                      const fills = [CLIP_FILL_1, CLIP_FILL_2, CLIP_FILL_3];
+                      const fill = fills[ci % 3];
                       return (
                         <div
                           key={ci}
