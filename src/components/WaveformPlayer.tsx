@@ -71,11 +71,11 @@ const DECK_COLORS = {
   },
 };
 
-const SHELL_BG = "#141414";
-const LANE_BG = "#0F0F0F";
-const DIVIDER = "rgba(255,255,255,0.06)";
-const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
-const BEVEL_DARK = "rgba(0,0,0,0.4)";
+const SHELL_BG = "#1C1C1E";
+const LANE_BG = "#141416";
+const DIVIDER = "rgba(255,255,255,0.08)";
+const BEVEL_LIGHT = "rgba(255,255,255,0.05)";
+const BEVEL_DARK = "rgba(0,0,0,0.35)";
 
 /* ── Time ruler helpers ── */
 const RULER_HEIGHT = 20;

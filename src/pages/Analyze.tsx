@@ -197,7 +197,7 @@ const Analyze = () => {
           )}
         </div>
       </main>
-      {result ? <CompactFooter /> : <Footer />}
+      {!result && <Footer />}
     </div>
   );
 };

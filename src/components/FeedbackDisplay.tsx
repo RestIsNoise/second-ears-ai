@@ -822,7 +822,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-8 pb-4 w-full overflow-hidden">
+        <div className="mt-6 pb-0 w-full overflow-hidden">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -840,10 +840,13 @@ const FeedbackDisplay = ({
         </div>
       )}
 
+      {/* ═══ TRANSITION DIVIDER ═══ */}
+      <div className="mt-5 mb-0 h-px w-full" style={{ background: "linear-gradient(to right, transparent, hsl(var(--border)) 20%, hsl(var(--border)) 80%, transparent)" }} />
+
       {/* ═══ OVERALL IMPRESSION ═══ */}
       {n.overallImpression && (
-        <div className="mt-10 mb-6 px-0.5">
-          <p className="text-[15px] text-foreground/60 leading-relaxed max-w-[54ch]" style={{ lineHeight: 1.7 }}>
+        <div className="mt-5 mb-4 px-0.5">
+          <p className="text-[14px] text-foreground/70 max-w-[48ch]" style={{ lineHeight: 1.75 }}>
             {n.overallImpression}
           </p>
         </div>
@@ -883,7 +886,7 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-8 flex border border-border/50 rounded-lg overflow-hidden bg-card/30" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04)" }}>
+      <div className="mt-5 flex border border-border/60 rounded-[10px] overflow-hidden bg-card/50" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)" }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
@@ -963,7 +966,7 @@ const FeedbackDisplay = ({
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div className={cn(
-          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/40",
+          "mt-5 grid gap-4 pt-4 border-t border-border-subtle/50",
           n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
         )}>
           {n.whatWorks.length > 0 && (

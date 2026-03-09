@@ -6,11 +6,11 @@ import type { WaveformMarker } from "@/types/feedback";
 import type { FrequencyData } from "@/lib/parseFrequencyData";
 
 const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
-const SHELL_BG = "#141414";
-const MIXER_BG = "#0E0E0E";
-const DIVIDER = "rgba(255,255,255,0.06)";
-const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
-const BEVEL_DARK = "rgba(0,0,0,0.4)";
+const SHELL_BG = "#1C1C1E";
+const MIXER_BG = "#151517";
+const DIVIDER = "rgba(255,255,255,0.08)";
+const BEVEL_LIGHT = "rgba(255,255,255,0.05)";
+const BEVEL_DARK = "rgba(0,0,0,0.35)";
 const ACCEPTED_FORMATS = ".mp3,.wav,.aiff,.aif";
 const DECK_A_COLOR = "#9A9590";  // warm charcoal/smoke
 const DECK_B_COLOR = "#78A8B2";  // desaturated teal
@@ -213,10 +213,10 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     <div
       className="overflow-hidden"
       style={{
-        borderRadius: 6,
+        borderRadius: 10,
         border: `1px solid ${DIVIDER}`,
         backgroundColor: SHELL_BG,
-        boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, 0 4px 16px rgba(0,0,0,0.35)`,
+        boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, 0 4px 16px rgba(0,0,0,0.25)`,
       }}
     >
       <input

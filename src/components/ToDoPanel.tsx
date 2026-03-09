@@ -149,21 +149,21 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
 
         {/* Empty state — card with icon + CTA */}
         {!loading && filtered.length === 0 && (
-          <div className="flex items-center justify-center py-10 px-4">
+          <div className="flex items-center justify-center py-6 px-3">
             <div
-              className="flex flex-col items-center gap-3 rounded-xl border border-dashed px-6 py-8 w-full max-w-[220px]"
-              style={{ borderColor: "rgba(180, 170, 155, 0.35)", backgroundColor: "rgba(245, 242, 238, 0.5)" }}
+              className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-4 py-5 w-full max-w-[200px]"
+              style={{ borderColor: "rgba(180, 170, 155, 0.3)", backgroundColor: "rgba(245, 242, 238, 0.4)" }}
             >
-              <ClipboardList className="w-7 h-7" style={{ color: "rgba(140, 130, 115, 0.4)" }} />
+              <ClipboardList className="w-5 h-5" style={{ color: "rgba(140, 130, 115, 0.35)" }} />
               <p
-                className="text-[12px] text-center leading-snug"
-                style={{ color: "rgba(90, 82, 70, 0.65)", fontFamily: SERIF_FONT }}
+                className="text-[11px] text-center leading-snug"
+                style={{ color: "rgba(90, 82, 70, 0.6)", fontFamily: SERIF_FONT }}
               >
                 {filter === "done" ? "No completed tasks yet" : filter === "open" ? "All tasks done!" : "Track your mix fixes"}
               </p>
               <button
                 onClick={() => inputRef.current?.focus()}
-                className="rounded-full px-4 py-1.5 text-[11px] font-medium transition-all duration-150"
+                className="rounded-full px-3 py-1 text-[10px] font-medium transition-all duration-150"
                 style={{
                   fontFamily: SERIF_FONT,
                   backgroundColor: "rgba(60, 55, 45, 0.85)",
