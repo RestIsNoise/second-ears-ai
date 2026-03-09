@@ -327,7 +327,36 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                   opacity: 0.50,
                 }}
               />
-...
+              {/* Center detent */}
+              <div
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none"
+                style={{
+                  left: "50%",
+                  width: 1,
+                  height: 10,
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                  borderRadius: 1,
+                }}
+              />
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={crossfade}
+                onChange={handleCrossfadeChange}
+                className="w-full crossfader-input"
+                style={{
+                  height: 22,
+                  WebkitAppearance: "none",
+                  appearance: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  position: "relative",
+                  zIndex: 2,
+                }}
+              />
+            </div>
+
             {/* B label */}
             <span
               className="shrink-0 uppercase tabular-nums"
