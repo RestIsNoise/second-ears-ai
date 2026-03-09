@@ -59,8 +59,8 @@ interface GroupedProject {
   lastUpdated: string;
 }
 
-/* ─── Track Card ─── */
-const TrackCard = ({
+/* ─── Track Row (list view) ─── */
+const TrackRow = ({
   grouped,
   onDelete,
 }: {
@@ -77,56 +77,99 @@ const TrackCard = ({
       to={`/project/${proj.id}`}
       className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all"
     >
-      {/* Audio icon */}
       <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-10 h-10 rounded-lg bg-muted/60">
         <AudioLines className="w-5 h-5 text-muted-foreground" />
       </div>
-
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-1">
-          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">
-            {proj.name}
-          </h3>
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}
-          >
-            <ModeIcon className="w-3 h-3" />
-            {mode}
+          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
+          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
+            <ModeIcon className="w-3 h-3" />{mode}
           </span>
           {versionCount > 1 && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-              v{latestAnalysis.version}
-            </span>
+            <span className="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">v{latestAnalysis.version}</span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground/60">
-          {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
-        </p>
+        <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
-
-      {/* Actions */}
       <DropdownMenu>
-        <DropdownMenuTrigger
-          asChild
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
+        <DropdownMenuTrigger asChild onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
           <button className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
             <MoreVertical className="w-4 h-4 text-muted-foreground" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            className="text-destructive focus:text-destructive"
-            onClick={(e) => onDelete(e, proj)}
-          >
-            <Trash2 className="w-3.5 h-3.5 mr-2" />
-            Delete
+          <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => onDelete(e, proj)}>
+            <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+    </Link>
+  );
+};
+
+/* ─── Track Grid Card ─── */
+const TrackGridCard = ({
+  grouped,
+  onDelete,
+}: {
+  grouped: GroupedProject;
+  onDelete: (e: React.MouseEvent, p: ProjectRow) => void;
+}) => {
+  const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
+  const mode = latestAnalysis.mode || "technical";
+  const ModeIcon = modeIcons[mode] || Activity;
+  const colorClass = modeColors[mode] || modeColors.technical;
+
+  return (
+    <Link
+      to={`/project/${proj.id}`}
+      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden"
+    >
+      {/* Waveform placeholder */}
+      <div className="h-20 bg-muted/40 flex items-center justify-center border-b border-border/40">
+        <div className="flex items-end gap-[2px] h-10">
+          {Array.from({ length: 32 }).map((_, i) => {
+            const h = Math.sin((i / 31) * Math.PI) * 28 + 4 + Math.random() * 6;
+            return (
+              <div
+                key={i}
+                className="w-[3px] rounded-sm bg-foreground/10 group-hover:bg-foreground/15 transition-colors"
+                style={{ height: h }}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="p-4 flex-1 flex flex-col">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+              <button className="p-0.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all shrink-0">
+                <MoreVertical className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => onDelete(e, proj)}>
+                <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${colorClass}`}>
+            <ModeIcon className="w-2.5 h-2.5" />{mode}
+          </span>
+          {versionCount > 1 && (
+            <span className="inline-flex items-center rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">v{latestAnalysis.version}</span>
+          )}
+        </div>
+
+        <p className="text-[11px] text-muted-foreground/50 mt-auto pt-2">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+      </div>
     </Link>
   );
 };
