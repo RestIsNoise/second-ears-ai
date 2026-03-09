@@ -165,114 +165,128 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
   }
 
   return (
-    <div ref={containerRef} className="space-y-3">
-      {sorted.map((item) => {
-        const isActive = activeItemId === item.id;
-        const alreadyAdded = todoItemIds?.has(item.id);
-        const borderColor = modeBorderColor[item.mode] || "border-l-foreground/20";
+    <TooltipProvider>
+      <div ref={containerRef} className="space-y-3">
+        {sorted.map((item) => {
+          const isActive = activeItemId === item.id;
+          const alreadyAdded = todoItemIds?.has(item.id);
+          const borderColor = modeBorderColor[item.mode] || "border-l-foreground/20";
 
-        return (
-          <div
-            key={item.id}
-            ref={(el) => {
-              if (el) itemRefs.current.set(item.id, el);
-              else itemRefs.current.delete(item.id);
-            }}
-            onClick={() => onItemClick(item)}
-            style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
-            className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 p-4 transition-all duration-200 cursor-pointer ${
-              isActive
-                ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
-                : "bg-card/60 hover:bg-secondary/30"
-            }`}
-          >
-            {/* Hover-only action buttons — top right */}
-            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              {onAddToDo && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!alreadyAdded) onAddToDo(item);
-                  }}
-                  disabled={alreadyAdded}
-                  className={`inline-flex items-center gap-0.5 text-[10px] transition-colors shrink-0 ${
-                    alreadyAdded
-                      ? "text-muted-foreground/30 cursor-default"
-                      : "text-muted-foreground/50 hover:text-foreground/70"
-                  }`}
-                  title={alreadyAdded ? "Already in To-Do" : "Add to To-Do list"}
-                >
-                  {alreadyAdded ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
-                  <span>{alreadyAdded ? "Added" : "To-Do"}</span>
-                </button>
-              )}
-              <CopyFixInline item={item} />
-            </div>
-
-            <div className="flex items-start gap-3">
-              {/* Timestamp column */}
-              <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
-                <div className={`w-2 h-2 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
-                <span
-                  className="text-foreground/50 tabular-nums"
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 11,
-                    letterSpacing: "0.01em",
-                  }}
-                >
-                  @{formatTime(item.timestampSec)}
-                </span>
+          return (
+            <div
+              key={item.id}
+              ref={(el) => {
+                if (el) itemRefs.current.set(item.id, el);
+                else itemRefs.current.delete(item.id);
+              }}
+              onClick={() => onItemClick(item)}
+              style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
+              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 p-4 transition-all duration-200 cursor-pointer ${
+                isActive
+                  ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
+                  : "bg-card/60 hover:bg-secondary/30"
+              }`}
+            >
+              {/* Hover-only action buttons — top right */}
+              <div className="absolute top-2.5 right-2.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {onAddToDo && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!alreadyAdded) onAddToDo(item);
+                    }}
+                    disabled={alreadyAdded}
+                    className={`inline-flex items-center gap-0.5 text-[10px] transition-colors shrink-0 ${
+                      alreadyAdded
+                        ? "text-muted-foreground/30 cursor-default"
+                        : "text-muted-foreground/50 hover:text-foreground/70"
+                    }`}
+                    title={alreadyAdded ? "Already in To-Do" : "Add to To-Do list"}
+                  >
+                    {alreadyAdded ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                    <span>{alreadyAdded ? "Added" : "To-Do"}</span>
+                  </button>
+                )}
+                <CopyFixInline item={item} />
               </div>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0 pr-12 max-w-[50ch]">
-                <h3
-                  className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
-                  title={item.title}
-                >
-                  {item.title}
-                </h3>
+              <div className="flex items-start gap-3">
+                {/* Timestamp column */}
+                <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
+                  <div className={`w-2 h-2 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
+                  <span
+                    className="text-foreground/50 tabular-nums"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 11,
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    @{formatTime(item.timestampSec)}
+                  </span>
+                </div>
 
-                {/* Observation — clamped to 3 lines */}
-                {item.observation && (
-                  <ClampedObservation text={item.observation} />
-                )}
+                {/* Content */}
+                <div className="flex-1 min-w-0 pr-12 max-w-[50ch]">
+                  <h3
+                    className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
+                    title={item.title}
+                  >
+                    {item.title}
+                  </h3>
 
-                {/* FIX block — always visible, stronger separator */}
-                {item.fix && (
-                  <>
-                    <div
-                      className="my-3"
-                      style={{ height: 2, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
-                    />
-                    <div className="flex items-start gap-2">
-                      <span
-                        className="shrink-0 mt-0.5 inline-flex items-center rounded px-2 py-[3px]"
-                        style={{
-                          fontFamily: MONO,
-                          fontSize: 9,
-                          fontWeight: 700,
-                          letterSpacing: "0.05em",
-                          lineHeight: 1,
-                          backgroundColor: "hsl(var(--foreground) / 0.9)",
-                          color: "hsl(var(--background))",
-                        }}
-                      >
-                        {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
-                      </span>
-                      <p className="text-[13px] text-foreground/70 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
-                        {item.fix}
-                      </p>
+                  {/* Observation — clamped to 3 lines */}
+                  {item.observation && (
+                    <ClampedObservation text={item.observation} />
+                  )}
+
+                  {/* FIX block — always visible, stronger separator */}
+                  {item.fix && (
+                    <>
+                      <div
+                        className="my-3"
+                        style={{ height: 2, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
+                      />
+                      <div className="flex items-start gap-2">
+                        <span
+                          className="shrink-0 mt-0.5 inline-flex items-center rounded px-2 py-[3px]"
+                          style={{
+                            fontFamily: MONO,
+                            fontSize: 9,
+                            fontWeight: 700,
+                            letterSpacing: "0.05em",
+                            lineHeight: 1,
+                            backgroundColor: "hsl(var(--foreground) / 0.9)",
+                            color: "hsl(var(--background))",
+                          }}
+                        >
+                          {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
+                        </span>
+                        <p className="text-[13px] text-foreground/70 max-w-[42ch]" style={{ lineHeight: 1.65 }}>
+                          {item.fix}
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Vote buttons */}
+                  {analysisId && (
+                    <div className="mt-2">
+                      <FeedbackVoteButtons
+                        feedbackItemId={item.id}
+                        analysisId={analysisId}
+                        userId={user?.id}
+                        initialUserVote={userVotes[item.id] ?? null}
+                      />
                     </div>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </TooltipProvider>
   );
 };
 
