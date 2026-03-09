@@ -28,17 +28,31 @@ interface AlsSession {
   tracks: AlsTrack[];
 }
 
-/* ── Monochrome palette ── */
+/* ── Ableton-style DAW palette (flat, no glow/blur) ── */
 const MONO_FONT = "'DM Mono', 'JetBrains Mono', monospace";
-const CLIP_FILL_1 = "0 0% 32%";
-const CLIP_FILL_2 = "0 0% 24%";
-const CLIP_FILL_3 = "0 0% 18%";
+const BG_MAIN = "#1D1F23";
+const BG_HEADER = "#282B30";
+const BG_RULER = "#252830";
+const BG_LANE_A = "#23262B";
+const BG_LANE_B = "#202329";
+const BG_GROUP = "#2A2D33";
+const GRID_LINE = "#3A3F47";
+const GRID_MINOR = "#2E3238";
+const TEXT_PRIMARY = "#D5D9E0";
+const TEXT_SECONDARY = "#A9B0BC";
+const TEXT_DIM = "#7B8290";
+const CLIP_A = "#7C8594";
+const CLIP_B = "#636B78";
+const CLIP_C = "#8B92A0";
+const ACCENT = "#BFC7D6";
+const BORDER_MAIN = "#3A3F47";
+const BORDER_SUBTLE = "#2E3238";
 
 /* ── Constants ── */
-const LABEL_W = 150;
-const RULER_H = 24;
-const OVERVIEW_ROW_H = 18;
-const DETAIL_ROW_H = 26;
+const LABEL_W = 155;
+const RULER_H = 26;
+const OVERVIEW_ROW_H = 22;
+const DETAIL_ROW_H = 28;
 
 /* ── Helpers ── */
 function beatsToTime(beats: number, bpm: number): string {
