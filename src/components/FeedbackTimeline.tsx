@@ -1,6 +1,10 @@
 import { useRef, useEffect, useState } from "react";
 import { Copy, Check, Plus, AudioLines, ChevronDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import FeedbackVoteButtons from "@/components/FeedbackVoteButtons";
+import { supabase } from "@/lib/supabaseClient";
+import { useAuth } from "@/hooks/useAuth";
 import type { FeedbackItem } from "@/types/feedback";
 
 const formatTime = (s: number) => {
