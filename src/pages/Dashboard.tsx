@@ -321,11 +321,39 @@ const Dashboard = () => {
               {grouped.length === 0 ? (
                 <EmptyState icon={AudioLines} message="No analyses yet. Upload a track to get started." />
               ) : (
-                <div className="grid gap-3">
-                  {grouped.map((g) => (
-                    <TrackCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
-                  ))}
-                </div>
+                <>
+                  {/* View toggle */}
+                  <div className="flex items-center justify-end gap-1 mb-4">
+                    <button
+                      onClick={() => { setViewMode("list"); localStorage.setItem("dashboard-view", "list"); }}
+                      className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      title="List view"
+                    >
+                      <List className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => { setViewMode("grid"); localStorage.setItem("dashboard-view", "grid"); }}
+                      className={`p-1.5 rounded-md transition-colors ${viewMode === "grid" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      title="Grid view"
+                    >
+                      <LayoutGrid className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {viewMode === "list" ? (
+                    <div className="grid gap-3">
+                      {grouped.map((g) => (
+                        <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {grouped.map((g) => (
+                        <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} />
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </TabsContent>
 
