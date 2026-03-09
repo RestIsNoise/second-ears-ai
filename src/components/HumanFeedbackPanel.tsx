@@ -191,16 +191,6 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 <p className="text-xs text-foreground/80 leading-relaxed mt-0.5">
                   {c.text}
                 </p>
-                {/* Vote buttons */}
-                <div className="mt-1">
-                  <CommentVoteButtons
-                    commentId={c.id}
-                    userId={user?.id}
-                    initialUpvotes={c.upvotes ?? 0}
-                    initialDownvotes={c.downvotes ?? 0}
-                    initialUserVote={userVotes[c.id] ?? null}
-                  />
-                </div>
               </div>
               {onAddToDo && (
                 <button
