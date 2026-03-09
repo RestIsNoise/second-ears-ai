@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,17 +7,8 @@ import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Activity, Music, Eye, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 const modeIcons: Record<string, typeof Activity> = {
   technical: Activity,
@@ -89,7 +80,7 @@ const TrackRow = ({
         <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
       </div>
       <button
-        onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked row:", proj.id, proj.name); onDelete(proj); }}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
         className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
         title="Delete project"
       >
@@ -139,7 +130,7 @@ const TrackGridCard = ({
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
           <button
-            onClick={(e) => { e.stopPropagation(); console.log("[DELETE] clicked grid:", proj.id, proj.name); onDelete(proj); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
             className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
             title="Delete project"
           >
@@ -170,13 +161,66 @@ const EmptyState = ({ icon: Icon, message }: { icon: typeof Inbox; message: stri
   </div>
 );
 
+/* ─── Delete confirmation modal (custom, no Radix portal issues) ─── */
+const DeleteConfirmModal = ({
+  projectName,
+  deleting,
+  onConfirm,
+  onCancel,
+}: {
+  projectName: string;
+  deleting: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) => {
+  // Close on Escape
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !deleting) onCancel();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onCancel, deleting]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      onClick={(e) => { if (e.target === e.currentTarget && !deleting) onCancel(); }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/60 animate-in fade-in-0 duration-150" />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-md mx-4 rounded-lg border border-border bg-background p-6 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150">
+        <h2 className="text-lg font-semibold mb-2">Delete project?</h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          This will permanently delete <strong>{projectName}</strong> and all its analyses. This action cannot be undone.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={onCancel} disabled={deleting}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={onConfirm}
+            disabled={deleting}
+          >
+            {deleting ? "Deleting…" : "Delete"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ─── Dashboard ─── */
 const Dashboard = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [fetching, setFetching] = useState(true);
-  const [projectToDelete, setProjectToDelete] = useState<ProjectRow | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ProjectRow | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     return (localStorage.getItem("dashboard-view") as "list" | "grid") || "list";
@@ -210,17 +254,23 @@ const Dashboard = () => {
       return { project: proj, latestAnalysis: sorted[0], versionCount: sorted.length, lastUpdated };
     });
 
-  const handleDeleteClick = (project: ProjectRow) => {
-    console.log("[DELETE] handleDeleteClick called:", project.id, project.name);
-    setProjectToDelete(project);
-  };
+  const handleDeleteClick = useCallback((project: ProjectRow) => {
+    setDeleteTarget(project);
+    setIsDeleteDialogOpen(true);
+  }, []);
 
-  const confirmDelete = async () => {
-    if (!projectToDelete) return;
-    console.log("[DELETE] confirmDelete called for:", projectToDelete.id, projectToDelete.name);
+  const handleCancelDelete = useCallback(() => {
+    if (!deleting) {
+      setIsDeleteDialogOpen(false);
+      setDeleteTarget(null);
+    }
+  }, [deleting]);
+
+  const confirmDelete = useCallback(async () => {
+    if (!deleteTarget) return;
     setDeleting(true);
     try {
-      const projectId = projectToDelete.id;
+      const projectId = deleteTarget.id;
       await supabase.from("analyses").delete().eq("project_id", projectId);
       const { error } = await supabase.from("projects").delete().eq("id", projectId);
       if (error) {
@@ -229,13 +279,14 @@ const Dashboard = () => {
       }
       setProjects((prev) => prev.filter((p) => p.id !== projectId));
       toast({ title: "Deleted", description: "Project removed." });
-      setProjectToDelete(null);
+      setIsDeleteDialogOpen(false);
+      setDeleteTarget(null);
     } catch {
       toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
     } finally {
       setDeleting(false);
     }
-  };
+  }, [deleteTarget]);
 
   if (loading || fetching) {
     return (
@@ -248,28 +299,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Delete confirmation */}
-      <AlertDialog open={!!projectToDelete} onOpenChange={(open) => { console.log("[DELETE] dialog onOpenChange:", open, "projectToDelete:", projectToDelete?.id); if (!open && !deleting) setProjectToDelete(null); }}>
-        <AlertDialogContent className="z-[200]">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete project?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete <strong>{projectToDelete?.name}</strong> and all its analyses.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={deleting}
-              onClick={(e) => { e.preventDefault(); void confirmDelete(); }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {deleting ? "Deleting…" : "Delete"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
       <Header />
       <main className="pt-24 pb-16 px-6">
         <div className="max-w-4xl mx-auto">
@@ -359,6 +388,16 @@ const Dashboard = () => {
         </div>
       </main>
       <Footer />
+
+      {/* Delete confirmation — rendered at root, above everything */}
+      {isDeleteDialogOpen && deleteTarget && (
+        <DeleteConfirmModal
+          projectName={deleteTarget.name}
+          deleting={deleting}
+          onConfirm={confirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </div>
   );
 };
