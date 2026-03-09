@@ -765,24 +765,8 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Right: buttons stacked vertically */}
-        <div className="flex flex-col items-end gap-2 sm:pt-2 shrink-0">
-          <button
-            onClick={() => setShowArrangement((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 text-[12px] font-medium text-muted-foreground/50 hover:text-foreground/70 hover:border-foreground/15 transition-all duration-150"
-          >
-            <Layers className="w-3 h-3" />
-            <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
-            <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
-          </button>
-          <button
-            onClick={() => setRefModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/40 px-3 py-1.5 text-[12px] font-medium text-muted-foreground/50 hover:text-foreground/70 hover:border-foreground/15 transition-all duration-150"
-          >
-            <Music className="w-3 h-3" />
-            <span className="hidden sm:inline">Add reference track</span>
-            <span className="sm:hidden">Reference</span>
-          </button>
+        {/* Right: collaborators only */}
+        <div className="flex items-center gap-2 sm:pt-2 shrink-0">
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
@@ -844,11 +828,36 @@ const FeedbackDisplay = ({
       {/* ═══ SUMMARY CARD ═══ */}
       {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
         <div className="mt-5 rounded-[10px] border border-border/60 bg-card/50 px-5 py-5 md:px-7 md:py-6" style={{ boxShadow: "0 1px 4px 0 rgba(0,0,0,0.04)" }}>
-          {n.overallImpression && (
-            <p className="text-[14px] text-foreground/70 max-w-[72ch]" style={{ lineHeight: 1.75 }}>
-              {n.overallImpression}
-            </p>
-          )}
+          {/* Top row: paragraph + action buttons */}
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            {n.overallImpression && (
+              <p className="text-[14px] text-foreground/70 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75 }}>
+                {n.overallImpression}
+              </p>
+            )}
+
+            {/* Action controls — styled like Issue/Win/Release chips */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setShowArrangement((v) => !v)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
+                style={{ paddingTop: 6, paddingBottom: 6 }}
+              >
+                <Layers className="w-3 h-3 text-foreground/50" />
+                <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
+                <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
+              </button>
+              <button
+                onClick={() => setRefModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
+                style={{ paddingTop: 6, paddingBottom: 6 }}
+              >
+                <Music className="w-3 h-3 text-foreground/50" />
+                <span className="hidden sm:inline">Add reference track</span>
+                <span className="sm:hidden">Reference</span>
+              </button>
+            </div>
+          </div>
 
           {(n.topIssue || n.biggestWin || releaseReadiness) && (
             <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-4")}>
