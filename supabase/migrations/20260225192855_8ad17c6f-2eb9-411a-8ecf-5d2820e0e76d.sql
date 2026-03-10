@@ -1,3 +1,5 @@
+-- LEGACY: standalone feedback table deprecated, replaced by analyses.feedback jsonb column
+
 -- Create storage bucket for audio tracks
 INSERT INTO storage.buckets (id, name, public) VALUES ('tracks', 'tracks', false);
 
