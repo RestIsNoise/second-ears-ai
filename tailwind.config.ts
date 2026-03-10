@@ -63,6 +63,9 @@ export default {
         "panel-bg": "hsl(var(--panel-bg))",
         "panel-header": "hsl(var(--panel-header))",
         "panel-content": "hsl(var(--panel-content))",
+        "surface-a": "hsl(var(--surface-a))",
+        "surface-b": "hsl(var(--surface-b))",
+        "surface-c": "hsl(var(--surface-c))",
       },
       borderRadius: {
         lg: "var(--radius)",
