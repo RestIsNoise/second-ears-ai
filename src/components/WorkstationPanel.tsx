@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 /** Flex weight per panel id */
 const PANEL_FLEX: Record<string, number> = {
@@ -11,6 +10,8 @@ const PANEL_FLEX: Record<string, number> = {
   "human-feedback": 1.5,
   "todo": 1.2,
 };
+
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
 interface Props {
   id: string;
@@ -25,50 +26,66 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
   return (
     <div
-      className="flex flex-col h-full min-w-0 border-r border-foreground/[0.08] last:border-r-0"
-      style={{ flex, minWidth }}
+      className="flex flex-col h-full min-w-0"
+      style={{
+        flex,
+        minWidth,
+        borderRight: "1px solid hsl(var(--channel-divider))",
+      }}
     >
-      {/* Header — industrial panel chrome */}
+      {/* ── Rack-mount header ── */}
       <div
-        className="flex items-center justify-between px-4 py-2 shrink-0"
+        className="shrink-0 select-none"
         style={{
           backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "1px solid hsl(var(--foreground) / 0.1)",
-          boxShadow: "inset 0 -1px 0 hsl(var(--panel-inset)), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+          borderBottom: "1px solid hsl(var(--foreground) / 0.12)",
+          boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.08)",
         }}
       >
-        <div className="flex items-center gap-2">
-          {/* Status indicator dot */}
-          <div
-            className="w-1.5 h-1.5 rounded-full shrink-0"
-            style={{ backgroundColor: "hsl(var(--foreground) / 0.25)" }}
-          />
-          <h3
-            className="text-[10px] text-foreground/70 tracking-[0.1em] uppercase truncate select-none font-bold"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+        {/* Top bevel line — rack edge detail */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--rack-screw)), hsl(var(--panel-header)))" }} />
+
+        <div className="flex items-center justify-between px-3 py-[7px]">
+          <div className="flex items-center gap-2 min-w-0">
+            {/* Rack screw detail */}
+            <div
+              className="w-[7px] h-[7px] rounded-full shrink-0"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--foreground) / 0.15), hsl(var(--foreground) / 0.06))",
+                boxShadow: "inset 0 1px 1px hsl(0 0% 100% / 0.1), 0 1px 1px hsl(0 0% 0% / 0.1)",
+              }}
+            />
+            <h3
+              className="text-[9px] text-foreground/65 tracking-[0.14em] uppercase truncate font-bold"
+              style={{ fontFamily: MONO }}
+            >
+              {title}
+            </h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-foreground/18 hover:text-foreground/55 transition-colors shrink-0 ml-2 rounded-sm p-0.5 hover:bg-foreground/[0.06]"
+            title="Close panel"
           >
-            {title}
-          </h3>
+            <X className="w-3 h-3" />
+          </button>
         </div>
-        <button
-          onClick={onClose}
-          className="text-foreground/20 hover:text-foreground/60 transition-colors shrink-0 ml-2 rounded p-0.5 hover:bg-foreground/[0.06]"
-          title="Close panel"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
+
+        {/* Bottom bevel — machined edge */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(0 0% 0% / 0.06), hsl(0 0% 0% / 0.03))" }} />
       </div>
-      {/* Scrollable content — recessed surface */}
+
+      {/* ── Recessed content well ── */}
       <div
         className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
         style={{
           backgroundColor: "hsl(var(--panel-content))",
-          boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
+          boxShadow: "inset 0 3px 6px hsl(var(--panel-inset)), inset 0 0 1px hsl(0 0% 0% / 0.04)",
         }}
       >
-        {/* Subtle noise grain texture for panel content */}
+        {/* Noise texture */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          className="absolute inset-0 pointer-events-none opacity-[0.035]"
           aria-hidden="true"
           style={{
             backgroundImage:
