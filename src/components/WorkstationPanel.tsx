@@ -25,36 +25,50 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
   return (
     <div
-      className="flex flex-col h-full min-w-0 border-r border-border/50 last:border-r-0"
+      className="flex flex-col h-full min-w-0 border-r border-foreground/[0.08] last:border-r-0"
       style={{ flex, minWidth }}
     >
-      {/* Header — elevated surface */}
+      {/* Header — industrial panel chrome */}
       <div
-        className="flex items-center justify-between px-4 py-2.5 border-b border-border/40 shrink-0"
-        style={{ backgroundColor: "hsl(var(--panel-header))" }}
+        className="flex items-center justify-between px-4 py-2 shrink-0"
+        style={{
+          backgroundColor: "hsl(var(--panel-header))",
+          borderBottom: "1px solid hsl(var(--foreground) / 0.1)",
+          boxShadow: "inset 0 -1px 0 hsl(var(--panel-inset)), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+        }}
       >
-        <h3
-          className="text-[10px] text-foreground/65 tracking-[0.08em] uppercase truncate select-none font-semibold"
-          style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
-        >
-          {title}
-        </h3>
+        <div className="flex items-center gap-2">
+          {/* Status indicator dot */}
+          <div
+            className="w-1.5 h-1.5 rounded-full shrink-0"
+            style={{ backgroundColor: "hsl(var(--foreground) / 0.25)" }}
+          />
+          <h3
+            className="text-[10px] text-foreground/70 tracking-[0.1em] uppercase truncate select-none font-bold"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
+            {title}
+          </h3>
+        </div>
         <button
           onClick={onClose}
-          className="text-foreground/25 hover:text-foreground/60 transition-colors shrink-0 ml-2 rounded p-0.5 hover:bg-secondary/40"
+          className="text-foreground/20 hover:text-foreground/60 transition-colors shrink-0 ml-2 rounded p-0.5 hover:bg-foreground/[0.06]"
           title="Close panel"
         >
           <X className="w-3.5 h-3.5" />
         </button>
       </div>
-      {/* Scrollable content with micro-texture */}
+      {/* Scrollable content — recessed surface */}
       <div
         className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
-        style={{ backgroundColor: "hsl(var(--panel-content))" }}
+        style={{
+          backgroundColor: "hsl(var(--panel-content))",
+          boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
+        }}
       >
         {/* Subtle noise grain texture for panel content */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
           aria-hidden="true"
           style={{
             backgroundImage:

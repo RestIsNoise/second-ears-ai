@@ -71,7 +71,15 @@ const MetricCard = ({ label, value, unit, min, max, status, decimals = 1 }: Metr
   const colors = isMissing ? null : statusColors[status.color];
 
   return (
-    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+    <div
+      className="rounded-md"
+      style={{
+        padding: "8px 10px",
+        backgroundColor: "hsl(var(--panel-bg))",
+        border: "1px solid hsl(var(--foreground) / 0.08)",
+        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+      }}
+    >
       <div className="flex items-start justify-between gap-1.5">
         <div className="min-w-0">
           <div className="flex items-baseline gap-1">
@@ -126,7 +134,15 @@ const CorrelationCard = ({ value }: { value: number }) => {
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+    <div
+      className="rounded-md"
+      style={{
+        padding: "8px 10px",
+        backgroundColor: "hsl(var(--panel-bg))",
+        border: "1px solid hsl(var(--foreground) / 0.08)",
+        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+      }}
+    >
       <div className="flex items-start justify-between gap-1.5">
         <div className="min-w-0">
           <span
@@ -174,7 +190,15 @@ const SubKickCard = ({ value }: { value: number }) => {
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+    <div
+      className="rounded-md"
+      style={{
+        padding: "8px 10px",
+        backgroundColor: "hsl(var(--panel-bg))",
+        border: "1px solid hsl(var(--foreground) / 0.08)",
+        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+      }}
+    >
       <div className="flex items-start justify-between gap-1.5">
         <p
           className="text-muted-foreground"

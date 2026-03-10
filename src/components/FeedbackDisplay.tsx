@@ -622,7 +622,7 @@ const FeedbackDisplay = ({
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div key={key} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                  <div key={key} className="rounded-md p-3" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                     <h3 className="text-[12px] font-semibold tracking-tight mb-1 text-foreground/80">{label}</h3>
                     <AnalysisCardText text={text} />
                   </div>
@@ -817,10 +817,11 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-6 rounded-[10px] border border-border/50 overflow-hidden"
+        className="mt-6 rounded-[10px] overflow-hidden"
         style={{
-          backgroundColor: "hsl(var(--card))",
-          boxShadow: "0 1px 4px 0 rgba(0,0,0,0.04), 0 0 0 1px hsl(var(--border) / 0.25)",
+          backgroundColor: "hsl(var(--workspace-bg))",
+          border: "1px solid hsl(var(--foreground) / 0.12)",
+          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08), 0 0 0 1px hsl(var(--foreground) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
         }}
       >
         {/* ── WAVEFORM PLAYER ── */}
@@ -846,10 +847,16 @@ const FeedbackDisplay = ({
         {/* ── SUMMARY SECTION ── */}
         {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
           <>
-            {/* Subtle internal divider */}
-            <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+            {/* Industrial divider */}
+            <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.12), hsl(var(--foreground) / 0.06))" }} />
 
-            <div className="px-5 py-5 md:px-7 md:py-6">
+            <div
+              className="px-5 py-5 md:px-7 md:py-6"
+              style={{
+                backgroundColor: "hsl(var(--panel-content))",
+                boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+              }}
+            >
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 {n.overallImpression && (
@@ -917,13 +924,14 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── PANELS WORKSTATION ── */}
-        <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.14), hsl(var(--foreground) / 0.06))" }} />
         <div
           className="flex overflow-hidden"
           style={{
             height: "calc(100vh - 340px)",
             minHeight: 380,
             backgroundColor: "hsl(var(--panel-bg))",
+            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
           }}
         >
         {/* Desktop sidebar */}
@@ -1006,9 +1014,15 @@ const FeedbackDisplay = ({
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div className={cn(
-          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/50",
+          "mt-6 grid gap-5 pt-6 rounded-lg p-5",
           n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
-        )}>
+        )}
+        style={{
+          backgroundColor: "hsl(var(--panel-content))",
+          border: "1px solid hsl(var(--foreground) / 0.08)",
+          boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+        }}
+        >
           {n.whatWorks.length > 0 && (
             <div className="flex flex-col">
               <h3
@@ -1021,7 +1035,7 @@ const FeedbackDisplay = ({
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
-                    <div key={i} className="flex-1 rounded-lg border border-border-subtle/50 bg-card/40 p-4">
+                    <div key={i} className="flex-1 rounded-md p-4" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="text-[14px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
                         {tags.length > 0 && (
@@ -1056,7 +1070,7 @@ const FeedbackDisplay = ({
               >
                 Your Focus
               </h3>
-              <div className="flex-1 flex flex-col gap-4 rounded-lg border border-border-subtle/50 bg-card/40 p-5">
+              <div className="flex-1 flex flex-col gap-4 rounded-md p-5" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                 <div>
                   <p
                     className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
