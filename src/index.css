@@ -111,10 +111,13 @@
     --text-tertiary: 25 10% 38%;
     --border-subtle: 30 15% 80%;
 
-    /* Depth layers */
-    --panel-bg: 30 25% 96%;
-    --panel-header: 30 18% 92%;
-    --panel-content: 30 28% 97.5%;
+    /* Depth layers — industrial workspace */
+    --panel-bg: 30 10% 90%;
+    --panel-header: 30 8% 86%;
+    --panel-content: 30 12% 92%;
+    --workspace-bg: 30 6% 84%;
+    --workspace-frame: 30 5% 78%;
+    --panel-inset: 0 0% 0% / 0.06;
 
     /* Alternating section surfaces */
     --surface-a: 30 23% 95%;
