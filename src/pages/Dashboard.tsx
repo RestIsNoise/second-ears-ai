@@ -410,9 +410,17 @@ const TrackGridCard = ({
 
 /* ─── Empty state ─── */
 const EmptyState = ({ icon: Icon, message }: { icon: typeof Inbox; message: string }) => (
-  <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-    <Icon className="w-10 h-10 mb-3 opacity-40" />
-    <p className="text-sm max-w-xs">{message}</p>
+  <div
+    className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground"
+    style={{
+      backgroundColor: "hsl(var(--panel-content))",
+      border: "2px solid hsl(var(--foreground) / 0.06)",
+      borderRadius: 3,
+      boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+    }}
+  >
+    <Icon className="w-8 h-8 mb-2 opacity-30" />
+    <p className="text-[11px] max-w-xs" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{message}</p>
   </div>
 );
 
