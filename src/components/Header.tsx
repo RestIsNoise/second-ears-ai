@@ -40,23 +40,26 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
         scrolled
-          ? "h-11 bg-background/98 backdrop-blur-[16px] border-b border-foreground/[0.08] shadow-[0_1px_8px_-2px_hsl(0_0%_0%/0.12)]"
-          : "h-14 bg-background/90 backdrop-blur-[6px] border-b border-border-subtle"
+          ? "h-10 bg-background/98 backdrop-blur-[16px] shadow-[0_2px_8px_-2px_hsl(0_0%_0%/0.15)]"
+          : "h-12 bg-background/95 backdrop-blur-[6px]"
       )}
+      style={{
+        borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+      }}
     >
       <div className={cn(
-        "flex items-center justify-between max-w-5xl mx-auto px-6 transition-all duration-500",
-        scrolled ? "h-11" : "h-14"
+        "flex items-center justify-between max-w-5xl mx-auto px-6 transition-all duration-300",
+        scrolled ? "h-10" : "h-12"
       )}>
         <Link to="/" className="flex items-center gap-2">
           <span
             className={cn(
-              "font-medium tracking-tight transition-all duration-500",
-              scrolled ? "text-[12px]" : "text-[13px]"
+              "font-bold tracking-tight transition-all duration-300 uppercase",
+              scrolled ? "text-[10px]" : "text-[11px]"
             )}
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em" }}
           >
             SecondEar
           </span>
