@@ -31,8 +31,8 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         flex,
         minWidth,
         /* Hard channel-strip divider between panels */
-        borderRight: "2px solid hsl(var(--foreground) / 0.1)",
-        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03)",
+        borderRight: "3px solid hsl(var(--foreground) / 0.14)",
+        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03), inset 1px 0 0 hsl(0 0% 0% / 0.04)",
       }}
     >
       {/* ═══ RACK-MOUNT HEADER ═══ */}
