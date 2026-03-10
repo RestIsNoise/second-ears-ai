@@ -130,13 +130,17 @@ const Analyze = () => {
           insertPayload.version = nextVersion;
         }
 
+        console.log("[Analyze] Inserting analysis with payload:", JSON.stringify(insertPayload, null, 2));
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
           .insert(insertPayload)
           .select("id")
           .single();
 
-        if (analysisErr) throw analysisErr;
+        if (analysisErr) {
+          console.error("[Analyze] Analysis insert failed:", JSON.stringify(analysisErr, null, 2));
+          throw analysisErr;
+        }
         if (analysisRow) {
           setSavedAnalysisId(analysisRow.id);
           // If new version, navigate to project page to see version pills
