@@ -62,29 +62,67 @@ const TrackRow = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all cursor-pointer"
+      className="group relative flex items-center gap-3 cursor-pointer transition-all duration-100"
+      style={{
+        padding: "10px 14px",
+        backgroundColor: "hsl(var(--card))",
+        border: "2px solid hsl(var(--foreground) / 0.08)",
+        borderRadius: 3,
+        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+      }}
     >
-      <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-10 h-10 rounded-lg bg-muted/60">
-        <AudioLines className="w-5 h-5 text-muted-foreground" />
+      <div
+        className="flex-shrink-0 flex items-center justify-center w-8 h-8"
+        style={{
+          backgroundColor: "hsl(var(--panel-bg))",
+          border: "1px solid hsl(var(--foreground) / 0.06)",
+          borderRadius: 2,
+          boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+        }}
+      >
+        <AudioLines className="w-4 h-4 text-foreground/50" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap mb-1">
-          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
-          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
-            <ModeIcon className="w-3 h-3" />{mode}
+      <div className="flex-1 min-w-0 flex items-center gap-2.5">
+        <h3
+          className="text-[12px] font-semibold truncate text-foreground/85 group-hover:text-foreground transition-colors"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          {proj.name}
+        </h3>
+        <span
+          className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold shrink-0"
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 8,
+            backgroundColor: "hsl(var(--foreground) / 0.04)",
+            border: "1px solid hsl(var(--foreground) / 0.06)",
+            borderRadius: 2,
+          }}
+        >
+          <ModeIcon className="w-2.5 h-2.5" />{mode}
+        </span>
+        {versionCount > 1 && (
+          <span
+            className="text-foreground/30 font-bold shrink-0"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+          >
+            v{latestAnalysis.version}
           </span>
-          {versionCount > 1 && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">v{latestAnalysis.version}</span>
-          )}
-        </div>
-        <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+        )}
       </div>
+      <span
+        className="text-foreground/25 shrink-0 tabular-nums"
+        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+      >
+        {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+      </span>
       <button
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-        className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
+        className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
+        style={{ borderRadius: 2 }}
         title="Delete project"
       >
-        <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
+        <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
       </button>
     </div>
   );
