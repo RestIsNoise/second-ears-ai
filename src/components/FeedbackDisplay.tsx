@@ -753,46 +753,46 @@ const FeedbackDisplay = ({
       />
       {/* ═══ HEADER — industrial track strip ═══ */}
       <div
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 px-4 sm:px-5"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6 px-3 sm:px-5"
         style={{
-          paddingTop: 14,
-          paddingBottom: 14,
+          paddingTop: 10,
+          paddingBottom: 10,
           backgroundColor: "hsl(var(--analysis-header))",
           border: "2px solid hsl(var(--foreground) / 0.08)",
-          borderRadius: 4,
+          borderRadius: 3,
           boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.06), 0 2px 8px hsl(0 0% 0% / 0.06)",
         }}
       >
         {/* Left: back + title */}
-        <div className="min-w-0 flex-1 flex items-center gap-4">
+        <div className="min-w-0 flex-1 flex items-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={onReset}
-            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-8 h-8"
+            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-7 h-7 sm:w-8 sm:h-8"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 sm:gap-3">
               {n.trackName && (
                 projectId ? (
                   <h1
-                    className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
+                    className="text-[14px] sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
                     onClick={() => navigate(`/project/${projectId}`)}
                     title="View all versions"
                   >
                     {n.trackName}
                   </h1>
                 ) : (
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
+                  <h1 className="text-[14px] sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
                     {n.trackName}
                   </h1>
                 )
               )}
               <span
-                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold hidden sm:inline-block"
                 style={{
                   fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
                   fontSize: 8,
@@ -806,7 +806,7 @@ const FeedbackDisplay = ({
               </span>
             </div>
             {versions && versions.length > 0 && projectId && analysisId && (
-              <div className="mt-1">
+              <div className="mt-0.5 sm:mt-1">
                 <VersionPills
                   versions={versions}
                   currentAnalysisId={analysisId}
@@ -819,8 +819,21 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Right: collaborators only */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right: mode badge (mobile) + collaborators */}
+        <div className="flex items-center gap-2 shrink-0 sm:justify-end">
+          <span
+            className="sm:hidden text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+            style={{
+              fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
+              fontSize: 7.5,
+              padding: "2px 5px",
+              backgroundColor: "hsl(var(--foreground) / 0.04)",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
+            }}
+          >
+            {modeLabels[mode]}
+          </span>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
