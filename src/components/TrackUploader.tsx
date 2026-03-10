@@ -149,7 +149,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <input
         id="track-file-input"
         ref={fileInputRef}
@@ -166,26 +166,29 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`cursor-pointer flex flex-col items-center justify-center gap-4 rounded-xl p-12 select-none transition-all duration-150 ${
-          dragOver ? "border-2 border-dashed border-foreground/30 bg-secondary/80"
-          : file ? "border border-solid border-foreground/20 bg-secondary/30"
-          : "border-2 border-dashed border-border-subtle hover:border-foreground/15 hover:bg-secondary/30"
-        }`}
+        className="cursor-pointer flex flex-col items-center justify-center gap-3 select-none transition-all duration-100"
+        style={{
+          padding: "40px 24px",
+          backgroundColor: dragOver ? "hsl(var(--panel-content))" : file ? "hsl(var(--card))" : "hsl(var(--card))",
+          border: dragOver ? "2px dashed hsl(var(--foreground) / 0.25)" : file ? "2px solid hsl(var(--foreground) / 0.15)" : "2px dashed hsl(var(--foreground) / 0.1)",
+          borderRadius: 3,
+          boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+        }}
       >
         {file ? (
           <>
-            <Music className="w-8 h-8 text-foreground/60" />
+            <Music className="w-6 h-6 text-foreground/50" />
             <div className="text-center">
-              <p className="text-sm font-medium">{file.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p className="text-[12px] font-semibold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
+              <p className="text-[10px] text-muted-foreground mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
-            <Upload className="w-8 h-8 text-muted-foreground" />
+            <Upload className="w-6 h-6 text-foreground/30" />
             <div className="text-center">
-              <p className="text-sm text-foreground">Drop your track here</p>
-              <p className="text-xs text-muted-foreground mt-1">or click to browse · MP3, WAV, FLAC</p>
+              <p className="text-[12px] text-foreground/60 font-medium" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
+              <p className="text-[10px] text-foreground/30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
@@ -197,44 +200,74 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           onChange={(e) => setContext(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && file && !isAnalyzing) { e.preventDefault(); analyze(); } }}
           placeholder="What are you going for?"
-          className="w-full rounded-xl border border-border-subtle bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full border bg-card px-4 py-2.5 text-[12px] text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-ring"
+          style={{
+            borderColor: "hsl(var(--foreground) / 0.1)",
+            borderRadius: 3,
+            fontFamily: "'IBM Plex Mono', monospace",
+          }}
         />
-        <p className="text-[11px] text-muted-foreground/50 mt-1.5 ml-1">Optional: references, goals, or specific concerns.</p>
+        <p className="text-[9px] text-foreground/30 mt-1 ml-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Optional: references, goals, or specific concerns.</p>
       </div>
       <div>
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Listening mode</p>
-        <div className="grid grid-cols-3 gap-3">
+        <p
+          className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase mb-2 font-bold"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          Listening mode
+        </p>
+        <div className="grid grid-cols-3 gap-1.5">
           {modes.map((m) => (
             <button key={m.id} onClick={() => setMode(m.id)}
-              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
-                mode === m.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
-                : "border-border-subtle hover:border-foreground/10"
-              }`}
+              className="text-left transition-all duration-100"
+              style={{
+                padding: "10px 12px",
+                backgroundColor: mode === m.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
+                border: mode === m.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 3,
+                boxShadow: mode === m.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+              }}
             >
-              <m.icon className="w-4 h-4 mb-2 text-foreground/70" />
-              <p className="text-sm font-medium">{m.label}</p>
-              <p className="font-mono-brand text-[10px] text-muted-foreground">{m.tag}</p>
+              <m.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+              <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
+              <p className="text-[9px] text-foreground/35 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.tag}</p>
             </button>
           ))}
         </div>
       </div>
       <div>
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">Goal</p>
-        <div className="grid grid-cols-3 gap-3">
+        <p
+          className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase mb-2 font-bold"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          Goal
+        </p>
+        <div className="grid grid-cols-3 gap-1.5">
           {goals.map((g) => (
             <button key={g.id} onClick={() => setGoal(g.id)}
-              className={`rounded-lg border p-4 text-left transition-all duration-150 ${
-                goal === g.id ? "border-foreground bg-foreground/10 shadow-[0_0_0_1px_hsl(var(--foreground)/0.18)]"
-                : "border-border-subtle hover:border-foreground/10"
-              }`}
+              className="text-left transition-all duration-100"
+              style={{
+                padding: "10px 12px",
+                backgroundColor: goal === g.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
+                border: goal === g.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 3,
+                boxShadow: goal === g.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+              }}
             >
-              <g.icon className="w-4 h-4 mb-2 text-foreground/70" />
-              <p className="text-sm font-medium">{g.label}</p>
+              <g.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+              <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
           ))}
         </div>
       </div>
-      <Button variant="hero" size="lg" className="w-full h-12 text-sm" disabled={!file || isAnalyzing} onClick={analyze}>
+      <Button
+        variant="default"
+        size="lg"
+        className="w-full h-11 text-[11px] font-bold tracking-[0.06em] uppercase"
+        style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
+        disabled={!file || isAnalyzing}
+        onClick={analyze}
+      >
         {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
       </Button>
     </div>

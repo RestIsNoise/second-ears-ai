@@ -590,38 +590,79 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-16 px-6">
+      <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header row */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-1">Dashboard</p>
-              <h1 className="text-2xl font-semibold tracking-tight">My Projects</h1>
+          <div
+            className="flex items-center justify-between mb-4 px-4"
+            style={{
+              paddingTop: 12,
+              paddingBottom: 12,
+              backgroundColor: "hsl(var(--analysis-header))",
+              border: "2px solid hsl(var(--foreground) / 0.08)",
+              borderRadius: 3,
+              boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-[7px] h-[7px] rounded-full shrink-0"
+                style={{
+                  background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
+                  boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
+                }}
+              />
+              <h1
+                className="text-[13px] font-bold tracking-tight"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                My Projects
+              </h1>
             </div>
             <Link
               to="/analyze"
-              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-medium hover:bg-primary/85 transition-all"
+              className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground transition-all"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 12px",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.1)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
             >
               New analysis
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
           {/* Tabs */}
           <Tabs defaultValue="tracks" className="w-full">
-            <TabsList className="bg-muted/50 mb-6">
-              <TabsTrigger value="tracks" className="gap-1.5 text-xs">
-                <AudioLines className="w-3.5 h-3.5" />
-                My Tracks
-              </TabsTrigger>
-              <TabsTrigger value="requests" className="gap-1.5 text-xs">
-                <Inbox className="w-3.5 h-3.5" />
-                Feedback Requests
-              </TabsTrigger>
-              <TabsTrigger value="archive" className="gap-1.5 text-xs">
-                <Archive className="w-3.5 h-3.5" />
-                Archive
-              </TabsTrigger>
+            <TabsList
+              className="mb-4 h-auto p-0 gap-0 rounded-none bg-transparent"
+              style={{
+                borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+              }}
+            >
+              {[
+                { value: "tracks", label: "My Tracks", icon: AudioLines },
+                { value: "requests", label: "Requests", icon: Inbox },
+                { value: "archive", label: "Archive", icon: Archive },
+              ].map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="gap-1.5 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}
+                >
+                  <tab.icon className="w-3 h-3" />
+                  {tab.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             <TabsContent value="tracks">
@@ -630,31 +671,43 @@ const Dashboard = () => {
               ) : (
                 <>
                   {/* View toggle */}
-                  <div className="flex items-center justify-end gap-1 mb-4">
+                  <div className="flex items-center justify-end gap-0.5 mb-3">
                     <button
                       onClick={() => { setViewMode("list"); localStorage.setItem("dashboard-view", "list"); }}
-                      className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      className="p-1.5 transition-colors"
+                      style={{
+                        backgroundColor: viewMode === "list" ? "hsl(var(--panel-bg))" : "transparent",
+                        border: viewMode === "list" ? "1px solid hsl(var(--foreground) / 0.08)" : "1px solid transparent",
+                        borderRadius: 2,
+                        color: viewMode === "list" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.3)",
+                      }}
                       title="List view"
                     >
-                      <List className="w-4 h-4" />
+                      <List className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => { setViewMode("grid"); localStorage.setItem("dashboard-view", "grid"); }}
-                      className={`p-1.5 rounded-md transition-colors ${viewMode === "grid" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      className="p-1.5 transition-colors"
+                      style={{
+                        backgroundColor: viewMode === "grid" ? "hsl(var(--panel-bg))" : "transparent",
+                        border: viewMode === "grid" ? "1px solid hsl(var(--foreground) / 0.08)" : "1px solid transparent",
+                        borderRadius: 2,
+                        color: viewMode === "grid" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.3)",
+                      }}
                       title="Grid view"
                     >
-                      <LayoutGrid className="w-4 h-4" />
+                      <LayoutGrid className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {viewMode === "list" ? (
-                    <div className="grid gap-3">
+                    <div className="grid gap-1.5">
                       {grouped.map((g) => (
                         <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {grouped.map((g) => (
                         <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}

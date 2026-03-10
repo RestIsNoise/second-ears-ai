@@ -116,7 +116,13 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="hero" size="sm" className={cn("text-xs px-4 transition-all duration-500", scrolled ? "h-7" : "h-8")} asChild>
+            <Button
+              variant="default"
+              size="sm"
+              className={cn("text-[10px] px-4 transition-all duration-300 uppercase tracking-[0.06em] font-bold", scrolled ? "h-7" : "h-7")}
+              style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
+              asChild
+            >
               <Link to="/auth">Sign in</Link>
             </Button>
           )}

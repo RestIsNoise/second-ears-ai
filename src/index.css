@@ -254,13 +254,13 @@ body::after {
   background-size: 28px 28px;
 }
 
-/* Ambient glow orbs */
+/* Ambient glow orbs — subtle */
 .bg-background {
   position: relative;
   background-image:
-    radial-gradient(ellipse 60% 40% at 50% 0%, hsl(0 0% 85% / 0.35), transparent),
-    radial-gradient(circle 600px at 10% 70%, hsl(0 0% 90% / 0.2), transparent),
-    radial-gradient(circle 500px at 90% 40%, hsl(0 0% 88% / 0.15), transparent);
+    radial-gradient(ellipse 60% 40% at 50% 0%, hsl(0 0% 80% / 0.2), transparent),
+    radial-gradient(circle 600px at 10% 70%, hsl(0 0% 85% / 0.12), transparent),
+    radial-gradient(circle 500px at 90% 40%, hsl(0 0% 82% / 0.1), transparent);
 }
 
 .dark .bg-background {
