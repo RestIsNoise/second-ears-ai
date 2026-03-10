@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,6 +22,13 @@ const navItems = [
 const Header = () => {
   const { user, profile, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
@@ -31,8 +38,18 @@ const Header = () => {
     .slice(0, 2);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-[6px] border-b border-border-subtle">
-      <div className="flex items-center justify-between h-14 max-w-5xl mx-auto px-6">
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 border-b border-border-subtle transition-all duration-300",
+        scrolled
+          ? "bg-background/98 backdrop-blur-[12px] h-12"
+          : "bg-background/95 backdrop-blur-[6px] h-14"
+      )}
+    >
+      <div className={cn(
+        "flex items-center justify-between max-w-5xl mx-auto px-6 transition-all duration-300",
+        scrolled ? "h-12" : "h-14"
+      )}>
         <Link to="/" className="flex items-center gap-2">
           <span
             className="text-[13px] font-medium tracking-tight"

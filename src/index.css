@@ -222,3 +222,49 @@ body::after {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
+
+/* ── Scroll Reveal System ── */
+.reveal-base {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(4px);
+  transition:
+    opacity 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Stagger children via CSS custom property */
+.reveal-child {
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(3px);
+  transition:
+    opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-visible .reveal-child {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-base,
+  .reveal-child {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
