@@ -355,19 +355,9 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel }: AnalysisPro
 
         {/* ── Footer ── */}
         <div
-          className="px-5 py-3 flex items-center justify-between"
+          className="px-5 py-3 flex items-center justify-end"
           style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.3)" }}
         >
-          <span
-            style={{
-              fontFamily: MONO,
-              fontSize: 10,
-              color: "hsl(var(--muted-foreground) / 0.40)",
-              letterSpacing: "0.02em",
-            }}
-          >
-            Usually completes in under 60s
-          </span>
           {onCancel && (
             <button
               onClick={onCancel}
