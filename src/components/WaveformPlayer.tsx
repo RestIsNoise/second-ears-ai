@@ -440,8 +440,14 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           </div>
         )}
 
-        {/* Waveform lane */}
-        <div style={{ backgroundColor: LANE_BG, padding: "0 10px" }}>
+        {/* Waveform lane — recessed well */}
+        <div
+          style={{
+            backgroundColor: LANE_BG,
+            padding: "0 10px",
+            boxShadow: "inset 0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(0,0,0,0.4)",
+          }}
+        >
           {error && (
             <div
               className="rounded flex items-start gap-3 m-2 p-2.5"
