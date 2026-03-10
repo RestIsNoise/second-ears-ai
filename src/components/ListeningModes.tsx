@@ -6,7 +6,7 @@ const modes = [
     icon: Activity,
     name: "Technical",
     tag: "Engineer view",
-    accent: "35 55% 55%",
+    accent: "0 0% 40%",
     description: "Loudness, dynamics, stereo image, and mix translation — focused on what to fix first.",
     points: ["Frequency balance", "Punch and headroom", "Stereo and mono compatibility", "Loudness control"],
   },
@@ -14,7 +14,7 @@ const modes = [
     icon: Music,
     name: "Musical",
     tag: "Producer view",
-    accent: "215 45% 55%",
+    accent: "0 0% 30%",
     description: "Arrangement flow, section contrast, hook clarity, and emotional momentum.",
     points: ["Arrangement pacing", "Tonal balance", "Vocal presence", "Low-end weight"],
   },
@@ -22,7 +22,7 @@ const modes = [
     icon: Eye,
     name: "Perception",
     tag: "Listener view",
-    accent: "270 35% 55%",
+    accent: "0 0% 20%",
     description: "How the mix translates on real speakers: impact, clarity, fatigue, and room response.",
     points: ["Speaker translation", "Listener impact", "Ear fatigue", "Playback compatibility"],
   },
@@ -41,7 +41,7 @@ const ListeningModes = () => {
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
       <div className="channel-strip-line absolute bottom-0 left-0 right-0" />
 
-      {/* Faint grid texture — only this section */}
+      {/* Faint grid texture */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
         aria-hidden="true"
@@ -53,7 +53,7 @@ const ListeningModes = () => {
       />
 
       <div className="max-w-3xl mx-auto relative">
-        {/* Right-aligned heading — asymmetry */}
+        {/* Right-aligned heading */}
         <div className="md:text-right mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase mb-3"
@@ -69,56 +69,80 @@ const ListeningModes = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid md:grid-cols-3 gap-4">
           {modes.map((mode, i) => (
             <div
               key={mode.name}
-              className="rounded-lg p-5 md:p-6 flex flex-col gap-3.5 transition-all duration-200 reveal-child group"
+              className="relative rounded-lg overflow-hidden flex flex-col reveal-child group"
               style={{
                 "--stagger": `${100 + i * 120}ms`,
                 background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle) / 0.4)",
-                boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+                border: "1px solid hsl(var(--border-subtle) / 0.45)",
+                boxShadow:
+                  "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
               } as React.CSSProperties}
             >
-              {/* Mode accent bar */}
+              {/* Panel header */}
               <div
-                className="h-px w-full rounded-full mb-1"
-                style={{ background: `linear-gradient(90deg, hsl(${mode.accent} / 0.4), hsl(${mode.accent} / 0.05))` }}
-              />
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center reveal-pop"
-                  style={{
-                    "--stagger": `${220 + i * 120}ms`,
-                    background: `hsl(${mode.accent} / 0.08)`,
-                    border: `1px solid hsl(${mode.accent} / 0.12)`,
-                  } as React.CSSProperties}
-                >
-                  <mode.icon className="w-4 h-4" style={{ color: `hsl(${mode.accent} / 0.7)` }} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="text-[13px] font-semibold tracking-[-0.02em]">{mode.name}</h3>
-                  <p
-                    className="text-[9px] text-muted-foreground/35 tracking-[0.1em]"
+                className="px-5 pt-5 pb-4"
+                style={{ borderBottom: "1px solid hsl(var(--border-subtle) / 0.2)" }}
+              >
+                <div className="flex items-center justify-between mb-3.5">
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center reveal-pop"
+                    style={{
+                      "--stagger": `${220 + i * 120}ms`,
+                      background: "hsl(var(--surface-b))",
+                      border: "1px solid hsl(var(--border-subtle) / 0.5)",
+                      boxShadow:
+                        "inset 0 1px 0 hsl(0 0% 100% / 0.6), inset 0 -1px 0 hsl(0 0% 0% / 0.03), 0 1px 3px hsl(0 0% 0% / 0.06)",
+                    } as React.CSSProperties}
+                  >
+                    <mode.icon className="w-4 h-4 text-foreground/50" strokeWidth={1.5} />
+                  </div>
+                  <span
+                    className="text-[9px] text-muted-foreground/30 tracking-[0.12em] uppercase"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {mode.tag}
-                  </p>
+                  </span>
                 </div>
+                <h3 className="text-[15px] font-semibold tracking-[-0.025em] text-foreground/90">
+                  {mode.name}
+                </h3>
+                <p className="text-[11.5px] text-muted-foreground/45 leading-[1.65] mt-1.5">
+                  {mode.description}
+                </p>
               </div>
-              <p className="text-[12px] text-muted-foreground/55 leading-[1.65]">{mode.description}</p>
-              <ul className="space-y-1.5 mt-auto pt-2" style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.2)" }}>
-                {mode.points.map((point) => (
-                  <li key={point} className="text-[11.5px] text-foreground/65 flex items-center gap-2">
-                    <span
-                      className="w-[3px] h-[3px] rounded-full"
-                      style={{ background: `hsl(${mode.accent} / 0.35)` }}
-                    />
-                    {point}
-                  </li>
-                ))}
-              </ul>
+
+              {/* Feature list */}
+              <div className="px-5 py-4 flex-1 flex flex-col justify-end">
+                <ul className="space-y-0">
+                  {mode.points.map((point, j) => (
+                    <li
+                      key={point}
+                      className="text-[11.5px] text-foreground/60 flex items-center gap-2.5 py-[7px]"
+                      style={{
+                        borderTop: j > 0 ? "1px solid hsl(var(--border-subtle) / 0.12)" : "none",
+                      }}
+                    >
+                      <span
+                        className="w-1 h-1 rounded-full shrink-0"
+                        style={{ background: "hsl(var(--foreground) / 0.18)" }}
+                      />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Bottom accent line */}
+              <div
+                className="h-[2px] w-full mt-auto"
+                style={{
+                  background: `linear-gradient(90deg, hsl(${mode.accent} / 0.25), hsl(${mode.accent} / 0.08))`,
+                }}
+              />
             </div>
           ))}
         </div>
