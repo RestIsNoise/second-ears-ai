@@ -1045,7 +1045,6 @@ const FeedbackDisplay = ({
           <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 300px) !important; min-height: 420px !important; } }`}</style>
           <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 300px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
-        <div className="hidden md:flex">
           <PanelSidebar
             panels={PANELS}
             activePanels={activePanels}
@@ -1055,32 +1054,88 @@ const FeedbackDisplay = ({
               <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} analysisId={analysisId} />
             }
           />
+
+          {/* Desktop panels area */}
+          <div className="flex flex-1 min-w-0">
+            {orderedActivePanels.length === 0 && (
+              <div
+                className="flex-1 flex flex-col items-center justify-center gap-1"
+                style={{ backgroundColor: "hsl(var(--panel-content))" }}
+              >
+                <span className="text-[10px] text-foreground/25" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>No panels open</span>
+                <span className="text-[8px] text-foreground/15" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Select from the sidebar</span>
+              </div>
+            )}
+            {orderedActivePanels.map((panel) => (
+              <WorkstationPanel
+                key={panel.id}
+                id={panel.id}
+                title={panelTitles[panel.id] || panel.label}
+                onClose={() => handleTogglePanel(panel.id)}
+              >
+                {renderPanelContent(panel.id)}
+              </WorkstationPanel>
+            ))}
+          </div>
         </div>
 
-        {/* Mobile panel selector */}
-        <div className="md:hidden w-full flex flex-col">
-          <div className="flex overflow-x-auto border-b border-border-subtle/40 p-1 gap-0.5 scrollbar-thin bg-secondary/15">
+        {/* ═══ MOBILE PANELS — full-width stacked modules ═══ */}
+        <div className="md:hidden flex flex-col">
+          {/* Module selector — horizontal strip */}
+          <div
+            className="flex overflow-x-auto scrollbar-thin"
+            style={{
+              backgroundColor: "hsl(var(--panel-header))",
+              borderBottom: "2px solid hsl(var(--foreground) / 0.1)",
+              padding: "0 2px",
+            }}
+          >
             {PANELS.map((panel) => {
               const isActive = activePanels.has(panel.id);
               return (
                 <button
                   key={panel.id}
                   onClick={() => handleTogglePanel(panel.id)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-all duration-150 ${
-                    isActive
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground/40 hover:text-foreground/70"
-                  }`}
+                  className="shrink-0 transition-all duration-100"
+                  style={{
+                    padding: "7px 10px",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 8,
+                    fontWeight: isActive ? 800 : 600,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: isActive ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.3)",
+                    borderBottom: isActive ? "2px solid hsl(var(--foreground) / 0.6)" : "2px solid transparent",
+                    backgroundColor: isActive ? "hsl(var(--panel-content))" : "transparent",
+                  }}
                 >
                   {panel.label}
                 </button>
               );
             })}
           </div>
-          {/* Mobile: stack panels vertically */}
-          <div className="flex flex-col flex-1 overflow-y-auto">
+
+          {/* Stacked panels — each with its own framed identity */}
+          <div className="flex flex-col">
+            {orderedActivePanels.length === 0 && (
+              <div
+                className="flex flex-col items-center justify-center py-12"
+                style={{
+                  backgroundColor: "hsl(var(--panel-content))",
+                  boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+                }}
+              >
+                <span className="text-[10px] text-foreground/20" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>No modules active</span>
+                <span className="text-[8px] text-foreground/12 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Tap a module above to open</span>
+              </div>
+            )}
             {orderedActivePanels.map((panel) => (
-              <div key={panel.id} className="border-b border-border-subtle/30 last:border-b-0">
+              <div
+                key={panel.id}
+                style={{
+                  borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+                }}
+              >
                 <WorkstationPanel
                   id={panel.id}
                   title={panelTitles[panel.id] || panel.label}
@@ -1091,33 +1146,79 @@ const FeedbackDisplay = ({
               </div>
             ))}
           </div>
-          {/* Mobile share button */}
-          <div className="p-2.5 border-t border-border-subtle/40 bg-secondary/10">
-            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-7 gap-1.5 text-[10px]">
-              <Share2 className="w-3 h-3" /> Share
-            </Button>
-          </div>
-        </div>
 
-        {/* Desktop panels area */}
-        <div className="hidden md:flex flex-1 min-w-0">
-          {orderedActivePanels.length === 0 && (
-            <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
-              <span className="text-[11px] text-muted-foreground/30">No panels open</span>
-              <span className="text-[9px] text-muted-foreground/20">Select from the sidebar</span>
-            </div>
-          )}
-          {orderedActivePanels.map((panel) => (
-            <WorkstationPanel
-              key={panel.id}
-              id={panel.id}
-              title={panelTitles[panel.id] || panel.label}
-              onClose={() => handleTogglePanel(panel.id)}
+          {/* Mobile share + controls strip */}
+          <div
+            className="flex items-center gap-1.5 px-2.5"
+            style={{
+              paddingTop: 6,
+              paddingBottom: 6,
+              backgroundColor: "hsl(var(--panel-header))",
+              borderTop: "2px solid hsl(var(--foreground) / 0.08)",
+            }}
+          >
+            <button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(window.location.href);
+                  toast({ title: "Link copied", duration: 1500 });
+                } catch { toast({ title: "Copy failed", variant: "destructive", duration: 1500 }); }
+              }}
+              className="flex-1 flex items-center justify-center gap-1 text-foreground/35 hover:text-foreground/60 transition-colors"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 8,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 0",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
             >
-              {renderPanelContent(panel.id)}
-            </WorkstationPanel>
-          ))}
-        </div>
+              <Link2 className="w-[9px] h-[9px]" strokeWidth={2} />
+              Link
+            </button>
+            <button
+              onClick={() => setShareOpen(true)}
+              className="flex-1 flex items-center justify-center gap-1 text-foreground/35 hover:text-foreground/60 transition-colors"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 8,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 0",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
+            >
+              <Share2 className="w-[9px] h-[9px]" strokeWidth={2} />
+              Share
+            </button>
+            {onExportPdf && (
+              <button
+                onClick={() => exportAnalysisPdf(n, releaseReadiness)}
+                className="flex items-center justify-center text-foreground/35 hover:text-foreground/60 transition-colors"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  padding: "5px 8px",
+                  backgroundColor: "hsl(var(--panel-bg))",
+                  border: "1px solid hsl(var(--foreground) / 0.06)",
+                  borderRadius: 2,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                }}
+              >
+                PDF
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Rack bottom edge */}
