@@ -918,7 +918,15 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-5 flex border border-border/60 rounded-[10px] overflow-hidden bg-card/50" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)" }}>
+      <div
+        className="mt-5 flex border border-border/50 rounded-[10px] overflow-hidden"
+        style={{
+          height: "calc(100vh - 340px)",
+          minHeight: 380,
+          backgroundColor: "hsl(var(--panel-bg))",
+          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.05), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+        }}
+      >
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
