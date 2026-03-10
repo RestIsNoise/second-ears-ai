@@ -108,7 +108,10 @@ const Analyze = () => {
 
         const insertPayload: any = {
           project_id: projectId,
+          user_id: user.id,
+          track_name: n.trackName,
           mode: n.mode,
+          result: feedbackResult.rawResult ?? {},
           feedback: feedbackResult.rawResult ?? {},
           metrics: feedbackResult.rawResult?.technical_metrics ?? {},
           version: isNewVersion ? nextVersion : 1,
