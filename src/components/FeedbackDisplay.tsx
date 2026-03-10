@@ -847,10 +847,16 @@ const FeedbackDisplay = ({
         {/* ── SUMMARY SECTION ── */}
         {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
           <>
-            {/* Subtle internal divider */}
-            <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+            {/* Industrial divider */}
+            <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.12), hsl(var(--foreground) / 0.06))" }} />
 
-            <div className="px-5 py-5 md:px-7 md:py-6">
+            <div
+              className="px-5 py-5 md:px-7 md:py-6"
+              style={{
+                backgroundColor: "hsl(var(--panel-content))",
+                boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+              }}
+            >
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 {n.overallImpression && (
