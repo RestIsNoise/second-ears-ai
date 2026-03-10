@@ -454,14 +454,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
             {/* Waveform container */}
             <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 1 }}>
-              {/* Deck glow — subtle bottom gradient */}
-              <div
-                className="absolute bottom-0 left-0 right-0 pointer-events-none"
-                style={{
-                  height: "50%",
-                  background: `linear-gradient(to top, ${colors.glow}, transparent)`,
-                }}
-              />
+              {/* Deck glow removed — clean edge */}
 
               {loading && !error && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">

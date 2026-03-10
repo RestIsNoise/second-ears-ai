@@ -213,10 +213,9 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     <div
       className="overflow-hidden"
       style={{
-        borderRadius: 10,
-        border: `1px solid ${DIVIDER}`,
+        borderRadius: 0,
+        border: "none",
         backgroundColor: SHELL_BG,
-        boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, 0 4px 16px rgba(0,0,0,0.25)`,
       }}
     >
       <input
