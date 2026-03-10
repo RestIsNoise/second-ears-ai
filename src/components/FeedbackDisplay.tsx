@@ -1009,6 +1009,14 @@ const FeedbackDisplay = ({
           ))}
         </div>
         </div>
+
+        {/* Rack bottom edge */}
+        <div
+          style={{
+            height: 3,
+            background: "linear-gradient(180deg, hsl(var(--workspace-bg)), hsl(var(--workspace-frame)))",
+          }}
+        />
       </div>
 
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
