@@ -127,10 +127,13 @@ const TimeRuler = ({
   const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
 
   return (
-    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%", backgroundColor: "rgba(0,0,0,0.3)" }}>
+    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%", backgroundColor: "rgba(0,0,0,0.35)" }}>
+      {/* Top edge bevel */}
+      <div className="absolute top-0 left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.03)" }} />
       <div className="absolute top-0 left-0 right-0" style={{ height: RULER_HEIGHT }}>
-        {/* Bottom border */}
-        <div className="absolute bottom-0 left-0 right-0" style={{ height: "1px", backgroundColor: DIVIDER }} />
+        {/* Bottom border — double machined */}
+        <div className="absolute bottom-0 left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.06)" }} />
+        <div className="absolute bottom-[-1px] left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(0,0,0,0.3)" }} />
 
         {ticks.map(({ time, isMajor }) => {
           const leftPct = (time / duration) * 100;
@@ -139,8 +142,8 @@ const TimeRuler = ({
               <div
                 style={{
                   width: isMajor ? "1px" : "0.5px",
-                  height: isMajor ? 10 : 4,
-                  backgroundColor: isMajor ? "rgba(255,255,255,0.40)" : "rgba(255,255,255,0.10)",
+                  height: isMajor ? 11 : 5,
+                  backgroundColor: isMajor ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)",
                 }}
               />
               {isMajor && (
@@ -148,12 +151,12 @@ const TimeRuler = ({
                   className="absolute whitespace-nowrap tabular-nums"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 8,
+                    fontSize: 7.5,
                     lineHeight: 1,
-                    letterSpacing: "0.04em",
-                    color: "rgba(255,255,255,0.45)",
-                    fontWeight: 500,
-                    bottom: 12,
+                    letterSpacing: "0.06em",
+                    color: "rgba(255,255,255,0.38)",
+                    fontWeight: 600,
+                    bottom: 13,
                     left: 0,
                     transform: time === 0 ? "none" : "translateX(-50%)",
                   }}
@@ -165,7 +168,7 @@ const TimeRuler = ({
           );
         })}
 
-        {/* Playhead tick */}
+        {/* Playhead tick — stronger */}
         <div
           className="absolute bottom-0 z-[4] pointer-events-none"
           style={{
@@ -174,23 +177,24 @@ const TimeRuler = ({
             transition: playing ? "none" : "left 0.1s ease-out",
           }}
         >
-          <div style={{ width: "1.5px", height: 12, backgroundColor: accentColor, boxShadow: `0 0 4px ${accentColor}` }} />
+          <div style={{ width: "2px", height: 14, backgroundColor: accentColor, boxShadow: `0 0 6px ${accentColor}` }} />
         </div>
 
         {/* Hover tooltip */}
         {hoverX !== null && (
           <div className="absolute pointer-events-none z-[6]" style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}>
             <span
-              className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
+              className="px-1.5 py-0.5 tabular-nums whitespace-nowrap"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 8.5,
                 lineHeight: 1,
-                letterSpacing: "0.02em",
-                color: snappedMarker ? "#ffffff" : "rgba(255,255,255,0.7)",
-                backgroundColor: "rgba(0,0,0,0.9)",
-                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.2" : "0.08"})`,
-                fontWeight: snappedMarker ? 600 : 400,
+                letterSpacing: "0.03em",
+                color: snappedMarker ? "#ffffff" : "rgba(255,255,255,0.65)",
+                backgroundColor: "rgba(0,0,0,0.92)",
+                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.2" : "0.06"})`,
+                fontWeight: snappedMarker ? 700 : 500,
+                borderRadius: 2,
               }}
             >
               {snappedMarker ? `▸ ${formatTimePrecise(snappedMarker.time)}` : formatTimePrecise(hoverTime)}
