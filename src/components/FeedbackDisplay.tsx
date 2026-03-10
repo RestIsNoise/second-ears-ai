@@ -815,118 +815,117 @@ const FeedbackDisplay = ({
         onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)}
       />
 
-      {/* ═══ WAVEFORM ═══ */}
-      {audioFile && (
-        <div className="mt-6 pb-0 w-full overflow-hidden relative">
-          <ABCompare
-            ref={waveformRef}
-            audioFileA={audioFile}
-            audioFileB={refAudioFile || null}
-            refTrackName={refTrackName}
-            markersA={markers}
-            activeMarkerId={activeItemId}
-            onMarkerClick={handleMarkerClick}
-            onTimeUpdate={handleTimeUpdate}
-            onDurationReady={setAudioDuration}
-            onAddNote={handleAddNoteFromWaveform}
-            onAddToDo={handleAddToDoWithTimestamp}
-            onEditNote={handleEditAnnotation}
-          />
-          {/* Player-to-content gradient transition */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none"
-            aria-hidden="true"
-            style={{
-              background: "linear-gradient(to bottom, transparent, hsl(var(--background) / 0.6))",
-            }}
-          />
-        </div>
-      )}
-
-      {/* ═══ SUMMARY CARD ═══ */}
-      {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div
-          className="mt-5 rounded-[10px] border border-border/50 px-5 py-5 md:px-7 md:py-6"
-          style={{
-            backgroundColor: "hsl(var(--card))",
-            boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 0 0 1px hsl(var(--border) / 0.3)",
-          }}
-        >
-          {/* Top row: paragraph + action buttons */}
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-            {n.overallImpression && (
-              <p className="text-[14px] text-foreground/70 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75 }}>
-                {n.overallImpression}
-              </p>
-            )}
-
-            {/* Action controls — styled like Issue/Win/Release chips */}
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setShowArrangement((v) => !v)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
-                style={{ paddingTop: 6, paddingBottom: 6 }}
-              >
-                <Layers className="w-3 h-3 text-foreground/50" />
-                <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
-                <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
-              </button>
-              <button
-                onClick={() => setRefModalOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
-                style={{ paddingTop: 6, paddingBottom: 6 }}
-              >
-                <Music className="w-3 h-3 text-foreground/50" />
-                <span className="hidden sm:inline">Add reference track</span>
-                <span className="sm:hidden">Reference</span>
-              </button>
-            </div>
-          </div>
-
-          {(n.topIssue || n.biggestWin || releaseReadiness) && (
-            <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-4")}>
-              {n.topIssue && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
-                  <span
-                    className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-                  >Issue</span>
-                  <span className="text-[12px] font-medium text-foreground/75">{n.topIssue}</span>
-                </span>
-              )}
-              {n.biggestWin && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
-                  <span
-                    className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-                  >Win</span>
-                  <span className="text-[12px] font-medium text-foreground/75">{n.biggestWin}</span>
-                </span>
-              )}
-              {releaseReadiness && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
-                  <span
-                    className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-                  >Release</span>
-                  <span className="text-[12px] font-medium text-foreground/75">{releaseReadiness}</span>
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
+      {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-5 flex border border-border/50 rounded-[10px] overflow-hidden"
+        className="mt-6 rounded-[10px] border border-border/50 overflow-hidden"
         style={{
-          height: "calc(100vh - 340px)",
-          minHeight: 380,
-          backgroundColor: "hsl(var(--panel-bg))",
-          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.05), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+          backgroundColor: "hsl(var(--card))",
+          boxShadow: "0 1px 4px 0 rgba(0,0,0,0.04), 0 0 0 1px hsl(var(--border) / 0.25)",
         }}
       >
+        {/* ── WAVEFORM PLAYER ── */}
+        {audioFile && (
+          <div className="w-full overflow-hidden">
+            <ABCompare
+              ref={waveformRef}
+              audioFileA={audioFile}
+              audioFileB={refAudioFile || null}
+              refTrackName={refTrackName}
+              markersA={markers}
+              activeMarkerId={activeItemId}
+              onMarkerClick={handleMarkerClick}
+              onTimeUpdate={handleTimeUpdate}
+              onDurationReady={setAudioDuration}
+              onAddNote={handleAddNoteFromWaveform}
+              onAddToDo={handleAddToDoWithTimestamp}
+              onEditNote={handleEditAnnotation}
+            />
+          </div>
+        )}
+
+        {/* ── SUMMARY SECTION ── */}
+        {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
+          <>
+            {/* Subtle internal divider */}
+            <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+
+            <div className="px-5 py-5 md:px-7 md:py-6">
+              {/* Top row: paragraph + action buttons */}
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                {n.overallImpression && (
+                  <p className="text-[14px] text-foreground/70 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75 }}>
+                    {n.overallImpression}
+                  </p>
+                )}
+
+                {/* Action controls */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setShowArrangement((v) => !v)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
+                    style={{ paddingTop: 6, paddingBottom: 6 }}
+                  >
+                    <Layers className="w-3 h-3 text-foreground/50" />
+                    <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
+                    <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
+                  </button>
+                  <button
+                    onClick={() => setRefModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
+                    style={{ paddingTop: 6, paddingBottom: 6 }}
+                  >
+                    <Music className="w-3 h-3 text-foreground/50" />
+                    <span className="hidden sm:inline">Add reference track</span>
+                    <span className="sm:hidden">Reference</span>
+                  </button>
+                </div>
+              </div>
+
+              {(n.topIssue || n.biggestWin || releaseReadiness) && (
+                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-4")}>
+                  {n.topIssue && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                      <span
+                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                      >Issue</span>
+                      <span className="text-[12px] font-medium text-foreground/75">{n.topIssue}</span>
+                    </span>
+                  )}
+                  {n.biggestWin && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                      <span
+                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                      >Win</span>
+                      <span className="text-[12px] font-medium text-foreground/75">{n.biggestWin}</span>
+                    </span>
+                  )}
+                  {releaseReadiness && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                      <span
+                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                      >Release</span>
+                      <span className="text-[12px] font-medium text-foreground/75">{releaseReadiness}</span>
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* ── PANELS WORKSTATION ── */}
+        <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+        <div
+          className="flex overflow-hidden"
+          style={{
+            height: "calc(100vh - 340px)",
+            minHeight: 380,
+            backgroundColor: "hsl(var(--panel-bg))",
+          }}
+        >
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
