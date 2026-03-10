@@ -451,22 +451,32 @@ const DeleteConfirmModal = ({
       onClick={(e) => { if (e.target === e.currentTarget && !deleting) onCancel(); }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 animate-in fade-in-0 duration-150" />
+      <div className="absolute inset-0 bg-black/70 animate-in fade-in-0 duration-150" />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-lg border border-border bg-background p-6 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150">
-        <h2 className="text-lg font-semibold mb-2">Delete project?</h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          This will permanently delete <strong>{projectName}</strong> and all its analyses. This action cannot be undone.
+      <div
+        className="relative z-10 w-full max-w-md mx-4 p-5 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150"
+        style={{
+          backgroundColor: "hsl(var(--card))",
+          border: "2px solid hsl(var(--foreground) / 0.12)",
+          borderRadius: 4,
+          boxShadow: "0 8px 30px hsl(0 0% 0% / 0.2)",
+        }}
+      >
+        <h2 className="text-sm font-bold mb-1.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Delete project?</h2>
+        <p className="text-[12px] text-muted-foreground mb-5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+          This will permanently delete <strong>{projectName}</strong> and all its analyses.
         </p>
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel} disabled={deleting}>
+          <Button variant="outline" size="sm" onClick={onCancel} disabled={deleting} style={{ borderRadius: 3 }}>
             Cancel
           </Button>
           <Button
             variant="destructive"
+            size="sm"
             onClick={onConfirm}
             disabled={deleting}
+            style={{ borderRadius: 3 }}
           >
             {deleting ? "Deleting…" : "Delete"}
           </Button>
