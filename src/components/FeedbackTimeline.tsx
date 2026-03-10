@@ -186,11 +186,24 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 borderLeftColor: accent.border,
                 backgroundColor: isActive ? accent.bg : undefined,
               }}
-              className={`group relative w-full text-left rounded-lg border-l-[3px] border border-border/40 px-3 py-2.5 transition-all duration-200 cursor-pointer ${
+              className={`group relative w-full text-left rounded-md border-l-[3px] px-3 py-2.5 transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
-                  : "bg-card/40 hover:bg-secondary/25"
+                  ? "shadow-sm"
+                  : "hover:brightness-[1.03]"
               }`}
+              style={{
+                ...(!isActive ? {
+                  backgroundColor: "hsl(var(--panel-bg))",
+                  border: "1px solid hsl(var(--foreground) / 0.07)",
+                  borderLeftWidth: 3,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                } : {
+                  backgroundColor: accent.bg,
+                  border: "1px solid hsl(var(--foreground) / 0.12)",
+                  borderLeftWidth: 3,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset)), 0 1px 3px hsl(0 0% 0% / 0.06)",
+                }),
+              }}
             >
               {/* Hover-only action buttons — top right */}
               <div className="absolute top-2.5 right-2.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

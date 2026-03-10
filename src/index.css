@@ -151,6 +151,9 @@
     --panel-bg: 0 0% 5%;
     --panel-header: 0 0% 7%;
     --panel-content: 0 0% 4%;
+    --workspace-bg: 0 0% 8%;
+    --workspace-frame: 0 0% 12%;
+    --panel-inset: 0 0% 100% / 0.03;
   }
 
   /* Section surface variants for contrast rhythm */

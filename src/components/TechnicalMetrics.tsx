@@ -190,7 +190,15 @@ const SubKickCard = ({ value }: { value: number }) => {
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div className="rounded-lg border border-border-subtle bg-background" style={{ padding: "8px 10px" }}>
+    <div
+      className="rounded-md"
+      style={{
+        padding: "8px 10px",
+        backgroundColor: "hsl(var(--panel-bg))",
+        border: "1px solid hsl(var(--foreground) / 0.08)",
+        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+      }}
+    >
       <div className="flex items-start justify-between gap-1.5">
         <p
           className="text-muted-foreground"

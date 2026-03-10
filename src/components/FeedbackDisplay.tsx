@@ -622,7 +622,7 @@ const FeedbackDisplay = ({
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div key={key} className="rounded-lg border border-border-subtle/40 bg-card/30 p-3">
+                  <div key={key} className="rounded-md p-3" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                     <h3 className="text-[12px] font-semibold tracking-tight mb-1 text-foreground/80">{label}</h3>
                     <AnalysisCardText text={text} />
                   </div>
