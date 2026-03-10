@@ -40,7 +40,8 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         className="shrink-0 select-none"
         style={{
           backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "2px solid hsl(var(--foreground) / 0.12)",
+          borderBottom: "3px solid hsl(var(--foreground) / 0.14)",
+          boxShadow: "0 2px 4px hsl(0 0% 0% / 0.06)",
         }}
       >
         {/* Top machined edge — 2-line bevel */}
