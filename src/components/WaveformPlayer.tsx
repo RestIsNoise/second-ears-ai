@@ -350,9 +350,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         className="overflow-hidden deck-shell"
         style={{
           backgroundColor: SHELL_BG,
-          borderRadius: 6,
-          border: `1px solid ${DIVIDER}`,
-          boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}, 0 2px 8px rgba(0,0,0,0.3)`,
+          borderRadius: 0,
+          border: "none",
           ...containerStyle,
         }}
       >
