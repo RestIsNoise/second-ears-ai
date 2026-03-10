@@ -924,13 +924,14 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── PANELS WORKSTATION ── */}
-        <div className="mx-0" style={{ height: 1, backgroundColor: "hsl(var(--border) / 0.35)" }} />
+        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.14), hsl(var(--foreground) / 0.06))" }} />
         <div
           className="flex overflow-hidden"
           style={{
             height: "calc(100vh - 340px)",
             minHeight: 380,
             backgroundColor: "hsl(var(--panel-bg))",
+            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
           }}
         >
         {/* Desktop sidebar */}
