@@ -817,7 +817,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-6 pb-0 w-full overflow-hidden">
+        <div className="mt-6 pb-0 w-full overflow-hidden relative">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -832,12 +832,26 @@ const FeedbackDisplay = ({
             onAddToDo={handleAddToDoWithTimestamp}
             onEditNote={handleEditAnnotation}
           />
+          {/* Player-to-content gradient transition */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none"
+            aria-hidden="true"
+            style={{
+              background: "linear-gradient(to bottom, transparent, hsl(var(--background) / 0.6))",
+            }}
+          />
         </div>
       )}
 
       {/* ═══ SUMMARY CARD ═══ */}
       {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-5 rounded-[10px] border border-border/60 bg-card/50 px-5 py-5 md:px-7 md:py-6" style={{ boxShadow: "0 1px 4px 0 rgba(0,0,0,0.04)" }}>
+        <div
+          className="mt-5 rounded-[10px] border border-border/50 px-5 py-5 md:px-7 md:py-6"
+          style={{
+            backgroundColor: "hsl(var(--card))",
+            boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 0 0 1px hsl(var(--border) / 0.3)",
+          }}
+        >
           {/* Top row: paragraph + action buttons */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             {n.overallImpression && (
