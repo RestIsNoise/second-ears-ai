@@ -100,7 +100,10 @@ const Analyze = () => {
             .insert({ user_id: user.id, name: n.trackName })
             .select("id")
             .single();
-          if (projErr) throw projErr;
+          if (projErr) {
+            console.error("[Analyze] Project insert failed:", JSON.stringify(projErr, null, 2));
+            throw projErr;
+          }
           projectId = project.id;
         }
 
