@@ -67,9 +67,11 @@ const Header = () => {
 
         {/* Desktop nav */}
         <nav className={cn(
-          "hidden md:flex items-center text-muted-foreground/65 transition-all duration-500",
-          scrolled ? "gap-6 text-[12px]" : "gap-8 text-[13px]"
-        )}>
+          "hidden md:flex items-center transition-all duration-300",
+          scrolled ? "gap-5 text-[10px]" : "gap-6 text-[11px]"
+        )}
+        style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, letterSpacing: "0.04em", textTransform: "uppercase" }}
+        >
           {navItems.map((item) =>
             item.href.startsWith("/") && !item.href.startsWith("/#") ? (
               <Link key={item.label} to={item.href} className="hover:text-foreground transition-colors">
