@@ -180,18 +180,15 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              style={{
-                scrollMarginTop: 32,
-                scrollMarginBottom: 160,
-                borderLeftColor: accent.border,
-                backgroundColor: isActive ? accent.bg : undefined,
-              }}
               className={`group relative w-full text-left rounded-md border-l-[3px] px-3 py-2.5 transition-all duration-200 cursor-pointer ${
                 isActive
                   ? "shadow-sm"
                   : "hover:brightness-[1.03]"
               }`}
               style={{
+                scrollMarginTop: 32,
+                scrollMarginBottom: 160,
+                borderLeftColor: accent.border,
                 ...(!isActive ? {
                   backgroundColor: "hsl(var(--panel-bg))",
                   border: "1px solid hsl(var(--foreground) / 0.07)",
