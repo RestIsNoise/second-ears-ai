@@ -245,14 +245,16 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         containerStyle={{ borderRadius: 0, border: "none", boxShadow: "none" }}
       />
 
-      {/* ═══ Mixer strip ═══ */}
+      {/* ═══ Mixer strip — heavier, more machined ═══ */}
       <div
-        className="flex items-center gap-3 px-3 py-2"
+        className="flex items-center gap-3 px-3"
         style={{
+          paddingTop: 8,
+          paddingBottom: 8,
           backgroundColor: MIXER_BG,
-          borderTop: `1px solid ${DIVIDER}`,
-          borderBottom: `1px solid ${DIVIDER}`,
-          boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}`,
+          borderTop: `2px solid rgba(0,0,0,0.5)`,
+          borderBottom: `2px solid rgba(0,0,0,0.5)`,
+          boxShadow: `inset 0 1px 0 ${BEVEL_LIGHT}, inset 0 -1px 0 ${BEVEL_DARK}, 0 1px 4px rgba(0,0,0,0.3)`,
         }}
       >
         {/* LEFT: Transport cluster */}
