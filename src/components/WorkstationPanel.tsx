@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, Minus } from "lucide-react";
 
 /** Flex weight per panel id */
 const PANEL_FLEX: Record<string, number> = {
@@ -30,67 +30,92 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
       style={{
         flex,
         minWidth,
-        borderRight: "1px solid hsl(var(--channel-divider))",
+        /* Hard channel-strip divider between panels */
+        borderRight: "2px solid hsl(var(--foreground) / 0.1)",
+        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03)",
       }}
     >
-      {/* ── Rack-mount header ── */}
+      {/* ═══ RACK-MOUNT HEADER ═══ */}
       <div
         className="shrink-0 select-none"
         style={{
           backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "1px solid hsl(var(--foreground) / 0.12)",
-          boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.08)",
+          borderBottom: "2px solid hsl(var(--foreground) / 0.12)",
         }}
       >
-        {/* Top bevel line — rack edge detail */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--rack-screw)), hsl(var(--panel-header)))" }} />
+        {/* Top machined edge — 2-line bevel */}
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.06)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.12)" }} />
 
-        <div className="flex items-center justify-between px-3 py-[7px]">
+        <div className="flex items-center justify-between px-3 py-[6px]">
           <div className="flex items-center gap-2 min-w-0">
-            {/* Rack screw detail */}
+            {/* Rack screw — double ring */}
             <div
-              className="w-[7px] h-[7px] rounded-full shrink-0"
+              className="w-[8px] h-[8px] rounded-full shrink-0"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--foreground) / 0.15), hsl(var(--foreground) / 0.06))",
-                boxShadow: "inset 0 1px 1px hsl(0 0% 100% / 0.1), 0 1px 1px hsl(0 0% 0% / 0.1)",
+                background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.18), hsl(var(--foreground) / 0.06))",
+                boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 1px 2px hsl(0 0% 0% / 0.15), 0 0 0 1px hsl(var(--foreground) / 0.06)",
               }}
             />
             <h3
-              className="text-[9px] text-foreground/65 tracking-[0.14em] uppercase truncate font-bold"
+              className="text-[9px] text-foreground/60 tracking-[0.16em] uppercase truncate font-extrabold"
               style={{ fontFamily: MONO }}
             >
               {title}
             </h3>
           </div>
-          <button
-            onClick={onClose}
-            className="text-foreground/18 hover:text-foreground/55 transition-colors shrink-0 ml-2 rounded-sm p-0.5 hover:bg-foreground/[0.06]"
-            title="Close panel"
-          >
-            <X className="w-3 h-3" />
-          </button>
+
+          <div className="flex items-center gap-0.5 shrink-0 ml-2">
+            {/* Panel ID chip — like a hardware serial label */}
+            <span
+              className="text-[7px] text-foreground/20 tracking-[0.12em] uppercase mr-1.5"
+              style={{ fontFamily: MONO }}
+            >
+              {id.split("-").pop()?.slice(0, 4).toUpperCase()}
+            </span>
+            <button
+              onClick={onClose}
+              className="text-foreground/15 hover:text-foreground/50 transition-colors rounded-[2px] p-[3px] hover:bg-foreground/[0.06]"
+              title="Close panel"
+            >
+              <X className="w-[10px] h-[10px]" strokeWidth={2.5} />
+            </button>
+          </div>
         </div>
 
-        {/* Bottom bevel — machined edge */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(0 0% 0% / 0.06), hsl(0 0% 0% / 0.03))" }} />
+        {/* Bottom machined edge — double bevel */}
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.1)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
       </div>
 
-      {/* ── Recessed content well ── */}
+      {/* ═══ RECESSED CONTENT WELL ═══ */}
       <div
         className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
         style={{
           backgroundColor: "hsl(var(--panel-content))",
-          boxShadow: "inset 0 3px 6px hsl(var(--panel-inset)), inset 0 0 1px hsl(0 0% 0% / 0.04)",
+          boxShadow: "inset 0 4px 8px hsl(var(--panel-inset)), inset 1px 0 0 hsl(0 0% 0% / 0.03), inset -1px 0 0 hsl(0 0% 0% / 0.03)",
         }}
       >
         {/* Noise texture */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.035]"
+          className="absolute inset-0 pointer-events-none opacity-[0.04]"
           aria-hidden="true"
           style={{
             backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
             backgroundSize: "256px 256px",
+          }}
+        />
+        {/* Fine grid overlay for technical feel */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.02]"
+          aria-hidden="true"
+          style={{
+            backgroundImage: `
+              linear-gradient(hsl(var(--foreground) / 0.15) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(var(--foreground) / 0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "24px 24px",
           }}
         />
         <div className="relative">

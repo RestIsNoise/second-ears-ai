@@ -2,60 +2,63 @@ import type { TechnicalMetrics as TechnicalMetricsType } from "@/pages/Analyze";
 
 type Status = { label: string; color: "green" | "orange" | "red" | "blue" };
 
+const MONO = "'IBM Plex Mono', monospace";
+
 function lufsStatus(v: number): Status {
-  if (v >= -14 && v <= -9) return { label: "Streaming Ready", color: "green" };
-  if ((v >= -16 && v < -14) || (v > -9 && v <= -7)) return { label: v > -9 ? "A Bit Hot" : "A Bit Quiet", color: "orange" };
-  if (v > -7) return { label: "Too Hot", color: "red" };
-  return { label: "Too Quiet", color: "red" };
+  if (v >= -14 && v <= -9) return { label: "OK", color: "green" };
+  if ((v >= -16 && v < -14) || (v > -9 && v <= -7)) return { label: v > -9 ? "Hot" : "Quiet", color: "orange" };
+  if (v > -7) return { label: "Clip", color: "red" };
+  return { label: "Low", color: "red" };
 }
 
 function drStatus(v: number): Status {
   if (v > 8) return { label: "Dynamic", color: "green" };
-  if (v >= 6) return { label: "Moderate", color: "orange" };
-  return { label: "Over-compressed", color: "red" };
+  if (v >= 6) return { label: "Mod", color: "orange" };
+  return { label: "Crushed", color: "red" };
 }
 
 function peakStatus(v: number): Status {
-  if (v > -0.3) return { label: "Clipping Risk", color: "red" };
+  if (v > -0.3) return { label: "Clip", color: "red" };
   if (v >= -1.0) return { label: "Hot", color: "orange" };
   if (v >= -3.0) return { label: "Safe", color: "green" };
-  return { label: "Headroom", color: "green" };
+  return { label: "Room", color: "green" };
 }
 
 function correlationStatus(v: number): Status {
-  if (v > 0.4) return { label: "Healthy", color: "green" };
+  if (v > 0.4) return { label: "OK", color: "green" };
   if (v >= 0) return { label: "Narrow", color: "orange" };
-  return { label: "Phase Issues", color: "red" };
+  return { label: "Phase", color: "red" };
 }
 
 function crestStatus(v: number): Status {
   if (v > 10) return { label: "Dynamic", color: "green" };
-  if (v >= 6) return { label: "Compressed", color: "orange" };
-  return { label: "Brick-Walled", color: "red" };
+  if (v >= 6) return { label: "Comp", color: "orange" };
+  return { label: "Brick", color: "red" };
 }
 
 function subKickStatus(v: number): Status {
-  if (v >= 0.8 && v <= 1.2) return { label: "Balanced", color: "green" };
-  if (v < 0.5 || v > 1.5) return { label: v < 0.5 ? "Kick Dominant" : "Sub Heavy", color: "red" };
-  return { label: v < 0.8 ? "Kick Dominant" : "Sub Heavy", color: "orange" };
+  if (v >= 0.8 && v <= 1.2) return { label: "Bal", color: "green" };
+  if (v < 0.5 || v > 1.5) return { label: v < 0.5 ? "Kick" : "Sub", color: "red" };
+  return { label: v < 0.8 ? "Kick" : "Sub", color: "orange" };
 }
 
 function lraStatus(v: number): Status {
-  if (v < 3) return { label: "Very Compressed", color: "red" };
-  if (v <= 8) return { label: "Compressed", color: "orange" };
-  if (v <= 14) return { label: "Dynamic", color: "green" };
-  return { label: "Very Dynamic", color: "blue" };
+  if (v < 3) return { label: "Flat", color: "red" };
+  if (v <= 8) return { label: "Comp", color: "orange" };
+  if (v <= 14) return { label: "OK", color: "green" };
+  return { label: "Wide", color: "blue" };
 }
 
-const statusColors: Record<string, { badge: string; bar: string }> = {
-  green: { badge: "bg-emerald-500/15 text-emerald-600", bar: "bg-emerald-500" },
-  orange: { badge: "bg-amber-500/15 text-amber-600", bar: "bg-amber-500" },
-  red: { badge: "bg-red-500/15 text-red-600", bar: "bg-red-500" },
-  blue: { badge: "bg-blue-500/15 text-blue-600", bar: "bg-blue-500" },
+/* Status LED colors — hardware indicator style */
+const ledColors: Record<string, { bg: string; glow: string }> = {
+  green: { bg: "hsl(145 60% 42%)", glow: "0 0 4px hsl(145 60% 42% / 0.4)" },
+  orange: { bg: "hsl(35 85% 50%)", glow: "0 0 4px hsl(35 85% 50% / 0.4)" },
+  red: { bg: "hsl(0 65% 48%)", glow: "0 0 4px hsl(0 65% 48% / 0.4)" },
+  blue: { bg: "hsl(210 65% 50%)", glow: "0 0 4px hsl(210 65% 50% / 0.4)" },
 };
 
-/* ── Compact Metric Card ── */
-interface MetricCardProps {
+/* ── Meter Row — horizontal strip like a hardware channel meter ── */
+interface MeterRowProps {
   label: string;
   value: number | null;
   unit: string;
@@ -65,170 +68,232 @@ interface MetricCardProps {
   decimals?: number;
 }
 
-const MetricCard = ({ label, value, unit, min, max, status, decimals = 1 }: MetricCardProps) => {
+const MeterRow = ({ label, value, unit, min, max, status, decimals = 1 }: MeterRowProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
-  const colors = isMissing ? null : statusColors[status.color];
+  const led = isMissing ? null : ledColors[status.color];
 
   return (
     <div
-      className="rounded-md"
       style={{
-        padding: "8px 10px",
-        backgroundColor: "hsl(var(--panel-bg))",
-        border: "1px solid hsl(var(--foreground) / 0.08)",
-        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+        padding: "6px 8px",
+        borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
       }}
     >
-      <div className="flex items-start justify-between gap-1.5">
-        <div className="min-w-0">
-          <div className="flex items-baseline gap-1">
-            <span
-              className="font-semibold text-foreground tabular-nums tracking-tight"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, lineHeight: 1.1 }}
-            >
-              {isMissing ? "—" : value.toFixed(decimals)}
-            </span>
-            {!isMissing && (
-              <span
-                className="text-muted-foreground font-medium"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
-              >
-                {unit}
-              </span>
-            )}
-          </div>
-          <p
-            className="text-muted-foreground"
-            style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", marginTop: 1, lineHeight: 1.2 }}
-          >
-            {label}
-          </p>
-        </div>
+      {/* Top line: label + value + LED */}
+      <div className="flex items-center justify-between gap-2 mb-1">
         <span
-          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${
-            isMissing ? "bg-muted text-muted-foreground/50" : colors!.badge
-          }`}
-          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
+          className="text-foreground/45 uppercase tracking-[0.08em] font-bold truncate"
+          style={{ fontFamily: MONO, fontSize: 8 }}
         >
-          {isMissing ? "N/A" : status.label}
+          {label}
         </span>
-      </div>
-      <div className="rounded-full bg-muted/50 overflow-hidden" style={{ height: 3, marginTop: 6 }}>
-        {!isMissing && (
+        <div className="flex items-center gap-2 shrink-0">
+          <span
+            className="text-foreground/80 tabular-nums font-bold"
+            style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "-0.02em" }}
+          >
+            {isMissing ? "—" : value.toFixed(decimals)}
+          </span>
+          {!isMissing && (
+            <span
+              className="text-foreground/35 font-medium uppercase"
+              style={{ fontFamily: MONO, fontSize: 8 }}
+            >
+              {unit}
+            </span>
+          )}
+          {/* LED indicator */}
           <div
-            className={`h-full rounded-full transition-all duration-700 ease-out ${colors!.bar}`}
-            style={{ width: `${pct}%`, opacity: 0.75 }}
+            className="w-[6px] h-[6px] rounded-full shrink-0"
+            style={{
+              backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.1)",
+              boxShadow: led ? led.glow : "none",
+            }}
           />
-        )}
+        </div>
       </div>
+      {/* Segmented meter bar */}
+      <div className="flex gap-[1px]" style={{ height: 3 }}>
+        {Array.from({ length: 20 }).map((_, i) => {
+          const segPct = (i + 1) * 5;
+          const filled = pct >= segPct;
+          return (
+            <div
+              key={i}
+              className="flex-1"
+              style={{
+                backgroundColor: filled && led
+                  ? `${led.bg}`
+                  : "hsl(var(--foreground) / 0.04)",
+                opacity: filled ? (0.5 + (i / 20) * 0.5) : 1,
+                borderRadius: 0.5,
+              }}
+            />
+          );
+        })}
+      </div>
+      {/* Status label */}
+      {!isMissing && (
+        <div className="mt-1 flex justify-end">
+          <span
+            className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
+            style={{ fontFamily: MONO, fontSize: 7 }}
+          >
+            {status.label}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
-/* ── Correlation Card ── */
-const CorrelationCard = ({ value }: { value: number }) => {
+/* ── Correlation Row ── */
+const CorrelationRow = ({ value }: { value: number }) => {
   const status = correlationStatus(value);
-  const colors = statusColors[status.color];
+  const led = ledColors[status.color];
   const pct = ((value + 1) / 2) * 100;
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
     <div
-      className="rounded-md"
       style={{
-        padding: "8px 10px",
-        backgroundColor: "hsl(var(--panel-bg))",
-        border: "1px solid hsl(var(--foreground) / 0.08)",
-        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+        padding: "6px 8px",
+        borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
       }}
     >
-      <div className="flex items-start justify-between gap-1.5">
-        <div className="min-w-0">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <span
+          className="text-foreground/45 uppercase tracking-[0.08em] font-bold"
+          style={{ fontFamily: MONO, fontSize: 8 }}
+        >
+          Stereo Corr
+        </span>
+        <div className="flex items-center gap-2 shrink-0">
           <span
-            className="font-semibold text-foreground tabular-nums tracking-tight"
-            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, lineHeight: 1.1 }}
+            className="text-foreground/80 tabular-nums font-bold"
+            style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "-0.02em" }}
           >
             {value > 0 ? "+" : ""}{value.toFixed(2)}
           </span>
-          <p
-            className="text-muted-foreground"
-            style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", marginTop: 1, lineHeight: 1.2 }}
-          >
-            Stereo Correlation
-          </p>
+          <div
+            className="w-[6px] h-[6px] rounded-full shrink-0"
+            style={{ backgroundColor: led.bg, boxShadow: led.glow }}
+          />
         </div>
-        <span
-          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${colors.badge}`}
-          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
-        >
-          {status.label}
-        </span>
       </div>
-      <div className="relative rounded-full bg-muted/50 overflow-hidden" style={{ height: 3, marginTop: 6 }}>
-        <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/10" />
+      {/* Bipolar meter */}
+      <div className="relative" style={{ height: 3 }}>
+        <div className="absolute inset-0 flex gap-[1px]">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex-1"
+              style={{
+                backgroundColor: "hsl(var(--foreground) / 0.04)",
+                borderRadius: 0.5,
+              }}
+            />
+          ))}
+        </div>
+        <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: "hsl(var(--foreground) / 0.12)" }} />
         {clampedPct >= 50 ? (
           <div
-            className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{ left: "50%", width: `${clampedPct - 50}%`, opacity: 0.75 }}
+            className="absolute inset-y-0"
+            style={{
+              left: "50%",
+              width: `${clampedPct - 50}%`,
+              backgroundColor: led.bg,
+              opacity: 0.7,
+              borderRadius: "0 1px 1px 0",
+            }}
           />
         ) : (
           <div
-            className={`absolute inset-y-0 rounded-full ${colors.bar}`}
-            style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, opacity: 0.75 }}
+            className="absolute inset-y-0"
+            style={{
+              left: `${clampedPct}%`,
+              width: `${50 - clampedPct}%`,
+              backgroundColor: led.bg,
+              opacity: 0.7,
+              borderRadius: "1px 0 0 1px",
+            }}
           />
         )}
+      </div>
+      <div className="mt-1 flex justify-end">
+        <span
+          className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
+          style={{ fontFamily: MONO, fontSize: 7 }}
+        >
+          {status.label}
+        </span>
       </div>
     </div>
   );
 };
 
-/* ── Sub/Kick Card ── */
-const SubKickCard = ({ value }: { value: number }) => {
+/* ── Sub/Kick Row ── */
+const SubKickRow = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
-  const colors = statusColors[status.color];
+  const led = ledColors[status.color];
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div
-      className="rounded-md"
-      style={{
-        padding: "8px 10px",
-        backgroundColor: "hsl(var(--panel-bg))",
-        border: "1px solid hsl(var(--foreground) / 0.08)",
-        boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-      }}
-    >
-      <div className="flex items-start justify-between gap-1.5">
-        <p
-          className="text-muted-foreground"
-          style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 1.2 }}
-        >
-          Sub / Kick Ratio
-        </p>
+    <div style={{ padding: "6px 8px" }}>
+      <div className="flex items-center justify-between gap-2 mb-1">
         <span
-          className={`shrink-0 rounded-full font-semibold tracking-wide uppercase ${colors.badge}`}
-          style={{ fontSize: 8, padding: "2px 6px", lineHeight: 1.2 }}
+          className="text-foreground/45 uppercase tracking-[0.08em] font-bold"
+          style={{ fontFamily: MONO, fontSize: 8 }}
         >
-          {status.label}
+          Sub/Kick
         </span>
-      </div>
-      <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
-        <span className="text-muted-foreground/60 shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em" }}>K</span>
-        <div className="relative flex-1 rounded-full bg-muted/50" style={{ height: 4 }}>
-          <div className="absolute inset-y-0 bg-emerald-500/10 rounded-full" style={{ left: "40%", width: "20%" }} />
-          <div className="absolute top-0 bottom-0 bg-foreground/8" style={{ left: "50%", width: 1 }} />
+        <div className="flex items-center gap-2 shrink-0">
+          <span
+            className="text-foreground/80 tabular-nums font-bold"
+            style={{ fontFamily: MONO, fontSize: 13 }}
+          >
+            {value.toFixed(2)}
+          </span>
           <div
-            className={`absolute top-1/2 rounded-full border border-background ${colors.bar}`}
-            style={{ left: `${pct}%`, width: 8, height: 8, transform: "translate(-50%, -50%)" }}
+            className="w-[6px] h-[6px] rounded-full shrink-0"
+            style={{ backgroundColor: led.bg, boxShadow: led.glow }}
           />
         </div>
-        <span className="text-muted-foreground/60 shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em" }}>S</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-foreground/25 shrink-0" style={{ fontFamily: MONO, fontSize: 7, fontWeight: 700 }}>K</span>
+        <div className="relative flex-1" style={{ height: 3 }}>
+          <div className="absolute inset-0 flex gap-[1px]">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex-1"
+                style={{ backgroundColor: "hsl(var(--foreground) / 0.04)", borderRadius: 0.5 }}
+              />
+            ))}
+          </div>
+          <div className="absolute inset-y-0" style={{ left: "50%", width: 1, backgroundColor: "hsl(var(--foreground) / 0.1)" }} />
+          <div
+            className="absolute top-1/2 rounded-full"
+            style={{
+              left: `${pct}%`,
+              width: 6,
+              height: 6,
+              transform: "translate(-50%, -50%)",
+              backgroundColor: led.bg,
+              boxShadow: led.glow,
+            }}
+          />
+        </div>
+        <span className="text-foreground/25 shrink-0" style={{ fontFamily: MONO, fontSize: 7, fontWeight: 700 }}>S</span>
+      </div>
+      <div className="mt-1 flex justify-end">
         <span
-          className="font-semibold text-foreground tabular-nums shrink-0"
-          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}
+          className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
+          style={{ fontFamily: MONO, fontSize: 7 }}
         >
-          {value.toFixed(2)}
+          {status.label}
         </span>
       </div>
     </div>
@@ -263,28 +328,52 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   const lra = metrics.lra ?? null;
 
   return (
-    <section>
-      <div className="flex items-baseline justify-between mb-2.5">
-        <h2 className="font-mono-brand text-[10px] text-muted-foreground tracking-widest uppercase">
-          Technical metrics
-        </h2>
+    <section
+      style={{
+        backgroundColor: "hsl(var(--panel-bg))",
+        border: "1px solid hsl(var(--foreground) / 0.06)",
+        borderRadius: 3,
+        boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+        overflow: "hidden",
+      }}
+    >
+      {/* Section header strip */}
+      <div
+        className="flex items-center justify-between px-2.5 py-[5px]"
+        style={{
+          backgroundColor: "hsl(var(--panel-header))",
+          borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
+        }}
+      >
+        <span
+          className="text-foreground/40 uppercase tracking-[0.14em] font-extrabold"
+          style={{ fontFamily: MONO, fontSize: 7 }}
+        >
+          Metering
+        </span>
+        <span
+          className="text-foreground/15 uppercase tracking-[0.1em] font-bold"
+          style={{ fontFamily: MONO, fontSize: 6 }}
+        >
+          {[il, stl, dr, peak, sc, cf, lra].filter(v => v !== null).length} ch
+        </span>
       </div>
-      <div className="grid grid-cols-1 gap-1.5">
-        <MetricCard label="Integrated LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
-        <MetricCard label="Short-Term LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
-        <MetricCard label="LRA · Loudness Range" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} />
-        <MetricCard label="Dynamic Range" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
-        <MetricCard label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
-        {sc !== null ? (
-          <CorrelationCard value={sc} />
-        ) : (
-          <MetricCard label="Stereo Correlation" value={null} unit="" min={-1} max={1} status={null} />
-        )}
-        <MetricCard label="Crest Factor" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
-        {metrics.sub_kick_ratio !== undefined && (
-          <SubKickCard value={metrics.sub_kick_ratio} />
-        )}
-      </div>
+
+      {/* Meter rows */}
+      <MeterRow label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
+      <MeterRow label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
+      <MeterRow label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} />
+      <MeterRow label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
+      <MeterRow label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
+      {sc !== null ? (
+        <CorrelationRow value={sc} />
+      ) : (
+        <MeterRow label="Stereo Corr" value={null} unit="" min={-1} max={1} status={null} />
+      )}
+      <MeterRow label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
+      {metrics.sub_kick_ratio !== undefined && (
+        <SubKickRow value={metrics.sub_kick_ratio} />
+      )}
     </section>
   );
 };
