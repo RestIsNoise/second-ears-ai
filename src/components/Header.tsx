@@ -74,11 +74,11 @@ const Header = () => {
         >
           {navItems.map((item) =>
             item.href.startsWith("/") && !item.href.startsWith("/#") ? (
-              <Link key={item.label} to={item.href} className="hover:text-foreground transition-colors">
+              <Link key={item.label} to={item.href} className="text-foreground/40 hover:text-foreground transition-colors">
                 {item.label}
               </Link>
             ) : (
-              <a key={item.label} href={item.href} className="hover:text-foreground transition-colors">
+              <a key={item.label} href={item.href} className="text-foreground/40 hover:text-foreground transition-colors">
                 {item.label}
               </a>
             )
