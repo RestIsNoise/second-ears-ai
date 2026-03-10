@@ -450,14 +450,15 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         </div>
       </div>
 
-      {/* Deck B */}
+      {/* Deck B — reference track */}
       <div
         className="relative"
         style={{
           borderTop: `1px solid ${DIVIDER}`,
-          borderBottom: "1px solid rgba(255,255,255,0.12)",
-          backgroundColor: "#101010",
-          paddingBottom: 8,
+          borderBottom: "2px solid rgba(0,0,0,0.4)",
+          backgroundColor: "#0E0E10",
+          paddingBottom: 10,
+          boxShadow: "inset 0 2px 6px rgba(0,0,0,0.3)",
         }}
       >
         <WaveformPlayer
