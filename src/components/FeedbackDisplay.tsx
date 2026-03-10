@@ -1108,8 +1108,9 @@ const FeedbackDisplay = ({
         {/* Rack bottom edge */}
         <div
           style={{
-            height: 3,
+            height: 5,
             background: "linear-gradient(180deg, hsl(var(--workspace-bg)), hsl(var(--workspace-frame)))",
+            boxShadow: "0 2px 6px hsl(0 0% 0% / 0.08)",
           }}
         />
       </div>
