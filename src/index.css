@@ -115,6 +115,11 @@
     --panel-bg: 30 25% 96%;
     --panel-header: 30 18% 92%;
     --panel-content: 30 28% 97.5%;
+
+    /* Alternating section surfaces */
+    --surface-a: 30 23% 95%;
+    --surface-b: 30 16% 92%;
+    --surface-c: 28 12% 89%;
   }
 
   .dark {
