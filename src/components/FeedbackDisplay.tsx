@@ -1200,7 +1200,7 @@ const FeedbackDisplay = ({
               <Share2 className="w-[9px] h-[9px]" strokeWidth={2} />
               Share
             </button>
-            {onExportPdf && (
+            {exportAnalysisPdf && (
               <button
                 onClick={() => exportAnalysisPdf(n, releaseReadiness)}
                 className="flex items-center justify-center text-foreground/35 hover:text-foreground/60 transition-colors"
