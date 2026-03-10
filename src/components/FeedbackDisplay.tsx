@@ -726,6 +726,7 @@ const FeedbackDisplay = ({
           backgroundSize: "256px 256px",
         }}
       />
+      {/* ═══ HEADER ═══ */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
         {/* Left: back + title */}
         <div className="min-w-0 flex-1">
