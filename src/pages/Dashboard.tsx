@@ -62,29 +62,67 @@ const TrackRow = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex items-start gap-4 rounded-xl border border-border-subtle bg-card p-5 hover:border-foreground/15 hover:shadow-sm transition-all cursor-pointer"
+      className="group relative flex items-center gap-3 cursor-pointer transition-all duration-100"
+      style={{
+        padding: "10px 14px",
+        backgroundColor: "hsl(var(--card))",
+        border: "2px solid hsl(var(--foreground) / 0.08)",
+        borderRadius: 3,
+        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+      }}
     >
-      <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-10 h-10 rounded-lg bg-muted/60">
-        <AudioLines className="w-5 h-5 text-muted-foreground" />
+      <div
+        className="flex-shrink-0 flex items-center justify-center w-8 h-8"
+        style={{
+          backgroundColor: "hsl(var(--panel-bg))",
+          border: "1px solid hsl(var(--foreground) / 0.06)",
+          borderRadius: 2,
+          boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+        }}
+      >
+        <AudioLines className="w-4 h-4 text-foreground/50" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap mb-1">
-          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
-          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${colorClass}`}>
-            <ModeIcon className="w-3 h-3" />{mode}
+      <div className="flex-1 min-w-0 flex items-center gap-2.5">
+        <h3
+          className="text-[12px] font-semibold truncate text-foreground/85 group-hover:text-foreground transition-colors"
+          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          {proj.name}
+        </h3>
+        <span
+          className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold shrink-0"
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 8,
+            backgroundColor: "hsl(var(--foreground) / 0.04)",
+            border: "1px solid hsl(var(--foreground) / 0.06)",
+            borderRadius: 2,
+          }}
+        >
+          <ModeIcon className="w-2.5 h-2.5" />{mode}
+        </span>
+        {versionCount > 1 && (
+          <span
+            className="text-foreground/30 font-bold shrink-0"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+          >
+            v{latestAnalysis.version}
           </span>
-          {versionCount > 1 && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">v{latestAnalysis.version}</span>
-          )}
-        </div>
-        <p className="text-xs text-muted-foreground/60">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+        )}
       </div>
+      <span
+        className="text-foreground/25 shrink-0 tabular-nums"
+        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+      >
+        {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+      </span>
       <button
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-        className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 self-center"
+        className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
+        style={{ borderRadius: 2 }}
         title="Delete project"
       >
-        <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
+        <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
       </button>
     </div>
   );
@@ -147,18 +185,19 @@ const TrackGridCard = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex flex-col rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-[2px]"
+      className="group relative flex flex-col overflow-hidden cursor-pointer transition-all duration-150 hover:-translate-y-[1px]"
       style={{
         background: "hsl(var(--card))",
-        border: "1px solid hsl(var(--border-subtle) / 0.3)",
-        boxShadow: "0 1px 4px hsl(0 0% 0% / 0.04)",
+        border: "2px solid hsl(var(--foreground) / 0.1)",
+        borderRadius: 3,
+        boxShadow: "0 2px 8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
       }}
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
       <div
         className="relative overflow-hidden"
         style={{
-          background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 7%) 100%)",
+          background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
           minHeight: 110,
         }}
       >
@@ -174,23 +213,23 @@ const TrackGridCard = ({
 
         {/* Header bar */}
         <div
-          className="relative flex items-center justify-between px-3 py-2"
+          className="relative flex items-center justify-between px-3 py-1.5"
           style={{ borderBottom: "1px solid hsl(0 0% 100% / 0.06)" }}
         >
           <div className="flex items-center gap-2">
             <div className="flex gap-[4px]">
-              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 30%)" }} />
-              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 22%)" }} />
+              <div className="w-[5px] h-[5px] rounded-full" style={{ background: "hsl(0 0% 30%)" }} />
+              <div className="w-[5px] h-[5px] rounded-full" style={{ background: "hsl(0 0% 22%)" }} />
             </div>
             <span
-              className="text-[8px] text-white/15 tracking-[0.15em] uppercase"
+              className="text-[7px] text-white/15 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               Analysis
             </span>
           </div>
           <span
-            className="text-[9px] text-white/25 tabular-nums"
+            className="text-[8px] text-white/25 tabular-nums font-medium"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             {duration}
@@ -199,7 +238,6 @@ const TrackGridCard = ({
 
         {/* Waveform lane */}
         <div className="relative px-3 py-3">
-          {/* Main waveform — mirrored bars */}
           <div className="relative flex items-center justify-center h-[36px]">
             {bars.map((v, i) => {
               const halfH = Math.max(1.5, v * 16);
@@ -212,22 +250,20 @@ const TrackGridCard = ({
                   style={{ width: 2.5, marginRight: 0.5 }}
                 >
                   <div
-                    className="rounded-[1px]"
                     style={{
                       width: 2,
                       height: halfH,
                       background: played ? "hsl(0 0% 65%)" : "hsl(0 0% 30%)",
-                      transition: "background 0.2s",
+                      borderRadius: 0,
                     }}
                   />
                   <div
-                    className="rounded-[1px]"
                     style={{
                       width: 2,
                       height: halfH * 0.6,
                       background: played ? "hsl(0 0% 45%)" : "hsl(0 0% 20%)",
                       opacity: 0.7,
-                      transition: "background 0.2s",
+                      borderRadius: 0,
                     }}
                   />
                 </div>
@@ -246,8 +282,7 @@ const TrackGridCard = ({
           </div>
 
           {/* Issue markers row */}
-          <div className="relative h-[14px] mt-1">
-            {/* Baseline */}
+          <div className="relative h-[12px] mt-1">
             <div
               className="absolute left-0 right-0 top-1/2 h-px"
               style={{ background: "hsl(0 0% 100% / 0.06)" }}
@@ -258,17 +293,15 @@ const TrackGridCard = ({
                 className="absolute top-1/2 -translate-y-1/2 flex flex-col items-center"
                 style={{ left: `${pos * 100}%` }}
               >
-                {/* Marker line */}
                 <div
-                  className="w-px h-[10px] -translate-x-1/2"
+                  className="w-px h-[8px] -translate-x-1/2"
                   style={{ background: "hsl(0 55% 52% / 0.6)" }}
                 />
-                {/* Marker dot */}
                 <div
-                  className="w-[4px] h-[4px] rounded-full -translate-x-1/2 mt-[-2px]"
+                  className="w-[3px] h-[3px] rounded-full -translate-x-1/2 mt-[-2px]"
                   style={{
                     background: "hsl(0 55% 52% / 0.8)",
-                    boxShadow: "0 0 4px hsl(0 55% 50% / 0.5)",
+                    boxShadow: "0 0 3px hsl(0 55% 50% / 0.5)",
                   }}
                 />
               </div>
@@ -293,71 +326,82 @@ const TrackGridCard = ({
         </div>
       </div>
 
-      {/* ══════ LIGHT INFO BOTTOM HALF ══════ */}
-      <div className="px-4 py-3.5 flex-1 flex flex-col">
-        <div className="flex items-start justify-between gap-2 mb-2.5">
-          <h3 className="text-[13px] font-semibold tracking-[-0.015em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight">
+      {/* ══════ INFO BOTTOM HALF ══════ */}
+      <div
+        className="px-3 py-3 flex-1 flex flex-col"
+        style={{
+          borderTop: "2px solid hsl(var(--foreground) / 0.08)",
+        }}
+      >
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3
+            className="text-[12px] font-bold tracking-[-0.01em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
             {proj.name}
           </h3>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-            className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
+            className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
+            style={{ borderRadius: 2 }}
             title="Delete project"
           >
-            <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
+            <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive transition-colors" />
           </button>
         </div>
 
         <div className="flex items-center gap-1.5 flex-wrap mb-auto">
           <span
-            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider"
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold"
             style={{
-              background: "hsl(var(--surface-b))",
-              border: "1px solid hsl(var(--border-subtle) / 0.3)",
-              color: "hsl(var(--muted-foreground))",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 8,
+              backgroundColor: "hsl(var(--foreground) / 0.04)",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
             }}
           >
             <ModeIcon className="w-2.5 h-2.5" />{mode}
           </span>
           {versionCount > 1 && (
             <span
-              className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground/60"
-              style={{
-                background: "hsl(var(--surface-b) / 0.6)",
-                border: "1px solid hsl(var(--border-subtle) / 0.2)",
-              }}
+              className="text-foreground/30 font-bold"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
             >
               v{latestAnalysis.version}
             </span>
           )}
           <span
-            className="inline-flex items-center gap-1 text-[9px] text-muted-foreground/30"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            className="text-foreground/20 tabular-nums"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
           >
             {markers.length} issues
           </span>
         </div>
 
         <div
-          className="flex items-center justify-between pt-2.5 mt-2"
-          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.12)" }}
+          className="flex items-center justify-between pt-2 mt-1.5"
+          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.06)" }}
         >
-          <p className="text-[10px] text-muted-foreground/35">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+          <p className="text-foreground/25 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}>
+            {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+          </p>
           <span
-            className="text-[9px] text-muted-foreground/20 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide uppercase"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            className="text-foreground/15 opacity-0 group-hover:opacity-100 transition-opacity tracking-[0.1em] uppercase font-bold"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace", fontSize: 8 }}
           >
             Open →
           </span>
         </div>
       </div>
 
-      {/* Hover glow overlay */}
+      {/* Hover border */}
       <div
-        className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300"
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200"
         style={{
-          border: "1px solid hsl(var(--foreground) / 0.15)",
-          boxShadow: "0 8px 24px -8px hsl(0 0% 0% / 0.12)",
+          border: "2px solid hsl(var(--foreground) / 0.18)",
+          borderRadius: 3,
+          boxShadow: "0 6px 20px -6px hsl(0 0% 0% / 0.15)",
         }}
       />
     </div>
@@ -366,9 +410,17 @@ const TrackGridCard = ({
 
 /* ─── Empty state ─── */
 const EmptyState = ({ icon: Icon, message }: { icon: typeof Inbox; message: string }) => (
-  <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-    <Icon className="w-10 h-10 mb-3 opacity-40" />
-    <p className="text-sm max-w-xs">{message}</p>
+  <div
+    className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground"
+    style={{
+      backgroundColor: "hsl(var(--panel-content))",
+      border: "2px solid hsl(var(--foreground) / 0.06)",
+      borderRadius: 3,
+      boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+    }}
+  >
+    <Icon className="w-8 h-8 mb-2 opacity-30" />
+    <p className="text-[11px] max-w-xs" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{message}</p>
   </div>
 );
 
@@ -399,22 +451,32 @@ const DeleteConfirmModal = ({
       onClick={(e) => { if (e.target === e.currentTarget && !deleting) onCancel(); }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 animate-in fade-in-0 duration-150" />
+      <div className="absolute inset-0 bg-black/70 animate-in fade-in-0 duration-150" />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-lg border border-border bg-background p-6 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150">
-        <h2 className="text-lg font-semibold mb-2">Delete project?</h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          This will permanently delete <strong>{projectName}</strong> and all its analyses. This action cannot be undone.
+      <div
+        className="relative z-10 w-full max-w-md mx-4 p-5 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150"
+        style={{
+          backgroundColor: "hsl(var(--card))",
+          border: "2px solid hsl(var(--foreground) / 0.12)",
+          borderRadius: 4,
+          boxShadow: "0 8px 30px hsl(0 0% 0% / 0.2)",
+        }}
+      >
+        <h2 className="text-sm font-bold mb-1.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Delete project?</h2>
+        <p className="text-[12px] text-muted-foreground mb-5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+          This will permanently delete <strong>{projectName}</strong> and all its analyses.
         </p>
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel} disabled={deleting}>
+          <Button variant="outline" size="sm" onClick={onCancel} disabled={deleting} style={{ borderRadius: 3 }}>
             Cancel
           </Button>
           <Button
             variant="destructive"
+            size="sm"
             onClick={onConfirm}
             disabled={deleting}
+            style={{ borderRadius: 3 }}
           >
             {deleting ? "Deleting…" : "Delete"}
           </Button>
@@ -528,38 +590,79 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-16 px-6">
+      <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header row */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-1">Dashboard</p>
-              <h1 className="text-2xl font-semibold tracking-tight">My Projects</h1>
+          <div
+            className="flex items-center justify-between mb-4 px-4"
+            style={{
+              paddingTop: 12,
+              paddingBottom: 12,
+              backgroundColor: "hsl(var(--analysis-header))",
+              border: "2px solid hsl(var(--foreground) / 0.08)",
+              borderRadius: 3,
+              boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-[7px] h-[7px] rounded-full shrink-0"
+                style={{
+                  background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
+                  boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
+                }}
+              />
+              <h1
+                className="text-[13px] font-bold tracking-tight"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                My Projects
+              </h1>
             </div>
             <Link
               to="/analyze"
-              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-medium hover:bg-primary/85 transition-all"
+              className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground transition-all"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 12px",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.1)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
             >
               New analysis
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
           {/* Tabs */}
           <Tabs defaultValue="tracks" className="w-full">
-            <TabsList className="bg-muted/50 mb-6">
-              <TabsTrigger value="tracks" className="gap-1.5 text-xs">
-                <AudioLines className="w-3.5 h-3.5" />
-                My Tracks
-              </TabsTrigger>
-              <TabsTrigger value="requests" className="gap-1.5 text-xs">
-                <Inbox className="w-3.5 h-3.5" />
-                Feedback Requests
-              </TabsTrigger>
-              <TabsTrigger value="archive" className="gap-1.5 text-xs">
-                <Archive className="w-3.5 h-3.5" />
-                Archive
-              </TabsTrigger>
+            <TabsList
+              className="mb-4 h-auto p-0 gap-0 rounded-none bg-transparent"
+              style={{
+                borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+              }}
+            >
+              {[
+                { value: "tracks", label: "My Tracks", icon: AudioLines },
+                { value: "requests", label: "Requests", icon: Inbox },
+                { value: "archive", label: "Archive", icon: Archive },
+              ].map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="gap-1.5 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}
+                >
+                  <tab.icon className="w-3 h-3" />
+                  {tab.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             <TabsContent value="tracks">
@@ -568,31 +671,43 @@ const Dashboard = () => {
               ) : (
                 <>
                   {/* View toggle */}
-                  <div className="flex items-center justify-end gap-1 mb-4">
+                  <div className="flex items-center justify-end gap-0.5 mb-3">
                     <button
                       onClick={() => { setViewMode("list"); localStorage.setItem("dashboard-view", "list"); }}
-                      className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      className="p-1.5 transition-colors"
+                      style={{
+                        backgroundColor: viewMode === "list" ? "hsl(var(--panel-bg))" : "transparent",
+                        border: viewMode === "list" ? "1px solid hsl(var(--foreground) / 0.08)" : "1px solid transparent",
+                        borderRadius: 2,
+                        color: viewMode === "list" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.3)",
+                      }}
                       title="List view"
                     >
-                      <List className="w-4 h-4" />
+                      <List className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => { setViewMode("grid"); localStorage.setItem("dashboard-view", "grid"); }}
-                      className={`p-1.5 rounded-md transition-colors ${viewMode === "grid" ? "bg-secondary text-foreground" : "text-muted-foreground/40 hover:text-foreground/60"}`}
+                      className="p-1.5 transition-colors"
+                      style={{
+                        backgroundColor: viewMode === "grid" ? "hsl(var(--panel-bg))" : "transparent",
+                        border: viewMode === "grid" ? "1px solid hsl(var(--foreground) / 0.08)" : "1px solid transparent",
+                        borderRadius: 2,
+                        color: viewMode === "grid" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.3)",
+                      }}
                       title="Grid view"
                     >
-                      <LayoutGrid className="w-4 h-4" />
+                      <LayoutGrid className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {viewMode === "list" ? (
-                    <div className="grid gap-3">
+                    <div className="grid gap-1.5">
                       {grouped.map((g) => (
                         <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {grouped.map((g) => (
                         <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
