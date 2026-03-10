@@ -1014,9 +1014,15 @@ const FeedbackDisplay = ({
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div className={cn(
-          "mt-6 grid gap-5 pt-5 border-t border-border-subtle/50",
+          "mt-6 grid gap-5 pt-6 rounded-lg p-5",
           n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
-        )}>
+        )}
+        style={{
+          backgroundColor: "hsl(var(--panel-content))",
+          border: "1px solid hsl(var(--foreground) / 0.08)",
+          boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+        }}
+        >
           {n.whatWorks.length > 0 && (
             <div className="flex flex-col">
               <h3
