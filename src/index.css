@@ -223,48 +223,99 @@ body::after {
   50% { transform: translateY(-6px); }
 }
 
-/* ── Scroll Reveal System ── */
-.reveal-base {
+/* ── Cinematic Scroll Reveal System ── */
+.reveal {
   opacity: 0;
-  transform: translateY(18px);
-  filter: blur(4px);
+  transform: translateY(36px);
+  filter: blur(10px);
   transition:
-    opacity 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    filter 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
-.reveal-visible {
+.reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
 }
 
-/* Stagger children via CSS custom property */
+/* Staggered children */
 .reveal-child {
   opacity: 0;
-  transform: translateY(14px);
-  filter: blur(3px);
+  transform: translateY(28px);
+  filter: blur(8px);
   transition:
-    opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    filter 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-delay: var(--reveal-delay, 0ms);
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--stagger, 0ms);
+  will-change: opacity, transform, filter;
 }
 
-.reveal-visible .reveal-child {
+.reveal.is-visible .reveal-child {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
+}
+
+/* Icon pop-in */
+.reveal-pop {
+  opacity: 0;
+  transform: scale(0.88);
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: var(--stagger, 0ms);
+}
+
+.reveal.is-visible .reveal-pop {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Line draw */
+@keyframes draw-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.line-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.reveal.is-visible .line-draw {
+  animation: draw-line 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 200ms;
+}
+
+/* Pro card emphasis pulse */
+@keyframes pro-glow {
+  0% { box-shadow: 0 4px 20px -4px hsl(0 0% 20% / 0.1); }
+  50% { box-shadow: 0 8px 40px -4px hsl(0 0% 40% / 0.2); }
+  100% { box-shadow: 0 4px 20px -4px hsl(0 0% 20% / 0.1); }
+}
+
+.pro-emphasis {
+  animation: pro-glow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 600ms;
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .reveal-base,
-  .reveal-child {
+  .reveal,
+  .reveal-child,
+  .reveal-pop,
+  .line-draw {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
     transition: none !important;
+    animation: none !important;
+  }
+  .pro-emphasis {
+    animation: none !important;
   }
 }
