@@ -1030,18 +1030,20 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── PANELS WORKSTATION — machined transition ── */}
-        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
+        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
         <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
-        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
+        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
         <div
-          className="flex overflow-hidden"
+          className="flex flex-col md:flex-row overflow-hidden"
           style={{
-            height: "calc(100vh - 300px)",
-            minHeight: 420,
+            minHeight: 340,
             backgroundColor: "hsl(var(--panel-bg))",
             boxShadow: "inset 0 4px 12px hsl(var(--panel-inset))",
           }}
         >
+          {/* On md+ use fixed height for horizontal layout */}
+          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 300px) !important; min-height: 420px !important; } }`}</style>
+          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 300px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
