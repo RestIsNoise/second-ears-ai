@@ -25,16 +25,16 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
   return (
     <div
-      className="flex flex-col h-full min-w-0 border-r border-border/70 last:border-r-0"
+      className="flex flex-col h-full min-w-0 border-r border-border/50 last:border-r-0"
       style={{ flex, minWidth }}
     >
-      {/* Header — tinted surface for clear layer separation */}
+      {/* Header — elevated surface */}
       <div
-        className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 shrink-0"
+        className="flex items-center justify-between px-4 py-2.5 border-b border-border/40 shrink-0"
         style={{ backgroundColor: "hsl(var(--panel-header))" }}
       >
         <h3
-          className="text-[10px] text-foreground/60 tracking-[0.08em] uppercase truncate select-none font-semibold"
+          className="text-[10px] text-foreground/65 tracking-[0.08em] uppercase truncate select-none font-semibold"
           style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
         >
           {title}
@@ -47,12 +47,24 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
           <X className="w-3.5 h-3.5" />
         </button>
       </div>
-      {/* Scrollable content */}
+      {/* Scrollable content with micro-texture */}
       <div
-        className="flex-1 overflow-y-auto min-h-0 scrollbar-thin"
+        className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
         style={{ backgroundColor: "hsl(var(--panel-content))" }}
       >
-        {children}
+        {/* Subtle noise grain texture for panel content */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          aria-hidden="true"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            backgroundSize: "256px 256px",
+          }}
+        />
+        <div className="relative">
+          {children}
+        </div>
       </div>
     </div>
   );

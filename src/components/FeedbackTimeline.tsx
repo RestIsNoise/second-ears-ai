@@ -19,12 +19,32 @@ const severityDot: Record<string, string> = {
   low: "bg-foreground/25",
 };
 
-/** Left border color by mode */
-const modeBorderColor: Record<string, string> = {
-  technical: "border-l-amber-400",
-  musical: "border-l-blue-400",
-  perception: "border-l-purple-400",
+/**
+ * Mode-linked accent colors — low saturation, waveform-tone-matched.
+ * These are the single source of truth for mode accents across cards.
+ */
+const modeAccent: Record<string, { border: string; bg: string; text: string; glow: string }> = {
+  technical: {
+    border: "hsl(35 55% 55%)",      // warm amber — matches warm-gray waveform
+    bg: "hsl(35 40% 50% / 0.06)",
+    text: "hsl(35 45% 45%)",
+    glow: "hsl(35 40% 50% / 0.04)",
+  },
+  musical: {
+    border: "hsl(215 45% 55%)",     // muted blue
+    bg: "hsl(215 35% 50% / 0.06)",
+    text: "hsl(215 40% 48%)",
+    glow: "hsl(215 35% 50% / 0.04)",
+  },
+  perception: {
+    border: "hsl(270 35% 55%)",     // soft purple
+    bg: "hsl(270 28% 50% / 0.06)",
+    text: "hsl(270 30% 48%)",
+    glow: "hsl(270 28% 50% / 0.04)",
+  },
 };
+
+const defaultAccent = modeAccent.technical;
 
 const MONO = "'IBM Plex Mono', monospace";
 
@@ -45,7 +65,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
     <div>
       <p
         ref={textRef}
-        className="text-[13px] text-foreground/60 mt-1"
+        className="text-[13px] text-foreground/65 mt-1.5"
         style={{
           lineHeight: 1.55,
           display: "-webkit-box",
@@ -150,7 +170,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
         {sorted.map((item) => {
           const isActive = activeItemId === item.id;
           const alreadyAdded = todoItemIds?.has(item.id);
-          const borderColor = modeBorderColor[item.mode] || "border-l-foreground/20";
+          const accent = modeAccent[item.mode] || defaultAccent;
 
           return (
             <div
@@ -160,11 +180,16 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              style={{ scrollMarginTop: 32, scrollMarginBottom: 160 }}
-              className={`group relative w-full text-left rounded-lg border-l-[3px] ${borderColor} border border-border/50 px-3 py-2.5 transition-all duration-200 cursor-pointer ${
+              style={{
+                scrollMarginTop: 32,
+                scrollMarginBottom: 160,
+                borderLeftColor: accent.border,
+                backgroundColor: isActive ? accent.bg : undefined,
+              }}
+              className={`group relative w-full text-left rounded-lg border-l-[3px] border border-border/40 px-3 py-2.5 transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-secondary/60 border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
-                  : "bg-card/60 hover:bg-secondary/30"
+                  ? "border-r-foreground/8 border-t-foreground/8 border-b-foreground/8 shadow-sm"
+                  : "bg-card/40 hover:bg-secondary/25"
               }`}
             >
               {/* Hover-only action buttons — top right */}
@@ -195,7 +220,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
                   <div className={`w-2 h-2 rounded-full ${severityDot[item.severity] || "bg-foreground/20"}`} />
                   <span
-                    className="text-foreground/50 tabular-nums"
+                    className="text-foreground/55 tabular-nums font-medium"
                     style={{
                       fontFamily: MONO,
                       fontSize: 11,
@@ -209,7 +234,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Content */}
                 <div className="flex-1 min-w-0 pr-8">
                   <h3
-                    className="text-[14px] font-semibold tracking-tight text-foreground/90 leading-snug"
+                    className="text-[14px] font-semibold tracking-tight text-foreground leading-snug"
                     title={item.title}
                   >
                     {item.title}
@@ -220,12 +245,15 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     <ClampedObservation text={item.observation} />
                   )}
 
-                  {/* FIX block — always visible, stronger separator */}
+                  {/* FIX block — clear visual separation */}
                   {item.fix && (
                     <>
                       <div
                         className="my-2"
-                        style={{ height: 1, background: "linear-gradient(to right, hsl(var(--foreground) / 0.08), hsl(var(--foreground) / 0.03), transparent)" }}
+                        style={{
+                          height: 1,
+                          background: `linear-gradient(to right, ${accent.border}33, ${accent.border}11, transparent)`,
+                        }}
                       />
                       <div className="flex items-start gap-2">
                         <span
@@ -236,13 +264,13 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                             fontWeight: 700,
                             letterSpacing: "0.05em",
                             lineHeight: 1,
-                            backgroundColor: "hsl(var(--foreground) / 0.9)",
-                            color: "hsl(var(--background))",
+                            backgroundColor: accent.border,
+                            color: "hsl(0 0% 100%)",
                           }}
                         >
                           {item.mode === "musical" ? "ARRANGE" : item.mode === "perception" ? "SYSTEM" : "FIX"}
                         </span>
-                        <p className="text-[13px] text-foreground/70" style={{ lineHeight: 1.55 }}>
+                        <p className="text-[13px] text-foreground/75" style={{ lineHeight: 1.55 }}>
                           {item.fix}
                         </p>
                       </div>
@@ -251,7 +279,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
                   {/* Vote buttons */}
                   {analysisId && (
-                    <div className="mt-2">
+                    <div className="mt-1.5">
                       <FeedbackVoteButtons
                         analysisId={analysisId}
                         priorityIndex={sorted.indexOf(item)}
