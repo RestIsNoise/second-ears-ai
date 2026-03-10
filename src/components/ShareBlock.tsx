@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link2, Share2, Lock, Globe, Download, UserPlus, X } from "lucide-react";
+import { Link2, Share2, Lock, Globe, Download, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
+
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
 interface ShareBlockProps {
   onExportPdf?: () => void;
@@ -56,78 +58,126 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
   return (
     <>
-      <div className="space-y-5 overflow-hidden">
-        {/* Share section */}
-        <div>
-          <h4 className="text-xs font-semibold tracking-tight text-foreground mb-3">Share feedback</h4>
-          <div className="flex flex-col gap-1.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyLink}
-              className="w-full h-8 text-[11px] gap-1.5 justify-center"
-            >
-              <Link2 className="w-3 h-3 shrink-0" />
-              <span className="truncate">Copy link</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setModalOpen(true)}
-              className="w-full h-8 text-[11px] gap-1.5 justify-center text-muted-foreground hover:text-foreground"
-            >
-              <Share2 className="w-3 h-3 shrink-0" />
-              <span className="truncate">Share</span>
-            </Button>
-          </div>
-
-          {/* Visibility toggle */}
+      <div className="space-y-0">
+        {/* ── Share actions ── */}
+        <div className="flex gap-1">
           <button
-            onClick={() => setIsPublic(!isPublic)}
-            className="flex items-center gap-2 mt-3 group"
+            onClick={handleCopyLink}
+            className="flex-1 flex items-center justify-center gap-1.5 text-foreground/35 hover:text-foreground/65 transition-colors"
+            style={{
+              fontFamily: MONO,
+              fontSize: 8,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              padding: "5px 0",
+              backgroundColor: "hsl(var(--panel-bg))",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
+              boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+            }}
           >
-            <div
-              className={`w-7 h-4 rounded-full relative transition-colors ${
-                isPublic ? "bg-foreground/15" : "bg-muted"
-              }`}
-            >
-              <div
-                className={`absolute top-0.5 w-3 h-3 rounded-full transition-all ${
-                  isPublic
-                    ? "left-3.5 bg-foreground/60"
-                    : "left-0.5 bg-muted-foreground/40"
-                }`}
-              />
-            </div>
-            <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground group-hover:text-foreground transition-colors">
-              {isPublic ? (
-                <>
-                  <Globe className="w-3 h-3" /> Public
-                </>
-              ) : (
-                <>
-                  <Lock className="w-3 h-3" /> Private
-                </>
-              )}
-            </span>
+            <Link2 className="w-[10px] h-[10px]" strokeWidth={2} />
+            Link
           </button>
-          <p className="text-[10px] text-muted-foreground/45 mt-1.5 leading-relaxed">
-            {isPublic
-              ? "Visible on your profile"
-              : "Only people with the link can view"}
-          </p>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="flex-1 flex items-center justify-center gap-1.5 text-foreground/35 hover:text-foreground/65 transition-colors"
+            style={{
+              fontFamily: MONO,
+              fontSize: 8,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              padding: "5px 0",
+              backgroundColor: "hsl(var(--panel-bg))",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
+              boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+            }}
+          >
+            <Share2 className="w-[10px] h-[10px]" strokeWidth={2} />
+            Share
+          </button>
         </div>
 
-        {/* Brand footer */}
-        <div className="pt-4 border-t border-border-subtle">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full border border-foreground/10 flex items-center justify-center">
-              <span className="text-[8px] font-bold text-foreground/40 leading-none">SE</span>
-            </div>
-            <p className="text-[10px] text-muted-foreground/40 tracking-wide">
-              SecondEar — AI speed, human ears
-            </p>
+        {/* ── Visibility toggle — hardware switch style ── */}
+        <button
+          onClick={() => setIsPublic(!isPublic)}
+          className="w-full flex items-center gap-2 mt-2 group"
+          style={{ padding: "4px 0" }}
+        >
+          <div
+            className="relative shrink-0"
+            style={{
+              width: 24,
+              height: 12,
+              borderRadius: 2,
+              backgroundColor: isPublic ? "hsl(145 60% 42% / 0.15)" : "hsl(var(--foreground) / 0.06)",
+              border: `1px solid ${isPublic ? "hsl(145 60% 42% / 0.3)" : "hsl(var(--foreground) / 0.08)"}`,
+              boxShadow: "inset 0 1px 2px hsl(0 0% 0% / 0.06)",
+              transition: "all 0.15s",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: 1,
+                width: 8,
+                height: 8,
+                borderRadius: 1,
+                transition: "all 0.15s",
+                left: isPublic ? 13 : 1,
+                backgroundColor: isPublic ? "hsl(145 60% 42%)" : "hsl(var(--foreground) / 0.3)",
+                boxShadow: isPublic
+                  ? "0 0 4px hsl(145 60% 42% / 0.4)"
+                  : "none",
+              }}
+            />
           </div>
+          <span
+            className="flex items-center gap-1 text-foreground/35 group-hover:text-foreground/55 transition-colors"
+            style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}
+          >
+            {isPublic ? (
+              <>
+                <Globe className="w-[9px] h-[9px]" strokeWidth={2} />
+                Public
+              </>
+            ) : (
+              <>
+                <Lock className="w-[9px] h-[9px]" strokeWidth={2} />
+                Private
+              </>
+            )}
+          </span>
+        </button>
+
+        {/* ── Brand mark ── */}
+        <div
+          className="flex items-center gap-1.5 mt-3 pt-2"
+          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}
+        >
+          <div
+            className="w-[14px] h-[14px] rounded-[2px] flex items-center justify-center shrink-0"
+            style={{
+              border: "1px solid hsl(var(--foreground) / 0.08)",
+              backgroundColor: "hsl(var(--panel-bg))",
+            }}
+          >
+            <span
+              className="text-foreground/25 leading-none"
+              style={{ fontFamily: MONO, fontSize: 6, fontWeight: 800 }}
+            >
+              SE
+            </span>
+          </div>
+          <span
+            className="text-foreground/18 tracking-[0.04em]"
+            style={{ fontFamily: MONO, fontSize: 7 }}
+          >
+            SecondEar
+          </span>
         </div>
       </div>
 
