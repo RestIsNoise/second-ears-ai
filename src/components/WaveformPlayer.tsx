@@ -360,59 +360,83 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           ...containerStyle,
         }}
       >
-        {/* Label bar — track name + deck badge */}
+        {/* Label bar — premium track header with metadata */}
         {label && (
           <div
-            className="flex items-center gap-2 px-3 py-1.5"
+            className="flex items-center gap-2.5 px-3"
             style={{
+              paddingTop: 7,
+              paddingBottom: 7,
               borderBottom: `1px solid ${DIVIDER}`,
-              background: `linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)`,
+              backgroundColor: HEADER_BG,
+              boxShadow: `inset 0 -1px 0 ${BEVEL_DARK}, inset 0 1px 0 ${BEVEL_LIGHT}`,
             }}
           >
-            {/* Deck badge */}
+            {/* Deck badge — machined */}
             <span
               className="shrink-0 flex items-center justify-center"
               style={{
                 width: 18,
                 height: 18,
-                borderRadius: 3,
+                borderRadius: 2,
                 backgroundColor: colors.accent,
                 fontFamily: MONO,
                 fontSize: 9,
-                fontWeight: 700,
+                fontWeight: 800,
                 color: "#000000",
-                letterSpacing: "0.02em",
+                letterSpacing: "0.04em",
+                boxShadow: `0 1px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)`,
               }}
             >
               {deckLabel}
             </span>
             <div className="min-w-0 flex-1">
               <span
-                className="uppercase tracking-[0.06em] truncate block"
+                className="uppercase tracking-[0.05em] truncate block"
                 style={{
                   fontFamily: MONO,
                   fontSize: 10,
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.75)",
+                  fontWeight: 700,
+                  color: "rgba(255,255,255,0.80)",
+                  letterSpacing: "0.04em",
                 }}
               >
                 {label}
               </span>
-              {duration > 0 && (
+            </div>
+            {/* Metadata readouts */}
+            {duration > 0 && (
+              <div className="flex items-center gap-3 shrink-0">
                 <span
-                  className="tabular-nums block"
+                  className="tabular-nums"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 8,
-                    color: "rgba(255,255,255,0.30)",
+                    fontSize: 9,
+                    color: "rgba(255,255,255,0.35)",
                     letterSpacing: "0.04em",
-                    marginTop: 1,
+                    fontWeight: 500,
                   }}
                 >
-                  {formatTime(duration)} · {audioFile?.type?.split("/")?.[1]?.toUpperCase() || "AUDIO"}
+                  {formatTime(duration)}
                 </span>
-              )}
-            </div>
+                <span
+                  className="uppercase"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 7.5,
+                    color: "rgba(255,255,255,0.22)",
+                    letterSpacing: "0.08em",
+                    fontWeight: 600,
+                    padding: "1px 5px",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "0.5px solid rgba(255,255,255,0.06)",
+                    borderRadius: 2,
+                  }}
+                >
+                  {audioFile?.type?.split("/")?.[1]?.toUpperCase() || "AUDIO"}
+                </span>
+              </div>
+            )}
           </div>
         )}
 
