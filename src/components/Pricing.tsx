@@ -59,21 +59,30 @@ const Pricing = () => {
     <section
       ref={ref}
       id="pricing"
-      className={`relative py-16 md:py-20 px-6 reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-16 md:py-22 px-6 reveal ${isVisible ? "is-visible" : ""}`}
       style={{ background: "hsl(var(--surface-a))" }}
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
-          <p
-            className="text-[10px] text-muted-foreground/50 tracking-[0.18em] uppercase mb-3"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
-          >
-            Simple pricing
+        {/* Centered heading with flanking dots — distinct from other headings */}
+        <div className="text-center mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className="w-1 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.12)" }} />
+            <p
+              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            >
+              Simple pricing
+            </p>
+            <span className="w-1 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.12)" }} />
+          </div>
+          <h2 className="text-[1.4rem] md:text-[1.6rem] font-semibold tracking-[-0.035em]">Pick your plan</h2>
+          <p className="text-[12.5px] text-muted-foreground/50 mt-2 max-w-xs mx-auto leading-relaxed">
+            Start with three free tracks. Upgrade when you need more.
           </p>
-          <h2 className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em]">Pick your plan</h2>
         </div>
+
         <div className="grid md:grid-cols-3 gap-3 items-start">
           {plans.map((plan, i) => {
             const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
@@ -86,15 +95,15 @@ const Pricing = () => {
                 )}
                 style={{
                   "--stagger": `${100 + staggerOrder * 130}ms`,
-                  background: plan.featured ? "hsl(0 0% 8%)" : "hsl(var(--card))",
+                  background: plan.featured ? "hsl(0 0% 7%)" : "hsl(var(--card))",
                   color: plan.featured ? "hsl(0 0% 92%)" : undefined,
                   border: plan.featured
-                    ? "1px solid hsl(0 0% 18%)"
-                    : "1px solid hsl(var(--border-subtle) / 0.5)",
+                    ? "1px solid hsl(0 0% 16%)"
+                    : "1px solid hsl(var(--border-subtle) / 0.45)",
                   boxShadow: plan.featured
-                    ? "0 8px 32px -8px hsl(0 0% 0% / 0.35), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
+                    ? "0 12px 40px -10px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
                     : "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
-                  transform: plan.featured ? "scale(1.02)" : undefined,
+                  transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
                 } as React.CSSProperties}
               >
@@ -106,17 +115,23 @@ const Pricing = () => {
                       background: "hsl(0 0% 92%)",
                       color: "hsl(0 0% 8%)",
                       border: "1px solid hsl(0 0% 80%)",
+                      boxShadow: "0 2px 8px hsl(0 0% 0% / 0.12)",
                     }}
                   >
                     Most popular
                   </span>
                 )}
 
+                {/* Top accent strip for Pro */}
+                {plan.featured && (
+                  <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsl(0 0% 30%), transparent)" }} />
+                )}
+
                 <div className="p-5 pb-4">
                   <h3 className="text-[13px] font-semibold tracking-[-0.02em]">{plan.name}</h3>
                   <p className={cn(
                     "text-[11px] mt-0.5",
-                    plan.featured ? "opacity-45" : "text-muted-foreground/50"
+                    plan.featured ? "opacity-40" : "text-muted-foreground/45"
                   )}>
                     {plan.description}
                   </p>
@@ -124,7 +139,7 @@ const Pricing = () => {
                     <span className="text-[1.5rem] font-semibold tracking-[-0.03em] leading-none">{plan.price}</span>
                     <span className={cn(
                       "text-[11px]",
-                      plan.featured ? "opacity-35" : "text-muted-foreground/40"
+                      plan.featured ? "opacity-30" : "text-muted-foreground/35"
                     )}>
                       {plan.period}
                     </span>
@@ -133,7 +148,7 @@ const Pricing = () => {
 
                 <div
                   className="mx-5 h-px"
-                  style={{ background: plan.featured ? "hsl(0 0% 100% / 0.07)" : "hsl(var(--border-subtle) / 0.3)" }}
+                  style={{ background: plan.featured ? "hsl(0 0% 100% / 0.06)" : "hsl(var(--border-subtle) / 0.25)" }}
                 />
 
                 <div className="p-5 pt-4 flex-1">
@@ -143,13 +158,13 @@ const Pricing = () => {
                         <Check className={cn(
                           "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
                           !feature.included && "opacity-0",
-                          plan.featured ? "opacity-35" : "text-muted-foreground/30"
+                          plan.featured ? "opacity-30" : "text-muted-foreground/25"
                         )} />
                         <span className={cn(
                           "text-[11.5px] leading-snug",
-                          !feature.included && (plan.featured ? "opacity-18 line-through" : "text-muted-foreground/22 line-through"),
-                          feature.included && !plan.featured && "text-foreground/65",
-                          feature.included && plan.featured && "opacity-75",
+                          !feature.included && (plan.featured ? "opacity-15 line-through" : "text-muted-foreground/20 line-through"),
+                          feature.included && !plan.featured && "text-foreground/60",
+                          feature.included && plan.featured && "opacity-70",
                         )}>
                           {feature.text}
                         </span>
@@ -163,7 +178,7 @@ const Pricing = () => {
                     variant={plan.featured ? "hero-outline" : "hero"}
                     className={cn(
                       "w-full h-10 text-[12px] rounded-full",
-                      plan.featured && "border-white/12 text-white hover:bg-white/6 bg-transparent"
+                      plan.featured && "border-white/10 text-white hover:bg-white/6 bg-transparent"
                     )}
                   >
                     {plan.cta}

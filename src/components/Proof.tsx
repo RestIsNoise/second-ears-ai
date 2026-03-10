@@ -40,56 +40,69 @@ const Proof = () => {
     <section
       ref={ref}
       id="features"
-      className={`relative py-16 md:py-20 px-6 scroll-mt-20 reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-16 md:py-22 px-6 scroll-mt-20 reveal ${isVisible ? "is-visible" : ""}`}
       style={{ background: "hsl(var(--surface-b))" }}
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
-          <p
-            className="text-[10px] text-muted-foreground/50 tracking-[0.18em] uppercase mb-3"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
-          >
-            Specifics
-          </p>
-          <h2 className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em]">
+        {/* Center-aligned heading with flanking rules — spec sheet feel */}
+        <div className="text-center mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+          <div className="flex items-center gap-4 justify-center mb-5">
+            <div className="h-px w-12" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
+            <p
+              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase shrink-0"
+              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            >
+              Specifics
+            </p>
+            <div className="h-px w-12" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
+          </div>
+          <h2 className="text-[1.4rem] md:text-[1.6rem] font-semibold tracking-[-0.035em]">
             What you get
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px rounded-lg overflow-hidden reveal-child"
+          style={{
+            "--stagger": "100ms",
+            background: "hsl(var(--border-subtle) / 0.3)",
+            border: "1px solid hsl(var(--border-subtle) / 0.3)",
+          } as React.CSSProperties}
+        >
           {blocks.map((block, i) => (
             <div
               key={block.title}
-              className="rounded-lg p-5 space-y-4 reveal-child"
+              className="p-6 space-y-4 reveal-child"
               style={{
-                "--stagger": `${100 + i * 100}ms`,
+                "--stagger": `${150 + i * 120}ms`,
                 background: "hsl(var(--surface-a))",
-                border: "1px solid hsl(var(--border-subtle) / 0.4)",
-                boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
               } as React.CSSProperties}
             >
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 reveal-pop"
                   style={{
-                    "--stagger": `${200 + i * 100}ms`,
+                    "--stagger": `${250 + i * 120}ms`,
                     background: "hsl(var(--surface-c))",
-                    border: "1px solid hsl(var(--border-subtle) / 0.4)",
+                    border: "1px solid hsl(var(--border-subtle) / 0.35)",
                     boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.4)",
                   } as React.CSSProperties}
                 >
-                  <block.icon className="w-3.5 h-3.5 text-foreground/60" strokeWidth={1.5} />
+                  <block.icon className="w-3.5 h-3.5 text-foreground/55" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-[13px] font-semibold tracking-[-0.02em] text-foreground">{block.title}</h3>
+                <h3 className="text-[13px] font-semibold tracking-[-0.02em] text-foreground/90">{block.title}</h3>
               </div>
-              <ul className="space-y-2 pl-0">
+              <div
+                className="h-px w-8"
+                style={{ background: "hsl(var(--border-subtle) / 0.25)" }}
+              />
+              <ul className="space-y-2.5 pl-0">
                 {block.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-[12px] text-muted-foreground/60 leading-[1.6]">
+                  <li key={item} className="flex items-start gap-2.5 text-[12px] text-muted-foreground/55 leading-[1.6]">
                     <span
-                      className="w-1 h-1 rounded-full shrink-0 mt-[7px]"
-                      style={{ background: "hsl(var(--foreground) / 0.15)" }}
+                      className="w-[3px] h-[3px] rounded-full shrink-0 mt-[7px]"
+                      style={{ background: "hsl(var(--foreground) / 0.12)" }}
                     />
                     {item}
                   </li>
