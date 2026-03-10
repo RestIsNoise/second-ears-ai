@@ -3,27 +3,15 @@ import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
+
 /* ── Types ── */
-interface MetricDiff {
-  user: string;
-  reference: string;
-  delta: number;
-}
-
-interface Priority {
-  issue: string;
-  whyItMatters: string;
-  suggestedFix: string;
-}
-
+interface MetricDiff { user: string; reference: string; delta: number; }
+interface Priority { issue: string; whyItMatters: string; suggestedFix: string; }
 export interface ReferenceResult {
   reference_track_name: string;
   metrics_diff: Record<string, MetricDiff>;
-  gemini_feedback: {
-    summary: string;
-    priorities: Priority[];
-    whatWorks?: string[];
-  };
+  gemini_feedback: { summary: string; priorities: Priority[]; whatWorks?: string[]; };
   reference_metrics?: Record<string, any>;
 }
 
@@ -34,47 +22,22 @@ interface Props {
   onUploadClick?: () => void;
 }
 
-/* ── Metric display names ── */
 const METRIC_LABELS: Record<string, string> = {
-  integratedLoudness: "Integrated LUFS",
-  integrated_lufs: "Integrated LUFS",
-  lra: "LRA",
-  loudnessRange: "LRA",
-  dynamicRange: "Dynamic Range",
-  dynamic_range: "Dynamic Range",
-  stereoWidth: "Stereo Width",
-  stereo_correlation: "Stereo Width",
-  sub: "Sub",
-  low: "Low",
-  mid: "Mid",
-  highMid: "High-Mid",
-  high: "High",
-  frequencyBalance: "Freq Balance",
+  integratedLoudness: "Int. LUFS", integrated_lufs: "Int. LUFS",
+  lra: "LRA", loudnessRange: "LRA",
+  dynamicRange: "DR", dynamic_range: "DR",
+  stereoWidth: "Stereo W", stereo_correlation: "Stereo W",
+  sub: "Sub", low: "Low", mid: "Mid", highMid: "Hi-Mid", high: "High",
+  frequencyBalance: "Freq Bal",
 };
 
-/* ── Delta color ── */
-function deltaColor(delta: number): string {
+function deltaLed(delta: number): { bg: string; glow: string } {
   const abs = Math.abs(delta);
-  if (abs <= 1) return "text-green-600";
-  if (abs <= 3) return "text-amber-600";
-  return "text-red-600";
+  if (abs <= 1) return { bg: "hsl(145 60% 42%)", glow: "0 0 3px hsl(145 60% 42% / 0.3)" };
+  if (abs <= 3) return { bg: "hsl(35 85% 50%)", glow: "0 0 3px hsl(35 85% 50% / 0.3)" };
+  return { bg: "hsl(0 65% 48%)", glow: "0 0 3px hsl(0 65% 48% / 0.3)" };
 }
 
-function deltaBgColor(delta: number): string {
-  const abs = Math.abs(delta);
-  if (abs <= 1) return "rgba(34,197,94,0.12)";
-  if (abs <= 3) return "rgba(245,158,11,0.1)";
-  return "rgba(239,68,68,0.1)";
-}
-
-function deltaBarColor(delta: number): string {
-  const abs = Math.abs(delta);
-  if (abs <= 1) return "rgba(34,197,94,0.5)";
-  if (abs <= 3) return "rgba(245,158,11,0.5)";
-  return "rgba(239,68,68,0.5)";
-}
-
-/* ── Copy button ── */
 const CopyBtn = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
   return (
@@ -86,33 +49,26 @@ const CopyBtn = ({ text }: { text: string }) => {
         toast({ title: "Copied", duration: 1200 });
         setTimeout(() => setCopied(false), 2000);
       }}
-      className="inline-flex items-center gap-1 text-[9px] text-muted-foreground/40 hover:text-foreground/60 transition-colors"
+      className="inline-flex items-center text-[8px] text-foreground/20 hover:text-foreground/50 transition-colors uppercase tracking-wider font-bold"
+      style={{ fontFamily: MONO }}
     >
       {copied ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
     </button>
   );
 };
 
-const MONO = "'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace";
-
 const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Props) => {
   const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
-
   const toggleCard = useCallback((idx: number) => {
-    setExpandedCards((prev) => {
-      const next = new Set(prev);
-      if (next.has(idx)) next.delete(idx);
-      else next.add(idx);
-      return next;
-    });
+    setExpandedCards((prev) => { const n = new Set(prev); if (n.has(idx)) n.delete(idx); else n.add(idx); return n; });
   }, []);
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
-        <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
-        <p className="text-[11px] text-muted-foreground/60">Comparing against reference…</p>
-        <p className="text-[9px] text-muted-foreground/40 truncate max-w-[200px]">{refTrackName}</p>
+        <Loader2 className="w-4 h-4 text-foreground/20 animate-spin" />
+        <p className="text-[9px] text-foreground/25 uppercase tracking-wider font-bold" style={{ fontFamily: MONO }}>Comparing…</p>
+        <p className="text-[8px] text-foreground/15 truncate max-w-[180px]" style={{ fontFamily: MONO }}>{refTrackName}</p>
       </div>
     );
   }
@@ -120,17 +76,31 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
   if (!result) {
     return (
       <div className="flex flex-col items-center justify-center h-full px-6 py-12">
-        <div className="flex flex-col items-center gap-5 rounded-xl border-2 border-dashed border-border/50 px-8 py-10 w-full max-w-[260px]">
-          <AudioWaveform className="w-12 h-12 text-muted-foreground/25" strokeWidth={1.5} />
-          <p className="text-lg font-medium text-foreground/55 tracking-tight text-center" style={{ fontSize: 18 }}>
-            Drop a reference track
+        <div
+          className="flex flex-col items-center gap-4 w-full max-w-[220px] px-6 py-8"
+          style={{
+            border: "1px dashed hsl(var(--foreground) / 0.1)",
+            borderRadius: 3,
+            backgroundColor: "hsl(var(--panel-bg))",
+          }}
+        >
+          <AudioWaveform className="w-8 h-8 text-foreground/10" strokeWidth={1.5} />
+          <p className="text-[10px] text-foreground/35 text-center font-bold uppercase tracking-wider" style={{ fontFamily: MONO }}>
+            Drop reference
           </p>
           {onUploadClick && (
             <button
               onClick={onUploadClick}
-              className="rounded-full border border-border/60 px-4 py-1.5 text-[10px] font-medium text-muted-foreground/55 hover:text-foreground/70 hover:border-foreground/15 hover:bg-secondary/20 transition-all duration-150"
+              className="text-[9px] font-bold uppercase tracking-[0.1em] text-foreground/40 hover:text-foreground/70 transition-colors"
+              style={{
+                fontFamily: MONO,
+                padding: "4px 10px",
+                border: "1px solid hsl(var(--foreground) / 0.1)",
+                borderRadius: 2,
+                backgroundColor: "hsl(var(--panel-header))",
+              }}
             >
-              Browse file
+              Browse
             </button>
           )}
         </div>
@@ -140,196 +110,133 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
 
   const { metrics_diff, gemini_feedback } = result;
   const metricEntries = Object.entries(metrics_diff);
-
-  // Find max abs delta for bar scaling
   const maxAbsDelta = Math.max(1, ...metricEntries.map(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0)));
 
   return (
-    <div className="p-3 space-y-4 overflow-y-auto h-full">
+    <div className="overflow-y-auto h-full scrollbar-thin">
       {/* Reference name */}
-      <div className="flex items-center gap-2.5">
-        <div className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+      <div
+        className="flex items-center gap-2 px-3 py-2"
+        style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.06)" }}
+      >
+        <div className="w-[5px] h-[5px] rounded-full" style={{ backgroundColor: "hsl(35 85% 50%)", boxShadow: "0 0 3px hsl(35 85% 50% / 0.4)" }} />
         <span
-          className="text-[13px] font-bold text-foreground/75 tracking-[0.08em] uppercase truncate"
+          className="text-[9px] font-extrabold text-foreground/55 tracking-[0.1em] uppercase truncate"
           style={{ fontFamily: MONO }}
         >
           vs {result.reference_track_name || refTrackName}
         </span>
       </div>
 
-      {/* ── Metrics Analysis Block ── */}
+      {/* ── Metrics Table ── */}
       {metricEntries.length > 0 && (
-        <div className="rounded-xl border-2 border-border bg-card/50 overflow-hidden">
-          {/* Section Header */}
-          <div className="bg-secondary/30 border-b border-border px-4 py-3">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/75" style={{ fontFamily: MONO }}>
-              Metric Comparison
-            </h3>
-          </div>
-
-          {/* Summary Strip */}
-          <div className="px-4 py-2.5 bg-secondary/15 border-b border-border/50">
-            {(() => {
-              const deltas = metricEntries.map(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0));
-              const maxDelta = Math.max(...deltas);
-              const minDelta = Math.min(...deltas.filter(d => d > 0));
-              const biggestGapMetric = metricEntries.find(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0) === maxDelta)?.[0];
-              const closestMatch = metricEntries.find(([, d]) => Math.abs(typeof d.delta === "number" ? d.delta : parseFloat(String(d.delta)) || 0) === minDelta)?.[0];
-              
-              return (
-                <div className="flex items-center gap-3 flex-wrap">
-                  {biggestGapMetric && (
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
-                      <span className="text-[10px] text-foreground/60" style={{ fontFamily: MONO }}>
-                        Biggest gap: <span className="text-foreground/80 font-semibold">{METRIC_LABELS[biggestGapMetric] || biggestGapMetric}</span>
-                      </span>
-                    </div>
-                  )}
-                  {closestMatch && closestMatch !== biggestGapMetric && (
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-400/60" />
-                      <span className="text-[10px] text-foreground/60" style={{ fontFamily: MONO }}>
-                        Closest match: <span className="text-foreground/80 font-semibold">{METRIC_LABELS[closestMatch] || closestMatch}</span>
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
-
-          {/* Table Header */}
+        <div
+          style={{
+            borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
+          }}
+        >
+          {/* Table header */}
           <div
-            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 text-[10px] uppercase tracking-[0.12em] font-bold text-foreground/70 px-4 py-3 bg-secondary/20"
-            style={{ fontFamily: MONO }}
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-3 py-[5px]"
+            style={{
+              backgroundColor: "hsl(var(--panel-header))",
+              borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
+            }}
           >
-            <span>Metric</span>
-            <span className="text-right w-[60px]">Yours</span>
-            <span className="text-right w-[60px]">Reference</span>
-            <span className="text-right w-[60px] font-black">Delta</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 7 }}>Metric</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>You</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>Ref</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[44px]" style={{ fontFamily: MONO, fontSize: 7 }}>Δ</span>
           </div>
 
-          {/* Rows */}
           {metricEntries.map(([key, diff], idx) => {
             const label = METRIC_LABELS[key] || key;
             const d = typeof diff.delta === "number" ? diff.delta : parseFloat(String(diff.delta)) || 0;
+            const led = deltaLed(d);
             const sign = d > 0 ? "+" : "";
-            const barWidth = Math.min(100, (Math.abs(d) / maxAbsDelta) * 100);
-            const isEven = idx % 2 === 0;
 
             return (
               <div
                 key={key}
-                className={`grid grid-cols-[1fr_auto_auto_auto] gap-x-4 items-center px-4 py-3 transition-colors relative ${
-                  isEven ? "bg-secondary/8" : "bg-transparent"
-                }`}
+                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[5px]"
                 style={{
-                  borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--border) / 0.1)" : "none",
+                  borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--foreground) / 0.03)" : "none",
                 }}
               >
-                {/* Mini delta bar */}
-                <div
-                  className="absolute inset-y-0 left-0 pointer-events-none"
-                  style={{
-                    width: `${Math.max(4, barWidth * 0.35)}%`,
-                    backgroundColor: deltaBarColor(d),
-                    opacity: 0.4,
-                    borderRadius: "0 2px 2px 0",
-                  }}
-                />
-                <span
-                  className="text-[11px] font-semibold text-foreground/80 uppercase truncate relative z-[1]"
-                  style={{ fontFamily: MONO }}
-                >
-                  {label}
-                </span>
-                <span
-                  className="text-[11px] text-foreground/70 text-right tabular-nums w-[60px] relative z-[1] font-medium"
-                  style={{ fontFamily: MONO }}
-                >
-                  {diff.user}
-                </span>
-                <span
-                  className="text-[11px] text-foreground/70 text-right tabular-nums w-[60px] relative z-[1] font-medium"
-                  style={{ fontFamily: MONO }}
-                >
-                  {diff.reference}
-                </span>
-                <span
-                  className={cn("text-[13px] text-right font-black tabular-nums w-[60px] relative z-[1]", deltaColor(d))}
-                  style={{ fontFamily: MONO }}
-                >
-                  {sign}{typeof d === "number" ? d.toFixed(1) : d}
-                </span>
+                <span className="text-[9px] font-bold text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
+                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
+                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
+                <div className="flex items-center justify-end gap-1.5 w-[44px]">
+                  <span className="text-[10px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
+                    {sign}{d.toFixed(1)}
+                  </span>
+                  <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+                </div>
               </div>
             );
           })}
         </div>
       )}
 
-      {/* ── Gemini Comparative Feedback ── */}
+      {/* ── Feedback ── */}
       {gemini_feedback && (
-        <div className="space-y-3">
+        <div className="p-3 space-y-2">
           {gemini_feedback.summary && (
-            <p className="text-[13px] text-foreground/65 leading-relaxed" style={{ lineHeight: 1.7 }}>
+            <p className="text-[11px] text-foreground/50" style={{ lineHeight: 1.6, fontFamily: MONO }}>
               {gemini_feedback.summary}
             </p>
           )}
 
-          {/* Priority cards */}
           {gemini_feedback.priorities?.map((p, i) => {
             const copyText = `${p.issue}\nWhy: ${p.whyItMatters}\nFix: ${p.suggestedFix}`;
             const isExpanded = expandedCards.has(i);
             return (
               <div
                 key={i}
-                className="group rounded-[10px] border-l-2 border-l-red-400/60 border border-border/50 bg-card/40 p-4"
+                className="group"
+                style={{
+                  borderLeft: "3px solid hsl(0 55% 50% / 0.5)",
+                  padding: "6px 8px",
+                  borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                }}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                    <span
-                      className="text-foreground/30 font-medium leading-none pt-0.5 shrink-0"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 15 }}
-                    >
+                <div className="flex items-start justify-between gap-1.5">
+                  <div className="flex items-start gap-2 flex-1 min-w-0">
+                    <span className="text-foreground/15 font-bold shrink-0" style={{ fontFamily: MONO, fontSize: 9 }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[13px] font-semibold tracking-tight text-foreground/85">{p.issue}</h4>
+                      <h4 className="text-[11px] font-bold tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
                       {p.whyItMatters && (
                         <p
-                          className={cn(
-                            "text-[12px] text-foreground/60 mt-1.5 transition-all duration-200",
-                            !isExpanded && "line-clamp-4"
-                          )}
-                          style={{ lineHeight: 1.65 }}
+                          className={cn("text-[10px] text-foreground/45 mt-1 transition-all", !isExpanded && "line-clamp-3")}
+                          style={{ lineHeight: 1.5, fontFamily: MONO }}
                         >
                           {p.whyItMatters}
                         </p>
                       )}
-
-                      {/* Expand/Collapse toggle */}
-                      {p.whyItMatters && p.whyItMatters.length > 180 && (
+                      {p.whyItMatters && p.whyItMatters.length > 150 && (
                         <button
                           onClick={() => toggleCard(i)}
-                          className="mt-1 inline-flex items-center gap-1 text-[10px] text-muted-foreground/50 hover:text-foreground/60 transition-colors"
-                          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                          className="mt-0.5 text-[8px] text-foreground/20 hover:text-foreground/45 uppercase tracking-wider font-bold"
+                          style={{ fontFamily: MONO }}
                         >
-                          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                          {isExpanded ? "Collapse" : "Expand"}
+                          {isExpanded ? "Less" : "More"}
                         </button>
                       )}
-
-                      {/* FIX block — always visible, visually separated */}
                       {p.suggestedFix && (
-                        <div className="mt-3 pt-2.5 border-t border-border/40 flex items-start gap-1.5">
+                        <div className="mt-1.5 pt-1.5 flex items-start gap-1.5" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
                           <span
-                            className="shrink-0 mt-0.5 inline-flex items-center rounded-full bg-foreground text-background px-1.5 py-0.5"
-                            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, letterSpacing: "0.06em" }}
+                            className="shrink-0 mt-[1px]"
+                            style={{
+                              fontFamily: MONO, fontSize: 7, fontWeight: 800,
+                              letterSpacing: "0.06em", padding: "1px 4px",
+                              backgroundColor: "hsl(0 55% 50% / 0.7)", color: "white", borderRadius: 1,
+                            }}
                           >
                             FIX
                           </span>
-                          <p className="text-[12px] text-foreground/70" style={{ lineHeight: 1.6 }}>{p.suggestedFix}</p>
+                          <p className="text-[10px] text-foreground/55" style={{ lineHeight: 1.5, fontFamily: MONO }}>{p.suggestedFix}</p>
                         </div>
                       )}
                     </div>
@@ -342,20 +249,16 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
             );
           })}
 
-          {/* What works */}
           {gemini_feedback.whatWorks && gemini_feedback.whatWorks.length > 0 && (
-            <div className="mt-3">
-              <span
-                className="text-[9px] text-muted-foreground/50 uppercase tracking-[0.12em] mb-2 block"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                Already matching
+            <div className="mt-2 pt-2" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
+              <span className="text-[7px] text-foreground/25 uppercase tracking-[0.14em] mb-1.5 block font-extrabold" style={{ fontFamily: MONO }}>
+                Matching
               </span>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {gemini_feedback.whatWorks.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2 text-[12px] text-foreground/60">
-                    <span className="text-green-500 shrink-0 mt-0.5">✓</span>
-                    <span style={{ lineHeight: 1.55 }}>{item}</span>
+                  <div key={i} className="flex items-start gap-1.5 text-[10px] text-foreground/45" style={{ fontFamily: MONO }}>
+                    <span className="shrink-0 mt-0.5" style={{ color: "hsl(145 60% 42%)", fontSize: 9 }}>✓</span>
+                    <span style={{ lineHeight: 1.45 }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -364,7 +267,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
         </div>
       )}
 
-      <div className="h-10" />
+      <div className="h-6" />
     </div>
   );
 };
