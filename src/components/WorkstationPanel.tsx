@@ -94,7 +94,7 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
         style={{
           backgroundColor: "hsl(var(--panel-content))",
-          boxShadow: "inset 0 4px 8px hsl(var(--panel-inset)), inset 1px 0 0 hsl(0 0% 0% / 0.03), inset -1px 0 0 hsl(0 0% 0% / 0.03)",
+          boxShadow: "inset 0 5px 12px hsl(var(--panel-inset)), inset 1px 0 0 hsl(0 0% 0% / 0.05), inset -1px 0 0 hsl(0 0% 0% / 0.05)",
         }}
       >
         {/* Noise texture */}

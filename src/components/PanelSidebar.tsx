@@ -46,8 +46,8 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       className="flex flex-col h-full w-[152px] min-w-[152px] shrink-0 overflow-visible select-none"
       style={{
         backgroundColor: "hsl(var(--workspace-bg))",
-        borderRight: "2px solid hsl(var(--foreground) / 0.1)",
-        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03)",
+        borderRight: "3px solid hsl(var(--foreground) / 0.14)",
+        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03), 2px 0 6px hsl(0 0% 0% / 0.06)",
       }}
     >
       {/* ═══ RACK HEADER ═══ */}

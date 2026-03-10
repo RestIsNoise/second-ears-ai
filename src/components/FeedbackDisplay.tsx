@@ -1117,39 +1117,80 @@ const FeedbackDisplay = ({
 
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
-        <div className={cn(
-          "mt-5 grid gap-4 p-4",
-          n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
-        )}
-        style={{
-          backgroundColor: "hsl(var(--panel-header))",
-          border: "2px solid hsl(var(--foreground) / 0.08)",
-          borderRadius: 6,
-          boxShadow: "inset 0 2px 4px hsl(var(--panel-inset)), inset 0 -1px 0 hsl(0 0% 100% / 0.03)",
-        }}
+        <div
+          className={cn(
+            "mt-3 grid gap-0",
+            n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
+          )}
+          style={{
+            backgroundColor: "hsl(var(--workspace-bg))",
+            border: "3px solid hsl(var(--foreground) / 0.12)",
+            borderRadius: 4,
+            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset)), 0 4px 16px hsl(0 0% 0% / 0.08)",
+            overflow: "hidden",
+          }}
         >
           {n.whatWorks.length > 0 && (
-            <div className="flex flex-col">
-              <h3
-                className="text-[9px] text-foreground/50 tracking-[0.16em] uppercase mb-2.5 font-bold"
-                style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            <div
+              className="flex flex-col"
+              style={{
+                borderRight: n.yourFocus.question ? "2px solid hsl(var(--foreground) / 0.08)" : "none",
+              }}
+            >
+              {/* Section header strip */}
+              <div
+                className="flex items-center gap-2 px-4"
+                style={{
+                  paddingTop: 6,
+                  paddingBottom: 6,
+                  backgroundColor: "hsl(var(--panel-header))",
+                  borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+                }}
               >
-                {modeWhatWorksLabel[mode] || "What Works"}
-              </h3>
-              <div className="space-y-2.5 flex-1 flex flex-col">
+                <div
+                  className="w-[6px] h-[6px] rounded-full shrink-0"
+                  style={{
+                    background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
+                    boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
+                  }}
+                />
+                <h3
+                  className="text-[8px] text-foreground/50 tracking-[0.16em] uppercase font-extrabold"
+                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+                >
+                  {modeWhatWorksLabel[mode] || "What Works"}
+                </h3>
+              </div>
+              <div className="p-3 space-y-1.5 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
-                    <div key={i} className="flex-1 rounded-md p-4" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
+                    <div
+                      key={i}
+                      className="flex-1 p-3"
+                      style={{
+                        backgroundColor: "hsl(var(--panel-bg))",
+                        border: "1px solid hsl(var(--foreground) / 0.07)",
+                        borderRadius: 2,
+                        boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+                      }}
+                    >
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="text-[14px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
+                        <h4 className="text-[13px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
                         {tags.length > 0 && (
-                          <div className="flex items-center gap-1.5 shrink-0">
+                          <div className="flex items-center gap-1 shrink-0">
                             {tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="inline-block rounded-full border border-border/60 px-2.5 py-0.5 text-foreground/50"
-                                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, letterSpacing: "0.04em" }}
+                                className="inline-block border px-2 py-0.5 text-foreground/45"
+                                style={{
+                                  fontFamily: "'IBM Plex Mono', monospace",
+                                  fontSize: 8,
+                                  letterSpacing: "0.06em",
+                                  borderColor: "hsl(var(--foreground) / 0.08)",
+                                  borderRadius: 2,
+                                  textTransform: "uppercase",
+                                }}
                               >
                                 {tag}
                               </span>
@@ -1158,7 +1199,7 @@ const FeedbackDisplay = ({
                         )}
                       </div>
                       {item.description && (
-                        <p className="text-[13px] text-foreground/65 mt-2" style={{ lineHeight: 1.6 }}>{item.description}</p>
+                        <p className="text-[12px] text-foreground/60 mt-1.5" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>{item.description}</p>
                       )}
                     </div>
                   );
@@ -1169,31 +1210,62 @@ const FeedbackDisplay = ({
 
           {n.yourFocus.question && (
             <div className="flex flex-col">
-              <h3
-                className="text-[9px] text-foreground/50 tracking-[0.16em] uppercase mb-2.5 font-bold"
-                style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+              {/* Section header strip */}
+              <div
+                className="flex items-center gap-2 px-4"
+                style={{
+                  paddingTop: 6,
+                  paddingBottom: 6,
+                  backgroundColor: "hsl(var(--panel-header))",
+                  borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+                }}
               >
-                Your Focus
-              </h3>
-              <div className="flex-1 flex flex-col gap-4 rounded-md p-5" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
-                <div>
+                <div
+                  className="w-[6px] h-[6px] rounded-full shrink-0"
+                  style={{
+                    background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
+                    boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
+                  }}
+                />
+                <h3
+                  className="text-[8px] text-foreground/50 tracking-[0.16em] uppercase font-extrabold"
+                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+                >
+                  Your Focus
+                </h3>
+              </div>
+              <div className="flex-1 flex flex-col gap-3 p-3" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+                <div
+                  className="p-3"
+                  style={{
+                    backgroundColor: "hsl(var(--panel-bg))",
+                    border: "1px solid hsl(var(--foreground) / 0.07)",
+                    borderRadius: 2,
+                    boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+                  }}
+                >
                   <p
-                    className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                    className="text-foreground/35 uppercase tracking-[0.1em] mb-1 font-extrabold"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
                   >You asked</p>
-                  <p className="text-[14px] text-foreground/70 leading-relaxed italic" style={{ lineHeight: 1.6 }}>
+                  <p className="text-[13px] text-foreground/70 italic" style={{ lineHeight: 1.6 }}>
                     &ldquo;{n.yourFocus.question}&rdquo;
                   </p>
                 </div>
                 <div
-                  style={{ height: 1, background: "linear-gradient(to right, hsl(var(--foreground) / 0.06), transparent)" }}
-                />
-                <div>
+                  className="p-3"
+                  style={{
+                    backgroundColor: "hsl(var(--panel-bg))",
+                    border: "1px solid hsl(var(--foreground) / 0.07)",
+                    borderRadius: 2,
+                    boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+                  }}
+                >
                   <p
-                    className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                    className="text-foreground/35 uppercase tracking-[0.1em] mb-1 font-extrabold"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
                   >Response</p>
-                  <p className="text-[13px] text-foreground/65 leading-relaxed" style={{ lineHeight: 1.65 }}>
+                  <p className="text-[12px] text-foreground/60" style={{ lineHeight: 1.65, fontFamily: "'IBM Plex Mono', monospace" }}>
                     {n.yourFocus.response || "No direct focus response available for this run."}
                   </p>
                 </div>
