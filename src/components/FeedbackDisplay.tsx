@@ -743,7 +743,7 @@ const FeedbackDisplay = ({
     <div className="animate-fade-up space-y-0" style={{ position: "relative" }}>
       {/* Micro-texture background for the entire workspace area */}
       <div
-        className="fixed inset-0 pointer-events-none opacity-[0.02] z-0"
+        className="fixed inset-0 pointer-events-none opacity-[0.025] z-0"
         aria-hidden="true"
         style={{
           backgroundImage:
@@ -751,43 +751,62 @@ const FeedbackDisplay = ({
           backgroundSize: "256px 256px",
         }}
       />
-      {/* ═══ HEADER ═══ */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+      {/* ═══ HEADER — industrial track strip ═══ */}
+      <div
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 px-4 sm:px-5"
+        style={{
+          paddingTop: 14,
+          paddingBottom: 14,
+          backgroundColor: "hsl(var(--analysis-header))",
+          border: "2px solid hsl(var(--foreground) / 0.08)",
+          borderRadius: 4,
+          boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.06), 0 2px 8px hsl(0 0% 0% / 0.06)",
+        }}
+      >
         {/* Left: back + title */}
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 flex items-center gap-4">
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={onReset}
-            className="gap-2 text-muted-foreground mb-4 -ml-2"
+            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-8 h-8"
           >
-            <ArrowLeft className="w-4 h-4" /> New analysis
+            <ArrowLeft className="w-4 h-4" />
           </Button>
 
-          <div className="space-y-2">
-            {n.trackName && (
-              projectId ? (
-                <h1
-                  className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
-                  onClick={() => navigate(`/project/${projectId}`)}
-                  title="View all versions"
-                >
-                  {n.trackName}
-                </h1>
-              ) : (
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight truncate text-foreground">
-                  {n.trackName}
-                </h1>
-              )
-            )}
-            <p
-              className="text-[11px] text-foreground/50 tracking-[0.08em] uppercase"
-              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
-            >
-              {modeLabels[mode]} analysis
-            </p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-3">
+              {n.trackName && (
+                projectId ? (
+                  <h1
+                    className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
+                    onClick={() => navigate(`/project/${projectId}`)}
+                    title="View all versions"
+                  >
+                    {n.trackName}
+                  </h1>
+                ) : (
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
+                    {n.trackName}
+                  </h1>
+                )
+              )}
+              <span
+                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+                style={{
+                  fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
+                  fontSize: 8,
+                  padding: "2px 6px",
+                  backgroundColor: "hsl(var(--foreground) / 0.04)",
+                  border: "1px solid hsl(var(--foreground) / 0.06)",
+                  borderRadius: 2,
+                }}
+              >
+                {modeLabels[mode]}
+              </span>
+            </div>
             {versions && versions.length > 0 && projectId && analysisId && (
-              <div className="pt-1">
+              <div className="mt-1">
                 <VersionPills
                   versions={versions}
                   currentAnalysisId={analysisId}
@@ -801,7 +820,7 @@ const FeedbackDisplay = ({
         </div>
 
         {/* Right: collaborators only */}
-        <div className="flex items-center gap-2 sm:pt-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
