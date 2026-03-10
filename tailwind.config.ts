@@ -66,6 +66,7 @@ export default {
         "surface-a": "hsl(var(--surface-a))",
         "surface-b": "hsl(var(--surface-b))",
         "surface-c": "hsl(var(--surface-c))",
+        "analysis-header": "hsl(var(--analysis-header))",
       },
       borderRadius: {
         lg: "var(--radius)",
