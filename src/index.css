@@ -112,12 +112,14 @@
     --border-subtle: 30 15% 80%;
 
     /* Depth layers — industrial workspace */
-    --panel-bg: 30 10% 90%;
-    --panel-header: 30 8% 86%;
-    --panel-content: 30 12% 92%;
-    --workspace-bg: 30 6% 84%;
-    --workspace-frame: 30 5% 78%;
-    --panel-inset: 0 0% 0% / 0.06;
+    --panel-bg: 30 6% 86%;
+    --panel-header: 28 4% 80%;
+    --panel-content: 30 8% 89%;
+    --workspace-bg: 28 4% 78%;
+    --workspace-frame: 25 3% 72%;
+    --panel-inset: 0 0% 0% / 0.09;
+    --rack-screw: 25 4% 74%;
+    --channel-divider: 0 0% 0% / 0.1;
 
     /* Alternating section surfaces */
     --surface-a: 30 23% 95%;
