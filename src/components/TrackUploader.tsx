@@ -90,25 +90,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       onProgressStep?.(2);
       const { data: { user: currentUser } } = await supabase.auth.getUser();
 
-      // Create project + version so backend can link the analysis
+      // Project + analysis creation is handled in Analyze.tsx after feedback returns
       let versionId: string | undefined;
-      if (currentUser) {
-        const { data: project, error: projErr } = await supabase
-          .from("projects")
-          .insert({ name: file.name, user_id: currentUser.id })
-          .select("id")
-          .single();
-        if (projErr) console.error("[TrackUploader] project create failed:", projErr.message);
-        if (project) {
-          const { data: version, error: verErr } = await supabase
-            .from("versions")
-            .insert({ project_id: project.id, version_number: 1, track_name: file.name, audio_url: fullSignedUrl, storage_path: storagePath })
-            .select("id")
-            .single();
-          if (verErr) console.error("[TrackUploader] version create failed:", verErr.message);
-          if (version) versionId = version.id;
-        }
-      }
 
       const feedbackRes = await fetch(
         "https://secondears-backend-production.up.railway.app/api/feedback",
