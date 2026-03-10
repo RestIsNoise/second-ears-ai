@@ -1070,7 +1070,7 @@ const FeedbackDisplay = ({
               >
                 Your Focus
               </h3>
-              <div className="flex-1 flex flex-col gap-4 rounded-lg border border-border-subtle/50 bg-card/40 p-5">
+              <div className="flex-1 flex flex-col gap-4 rounded-md p-5" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                 <div>
                   <p
                     className="text-muted-foreground/55 uppercase tracking-wider mb-1.5 font-medium"
