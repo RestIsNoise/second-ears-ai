@@ -12,29 +12,41 @@ const UnifiedFooter = () => {
       {/* ── CTA block ── */}
       <section
         ref={ctaRef}
-        className={`bg-background py-12 md:py-16 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
+        className={`relative py-16 md:py-20 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
+        style={{ background: "hsl(var(--background))" }}
       >
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+
         <div className="max-w-xl mx-auto text-center">
-          <div className="reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
-            <Button variant="hero" size="lg" className="h-14 px-14 text-[15px] gap-2.5" asChild>
+          <p
+            className="text-[10px] text-muted-foreground/50 tracking-[0.2em] uppercase mb-6 reveal-child"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
+          >
+            Ready to hear your mix
+          </p>
+          <div className="reveal-child" style={{ "--stagger": "80ms" } as React.CSSProperties}>
+            <Button variant="hero" size="lg" className="h-14 px-14 text-[14px] gap-2.5" asChild>
               <Link to="/analyze">
                 <Upload className="w-4 h-4" />
                 Start free analysis
               </Link>
             </Button>
           </div>
-          <p className="mt-4 text-[11px] tracking-wide text-muted-foreground/45 reveal-child" style={{ "--stagger": "100ms" } as React.CSSProperties}>
+          <p
+            className="mt-4 text-[11px] tracking-wide text-muted-foreground/40 reveal-child"
+            style={{ "--stagger": "160ms" } as React.CSSProperties}
+          >
             No credit card required
           </p>
         </div>
       </section>
 
-      {/* ── Layered gradient transition band ── */}
+      {/* ── Gradient transition to dark ── */}
       <div
-        className="h-32 pointer-events-none"
+        className="h-24 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(0 0% 6%) 40%, hsl(0 0% 5%) 100%)",
+          background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(0 0% 6%) 50%, hsl(0 0% 5%) 100%)",
         }}
       />
 
@@ -44,7 +56,7 @@ const UnifiedFooter = () => {
         className={`relative overflow-hidden reveal ${contactVisible ? "is-visible" : ""}`}
         style={{ background: "hsl(0 0% 5%)" }}
       >
-        {/* Moving noise grain — dark region only */}
+        {/* Noise grain */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.04]"
           aria-hidden="true"
@@ -55,37 +67,25 @@ const UnifiedFooter = () => {
           }}
         />
 
-        {/* Ambient halos */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div
-            className="absolute top-[50%] left-[10%] w-[350px] h-[350px] rounded-full blur-[160px]"
-            style={{ background: "hsl(0 0% 14% / 0.25)" }}
-          />
-          <div
-            className="absolute top-[40%] right-[10%] w-[300px] h-[300px] rounded-full blur-[140px]"
-            style={{ background: "hsl(0 0% 18% / 0.2)" }}
-          />
-        </div>
-
         <div className="relative">
           {/* Contact */}
-          <div className="pt-12 md:pt-16 pb-10 md:pb-12 px-6">
-            <div className="max-w-5xl mx-auto text-center">
+          <div className="pt-14 md:pt-16 pb-12 md:pb-14 px-6">
+            <div className="max-w-4xl mx-auto text-center">
               <p
-                className="text-[10px] tracking-[0.18em] uppercase mb-3 reveal-child"
-                style={{ color: "hsl(0 0% 52%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
+                className="text-[10px] tracking-[0.2em] uppercase mb-4 reveal-child"
+                style={{ color: "hsl(0 0% 45%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
               >
                 Get in touch
               </p>
               <h2
-                className="text-2xl md:text-[1.75rem] font-semibold tracking-tight mb-2.5 reveal-child"
-                style={{ color: "hsl(0 0% 93%)", "--stagger": "90ms" } as React.CSSProperties}
+                className="text-[1.5rem] md:text-[1.65rem] font-semibold tracking-[-0.03em] mb-3 reveal-child"
+                style={{ color: "hsl(0 0% 92%)", "--stagger": "90ms" } as React.CSSProperties}
               >
                 Contact
               </h2>
               <p
-                className="text-[13px] max-w-sm mx-auto mb-6 leading-relaxed reveal-child"
-                style={{ color: "hsl(0 0% 58%)", "--stagger": "180ms" } as React.CSSProperties}
+                className="text-[13px] max-w-sm mx-auto mb-7 leading-relaxed reveal-child"
+                style={{ color: "hsl(0 0% 50%)", "--stagger": "180ms" } as React.CSSProperties}
               >
                 Billing, feedback quality, feature requests. We read every message.
               </p>
@@ -97,18 +97,21 @@ const UnifiedFooter = () => {
                   </a>
                 </Button>
               </div>
-              <p className="text-[11px] mt-3 reveal-child" style={{ color: "hsl(0 0% 46%)", "--stagger": "320ms" } as React.CSSProperties}>
+              <p className="text-[10px] mt-3.5 reveal-child" style={{ color: "hsl(0 0% 42%)", "--stagger": "320ms" } as React.CSSProperties}>
                 Response within 24–48h
               </p>
             </div>
           </div>
 
           {/* Legal row */}
-          <div className="pt-6 pb-10 md:pb-14 px-6 border-t border-white/[0.06]">
-            <div className="max-w-5xl mx-auto flex flex-col items-center gap-5">
+          <div
+            className="pt-6 pb-10 md:pb-14 px-6"
+            style={{ borderTop: "1px solid hsl(0 0% 100% / 0.05)" }}
+          >
+            <div className="max-w-4xl mx-auto flex flex-col items-center gap-5">
               <span
                 className="text-[11px] tracking-tight"
-                style={{ color: "hsl(0 0% 40%)", fontFamily: "'IBM Plex Mono', monospace" }}
+                style={{ color: "hsl(0 0% 36%)", fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 SecondEar™
               </span>
@@ -119,26 +122,26 @@ const UnifiedFooter = () => {
                   { to: "/faq", label: "FAQ" },
                 ].map((link, i) => (
                   <span key={link.to} className="flex items-center gap-4">
-                    {i > 0 && <span style={{ color: "hsl(0 0% 26%)" }}>·</span>}
+                    {i > 0 && <span style={{ color: "hsl(0 0% 22%)" }}>·</span>}
                     <Link
                       to={link.to}
                       className="text-[10px] tracking-wide transition-colors"
-                      style={{ color: "hsl(0 0% 46%)" }}
+                      style={{ color: "hsl(0 0% 42%)" }}
                     >
                       {link.label}
                     </Link>
                   </span>
                 ))}
-                <span style={{ color: "hsl(0 0% 26%)" }}>·</span>
+                <span style={{ color: "hsl(0 0% 22%)" }}>·</span>
                 <a
                   href="mailto:hello@secondears.io"
                   className="text-[10px] tracking-wide transition-colors"
-                  style={{ color: "hsl(0 0% 46%)" }}
+                  style={{ color: "hsl(0 0% 42%)" }}
                 >
                   Contact
                 </a>
               </div>
-              <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 35%)" }}>
+              <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 32%)" }}>
                 © {new Date().getFullYear()} SecondEar. All rights reserved.
               </p>
             </div>

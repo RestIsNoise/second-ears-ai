@@ -100,10 +100,7 @@ const Analyze = () => {
             .insert({ user_id: user.id, name: n.trackName })
             .select("id")
             .single();
-          if (projErr) {
-            console.error("[Analyze] Project insert failed:", JSON.stringify(projErr));
-            throw projErr;
-          }
+          if (projErr) throw projErr;
           projectId = project.id;
         }
 
@@ -136,10 +133,7 @@ const Analyze = () => {
           .select("id")
           .single();
 
-        if (analysisErr) {
-          console.error("[Analyze] Analysis insert failed:", JSON.stringify(analysisErr), "payload:", JSON.stringify(insertPayload));
-          throw analysisErr;
-        }
+        if (analysisErr) throw analysisErr;
         if (analysisRow) {
           setSavedAnalysisId(analysisRow.id);
           // If new version, navigate to project page to see version pills
