@@ -59,22 +59,22 @@ const Pricing = () => {
     <section
       ref={ref}
       id="pricing"
-      className={`relative py-20 md:py-24 px-6 reveal ${isVisible ? "is-visible" : ""}`}
-      style={{ background: "hsl(var(--background))" }}
+      className={`relative py-16 md:py-20 px-6 reveal ${isVisible ? "is-visible" : ""}`}
+      style={{ background: "hsl(var(--surface-a))" }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+      <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
-            className="text-[10px] text-muted-foreground/50 tracking-[0.2em] uppercase mb-4"
+            className="text-[10px] text-muted-foreground/50 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             Simple pricing
           </p>
-          <h2 className="text-[1.5rem] md:text-[1.65rem] font-semibold tracking-[-0.03em]">Pick your plan</h2>
+          <h2 className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em]">Pick your plan</h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-4 items-start">
+        <div className="grid md:grid-cols-3 gap-3 items-start">
           {plans.map((plan, i) => {
             const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
             return (
@@ -86,14 +86,14 @@ const Pricing = () => {
                 )}
                 style={{
                   "--stagger": `${100 + staggerOrder * 130}ms`,
-                  background: plan.featured ? "hsl(var(--primary))" : "hsl(var(--card))",
-                  color: plan.featured ? "hsl(var(--primary-foreground))" : undefined,
+                  background: plan.featured ? "hsl(0 0% 8%)" : "hsl(var(--card))",
+                  color: plan.featured ? "hsl(0 0% 92%)" : undefined,
                   border: plan.featured
-                    ? "1px solid hsl(0 0% 20%)"
-                    : "1px solid hsl(var(--border-subtle) / 0.45)",
+                    ? "1px solid hsl(0 0% 18%)"
+                    : "1px solid hsl(var(--border-subtle) / 0.5)",
                   boxShadow: plan.featured
-                    ? "0 4px 24px -6px hsl(0 0% 0% / 0.25)"
-                    : "0 1px 3px hsl(0 0% 0% / 0.03)",
+                    ? "0 8px 32px -8px hsl(0 0% 0% / 0.35), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
+                    : "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.02)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
                 } as React.CSSProperties}
@@ -103,9 +103,9 @@ const Pricing = () => {
                     className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] tracking-[0.12em] uppercase px-3 py-1 rounded font-medium"
                     style={{
                       fontFamily: "'IBM Plex Mono', monospace",
-                      background: "hsl(var(--primary-foreground))",
-                      color: "hsl(var(--primary))",
-                      border: "1px solid hsl(var(--border-subtle) / 0.2)",
+                      background: "hsl(0 0% 92%)",
+                      color: "hsl(0 0% 8%)",
+                      border: "1px solid hsl(0 0% 80%)",
                     }}
                   >
                     Most popular
@@ -113,18 +113,18 @@ const Pricing = () => {
                 )}
 
                 <div className="p-5 pb-4">
-                  <h3 className="text-[14px] font-semibold tracking-[-0.02em]">{plan.name}</h3>
+                  <h3 className="text-[13px] font-semibold tracking-[-0.02em]">{plan.name}</h3>
                   <p className={cn(
-                    "text-[11.5px] mt-0.5",
-                    plan.featured ? "opacity-50" : "text-muted-foreground/55"
+                    "text-[11px] mt-0.5",
+                    plan.featured ? "opacity-45" : "text-muted-foreground/50"
                   )}>
                     {plan.description}
                   </p>
                   <div className="flex items-baseline gap-1 mt-3">
-                    <span className="text-[1.65rem] font-semibold tracking-[-0.03em] leading-none">{plan.price}</span>
+                    <span className="text-[1.5rem] font-semibold tracking-[-0.03em] leading-none">{plan.price}</span>
                     <span className={cn(
                       "text-[11px]",
-                      plan.featured ? "opacity-40" : "text-muted-foreground/45"
+                      plan.featured ? "opacity-35" : "text-muted-foreground/40"
                     )}>
                       {plan.period}
                     </span>
@@ -133,7 +133,7 @@ const Pricing = () => {
 
                 <div
                   className="mx-5 h-px"
-                  style={{ background: plan.featured ? "hsl(0 0% 100% / 0.08)" : "hsl(var(--border-subtle) / 0.35)" }}
+                  style={{ background: plan.featured ? "hsl(0 0% 100% / 0.07)" : "hsl(var(--border-subtle) / 0.3)" }}
                 />
 
                 <div className="p-5 pt-4 flex-1">
@@ -143,13 +143,13 @@ const Pricing = () => {
                         <Check className={cn(
                           "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
                           !feature.included && "opacity-0",
-                          plan.featured ? "opacity-40" : "text-muted-foreground/35"
+                          plan.featured ? "opacity-35" : "text-muted-foreground/30"
                         )} />
                         <span className={cn(
-                          "text-[12px] leading-snug",
-                          !feature.included && (plan.featured ? "opacity-20 line-through" : "text-muted-foreground/25 line-through"),
-                          feature.included && !plan.featured && "text-foreground/70",
-                          feature.included && plan.featured && "opacity-80",
+                          "text-[11.5px] leading-snug",
+                          !feature.included && (plan.featured ? "opacity-18 line-through" : "text-muted-foreground/22 line-through"),
+                          feature.included && !plan.featured && "text-foreground/65",
+                          feature.included && plan.featured && "opacity-75",
                         )}>
                           {feature.text}
                         </span>
@@ -163,7 +163,7 @@ const Pricing = () => {
                     variant={plan.featured ? "hero-outline" : "hero"}
                     className={cn(
                       "w-full h-10 text-[12px] rounded-full",
-                      plan.featured && "border-white/15 text-white hover:bg-white/8 bg-transparent"
+                      plan.featured && "border-white/12 text-white hover:bg-white/6 bg-transparent"
                     )}
                   >
                     {plan.cta}

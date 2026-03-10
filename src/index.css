@@ -157,6 +157,49 @@
   }
 }
 
+/* ── Studio waveform separator ── */
+.waveform-separator {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
+}
+.waveform-separator::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 3px,
+    hsl(var(--border-subtle) / 0.25) 3px,
+    hsl(var(--border-subtle) / 0.25) 4px
+  );
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 24'%3E%3Cpath d='M0 12 Q5 4 10 12 Q15 20 20 12 Q25 6 30 12 Q35 18 40 12 Q45 5 50 12 Q55 19 60 12 Q65 7 70 12 Q75 17 80 12 Q85 4 90 12 Q95 20 100 12 Q105 6 110 12 Q115 18 120 12 Q125 5 130 12 Q135 19 140 12 Q145 7 150 12 Q155 17 160 12 Q165 4 170 12 Q175 20 180 12 Q185 6 190 12 Q195 18 200 12 V24 H0Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 200px 24px;
+  mask-repeat: repeat-x;
+  opacity: 0.6;
+}
+
+/* ── Studio channel strip line ── */
+.channel-strip-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--border-subtle) / 0.5) 15%,
+    hsl(var(--border-subtle) / 0.5) 85%,
+    transparent 100%
+  );
+}
+
+/* ── Faint grid texture for inset sections ── */
+.studio-grid-bg {
+  background-image:
+    linear-gradient(hsl(var(--border-subtle) / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--border-subtle) / 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
 @layer base {
   * {
     @apply border-border;

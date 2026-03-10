@@ -32,61 +32,64 @@ const ListeningModes = () => {
     <section
       ref={ref}
       id="modes"
-      className={`relative py-20 md:py-24 px-6 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
-      style={{ background: "hsl(30 18% 92%)" }}
+      className={`relative py-16 md:py-20 px-6 overflow-visible studio-grid-bg reveal ${isVisible ? "is-visible" : ""}`}
+      style={{ background: "hsl(var(--surface-c))" }}
     >
-      {/* Top + bottom borders for inset feel */}
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
-      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+      <div className="channel-strip-line absolute top-0 left-0 right-0" />
+      <div className="channel-strip-line absolute bottom-0 left-0 right-0" />
 
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+      <div className="max-w-3xl mx-auto relative">
+        <div className="text-center mb-10 md:mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
-            className="text-[10px] text-muted-foreground/50 tracking-[0.2em] uppercase mb-4"
+            className="text-[10px] text-muted-foreground/50 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             Three perspectives
           </p>
-          <h2 className="text-[1.5rem] md:text-[1.65rem] font-semibold tracking-[-0.03em]">Listening modes</h2>
+          <h2 className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em]">Listening modes</h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-3">
           {modes.map((mode, i) => (
             <div
               key={mode.name}
-              className="rounded-lg p-6 md:p-7 flex flex-col gap-4 transition-colors reveal-child"
+              className="rounded-lg p-5 md:p-6 flex flex-col gap-3.5 transition-colors reveal-child"
               style={{
                 "--stagger": `${100 + i * 100}ms`,
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle) / 0.45)",
-                boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03)",
+                background: "hsl(var(--surface-a))",
+                border: "1px solid hsl(var(--border-subtle) / 0.5)",
+                boxShadow: "0 1px 3px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
               } as React.CSSProperties}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center reveal-pop"
+                  className="w-8 h-8 rounded-md flex items-center justify-center reveal-pop"
                   style={{
                     "--stagger": `${200 + i * 100}ms`,
-                    background: "hsl(var(--secondary) / 0.6)",
-                    border: "1px solid hsl(var(--border-subtle) / 0.35)",
+                    background: "hsl(var(--surface-c))",
+                    border: "1px solid hsl(var(--border-subtle) / 0.4)",
+                    boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.35)",
                   } as React.CSSProperties}
                 >
-                  <mode.icon className="w-[18px] h-[18px] text-foreground/70" strokeWidth={1.6} />
+                  <mode.icon className="w-4 h-4 text-foreground/60" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h3 className="text-[14px] font-semibold tracking-[-0.02em]">{mode.name}</h3>
+                  <h3 className="text-[13px] font-semibold tracking-[-0.02em]">{mode.name}</h3>
                   <p
-                    className="text-[9px] text-muted-foreground/45 tracking-[0.1em]"
+                    className="text-[9px] text-muted-foreground/40 tracking-[0.1em]"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {mode.tag}
                   </p>
                 </div>
               </div>
-              <p className="text-[12.5px] text-muted-foreground/65 leading-[1.65]">{mode.description}</p>
-              <ul className="space-y-2 mt-auto">
+              <p className="text-[12px] text-muted-foreground/60 leading-[1.65]">{mode.description}</p>
+              <ul className="space-y-1.5 mt-auto">
                 {mode.points.map((point) => (
-                  <li key={point} className="text-[12.5px] text-foreground/75 flex items-center gap-2">
-                    <span className="w-1 h-1 rounded-full bg-foreground/15" />
+                  <li key={point} className="text-[12px] text-foreground/70 flex items-center gap-2">
+                    <span
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: "hsl(var(--foreground) / 0.15)" }}
+                    />
                     {point}
                   </li>
                 ))}

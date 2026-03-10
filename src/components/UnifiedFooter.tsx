@@ -12,20 +12,20 @@ const UnifiedFooter = () => {
       {/* ── CTA block ── */}
       <section
         ref={ctaRef}
-        className={`relative py-16 md:py-20 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
-        style={{ background: "hsl(var(--background))" }}
+        className={`relative py-14 md:py-18 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
+        style={{ background: "hsl(var(--surface-a))" }}
       >
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+        <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
         <div className="max-w-xl mx-auto text-center">
           <p
-            className="text-[10px] text-muted-foreground/50 tracking-[0.2em] uppercase mb-6 reveal-child"
+            className="text-[10px] text-muted-foreground/45 tracking-[0.18em] uppercase mb-5 reveal-child"
             style={{ fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
           >
             Ready to hear your mix
           </p>
           <div className="reveal-child" style={{ "--stagger": "80ms" } as React.CSSProperties}>
-            <Button variant="hero" size="lg" className="h-14 px-14 text-[14px] gap-2.5" asChild>
+            <Button variant="hero" size="lg" className="h-13 px-12 text-[13px] gap-2.5" asChild>
               <Link to="/analyze">
                 <Upload className="w-4 h-4" />
                 Start free analysis
@@ -33,7 +33,7 @@ const UnifiedFooter = () => {
             </Button>
           </div>
           <p
-            className="mt-4 text-[11px] tracking-wide text-muted-foreground/40 reveal-child"
+            className="mt-3.5 text-[11px] tracking-wide text-muted-foreground/35 reveal-child"
             style={{ "--stagger": "160ms" } as React.CSSProperties}
           >
             No credit card required
@@ -41,12 +41,13 @@ const UnifiedFooter = () => {
         </div>
       </section>
 
-      {/* ── Gradient transition to dark ── */}
+      {/* ── Waveform transition to dark ── */}
+      <div className="waveform-separator" style={{ background: "hsl(var(--surface-a))" }} />
       <div
-        className="h-24 pointer-events-none"
+        className="h-16 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(0 0% 6%) 50%, hsl(0 0% 5%) 100%)",
+          background: "linear-gradient(to bottom, hsl(var(--surface-a)) 0%, hsl(0 0% 6%) 60%, hsl(0 0% 5%) 100%)",
         }}
       />
 
@@ -69,35 +70,35 @@ const UnifiedFooter = () => {
 
         <div className="relative">
           {/* Contact */}
-          <div className="pt-14 md:pt-16 pb-12 md:pb-14 px-6">
-            <div className="max-w-4xl mx-auto text-center">
+          <div className="pt-12 md:pt-14 pb-10 md:pb-12 px-6">
+            <div className="max-w-3xl mx-auto text-center">
               <p
-                className="text-[10px] tracking-[0.2em] uppercase mb-4 reveal-child"
-                style={{ color: "hsl(0 0% 45%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
+                className="text-[10px] tracking-[0.18em] uppercase mb-3 reveal-child"
+                style={{ color: "hsl(0 0% 42%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
               >
                 Get in touch
               </p>
               <h2
-                className="text-[1.5rem] md:text-[1.65rem] font-semibold tracking-[-0.03em] mb-3 reveal-child"
-                style={{ color: "hsl(0 0% 92%)", "--stagger": "90ms" } as React.CSSProperties}
+                className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em] mb-3 reveal-child"
+                style={{ color: "hsl(0 0% 90%)", "--stagger": "90ms" } as React.CSSProperties}
               >
                 Contact
               </h2>
               <p
-                className="text-[13px] max-w-sm mx-auto mb-7 leading-relaxed reveal-child"
-                style={{ color: "hsl(0 0% 50%)", "--stagger": "180ms" } as React.CSSProperties}
+                className="text-[12.5px] max-w-sm mx-auto mb-6 leading-relaxed reveal-child"
+                style={{ color: "hsl(0 0% 48%)", "--stagger": "180ms" } as React.CSSProperties}
               >
                 Billing, feedback quality, feature requests. We read every message.
               </p>
               <div className="reveal-child" style={{ "--stagger": "260ms" } as React.CSSProperties}>
-                <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
+                <Button variant="hero" size="lg" className="h-11 px-8 text-[12px] gap-2" asChild>
                   <a href="mailto:hello@secondears.io">
                     <Mail className="w-4 h-4" />
                     hello@secondears.io
                   </a>
                 </Button>
               </div>
-              <p className="text-[10px] mt-3.5 reveal-child" style={{ color: "hsl(0 0% 42%)", "--stagger": "320ms" } as React.CSSProperties}>
+              <p className="text-[10px] mt-3 reveal-child" style={{ color: "hsl(0 0% 40%)", "--stagger": "320ms" } as React.CSSProperties}>
                 Response within 24–48h
               </p>
             </div>
@@ -105,13 +106,13 @@ const UnifiedFooter = () => {
 
           {/* Legal row */}
           <div
-            className="pt-6 pb-10 md:pb-14 px-6"
+            className="pt-5 pb-8 md:pb-12 px-6"
             style={{ borderTop: "1px solid hsl(0 0% 100% / 0.05)" }}
           >
-            <div className="max-w-4xl mx-auto flex flex-col items-center gap-5">
+            <div className="max-w-3xl mx-auto flex flex-col items-center gap-4">
               <span
                 className="text-[11px] tracking-tight"
-                style={{ color: "hsl(0 0% 36%)", fontFamily: "'IBM Plex Mono', monospace" }}
+                style={{ color: "hsl(0 0% 34%)", fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 SecondEar™
               </span>
@@ -122,26 +123,26 @@ const UnifiedFooter = () => {
                   { to: "/faq", label: "FAQ" },
                 ].map((link, i) => (
                   <span key={link.to} className="flex items-center gap-4">
-                    {i > 0 && <span style={{ color: "hsl(0 0% 22%)" }}>·</span>}
+                    {i > 0 && <span style={{ color: "hsl(0 0% 20%)" }}>·</span>}
                     <Link
                       to={link.to}
                       className="text-[10px] tracking-wide transition-colors"
-                      style={{ color: "hsl(0 0% 42%)" }}
+                      style={{ color: "hsl(0 0% 40%)" }}
                     >
                       {link.label}
                     </Link>
                   </span>
                 ))}
-                <span style={{ color: "hsl(0 0% 22%)" }}>·</span>
+                <span style={{ color: "hsl(0 0% 20%)" }}>·</span>
                 <a
                   href="mailto:hello@secondears.io"
                   className="text-[10px] tracking-wide transition-colors"
-                  style={{ color: "hsl(0 0% 42%)" }}
+                  style={{ color: "hsl(0 0% 40%)" }}
                 >
                   Contact
                 </a>
               </div>
-              <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 32%)" }}>
+              <p className="text-[10px] tracking-wide" style={{ color: "hsl(0 0% 30%)" }}>
                 © {new Date().getFullYear()} SecondEar. All rights reserved.
               </p>
             </div>
