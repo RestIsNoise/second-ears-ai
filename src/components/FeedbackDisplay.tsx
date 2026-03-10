@@ -1236,7 +1236,7 @@ const FeedbackDisplay = ({
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
           className={cn(
-            "mt-3 grid gap-0",
+            "mt-2 sm:mt-3 grid gap-0",
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
