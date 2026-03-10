@@ -842,16 +842,17 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-6 rounded-[10px] overflow-hidden"
+        className="mt-6 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
-          border: "1px solid hsl(var(--foreground) / 0.12)",
-          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08), 0 0 0 1px hsl(var(--foreground) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+          border: "2px solid hsl(var(--foreground) / 0.1)",
+          borderRadius: 6,
+          boxShadow: "0 4px 20px 0 rgba(0,0,0,0.1), 0 0 0 1px hsl(var(--foreground) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
         }}
       >
         {/* ── WAVEFORM PLAYER ── */}
         {audioFile && (
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-hidden" style={{ borderRadius: "4px 4px 0 0" }}>
             <ABCompare
               ref={waveformRef}
               audioFileA={audioFile}
