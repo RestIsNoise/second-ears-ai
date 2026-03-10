@@ -235,7 +235,7 @@ const Dashboard = () => {
     const load = async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, created_at, versions(id, version_number, track_name, created_at, analyses(id, mode, feedback, created_at))")
+        .select("id, name, created_at, versions(id, version_number, track_name, created_at, analyses(id, mode, result, created_at))")
         .order("created_at", { ascending: false });
       if (error) {
         console.error("[Dashboard] fetch projects error:", error.message);
