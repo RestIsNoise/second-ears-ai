@@ -49,16 +49,18 @@ function lraStatus(v: number): Status {
   return { label: "Wide", color: "blue" };
 }
 
-/* Status LED colors — hardware indicator style */
-const ledColors: Record<string, { bg: string; glow: string }> = {
-  green: { bg: "hsl(145 60% 42%)", glow: "0 0 4px hsl(145 60% 42% / 0.4)" },
-  orange: { bg: "hsl(35 85% 50%)", glow: "0 0 4px hsl(35 85% 50% / 0.4)" },
-  red: { bg: "hsl(0 65% 48%)", glow: "0 0 4px hsl(0 65% 48% / 0.4)" },
-  blue: { bg: "hsl(210 65% 50%)", glow: "0 0 4px hsl(210 65% 50% / 0.4)" },
+/* Status LED colors */
+const ledColors: Record<string, { bg: string; glow: string; muted: string }> = {
+  green: { bg: "hsl(145 60% 42%)", glow: "0 0 5px hsl(145 60% 42% / 0.5)", muted: "hsl(145 60% 42% / 0.12)" },
+  orange: { bg: "hsl(35 85% 50%)", glow: "0 0 5px hsl(35 85% 50% / 0.5)", muted: "hsl(35 85% 50% / 0.12)" },
+  red: { bg: "hsl(0 65% 48%)", glow: "0 0 5px hsl(0 65% 48% / 0.5)", muted: "hsl(0 65% 48% / 0.12)" },
+  blue: { bg: "hsl(210 65% 50%)", glow: "0 0 5px hsl(210 65% 50% / 0.5)", muted: "hsl(210 65% 50% / 0.12)" },
 };
 
-/* ── Meter Row — horizontal strip like a hardware channel meter ── */
-interface MeterRowProps {
+const SEGMENTS = 32;
+
+/* ── Meter Channel ── */
+interface MeterChannelProps {
   label: string;
   value: number | null;
   unit: string;
@@ -66,9 +68,10 @@ interface MeterRowProps {
   max: number;
   status: Status | null;
   decimals?: number;
+  thresholds?: { pct: number; label: string }[];
 }
 
-const MeterRow = ({ label, value, unit, min, max, status, decimals = 1 }: MeterRowProps) => {
+const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds }: MeterChannelProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const led = isMissing ? null : ledColors[status.color];
@@ -76,229 +79,314 @@ const MeterRow = ({ label, value, unit, min, max, status, decimals = 1 }: MeterR
   return (
     <div
       style={{
-        padding: "6px 8px",
-        borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
+        padding: "0",
+        borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
       }}
     >
-      {/* Top line: label + value + LED */}
-      <div className="flex items-center justify-between gap-2 mb-1">
-        <span
-          className="text-foreground/45 uppercase tracking-[0.08em] font-bold truncate"
-          style={{ fontFamily: MONO, fontSize: 8 }}
+      <div className="flex items-stretch">
+        {/* Left: label column */}
+        <div
+          className="flex items-center shrink-0"
+          style={{
+            width: 72,
+            padding: "6px 0 6px 8px",
+            borderRight: "1px solid hsl(var(--foreground) / 0.05)",
+          }}
         >
-          {label}
-        </span>
-        <div className="flex items-center gap-2 shrink-0">
           <span
-            className="text-foreground/80 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "-0.02em" }}
+            className="text-foreground/40 uppercase tracking-[0.06em] font-bold truncate"
+            style={{ fontFamily: MONO, fontSize: 8 }}
+          >
+            {label}
+          </span>
+        </div>
+
+        {/* Center: meter + thresholds */}
+        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "7px 8px" }}>
+          {/* Segmented bar */}
+          <div className="relative">
+            <div className="flex gap-px" style={{ height: 4 }}>
+              {Array.from({ length: SEGMENTS }).map((_, i) => {
+                const segPct = ((i + 1) / SEGMENTS) * 100;
+                const filled = pct >= segPct;
+                // Color ramp: last 20% of bar shifts to warm/red for "hot" zones
+                const isHotZone = i >= SEGMENTS * 0.8;
+                const fillColor = filled && led
+                  ? (isHotZone && (status?.color === "red" || status?.color === "orange") ? led.bg : led.bg)
+                  : "hsl(var(--foreground) / 0.035)";
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      flex: 1,
+                      backgroundColor: fillColor,
+                      opacity: filled ? (0.4 + (i / SEGMENTS) * 0.6) : 1,
+                      borderRadius: 0,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            {/* Threshold tick marks */}
+            {thresholds?.map((t, i) => (
+              <div
+                key={i}
+                className="absolute"
+                style={{
+                  left: `${t.pct}%`,
+                  top: -1,
+                  bottom: -2,
+                  width: 1,
+                  backgroundColor: "hsl(var(--foreground) / 0.12)",
+                }}
+              >
+                <span
+                  className="absolute text-foreground/15 font-bold"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 5.5,
+                    top: -8,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: value + unit + LED */}
+        <div
+          className="flex items-center gap-1.5 shrink-0"
+          style={{
+            padding: "6px 8px 6px 0",
+            borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
+            minWidth: 80,
+            justifyContent: "flex-end",
+          }}
+        >
+          {/* Status tag */}
+          {!isMissing && led && (
+            <span
+              className="font-extrabold uppercase tracking-[0.06em]"
+              style={{
+                fontFamily: MONO,
+                fontSize: 6.5,
+                color: led.bg,
+                padding: "1px 4px",
+                backgroundColor: led.muted,
+                borderRadius: 1,
+                lineHeight: 1,
+              }}
+            >
+              {status.label}
+            </span>
+          )}
+          <span
+            className="text-foreground/85 tabular-nums font-bold"
+            style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "-0.03em" }}
           >
             {isMissing ? "—" : value.toFixed(decimals)}
           </span>
-          {!isMissing && (
-            <span
-              className="text-foreground/35 font-medium uppercase"
-              style={{ fontFamily: MONO, fontSize: 8 }}
-            >
-              {unit}
-            </span>
-          )}
-          {/* LED indicator */}
+          <span
+            className="text-foreground/25 font-medium uppercase"
+            style={{ fontFamily: MONO, fontSize: 7 }}
+          >
+            {unit}
+          </span>
+          {/* LED */}
           <div
-            className="w-[6px] h-[6px] rounded-full shrink-0"
+            className="w-[5px] h-[5px] rounded-full shrink-0"
             style={{
-              backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.1)",
+              backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.08)",
               boxShadow: led ? led.glow : "none",
             }}
           />
         </div>
       </div>
-      {/* Segmented meter bar */}
-      <div className="flex gap-[1px]" style={{ height: 3 }}>
-        {Array.from({ length: 20 }).map((_, i) => {
-          const segPct = (i + 1) * 5;
-          const filled = pct >= segPct;
-          return (
-            <div
-              key={i}
-              className="flex-1"
-              style={{
-                backgroundColor: filled && led
-                  ? `${led.bg}`
-                  : "hsl(var(--foreground) / 0.04)",
-                opacity: filled ? (0.5 + (i / 20) * 0.5) : 1,
-                borderRadius: 0.5,
-              }}
-            />
-          );
-        })}
-      </div>
-      {/* Status label */}
-      {!isMissing && (
-        <div className="mt-1 flex justify-end">
-          <span
-            className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
-            style={{ fontFamily: MONO, fontSize: 7 }}
-          >
-            {status.label}
-          </span>
-        </div>
-      )}
     </div>
   );
 };
 
-/* ── Correlation Row ── */
-const CorrelationRow = ({ value }: { value: number }) => {
+/* ── Correlation Channel (bipolar) ── */
+const CorrelationChannel = ({ value }: { value: number }) => {
   const status = correlationStatus(value);
   const led = ledColors[status.color];
   const pct = ((value + 1) / 2) * 100;
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div
-      style={{
-        padding: "6px 8px",
-        borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
-      }}
-    >
-      <div className="flex items-center justify-between gap-2 mb-1">
-        <span
-          className="text-foreground/45 uppercase tracking-[0.08em] font-bold"
-          style={{ fontFamily: MONO, fontSize: 8 }}
+    <div style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.04)" }}>
+      <div className="flex items-stretch">
+        {/* Label */}
+        <div
+          className="flex items-center shrink-0"
+          style={{ width: 72, padding: "6px 0 6px 8px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          Stereo Corr
-        </span>
-        <div className="flex items-center gap-2 shrink-0">
-          <span
-            className="text-foreground/80 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "-0.02em" }}
-          >
-            {value > 0 ? "+" : ""}{value.toFixed(2)}
+          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 8 }}>
+            Stereo
           </span>
-          <div
-            className="w-[6px] h-[6px] rounded-full shrink-0"
-            style={{ backgroundColor: led.bg, boxShadow: led.glow }}
-          />
         </div>
-      </div>
-      {/* Bipolar meter */}
-      <div className="relative" style={{ height: 3 }}>
-        <div className="absolute inset-0 flex gap-[1px]">
-          {Array.from({ length: 20 }).map((_, i) => (
+
+        {/* Bipolar meter */}
+        <div className="flex-1 flex flex-col justify-center" style={{ padding: "7px 8px" }}>
+          <div className="relative" style={{ height: 4 }}>
+            {/* Background segments */}
+            <div className="absolute inset-0 flex gap-px">
+              {Array.from({ length: SEGMENTS }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{ flex: 1, backgroundColor: "hsl(var(--foreground) / 0.035)" }}
+                />
+              ))}
+            </div>
+            {/* Center line */}
+            <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: "hsl(var(--foreground) / 0.15)" }} />
+            {/* L / R scale labels */}
+            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, left: 0 }}>−1</span>
+            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, left: "50%", transform: "translateX(-50%)" }}>0</span>
+            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, right: 0 }}>+1</span>
+            {/* Fill */}
+            {clampedPct >= 50 ? (
+              <div
+                className="absolute inset-y-0"
+                style={{ left: "50%", width: `${clampedPct - 50}%`, backgroundColor: led.bg, opacity: 0.7 }}
+              />
+            ) : (
+              <div
+                className="absolute inset-y-0"
+                style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, backgroundColor: led.bg, opacity: 0.7 }}
+              />
+            )}
+            {/* Needle */}
             <div
-              key={i}
-              className="flex-1"
+              className="absolute"
               style={{
-                backgroundColor: "hsl(var(--foreground) / 0.04)",
-                borderRadius: 0.5,
+                left: `${clampedPct}%`,
+                top: -1,
+                bottom: -1,
+                width: 2,
+                backgroundColor: led.bg,
+                boxShadow: led.glow,
+                transform: "translateX(-50%)",
               }}
             />
-          ))}
+          </div>
         </div>
-        <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: "hsl(var(--foreground) / 0.12)" }} />
-        {clampedPct >= 50 ? (
-          <div
-            className="absolute inset-y-0"
-            style={{
-              left: "50%",
-              width: `${clampedPct - 50}%`,
-              backgroundColor: led.bg,
-              opacity: 0.7,
-              borderRadius: "0 1px 1px 0",
-            }}
-          />
-        ) : (
-          <div
-            className="absolute inset-y-0"
-            style={{
-              left: `${clampedPct}%`,
-              width: `${50 - clampedPct}%`,
-              backgroundColor: led.bg,
-              opacity: 0.7,
-              borderRadius: "1px 0 0 1px",
-            }}
-          />
-        )}
-      </div>
-      <div className="mt-1 flex justify-end">
-        <span
-          className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
-          style={{ fontFamily: MONO, fontSize: 7 }}
+
+        {/* Value */}
+        <div
+          className="flex items-center gap-1.5 shrink-0"
+          style={{ padding: "6px 8px 6px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 80, justifyContent: "flex-end" }}
         >
-          {status.label}
-        </span>
+          <span
+            className="font-extrabold uppercase tracking-[0.06em]"
+            style={{ fontFamily: MONO, fontSize: 6.5, color: led.bg, padding: "1px 4px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
+          >
+            {status.label}
+          </span>
+          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "-0.03em" }}>
+            {value > 0 ? "+" : ""}{value.toFixed(2)}
+          </span>
+          <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+        </div>
       </div>
     </div>
   );
 };
 
-/* ── Sub/Kick Row ── */
-const SubKickRow = ({ value }: { value: number }) => {
+/* ── Sub/Kick Channel ── */
+const SubKickChannel = ({ value }: { value: number }) => {
   const status = subKickStatus(value);
   const led = ledColors[status.color];
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div style={{ padding: "6px 8px" }}>
-      <div className="flex items-center justify-between gap-2 mb-1">
-        <span
-          className="text-foreground/45 uppercase tracking-[0.08em] font-bold"
-          style={{ fontFamily: MONO, fontSize: 8 }}
+    <div>
+      <div className="flex items-stretch">
+        {/* Label */}
+        <div
+          className="flex items-center shrink-0"
+          style={{ width: 72, padding: "6px 0 6px 8px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          Sub/Kick
-        </span>
-        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 8 }}>
+            Sub/Kick
+          </span>
+        </div>
+
+        {/* Bipolar meter with needle */}
+        <div className="flex-1 flex flex-col justify-center" style={{ padding: "7px 8px" }}>
+          <div className="flex items-center gap-1.5">
+            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 6, fontWeight: 700 }}>K</span>
+            <div className="relative flex-1" style={{ height: 4 }}>
+              <div className="absolute inset-0 flex gap-px">
+                {Array.from({ length: SEGMENTS }).map((_, i) => (
+                  <div key={i} style={{ flex: 1, backgroundColor: "hsl(var(--foreground) / 0.035)" }} />
+                ))}
+              </div>
+              <div className="absolute inset-y-0" style={{ left: "50%", width: 1, backgroundColor: "hsl(var(--foreground) / 0.12)" }} />
+              {/* Needle */}
+              <div
+                className="absolute"
+                style={{
+                  left: `${pct}%`,
+                  top: -2,
+                  bottom: -2,
+                  width: 2,
+                  backgroundColor: led.bg,
+                  boxShadow: led.glow,
+                  transform: "translateX(-50%)",
+                }}
+              />
+            </div>
+            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 6, fontWeight: 700 }}>S</span>
+          </div>
+        </div>
+
+        {/* Value */}
+        <div
+          className="flex items-center gap-1.5 shrink-0"
+          style={{ padding: "6px 8px 6px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 80, justifyContent: "flex-end" }}
+        >
           <span
-            className="text-foreground/80 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 13 }}
+            className="font-extrabold uppercase tracking-[0.06em]"
+            style={{ fontFamily: MONO, fontSize: 6.5, color: led.bg, padding: "1px 4px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
           >
+            {status.label}
+          </span>
+          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 12 }}>
             {value.toFixed(2)}
           </span>
-          <div
-            className="w-[6px] h-[6px] rounded-full shrink-0"
-            style={{ backgroundColor: led.bg, boxShadow: led.glow }}
-          />
+          <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
         </div>
-      </div>
-      <div className="flex items-center gap-1.5">
-        <span className="text-foreground/25 shrink-0" style={{ fontFamily: MONO, fontSize: 7, fontWeight: 700 }}>K</span>
-        <div className="relative flex-1" style={{ height: 3 }}>
-          <div className="absolute inset-0 flex gap-[1px]">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-1"
-                style={{ backgroundColor: "hsl(var(--foreground) / 0.04)", borderRadius: 0.5 }}
-              />
-            ))}
-          </div>
-          <div className="absolute inset-y-0" style={{ left: "50%", width: 1, backgroundColor: "hsl(var(--foreground) / 0.1)" }} />
-          <div
-            className="absolute top-1/2 rounded-full"
-            style={{
-              left: `${pct}%`,
-              width: 6,
-              height: 6,
-              transform: "translate(-50%, -50%)",
-              backgroundColor: led.bg,
-              boxShadow: led.glow,
-            }}
-          />
-        </div>
-        <span className="text-foreground/25 shrink-0" style={{ fontFamily: MONO, fontSize: 7, fontWeight: 700 }}>S</span>
-      </div>
-      <div className="mt-1 flex justify-end">
-        <span
-          className="text-foreground/30 uppercase tracking-[0.1em] font-bold"
-          style={{ fontFamily: MONO, fontSize: 7 }}
-        >
-          {status.label}
-        </span>
       </div>
     </div>
   );
 };
+
+/* ── Section Divider ── */
+const SectionDivider = ({ label }: { label: string }) => (
+  <div
+    className="flex items-center gap-2 px-2"
+    style={{
+      padding: "3px 8px",
+      backgroundColor: "hsl(var(--panel-header))",
+      borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
+      borderTop: "1px solid hsl(var(--foreground) / 0.06)",
+    }}
+  >
+    <div style={{ width: 3, height: 3, backgroundColor: "hsl(var(--foreground) / 0.15)", borderRadius: 1 }} />
+    <span
+      className="text-foreground/25 uppercase tracking-[0.14em] font-extrabold"
+      style={{ fontFamily: MONO, fontSize: 6.5 }}
+    >
+      {label}
+    </span>
+  </div>
+);
 
 /* ── Main Component ── */
 interface Props {
@@ -327,52 +415,80 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   const cf = metrics.crest_factor ?? null;
   const lra = metrics.lra ?? null;
 
+  // LUFS thresholds: -14 and -9
+  const lufsThresholds = [
+    { pct: ((-14 - (-24)) / ((-6) - (-24))) * 100, label: "-14" },
+    { pct: ((-9 - (-24)) / ((-6) - (-24))) * 100, label: "-9" },
+  ];
+  // Peak threshold: -1 dBTP
+  const peakThresholds = [
+    { pct: ((-3 - (-6)) / (0 - (-6))) * 100, label: "-3" },
+    { pct: ((-1 - (-6)) / (0 - (-6))) * 100, label: "-1" },
+  ];
+
   return (
     <section
       style={{
         backgroundColor: "hsl(var(--panel-bg))",
-        border: "1px solid hsl(var(--foreground) / 0.06)",
-        borderRadius: 3,
-        boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+        border: "1px solid hsl(var(--foreground) / 0.07)",
+        borderRadius: 2,
+        boxShadow: "inset 0 1px 4px hsl(var(--panel-inset))",
         overflow: "hidden",
       }}
     >
-      {/* Section header strip */}
+      {/* Module header — rack label */}
       <div
-        className="flex items-center justify-between px-2.5 py-[5px]"
+        className="flex items-center justify-between"
         style={{
+          padding: "4px 8px",
           backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
+          borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
         }}
       >
+        <div className="flex items-center gap-2">
+          <div
+            className="w-[6px] h-[6px] rounded-full"
+            style={{
+              background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
+              boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
+            }}
+          />
+          <span
+            className="text-foreground/45 uppercase tracking-[0.16em] font-extrabold"
+            style={{ fontFamily: MONO, fontSize: 7 }}
+          >
+            Metering
+          </span>
+        </div>
         <span
-          className="text-foreground/40 uppercase tracking-[0.14em] font-extrabold"
-          style={{ fontFamily: MONO, fontSize: 7 }}
-        >
-          Metering
-        </span>
-        <span
-          className="text-foreground/15 uppercase tracking-[0.1em] font-bold"
+          className="text-foreground/15 uppercase tracking-[0.1em] font-bold tabular-nums"
           style={{ fontFamily: MONO, fontSize: 6 }}
         >
           {[il, stl, dr, peak, sc, cf, lra].filter(v => v !== null).length} ch
         </span>
       </div>
 
-      {/* Meter rows */}
-      <MeterRow label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} />
-      <MeterRow label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} />
-      <MeterRow label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} />
-      <MeterRow label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} />
-      <MeterRow label="Peak dBTP" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} />
+      {/* Loudness section */}
+      <SectionDivider label="Loudness" />
+      <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} />
+      <MeterChannel label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} thresholds={lufsThresholds} />
+      <MeterChannel label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} thresholds={[{ pct: 40, label: "8" }, { pct: 70, label: "14" }]} />
+
+      {/* Dynamics section */}
+      <SectionDivider label="Dynamics" />
+      <MeterChannel label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 40, label: "8" }]} />
+      <MeterChannel label="Peak" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} decimals={1} thresholds={peakThresholds} />
+      <MeterChannel label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 50, label: "10" }]} />
+
+      {/* Stereo section */}
+      <SectionDivider label="Stereo / Balance" />
       {sc !== null ? (
-        <CorrelationRow value={sc} />
+        <CorrelationChannel value={sc} />
       ) : (
-        <MeterRow label="Stereo Corr" value={null} unit="" min={-1} max={1} status={null} />
+        <MeterChannel label="Stereo" value={null} unit="" min={-1} max={1} status={null} />
       )}
-      <MeterRow label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} />
       {metrics.sub_kick_ratio !== undefined && (
-        <SubKickRow value={metrics.sub_kick_ratio} />
+        <SubKickChannel value={metrics.sub_kick_ratio} />
       )}
     </section>
   );
