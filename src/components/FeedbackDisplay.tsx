@@ -715,7 +715,17 @@ const FeedbackDisplay = ({
   const orderedActivePanels = PANELS.filter((p) => activePanels.has(p.id));
 
   return (
-    <div className="animate-fade-up space-y-0">
+    <div className="animate-fade-up space-y-0" style={{ position: "relative" }}>
+      {/* Micro-texture background for the entire workspace area */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.02] z-0"
+        aria-hidden="true"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "256px 256px",
+        }}
+      />
       {/* ═══ HEADER ═══ */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
         {/* Left: back + title */}
@@ -807,7 +817,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WAVEFORM ═══ */}
       {audioFile && (
-        <div className="mt-6 pb-0 w-full overflow-hidden">
+        <div className="mt-6 pb-0 w-full overflow-hidden relative">
           <ABCompare
             ref={waveformRef}
             audioFileA={audioFile}
@@ -822,12 +832,26 @@ const FeedbackDisplay = ({
             onAddToDo={handleAddToDoWithTimestamp}
             onEditNote={handleEditAnnotation}
           />
+          {/* Player-to-content gradient transition */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none"
+            aria-hidden="true"
+            style={{
+              background: "linear-gradient(to bottom, transparent, hsl(var(--background) / 0.6))",
+            }}
+          />
         </div>
       )}
 
       {/* ═══ SUMMARY CARD ═══ */}
       {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
-        <div className="mt-5 rounded-[10px] border border-border/60 bg-card/50 px-5 py-5 md:px-7 md:py-6" style={{ boxShadow: "0 1px 4px 0 rgba(0,0,0,0.04)" }}>
+        <div
+          className="mt-5 rounded-[10px] border border-border/50 px-5 py-5 md:px-7 md:py-6"
+          style={{
+            backgroundColor: "hsl(var(--card))",
+            boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 0 0 1px hsl(var(--border) / 0.3)",
+          }}
+        >
           {/* Top row: paragraph + action buttons */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             {n.overallImpression && (
@@ -894,7 +918,15 @@ const FeedbackDisplay = ({
       )}
 
       {/* ═══ SIDEBAR + PANELS WORKSTATION ═══ */}
-      <div className="mt-5 flex border border-border/60 rounded-[10px] overflow-hidden bg-card/50" style={{ height: "calc(100vh - 340px)", minHeight: 380, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)" }}>
+      <div
+        className="mt-5 flex border border-border/50 rounded-[10px] overflow-hidden"
+        style={{
+          height: "calc(100vh - 340px)",
+          minHeight: 380,
+          backgroundColor: "hsl(var(--panel-bg))",
+          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.05), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+        }}
+      >
         {/* Desktop sidebar */}
         <div className="hidden md:flex">
           <PanelSidebar
