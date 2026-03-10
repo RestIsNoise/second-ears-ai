@@ -842,16 +842,17 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-6 rounded-[10px] overflow-hidden"
+        className="mt-6 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
-          border: "1px solid hsl(var(--foreground) / 0.12)",
-          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08), 0 0 0 1px hsl(var(--foreground) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+          border: "2px solid hsl(var(--foreground) / 0.1)",
+          borderRadius: 6,
+          boxShadow: "0 4px 20px 0 rgba(0,0,0,0.1), 0 0 0 1px hsl(var(--foreground) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
         }}
       >
         {/* ── WAVEFORM PLAYER ── */}
         {audioFile && (
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-hidden" style={{ borderRadius: "4px 4px 0 0" }}>
             <ABCompare
               ref={waveformRef}
               audioFileA={audioFile}
@@ -872,74 +873,122 @@ const FeedbackDisplay = ({
         {/* ── SUMMARY SECTION ── */}
         {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
           <>
-            {/* Industrial divider */}
-            <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.12), hsl(var(--foreground) / 0.06))" }} />
+            {/* Machined transition — player to summary */}
+            <div style={{ height: 1, background: "rgba(0,0,0,0.15)" }} />
+            <div style={{ height: 1, background: "hsl(var(--foreground) / 0.08)" }} />
+            <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
               className="px-5 py-5 md:px-7 md:py-6"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
-                boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+                boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
               }}
             >
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 {n.overallImpression && (
-                  <p className="text-[14px] text-foreground/70 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75 }}>
+                  <p className="text-[13px] text-foreground/65 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace" }}>
                     {n.overallImpression}
                   </p>
                 )}
 
-                {/* Action controls */}
-                <div className="flex items-center gap-2 shrink-0">
+                {/* Action controls — industrial buttons */}
+                <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     onClick={() => setShowArrangement((v) => !v)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
-                    style={{ paddingTop: 6, paddingBottom: 6 }}
+                    className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      padding: "5px 10px",
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.08)",
+                      borderRadius: 2,
+                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                    }}
                   >
-                    <Layers className="w-3 h-3 text-foreground/50" />
-                    <span className="hidden sm:inline">{showArrangement ? "Hide Arrangement" : "Show Arrangement"}</span>
-                    <span className="sm:hidden">{showArrangement ? "Hide" : "Arrange"}</span>
+                    <Layers className="w-3 h-3" />
+                    <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
+                    <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
                   </button>
                   <button
                     onClick={() => setRefModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5 text-[12px] font-medium text-foreground/75 hover:text-foreground hover:border-foreground/25 transition-all duration-150"
-                    style={{ paddingTop: 6, paddingBottom: 6 }}
+                    className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      padding: "5px 10px",
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.08)",
+                      borderRadius: 2,
+                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                    }}
                   >
-                    <Music className="w-3 h-3 text-foreground/50" />
-                    <span className="hidden sm:inline">Add reference track</span>
-                    <span className="sm:hidden">Reference</span>
+                    <Music className="w-3 h-3" />
+                    <span className="hidden sm:inline">Reference</span>
+                    <span className="sm:hidden">Ref</span>
                   </button>
                 </div>
               </div>
 
               {(n.topIssue || n.biggestWin || releaseReadiness) && (
-                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-4")}>
+                <div className={cn("flex flex-wrap items-center gap-2", n.overallImpression && "mt-4")}>
                   {n.topIssue && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                    <span
+                      className="inline-flex items-center gap-1.5"
+                      style={{
+                        padding: "4px 10px",
+                        backgroundColor: "hsl(var(--panel-bg))",
+                        border: "1px solid hsl(var(--foreground) / 0.06)",
+                        borderRadius: 2,
+                      }}
+                    >
                       <span
-                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
                       >Issue</span>
-                      <span className="text-[12px] font-medium text-foreground/75">{n.topIssue}</span>
+                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
                     </span>
                   )}
                   {n.biggestWin && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                    <span
+                      className="inline-flex items-center gap-1.5"
+                      style={{
+                        padding: "4px 10px",
+                        backgroundColor: "hsl(var(--panel-bg))",
+                        border: "1px solid hsl(var(--foreground) / 0.06)",
+                        borderRadius: 2,
+                      }}
+                    >
                       <span
-                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
                       >Win</span>
-                      <span className="text-[12px] font-medium text-foreground/75">{n.biggestWin}</span>
+                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
                     </span>
                   )}
                   {releaseReadiness && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-secondary/40 px-3.5" style={{ paddingTop: 6, paddingBottom: 6 }}>
+                    <span
+                      className="inline-flex items-center gap-1.5"
+                      style={{
+                        padding: "4px 10px",
+                        backgroundColor: "hsl(var(--panel-bg))",
+                        border: "1px solid hsl(var(--foreground) / 0.06)",
+                        borderRadius: 2,
+                      }}
+                    >
                       <span
-                        className="text-foreground/50 uppercase tracking-[0.06em] font-semibold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
                       >Release</span>
-                      <span className="text-[12px] font-medium text-foreground/75">{releaseReadiness}</span>
+                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
                     </span>
                   )}
                 </div>
@@ -948,15 +997,17 @@ const FeedbackDisplay = ({
           </>
         )}
 
-        {/* ── PANELS WORKSTATION ── */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.14), hsl(var(--foreground) / 0.06))" }} />
+        {/* ── PANELS WORKSTATION — machined transition ── */}
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.1)" }} />
+        <div style={{ height: 1, background: "hsl(var(--foreground) / 0.1)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
         <div
           className="flex overflow-hidden"
           style={{
             height: "calc(100vh - 340px)",
             minHeight: 380,
             backgroundColor: "hsl(var(--panel-bg))",
-            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+            boxShadow: "inset 0 3px 8px hsl(var(--panel-inset))",
           }}
         >
         {/* Desktop sidebar */}

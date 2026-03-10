@@ -71,11 +71,12 @@ const DECK_COLORS = {
   },
 };
 
-const SHELL_BG = "#1C1C1E";
-const LANE_BG = "#141416";
-const DIVIDER = "rgba(255,255,255,0.08)";
-const BEVEL_LIGHT = "rgba(255,255,255,0.05)";
-const BEVEL_DARK = "rgba(0,0,0,0.35)";
+const SHELL_BG = "#191919";
+const LANE_BG = "#111113";
+const DIVIDER = "rgba(255,255,255,0.07)";
+const BEVEL_LIGHT = "rgba(255,255,255,0.04)";
+const BEVEL_DARK = "rgba(0,0,0,0.4)";
+const HEADER_BG = "#161618";
 
 /* ── Time ruler helpers ── */
 const RULER_HEIGHT = 20;
@@ -126,10 +127,13 @@ const TimeRuler = ({
   const snappedMarker = snappedMarkerId ? markers.find(m => m.id === snappedMarkerId) : null;
 
   return (
-    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%", backgroundColor: "rgba(0,0,0,0.3)" }}>
+    <div className="relative select-none" style={{ height: RULER_HEIGHT, width: "100%", backgroundColor: "rgba(0,0,0,0.35)" }}>
+      {/* Top edge bevel */}
+      <div className="absolute top-0 left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.03)" }} />
       <div className="absolute top-0 left-0 right-0" style={{ height: RULER_HEIGHT }}>
-        {/* Bottom border */}
-        <div className="absolute bottom-0 left-0 right-0" style={{ height: "1px", backgroundColor: DIVIDER }} />
+        {/* Bottom border — double machined */}
+        <div className="absolute bottom-0 left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.06)" }} />
+        <div className="absolute bottom-[-1px] left-0 right-0" style={{ height: "1px", backgroundColor: "rgba(0,0,0,0.3)" }} />
 
         {ticks.map(({ time, isMajor }) => {
           const leftPct = (time / duration) * 100;
@@ -138,8 +142,8 @@ const TimeRuler = ({
               <div
                 style={{
                   width: isMajor ? "1px" : "0.5px",
-                  height: isMajor ? 10 : 4,
-                  backgroundColor: isMajor ? "rgba(255,255,255,0.40)" : "rgba(255,255,255,0.10)",
+                  height: isMajor ? 11 : 5,
+                  backgroundColor: isMajor ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)",
                 }}
               />
               {isMajor && (
@@ -147,12 +151,12 @@ const TimeRuler = ({
                   className="absolute whitespace-nowrap tabular-nums"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 8,
+                    fontSize: 7.5,
                     lineHeight: 1,
-                    letterSpacing: "0.04em",
-                    color: "rgba(255,255,255,0.45)",
-                    fontWeight: 500,
-                    bottom: 12,
+                    letterSpacing: "0.06em",
+                    color: "rgba(255,255,255,0.38)",
+                    fontWeight: 600,
+                    bottom: 13,
                     left: 0,
                     transform: time === 0 ? "none" : "translateX(-50%)",
                   }}
@@ -164,7 +168,7 @@ const TimeRuler = ({
           );
         })}
 
-        {/* Playhead tick */}
+        {/* Playhead tick — stronger */}
         <div
           className="absolute bottom-0 z-[4] pointer-events-none"
           style={{
@@ -173,23 +177,24 @@ const TimeRuler = ({
             transition: playing ? "none" : "left 0.1s ease-out",
           }}
         >
-          <div style={{ width: "1.5px", height: 12, backgroundColor: accentColor, boxShadow: `0 0 4px ${accentColor}` }} />
+          <div style={{ width: "2px", height: 14, backgroundColor: accentColor, boxShadow: `0 0 6px ${accentColor}` }} />
         </div>
 
         {/* Hover tooltip */}
         {hoverX !== null && (
           <div className="absolute pointer-events-none z-[6]" style={{ left: hoverX, top: -2, transform: "translateX(-50%)" }}>
             <span
-              className="rounded px-1.5 py-0.5 tabular-nums whitespace-nowrap"
+              className="px-1.5 py-0.5 tabular-nums whitespace-nowrap"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 8.5,
                 lineHeight: 1,
-                letterSpacing: "0.02em",
-                color: snappedMarker ? "#ffffff" : "rgba(255,255,255,0.7)",
-                backgroundColor: "rgba(0,0,0,0.9)",
-                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.2" : "0.08"})`,
-                fontWeight: snappedMarker ? 600 : 400,
+                letterSpacing: "0.03em",
+                color: snappedMarker ? "#ffffff" : "rgba(255,255,255,0.65)",
+                backgroundColor: "rgba(0,0,0,0.92)",
+                border: `0.5px solid rgba(255,255,255,${snappedMarker ? "0.2" : "0.06"})`,
+                fontWeight: snappedMarker ? 700 : 500,
+                borderRadius: 2,
               }}
             >
               {snappedMarker ? `▸ ${formatTimePrecise(snappedMarker.time)}` : formatTimePrecise(hoverTime)}
@@ -341,7 +346,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
-    const WAVEFORM_HEIGHT = 88;
+    const WAVEFORM_HEIGHT = 94;
 
     const deckLabel = deckVariant === "a" ? "A" : "B";
 
@@ -355,64 +360,94 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           ...containerStyle,
         }}
       >
-        {/* Label bar — track name + deck badge */}
+        {/* Label bar — premium track header with metadata */}
         {label && (
           <div
-            className="flex items-center gap-2 px-3 py-1.5"
+            className="flex items-center gap-2.5 px-3"
             style={{
+              paddingTop: 7,
+              paddingBottom: 7,
               borderBottom: `1px solid ${DIVIDER}`,
-              background: `linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)`,
+              backgroundColor: HEADER_BG,
+              boxShadow: `inset 0 -1px 0 ${BEVEL_DARK}, inset 0 1px 0 ${BEVEL_LIGHT}`,
             }}
           >
-            {/* Deck badge */}
+            {/* Deck badge — machined */}
             <span
               className="shrink-0 flex items-center justify-center"
               style={{
                 width: 18,
                 height: 18,
-                borderRadius: 3,
+                borderRadius: 2,
                 backgroundColor: colors.accent,
                 fontFamily: MONO,
                 fontSize: 9,
-                fontWeight: 700,
+                fontWeight: 800,
                 color: "#000000",
-                letterSpacing: "0.02em",
+                letterSpacing: "0.04em",
+                boxShadow: `0 1px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)`,
               }}
             >
               {deckLabel}
             </span>
             <div className="min-w-0 flex-1">
               <span
-                className="uppercase tracking-[0.06em] truncate block"
+                className="uppercase tracking-[0.05em] truncate block"
                 style={{
                   fontFamily: MONO,
                   fontSize: 10,
-                  fontWeight: 600,
-                  color: "rgba(255,255,255,0.75)",
+                  fontWeight: 700,
+                  color: "rgba(255,255,255,0.80)",
+                  letterSpacing: "0.04em",
                 }}
               >
                 {label}
               </span>
-              {duration > 0 && (
+            </div>
+            {/* Metadata readouts */}
+            {duration > 0 && (
+              <div className="flex items-center gap-3 shrink-0">
                 <span
-                  className="tabular-nums block"
+                  className="tabular-nums"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 8,
-                    color: "rgba(255,255,255,0.30)",
+                    fontSize: 9,
+                    color: "rgba(255,255,255,0.35)",
                     letterSpacing: "0.04em",
-                    marginTop: 1,
+                    fontWeight: 500,
                   }}
                 >
-                  {formatTime(duration)} · {audioFile?.type?.split("/")?.[1]?.toUpperCase() || "AUDIO"}
+                  {formatTime(duration)}
                 </span>
-              )}
-            </div>
+                <span
+                  className="uppercase"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 7.5,
+                    color: "rgba(255,255,255,0.22)",
+                    letterSpacing: "0.08em",
+                    fontWeight: 600,
+                    padding: "1px 5px",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "0.5px solid rgba(255,255,255,0.06)",
+                    borderRadius: 2,
+                  }}
+                >
+                  {audioFile?.type?.split("/")?.[1]?.toUpperCase() || "AUDIO"}
+                </span>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Waveform lane */}
-        <div style={{ backgroundColor: LANE_BG, padding: "0 10px" }}>
+        {/* Waveform lane — recessed well */}
+        <div
+          style={{
+            backgroundColor: LANE_BG,
+            padding: "0 10px",
+            boxShadow: "inset 0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(0,0,0,0.4)",
+          }}
+        >
           {error && (
             <div
               className="rounded flex items-start gap-3 m-2 p-2.5"
