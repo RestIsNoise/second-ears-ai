@@ -997,15 +997,17 @@ const FeedbackDisplay = ({
           </>
         )}
 
-        {/* ── PANELS WORKSTATION ── */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, hsl(var(--foreground) / 0.14), hsl(var(--foreground) / 0.06))" }} />
+        {/* ── PANELS WORKSTATION — machined transition ── */}
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.1)" }} />
+        <div style={{ height: 1, background: "hsl(var(--foreground) / 0.1)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
         <div
           className="flex overflow-hidden"
           style={{
             height: "calc(100vh - 340px)",
             minHeight: 380,
             backgroundColor: "hsl(var(--panel-bg))",
-            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+            boxShadow: "inset 0 3px 8px hsl(var(--panel-inset))",
           }}
         >
         {/* Desktop sidebar */}
