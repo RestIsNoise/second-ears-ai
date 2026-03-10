@@ -108,7 +108,7 @@ const SampleFeedback = () => {
   return (
     <section
       ref={setRefs}
-      className={`relative py-16 md:py-20 px-6 reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-20 md:py-28 px-6 reveal ${isVisible ? "is-visible" : ""}`}
       style={{ background: "hsl(0 0% 5%)" }}
     >
       {/* Noise grain */}
@@ -122,33 +122,46 @@ const SampleFeedback = () => {
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto">
-        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+      <div className="relative max-w-3xl mx-auto">
+        {/* Asymmetric heading — left-aligned with right-side annotation */}
+        <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end mb-14 md:mb-16 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+          <div>
+            <p
+              className="text-[10px] tracking-[0.2em] uppercase mb-3"
+              style={{ color: "hsl(0 0% 38%)", fontFamily: "'IBM Plex Mono', monospace" }}
+            >
+              Real output
+            </p>
+            <h2
+              className="text-[1.5rem] md:text-[1.75rem] font-semibold tracking-[-0.035em] leading-tight"
+              style={{ color: "hsl(0 0% 90%)" }}
+            >
+              See what SecondEar hears
+            </h2>
+          </div>
           <p
-            className="text-[10px] tracking-[0.18em] uppercase mb-3"
-            style={{ color: "hsl(0 0% 42%)", fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            className="text-[12px] leading-relaxed max-w-[260px] hidden md:block"
+            style={{ color: "hsl(0 0% 44%)" }}
           >
-            Real output
-          </p>
-          <h2
-            className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em] mb-2.5"
-            style={{ color: "hsl(0 0% 90%)" }}
-          >
-            See what SecondEar hears
-          </h2>
-          <p className="text-[12.5px] max-w-md mx-auto leading-relaxed" style={{ color: "hsl(0 0% 48%)" }}>
             Every analysis returns timestamped issues with concrete next steps.
           </p>
         </div>
+        {/* Mobile-only subtitle */}
+        <p
+          className="text-[12.5px] leading-relaxed mb-10 md:hidden reveal-child"
+          style={{ color: "hsl(0 0% 44%)", "--stagger": "60ms" } as React.CSSProperties}
+        >
+          Every analysis returns timestamped issues with concrete next steps.
+        </p>
 
         <div
           className="max-w-2xl mx-auto overflow-hidden reveal-child"
           style={{
-            borderRadius: "8px",
-            border: "1px solid hsl(0 0% 100% / 0.06)",
+            borderRadius: "10px",
+            border: "1px solid hsl(0 0% 100% / 0.05)",
             background: "hsl(0 0% 7%)",
-            boxShadow: "0 1px 0 hsl(0 0% 100% / 0.02) inset, 0 12px 48px -12px hsl(0 0% 0% / 0.5)",
-            "--stagger": "120ms",
+            boxShadow: "0 1px 0 hsl(0 0% 100% / 0.02) inset, 0 16px 56px -16px hsl(0 0% 0% / 0.6)",
+            "--stagger": "150ms",
           } as React.CSSProperties}
         >
           {/* Title bar — studio panel chrome */}
@@ -156,7 +169,7 @@ const SampleFeedback = () => {
             className="flex items-center gap-2 px-5 py-2.5"
             style={{
               borderBottom: "1px solid hsl(0 0% 100% / 0.04)",
-              background: "hsl(0 0% 8%)",
+              background: "linear-gradient(to bottom, hsl(0 0% 10%), hsl(0 0% 8%))",
             }}
           >
             <span className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 20%)" }} />
@@ -164,7 +177,7 @@ const SampleFeedback = () => {
             <span className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 20%)" }} />
             <span
               className="ml-3 text-[10px] tracking-[0.08em]"
-              style={{ color: "hsl(0 0% 35%)", fontFamily: "'IBM Plex Mono', monospace" }}
+              style={{ color: "hsl(0 0% 32%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               analysis · demo_track.wav
             </span>
@@ -175,14 +188,14 @@ const SampleFeedback = () => {
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="px-5 py-3.5 flex gap-4"
+                className="px-5 py-4 flex gap-4"
                 style={{
                   borderTop: idx > 0 ? "1px solid hsl(0 0% 100% / 0.03)" : "none",
                 }}
               >
                 <span
                   className="text-[11.5px] tabular-nums pt-0.5 shrink-0 min-w-[2.5rem]"
-                  style={{ color: "hsl(0 0% 48%)", fontFamily: "'IBM Plex Mono', monospace" }}
+                  style={{ color: "hsl(0 0% 46%)", fontFamily: "'IBM Plex Mono', monospace" }}
                 >
                   {item.time}
                   {activeCursor === "time" && <Cursor />}
@@ -192,7 +205,7 @@ const SampleFeedback = () => {
                   {item.mode ? (
                     <span
                       className="inline-block text-[9px] font-medium tracking-[0.1em] uppercase rounded px-2 py-0.5"
-                      style={{ background: "hsl(0 0% 14%)", color: "hsl(0 0% 82%)", border: "1px solid hsl(0 0% 100% / 0.04)" }}
+                      style={{ background: "hsl(0 0% 13%)", color: "hsl(0 0% 78%)", border: "1px solid hsl(0 0% 100% / 0.04)" }}
                     >
                       {item.mode}
                       {activeCursor === "mode" && <Cursor />}
@@ -201,18 +214,43 @@ const SampleFeedback = () => {
                     <span className="inline-block h-[22px]" />
                   )}
 
-                  <p className="text-[12px] leading-[1.6] min-h-[1.5em]" style={{ color: "hsl(0 0% 75%)" }}>
+                  <p className="text-[12px] leading-[1.6] min-h-[1.5em]" style={{ color: "hsl(0 0% 74%)" }}>
                     {item.issue}
                     {activeCursor === "issue" && <Cursor />}
                   </p>
 
-                  <p className="text-[11px] leading-[1.55] min-h-[1.35em]" style={{ color: "hsl(0 0% 42%)" }}>
+                  <p className="text-[11px] leading-[1.55] min-h-[1.35em]" style={{ color: "hsl(0 0% 40%)" }}>
                     {item.action}
                     {activeCursor === "action" && <Cursor />}
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Bottom chrome strip */}
+          <div
+            className="px-5 py-2 flex items-center justify-between"
+            style={{
+              borderTop: "1px solid hsl(0 0% 100% / 0.03)",
+              background: "hsl(0 0% 6.5%)",
+            }}
+          >
+            <span
+              className="text-[9px] tracking-[0.06em]"
+              style={{ color: "hsl(0 0% 28%)", fontFamily: "'IBM Plex Mono', monospace" }}
+            >
+              3 issues found
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-[5px] h-[5px] rounded-full" style={{ background: "hsl(140 40% 42%)" }} />
+              <span
+                className="text-[9px] tracking-[0.06em]"
+                style={{ color: "hsl(0 0% 28%)", fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                complete
+              </span>
+            </span>
           </div>
         </div>
       </div>
