@@ -1220,6 +1220,7 @@ const FeedbackDisplay = ({
             )}
           </div>
         </div>
+        </div>
 
         {/* Rack bottom edge */}
         <div
