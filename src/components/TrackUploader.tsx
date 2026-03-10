@@ -88,13 +88,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         ? (signedData.signedUrl.startsWith("http") ? signedData.signedUrl : `https://nllfubvokhybmtnnqeuk.supabase.co/storage/v1${signedData.signedUrl}`)
         : undefined;
       onProgressStep?.(2);
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
       const feedbackRes = await fetch(
         "https://secondears-backend-production.up.railway.app/api/feedback",
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": "secondears-secret-2024" },
-          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal, user_id: currentUser?.id }),
+          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal }),
         }
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
