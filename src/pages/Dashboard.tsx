@@ -235,24 +235,24 @@ const Dashboard = () => {
     const load = async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, created_at, versions(id, version_number, track_name, created_at, analyses(id, mode, result, created_at))")
+        .select("id, name, created_at, analyses(id, mode, feedback, created_at, version)")
         .order("created_at", { ascending: false });
       if (error) {
         console.error("[Dashboard] fetch projects error:", error.message);
         setFetching(false);
         return;
       }
-      // Flatten versions → analyses into the shape the UI expects
       const mapped: ProjectRow[] = (data || []).map((p: any) => ({
         id: p.id,
         name: p.name,
         created_at: p.created_at,
-        analyses: (p.versions || []).flatMap((v: any) =>
-          (v.analyses || []).map((a: any) => ({
-            ...a,
-            version: v.version_number,
-          }))
-        ),
+        analyses: (p.analyses || []).map((a: any) => ({
+          id: a.id,
+          mode: a.mode,
+          feedback: a.feedback,
+          created_at: a.created_at,
+          version: a.version ?? 1,
+        })),
       }));
       setProjects(mapped);
       setFetching(false);
