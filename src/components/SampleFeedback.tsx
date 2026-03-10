@@ -104,7 +104,9 @@ const SampleFeedback = () => {
     <section
       ref={(el) => {
         (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-        (revealRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        if (revealRef && typeof revealRef === 'object') {
+          (revealRef as React.MutableRefObject<HTMLElement | null>).current = el;
+        }
       }}
       className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal-base ${isVisible ? "reveal-visible" : ""}`}
     >
