@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, Layers, Music } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Layers, Music, Link2 } from "lucide-react";
 import CompactFooter from "@/components/CompactFooter";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -753,46 +753,46 @@ const FeedbackDisplay = ({
       />
       {/* ═══ HEADER — industrial track strip ═══ */}
       <div
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 px-4 sm:px-5"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6 px-3 sm:px-5"
         style={{
-          paddingTop: 14,
-          paddingBottom: 14,
+          paddingTop: 10,
+          paddingBottom: 10,
           backgroundColor: "hsl(var(--analysis-header))",
           border: "2px solid hsl(var(--foreground) / 0.08)",
-          borderRadius: 4,
+          borderRadius: 3,
           boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.06), 0 2px 8px hsl(0 0% 0% / 0.06)",
         }}
       >
         {/* Left: back + title */}
-        <div className="min-w-0 flex-1 flex items-center gap-4">
+        <div className="min-w-0 flex-1 flex items-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={onReset}
-            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-8 h-8"
+            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-7 h-7 sm:w-8 sm:h-8"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 sm:gap-3">
               {n.trackName && (
                 projectId ? (
                   <h1
-                    className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
+                    className="text-[14px] sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground hover:text-primary/80 cursor-pointer transition-colors"
                     onClick={() => navigate(`/project/${projectId}`)}
                     title="View all versions"
                   >
                     {n.trackName}
                   </h1>
                 ) : (
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
+                  <h1 className="text-[14px] sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
                     {n.trackName}
                   </h1>
                 )
               )}
               <span
-                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold hidden sm:inline-block"
                 style={{
                   fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
                   fontSize: 8,
@@ -806,7 +806,7 @@ const FeedbackDisplay = ({
               </span>
             </div>
             {versions && versions.length > 0 && projectId && analysisId && (
-              <div className="mt-1">
+              <div className="mt-0.5 sm:mt-1">
                 <VersionPills
                   versions={versions}
                   currentAnalysisId={analysisId}
@@ -819,8 +819,21 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Right: collaborators only */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right: mode badge (mobile) + collaborators */}
+        <div className="flex items-center gap-2 shrink-0 sm:justify-end">
+          <span
+            className="sm:hidden text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+            style={{
+              fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
+              fontSize: 7.5,
+              padding: "2px 5px",
+              backgroundColor: "hsl(var(--foreground) / 0.04)",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
+            }}
+          >
+            {modeLabels[mode]}
+          </span>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
@@ -861,12 +874,12 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-3 overflow-hidden"
+        className="mt-2 sm:mt-3 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
-          border: "3px solid hsl(var(--foreground) / 0.14)",
-          borderRadius: 4,
-          boxShadow: "0 6px 30px 0 rgba(0,0,0,0.15), 0 0 0 1px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
+          border: "2px solid hsl(var(--foreground) / 0.14)",
+          borderRadius: 3,
+          boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12), 0 0 0 1px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
         }}
       >
         {/* ── WAVEFORM PLAYER ── */}
@@ -907,7 +920,7 @@ const FeedbackDisplay = ({
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 {n.overallImpression && (
-                  <p className="text-[13px] text-foreground/65 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <p className="text-[12px] sm:text-[13px] text-foreground/65 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace" }}>
                     {n.overallImpression}
                   </p>
                 )}
@@ -1017,20 +1030,21 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── PANELS WORKSTATION — machined transition ── */}
-        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
+        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
         <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
-        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
+        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
         <div
-          className="flex overflow-hidden"
+          className="flex flex-col md:flex-row overflow-hidden"
           style={{
-            height: "calc(100vh - 300px)",
-            minHeight: 420,
+            minHeight: 340,
             backgroundColor: "hsl(var(--panel-bg))",
             boxShadow: "inset 0 4px 12px hsl(var(--panel-inset))",
           }}
         >
+          {/* On md+ use fixed height for horizontal layout */}
+          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 300px) !important; min-height: 420px !important; } }`}</style>
+          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 300px)", minHeight: 420 }}>
         {/* Desktop sidebar */}
-        <div className="hidden md:flex">
           <PanelSidebar
             panels={PANELS}
             activePanels={activePanels}
@@ -1040,32 +1054,88 @@ const FeedbackDisplay = ({
               <ShareBlock onExportPdf={() => exportAnalysisPdf(n, releaseReadiness)} analysisId={analysisId} />
             }
           />
+
+          {/* Desktop panels area */}
+          <div className="flex flex-1 min-w-0">
+            {orderedActivePanels.length === 0 && (
+              <div
+                className="flex-1 flex flex-col items-center justify-center gap-1"
+                style={{ backgroundColor: "hsl(var(--panel-content))" }}
+              >
+                <span className="text-[10px] text-foreground/25" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>No panels open</span>
+                <span className="text-[8px] text-foreground/15" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Select from the sidebar</span>
+              </div>
+            )}
+            {orderedActivePanels.map((panel) => (
+              <WorkstationPanel
+                key={panel.id}
+                id={panel.id}
+                title={panelTitles[panel.id] || panel.label}
+                onClose={() => handleTogglePanel(panel.id)}
+              >
+                {renderPanelContent(panel.id)}
+              </WorkstationPanel>
+            ))}
+          </div>
         </div>
 
-        {/* Mobile panel selector */}
-        <div className="md:hidden w-full flex flex-col">
-          <div className="flex overflow-x-auto border-b border-border-subtle/40 p-1 gap-0.5 scrollbar-thin bg-secondary/15">
+        {/* ═══ MOBILE PANELS — full-width stacked modules ═══ */}
+        <div className="md:hidden flex flex-col">
+          {/* Module selector — horizontal strip */}
+          <div
+            className="flex overflow-x-auto scrollbar-thin"
+            style={{
+              backgroundColor: "hsl(var(--panel-header))",
+              borderBottom: "2px solid hsl(var(--foreground) / 0.1)",
+              padding: "0 2px",
+            }}
+          >
             {PANELS.map((panel) => {
               const isActive = activePanels.has(panel.id);
               return (
                 <button
                   key={panel.id}
                   onClick={() => handleTogglePanel(panel.id)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-md text-[10px] font-medium transition-all duration-150 ${
-                    isActive
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground/40 hover:text-foreground/70"
-                  }`}
+                  className="shrink-0 transition-all duration-100"
+                  style={{
+                    padding: "7px 10px",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 8,
+                    fontWeight: isActive ? 800 : 600,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: isActive ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.3)",
+                    borderBottom: isActive ? "2px solid hsl(var(--foreground) / 0.6)" : "2px solid transparent",
+                    backgroundColor: isActive ? "hsl(var(--panel-content))" : "transparent",
+                  }}
                 >
                   {panel.label}
                 </button>
               );
             })}
           </div>
-          {/* Mobile: stack panels vertically */}
-          <div className="flex flex-col flex-1 overflow-y-auto">
+
+          {/* Stacked panels — each with its own framed identity */}
+          <div className="flex flex-col">
+            {orderedActivePanels.length === 0 && (
+              <div
+                className="flex flex-col items-center justify-center py-12"
+                style={{
+                  backgroundColor: "hsl(var(--panel-content))",
+                  boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+                }}
+              >
+                <span className="text-[10px] text-foreground/20" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>No modules active</span>
+                <span className="text-[8px] text-foreground/12 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Tap a module above to open</span>
+              </div>
+            )}
             {orderedActivePanels.map((panel) => (
-              <div key={panel.id} className="border-b border-border-subtle/30 last:border-b-0">
+              <div
+                key={panel.id}
+                style={{
+                  borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+                }}
+              >
                 <WorkstationPanel
                   id={panel.id}
                   title={panelTitles[panel.id] || panel.label}
@@ -1076,32 +1146,79 @@ const FeedbackDisplay = ({
               </div>
             ))}
           </div>
-          {/* Mobile share button */}
-          <div className="p-2.5 border-t border-border-subtle/40 bg-secondary/10">
-            <Button variant="outline" size="sm" onClick={() => setShareOpen(true)} className="w-full h-7 gap-1.5 text-[10px]">
-              <Share2 className="w-3 h-3" /> Share
-            </Button>
-          </div>
-        </div>
 
-        {/* Desktop panels area */}
-        <div className="hidden md:flex flex-1 min-w-0">
-          {orderedActivePanels.length === 0 && (
-            <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
-              <span className="text-[11px] text-muted-foreground/30">No panels open</span>
-              <span className="text-[9px] text-muted-foreground/20">Select from the sidebar</span>
-            </div>
-          )}
-          {orderedActivePanels.map((panel) => (
-            <WorkstationPanel
-              key={panel.id}
-              id={panel.id}
-              title={panelTitles[panel.id] || panel.label}
-              onClose={() => handleTogglePanel(panel.id)}
+          {/* Mobile share + controls strip */}
+          <div
+            className="flex items-center gap-1.5 px-2.5"
+            style={{
+              paddingTop: 6,
+              paddingBottom: 6,
+              backgroundColor: "hsl(var(--panel-header))",
+              borderTop: "2px solid hsl(var(--foreground) / 0.08)",
+            }}
+          >
+            <button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(window.location.href);
+                  toast({ title: "Link copied", duration: 1500 });
+                } catch { toast({ title: "Copy failed", variant: "destructive", duration: 1500 }); }
+              }}
+              className="flex-1 flex items-center justify-center gap-1 text-foreground/35 hover:text-foreground/60 transition-colors"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 8,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 0",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
             >
-              {renderPanelContent(panel.id)}
-            </WorkstationPanel>
-          ))}
+              <Link2 className="w-[9px] h-[9px]" strokeWidth={2} />
+              Link
+            </button>
+            <button
+              onClick={() => setShareOpen(true)}
+              className="flex-1 flex items-center justify-center gap-1 text-foreground/35 hover:text-foreground/60 transition-colors"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 8,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "5px 0",
+                backgroundColor: "hsl(var(--panel-bg))",
+                border: "1px solid hsl(var(--foreground) / 0.06)",
+                borderRadius: 2,
+                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+              }}
+            >
+              <Share2 className="w-[9px] h-[9px]" strokeWidth={2} />
+              Share
+            </button>
+            {exportAnalysisPdf && (
+              <button
+                onClick={() => exportAnalysisPdf(n, releaseReadiness)}
+                className="flex items-center justify-center text-foreground/35 hover:text-foreground/60 transition-colors"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  padding: "5px 8px",
+                  backgroundColor: "hsl(var(--panel-bg))",
+                  border: "1px solid hsl(var(--foreground) / 0.06)",
+                  borderRadius: 2,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                }}
+              >
+                PDF
+              </button>
+            )}
+          </div>
         </div>
         </div>
 
@@ -1119,7 +1236,7 @@ const FeedbackDisplay = ({
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
           className={cn(
-            "mt-3 grid gap-0",
+            "mt-2 sm:mt-3 grid gap-0",
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{

@@ -149,7 +149,7 @@ const Analyze = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className={`pt-24 pb-6 md:pb-10 ${result ? "px-3 md:px-4" : "px-6"}`}>
+      <main className={`pt-16 sm:pt-24 pb-4 md:pb-10 ${result ? "px-1.5 sm:px-3 md:px-4" : "px-4 sm:px-6"}`}>
         <div className={result ? "w-full" : "max-w-2xl mx-auto"}>
           {result ? (
             <FeedbackDisplay
