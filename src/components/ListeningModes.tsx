@@ -32,44 +32,61 @@ const ListeningModes = () => {
     <section
       ref={ref}
       id="modes"
-      className={`py-16 md:py-20 px-6 bg-secondary/40 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-20 md:py-24 px-6 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
+      style={{ background: "hsl(30 18% 92%)" }}
     >
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10 md:mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+      {/* Top + bottom borders for inset feel */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
-            className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
+            className="text-[10px] text-muted-foreground/50 tracking-[0.2em] uppercase mb-4"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             Three perspectives
           </p>
-          <h2 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">Listening modes</h2>
+          <h2 className="text-[1.5rem] md:text-[1.65rem] font-semibold tracking-[-0.03em]">Listening modes</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {modes.map((mode, i) => (
             <div
               key={mode.name}
-              className="bg-background rounded-lg border border-border-subtle/50 p-6 md:p-7 flex flex-col gap-4 hover:border-foreground/10 transition-colors reveal-child"
-              style={{ "--stagger": `${100 + i * 100}ms` } as React.CSSProperties}
+              className="rounded-lg p-6 md:p-7 flex flex-col gap-4 transition-colors reveal-child"
+              style={{
+                "--stagger": `${100 + i * 100}ms`,
+                background: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border-subtle) / 0.45)",
+                boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03)",
+              } as React.CSSProperties}
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center reveal-pop" style={{ "--stagger": `${200 + i * 100}ms` } as React.CSSProperties}>
-                  <mode.icon className="w-[18px] h-[18px] text-foreground/80" />
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center reveal-pop"
+                  style={{
+                    "--stagger": `${200 + i * 100}ms`,
+                    background: "hsl(var(--secondary) / 0.6)",
+                    border: "1px solid hsl(var(--border-subtle) / 0.35)",
+                  } as React.CSSProperties}
+                >
+                  <mode.icon className="w-[18px] h-[18px] text-foreground/70" strokeWidth={1.6} />
                 </div>
                 <div>
-                  <h3 className="text-[15px] font-semibold tracking-tight">{mode.name}</h3>
+                  <h3 className="text-[14px] font-semibold tracking-[-0.02em]">{mode.name}</h3>
                   <p
-                    className="text-[10px] text-muted-foreground/55 tracking-wide"
+                    className="text-[9px] text-muted-foreground/45 tracking-[0.1em]"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {mode.tag}
                   </p>
                 </div>
               </div>
-              <p className="text-[13px] text-muted-foreground/70 leading-relaxed">{mode.description}</p>
+              <p className="text-[12.5px] text-muted-foreground/65 leading-[1.65]">{mode.description}</p>
               <ul className="space-y-2 mt-auto">
                 {mode.points.map((point) => (
-                  <li key={point} className="text-[13px] text-foreground/80 flex items-center gap-2">
-                    <span className="w-1 h-1 rounded-full bg-foreground/20" />
+                  <li key={point} className="text-[12.5px] text-foreground/75 flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground/15" />
                     {point}
                   </li>
                 ))}
