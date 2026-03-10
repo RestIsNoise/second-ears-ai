@@ -29,9 +29,12 @@ const HowItWorks = () => {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className={`relative py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal-base ${isVisible ? "reveal-visible" : ""}`}>
+    <section
+      ref={ref}
+      className={`relative py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal ${isVisible ? "is-visible" : ""}`}
+    >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
@@ -44,18 +47,21 @@ const HowItWorks = () => {
         </div>
 
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
-          {/* Connector lines — desktop only */}
-          <div className="hidden md:block absolute top-[38px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-border-subtle/50" aria-hidden="true" />
+          {/* Connector line with draw animation */}
+          <div
+            className="hidden md:block absolute top-[38px] left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-border-subtle/50 line-draw"
+            aria-hidden="true"
+          />
 
           {steps.map((step, i) => (
             <div
               key={step.number}
               className="relative flex flex-col items-center text-center md:px-8 reveal-child"
-              style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}
+              style={{ "--stagger": `${300 + i * 120}ms` } as React.CSSProperties}
             >
               {/* Step number + icon */}
               <div className="relative mb-5">
-                <div className="w-[52px] h-[52px] rounded-xl bg-secondary/60 flex items-center justify-center relative z-10">
+                <div className="w-[52px] h-[52px] rounded-xl bg-secondary/60 flex items-center justify-center relative z-10 reveal-pop" style={{ "--stagger": `${400 + i * 120}ms` } as React.CSSProperties}>
                   <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
                 </div>
                 <span

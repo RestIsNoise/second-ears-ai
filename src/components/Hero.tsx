@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { useScrollProgress } from "@/hooks/useScrollReveal";
 import heroScreenshot from "@/assets/hero-screenshot.png";
 
 const trustItems = [
@@ -11,25 +12,16 @@ const trustItems = [
 ];
 
 const Hero = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+  const { ref: parallaxRef, progress } = useScrollProgress<HTMLElement>();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const els = sectionRef.current.querySelectorAll<HTMLElement>("[data-parallax]");
-      const y = window.scrollY;
-      els.forEach((el) => {
-        const speed = parseFloat(el.dataset.parallax || "0");
-        el.style.transform = `translateY(${y * speed}px)`;
-      });
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Subtle parallax: headline moves up slightly, screenshot scales in
+  const headlineY = progress * -18; // px
+  const screenshotScale = 0.96 + progress * 0.04; // 0.96 → 1.0
+  const glowOpacity = 0.3 + progress * 0.15;
 
   return (
     <section
-      ref={sectionRef}
+      ref={parallaxRef}
       className="relative overflow-hidden"
       style={{ background: "hsl(0 0% 4%)", color: "hsl(0 0% 94%)" }}
     >
@@ -44,15 +36,13 @@ const Hero = () => {
         }}
       />
 
-      {/* Ambient halo */}
+      {/* Ambient halo — shifts with scroll */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
-          data-parallax="-0.02"
-          className="absolute top-1/3 right-[15%] w-[500px] h-[500px] rounded-full blur-[140px]"
-          style={{ background: "hsl(0 0% 18% / 0.35)" }}
+          className="absolute top-1/3 right-[15%] w-[500px] h-[500px] rounded-full blur-[140px] transition-opacity duration-700"
+          style={{ background: `hsl(0 0% 18% / ${glowOpacity})` }}
         />
         <div
-          data-parallax="-0.03"
           className="absolute top-[60%] left-[20%] w-[300px] h-[300px] rounded-full blur-[120px]"
           style={{ background: "hsl(0 0% 14% / 0.25)" }}
         />
@@ -61,12 +51,10 @@ const Hero = () => {
       {/* Diagonal bar motif */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
-          data-parallax="-0.03"
           className="absolute -top-[20%] left-[72%] w-[1px] h-[160%] rotate-[70deg] origin-center"
           style={{ background: "hsl(0 0% 100% / 0.06)" }}
         />
         <div
-          data-parallax="-0.04"
           className="absolute -top-[20%] left-[78%] w-[1px] h-[160%] rotate-[70deg] origin-center"
           style={{ background: "hsl(0 0% 100% / 0.06)" }}
         />
@@ -74,8 +62,11 @@ const Hero = () => {
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-40 md:pb-32">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left column — Copy */}
-          <div className="max-w-xl">
+          {/* Left column — Copy with parallax */}
+          <div
+            className="max-w-xl"
+            style={{ transform: `translateY(${headlineY}px)` }}
+          >
             <p
               className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up"
               style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
@@ -155,24 +146,25 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right column — Real product screenshot */}
+          {/* Right column — Screenshot with scroll-linked scale */}
           <div
             className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0"
             style={{ animationDelay: "0.2s" }}
           >
             {/* Glow behind frame */}
             <div
-              className="absolute -inset-8 sm:-inset-10 rounded-3xl blur-[100px] pointer-events-none"
+              className="absolute -inset-8 sm:-inset-10 rounded-3xl blur-[100px] pointer-events-none transition-opacity duration-500"
               aria-hidden="true"
-              style={{ background: "hsl(0 0% 16% / 0.4)" }}
+              style={{ background: `hsl(0 0% 16% / ${glowOpacity + 0.1})` }}
             />
 
-            {/* Screenshot frame with float animation */}
+            {/* Screenshot frame with scroll-linked scale */}
             <div
               className="relative w-full max-w-[360px] sm:max-w-[480px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
-                animation: "hero-float 6s ease-in-out infinite",
+                transform: `scale(${screenshotScale})`,
+                transition: "transform 50ms linear",
               }}
             >
               {/* Window dots bar */}
@@ -188,7 +180,7 @@ const Hero = () => {
                 <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
               </div>
 
-              {/* Screenshot — cropped to waveform + feedback cards */}
+              {/* Screenshot */}
               <div className="w-full overflow-hidden" style={{ height: "clamp(220px, 28vw, 380px)" }}>
                 <img
                   src={heroScreenshot}

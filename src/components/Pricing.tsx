@@ -56,9 +56,13 @@ const Pricing = () => {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} id="pricing" className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal-base ${isVisible ? "reveal-visible" : ""}`}>
+    <section
+      ref={ref}
+      id="pricing"
+      className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal ${isVisible ? "is-visible" : ""}`}
+    >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
@@ -69,18 +73,21 @@ const Pricing = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-4 items-start">
           {plans.map((plan, i) => {
-            // Pro card (featured) animates last for emphasis
-            const order = plan.featured ? 2 : i < 1 ? 0 : 1;
+            // Free=0, Human Review=1, Pro=2 (last for emphasis)
+            const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
             return (
               <div
                 key={plan.name}
                 className={cn(
                   "relative rounded-lg border flex flex-col transition-all duration-200 reveal-child",
                   plan.featured
-                    ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.1)] md:scale-[1.03] z-10"
-                    : "bg-background border-border-subtle/50 hover:border-foreground/10"
+                    ? "bg-primary text-primary-foreground border-primary md:scale-[1.03] z-10"
+                    : "bg-background border-border-subtle/50 hover:border-foreground/10",
+                  plan.featured && isVisible && "pro-emphasis"
                 )}
-                style={{ "--reveal-delay": `${order * 100}ms` } as React.CSSProperties}
+                style={{
+                  "--stagger": `${100 + staggerOrder * 130}ms`,
+                } as React.CSSProperties}
               >
                 {plan.featured && (
                   <span
@@ -91,7 +98,6 @@ const Pricing = () => {
                   </span>
                 )}
 
-                {/* Plan header */}
                 <div className="p-5 pb-4">
                   <h3 className="text-[15px] font-semibold tracking-tight">{plan.name}</h3>
                   <p className={cn(
@@ -111,13 +117,11 @@ const Pricing = () => {
                   </div>
                 </div>
 
-                {/* Divider */}
                 <div className={cn(
                   "mx-5 h-px",
                   plan.featured ? "bg-primary-foreground/10" : "bg-border-subtle/40"
                 )} />
 
-                {/* Feature list */}
                 <div className="p-5 pt-4 flex-1">
                   <ul className="space-y-2">
                     {plan.features.map((feature) => (
@@ -125,9 +129,7 @@ const Pricing = () => {
                         <Check className={cn(
                           "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
                           !feature.included && "opacity-0",
-                          plan.featured
-                            ? "text-primary-foreground/50"
-                            : "text-muted-foreground/40"
+                          plan.featured ? "text-primary-foreground/50" : "text-muted-foreground/40"
                         )} />
                         <span className={cn(
                           "text-[12px] leading-snug",
@@ -142,7 +144,6 @@ const Pricing = () => {
                   </ul>
                 </div>
 
-                {/* CTA */}
                 <div className="px-5 pb-5">
                   <Button
                     variant={plan.featured ? "hero-outline" : "hero"}

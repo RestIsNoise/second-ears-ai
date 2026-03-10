@@ -37,9 +37,13 @@ const Proof = () => {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} id="features" className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 scroll-mt-20 reveal-base ${isVisible ? "reveal-visible" : ""}`}>
+    <section
+      ref={ref}
+      id="features"
+      className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 scroll-mt-20 reveal ${isVisible ? "is-visible" : ""}`}
+    >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
@@ -53,9 +57,13 @@ const Proof = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {blocks.map((block, i) => (
-            <div key={block.title} className="space-y-4 reveal-child" style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}>
+            <div
+              key={block.title}
+              className="space-y-4 reveal-child"
+              style={{ "--stagger": `${100 + i * 100}ms` } as React.CSSProperties}
+            >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center shrink-0 reveal-pop" style={{ "--stagger": `${200 + i * 100}ms` } as React.CSSProperties}>
                   <block.icon className="w-4 h-4 text-foreground/80" strokeWidth={1.8} />
                 </div>
                 <h3 className="text-[15px] font-semibold tracking-tight text-foreground">{block.title}</h3>
