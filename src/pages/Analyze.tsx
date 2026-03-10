@@ -89,16 +89,33 @@ const Analyze = () => {
       try {
         const n = feedbackResult.normalized;
 
-        const insertPayload: any = {
-          user_id: user.id,
-          track_name: n.trackName,
+        // 1. Create project
+        const { data: project, error: projErr } = await supabase
+          .from("projects")
+          .insert({ user_id: user.id, name: n.trackName })
+          .select("id")
+          .single();
+
+        if (projErr || !project) {
+          console.error("[Analyze] Project insert failed:", JSON.stringify(projErr, null, 2));
+          throw projErr;
+        }
+        console.log("[Analyze] Project created:", project.id);
+
+        // 2. Insert analysis linked to project
+        const analysisPayload = {
+          project_id: project.id,
           mode: n.mode,
-          result: feedbackResult.rawResult,
+          feedback: feedbackResult.rawResult ?? {},
+          metrics: {},
+          version: 1,
+          storage_path: feedbackResult.storagePath ?? null,
         };
+        console.log("[Analyze] Inserting analysis:", JSON.stringify(analysisPayload, null, 2));
 
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
-          .insert(insertPayload)
+          .insert(analysisPayload)
           .select("id")
           .single();
 
