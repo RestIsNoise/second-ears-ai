@@ -31,8 +31,8 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         flex,
         minWidth,
         /* Hard channel-strip divider between panels */
-        borderRight: "2px solid hsl(var(--foreground) / 0.1)",
-        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03)",
+        borderRight: "3px solid hsl(var(--foreground) / 0.14)",
+        boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03), inset 1px 0 0 hsl(0 0% 0% / 0.04)",
       }}
     >
       {/* ═══ RACK-MOUNT HEADER ═══ */}
@@ -40,7 +40,8 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         className="shrink-0 select-none"
         style={{
           backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "2px solid hsl(var(--foreground) / 0.12)",
+          borderBottom: "3px solid hsl(var(--foreground) / 0.14)",
+          boxShadow: "0 2px 4px hsl(0 0% 0% / 0.06)",
         }}
       >
         {/* Top machined edge — 2-line bevel */}
@@ -93,7 +94,7 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         className="flex-1 overflow-y-auto min-h-0 scrollbar-thin relative"
         style={{
           backgroundColor: "hsl(var(--panel-content))",
-          boxShadow: "inset 0 4px 8px hsl(var(--panel-inset)), inset 1px 0 0 hsl(0 0% 0% / 0.03), inset -1px 0 0 hsl(0 0% 0% / 0.03)",
+          boxShadow: "inset 0 5px 12px hsl(var(--panel-inset)), inset 1px 0 0 hsl(0 0% 0% / 0.05), inset -1px 0 0 hsl(0 0% 0% / 0.05)",
         }}
       >
         {/* Noise texture */}
