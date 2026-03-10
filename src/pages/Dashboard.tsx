@@ -185,18 +185,19 @@ const TrackGridCard = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex flex-col rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-[2px]"
+      className="group relative flex flex-col overflow-hidden cursor-pointer transition-all duration-150 hover:-translate-y-[1px]"
       style={{
         background: "hsl(var(--card))",
-        border: "1px solid hsl(var(--border-subtle) / 0.3)",
-        boxShadow: "0 1px 4px hsl(0 0% 0% / 0.04)",
+        border: "2px solid hsl(var(--foreground) / 0.1)",
+        borderRadius: 3,
+        boxShadow: "0 2px 8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
       }}
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
       <div
         className="relative overflow-hidden"
         style={{
-          background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 7%) 100%)",
+          background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
           minHeight: 110,
         }}
       >
@@ -212,23 +213,23 @@ const TrackGridCard = ({
 
         {/* Header bar */}
         <div
-          className="relative flex items-center justify-between px-3 py-2"
+          className="relative flex items-center justify-between px-3 py-1.5"
           style={{ borderBottom: "1px solid hsl(0 0% 100% / 0.06)" }}
         >
           <div className="flex items-center gap-2">
             <div className="flex gap-[4px]">
-              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 30%)" }} />
-              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 22%)" }} />
+              <div className="w-[5px] h-[5px] rounded-full" style={{ background: "hsl(0 0% 30%)" }} />
+              <div className="w-[5px] h-[5px] rounded-full" style={{ background: "hsl(0 0% 22%)" }} />
             </div>
             <span
-              className="text-[8px] text-white/15 tracking-[0.15em] uppercase"
+              className="text-[7px] text-white/15 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
             >
               Analysis
             </span>
           </div>
           <span
-            className="text-[9px] text-white/25 tabular-nums"
+            className="text-[8px] text-white/25 tabular-nums font-medium"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             {duration}
@@ -237,7 +238,6 @@ const TrackGridCard = ({
 
         {/* Waveform lane */}
         <div className="relative px-3 py-3">
-          {/* Main waveform — mirrored bars */}
           <div className="relative flex items-center justify-center h-[36px]">
             {bars.map((v, i) => {
               const halfH = Math.max(1.5, v * 16);
@@ -250,22 +250,20 @@ const TrackGridCard = ({
                   style={{ width: 2.5, marginRight: 0.5 }}
                 >
                   <div
-                    className="rounded-[1px]"
                     style={{
                       width: 2,
                       height: halfH,
                       background: played ? "hsl(0 0% 65%)" : "hsl(0 0% 30%)",
-                      transition: "background 0.2s",
+                      borderRadius: 0,
                     }}
                   />
                   <div
-                    className="rounded-[1px]"
                     style={{
                       width: 2,
                       height: halfH * 0.6,
                       background: played ? "hsl(0 0% 45%)" : "hsl(0 0% 20%)",
                       opacity: 0.7,
-                      transition: "background 0.2s",
+                      borderRadius: 0,
                     }}
                   />
                 </div>
@@ -284,8 +282,7 @@ const TrackGridCard = ({
           </div>
 
           {/* Issue markers row */}
-          <div className="relative h-[14px] mt-1">
-            {/* Baseline */}
+          <div className="relative h-[12px] mt-1">
             <div
               className="absolute left-0 right-0 top-1/2 h-px"
               style={{ background: "hsl(0 0% 100% / 0.06)" }}
@@ -296,17 +293,15 @@ const TrackGridCard = ({
                 className="absolute top-1/2 -translate-y-1/2 flex flex-col items-center"
                 style={{ left: `${pos * 100}%` }}
               >
-                {/* Marker line */}
                 <div
-                  className="w-px h-[10px] -translate-x-1/2"
+                  className="w-px h-[8px] -translate-x-1/2"
                   style={{ background: "hsl(0 55% 52% / 0.6)" }}
                 />
-                {/* Marker dot */}
                 <div
-                  className="w-[4px] h-[4px] rounded-full -translate-x-1/2 mt-[-2px]"
+                  className="w-[3px] h-[3px] rounded-full -translate-x-1/2 mt-[-2px]"
                   style={{
                     background: "hsl(0 55% 52% / 0.8)",
-                    boxShadow: "0 0 4px hsl(0 55% 50% / 0.5)",
+                    boxShadow: "0 0 3px hsl(0 55% 50% / 0.5)",
                   }}
                 />
               </div>
@@ -331,71 +326,82 @@ const TrackGridCard = ({
         </div>
       </div>
 
-      {/* ══════ LIGHT INFO BOTTOM HALF ══════ */}
-      <div className="px-4 py-3.5 flex-1 flex flex-col">
-        <div className="flex items-start justify-between gap-2 mb-2.5">
-          <h3 className="text-[13px] font-semibold tracking-[-0.015em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight">
+      {/* ══════ INFO BOTTOM HALF ══════ */}
+      <div
+        className="px-3 py-3 flex-1 flex flex-col"
+        style={{
+          borderTop: "2px solid hsl(var(--foreground) / 0.08)",
+        }}
+      >
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3
+            className="text-[12px] font-bold tracking-[-0.01em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight"
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
             {proj.name}
           </h3>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-            className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
+            className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
+            style={{ borderRadius: 2 }}
             title="Delete project"
           >
-            <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
+            <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive transition-colors" />
           </button>
         </div>
 
         <div className="flex items-center gap-1.5 flex-wrap mb-auto">
           <span
-            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider"
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold"
             style={{
-              background: "hsl(var(--surface-b))",
-              border: "1px solid hsl(var(--border-subtle) / 0.3)",
-              color: "hsl(var(--muted-foreground))",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 8,
+              backgroundColor: "hsl(var(--foreground) / 0.04)",
+              border: "1px solid hsl(var(--foreground) / 0.06)",
+              borderRadius: 2,
             }}
           >
             <ModeIcon className="w-2.5 h-2.5" />{mode}
           </span>
           {versionCount > 1 && (
             <span
-              className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground/60"
-              style={{
-                background: "hsl(var(--surface-b) / 0.6)",
-                border: "1px solid hsl(var(--border-subtle) / 0.2)",
-              }}
+              className="text-foreground/30 font-bold"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
             >
               v{latestAnalysis.version}
             </span>
           )}
           <span
-            className="inline-flex items-center gap-1 text-[9px] text-muted-foreground/30"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            className="text-foreground/20 tabular-nums"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
           >
             {markers.length} issues
           </span>
         </div>
 
         <div
-          className="flex items-center justify-between pt-2.5 mt-2"
-          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.12)" }}
+          className="flex items-center justify-between pt-2 mt-1.5"
+          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.06)" }}
         >
-          <p className="text-[10px] text-muted-foreground/35">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+          <p className="text-foreground/25 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}>
+            {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+          </p>
           <span
-            className="text-[9px] text-muted-foreground/20 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide uppercase"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            className="text-foreground/15 opacity-0 group-hover:opacity-100 transition-opacity tracking-[0.1em] uppercase font-bold"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace", fontSize: 8 }}
           >
             Open →
           </span>
         </div>
       </div>
 
-      {/* Hover glow overlay */}
+      {/* Hover border */}
       <div
-        className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300"
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200"
         style={{
-          border: "1px solid hsl(var(--foreground) / 0.15)",
-          boxShadow: "0 8px 24px -8px hsl(0 0% 0% / 0.12)",
+          border: "2px solid hsl(var(--foreground) / 0.18)",
+          borderRadius: 3,
+          boxShadow: "0 6px 20px -6px hsl(0 0% 0% / 0.15)",
         }}
       />
     </div>
