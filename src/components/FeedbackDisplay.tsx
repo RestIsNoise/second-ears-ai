@@ -1000,6 +1000,7 @@ const FeedbackDisplay = ({
             </WorkstationPanel>
           ))}
         </div>
+        </div>
       </div>
 
       {/* ═══ WHAT WORKS & YOUR FOCUS ═══ */}
