@@ -90,6 +90,40 @@ const TrackRow = ({
   );
 };
 
+/* ─── Seeded waveform generator (deterministic per project id) ─── */
+const seededRandom = (seed: string) => {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+  }
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), h | 1);
+    h ^= h + Math.imul(h ^ (h >>> 7), h | 61);
+    return ((h ^ (h >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const generateWaveform = (id: string, count: number) => {
+  const rng = seededRandom(id);
+  const bars: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const envelope = Math.sin((i / (count - 1)) * Math.PI);
+    const noise = 0.3 + rng() * 0.7;
+    bars.push(envelope * noise);
+  }
+  return bars;
+};
+
+const generateMarkers = (id: string) => {
+  const rng = seededRandom(id + "-markers");
+  const count = 2 + Math.floor(rng() * 3);
+  const markers: number[] = [];
+  for (let i = 0; i < count; i++) {
+    markers.push(0.08 + rng() * 0.84);
+  }
+  return markers.sort();
+};
+
 /* ─── Track Grid Card ─── */
 const TrackGridCard = ({
   grouped,
@@ -105,50 +139,160 @@ const TrackGridCard = ({
   const ModeIcon = modeIcons[mode] || Activity;
   const colorClass = modeColors[mode] || modeColors.technical;
 
+  const bars = generateWaveform(proj.id, 56);
+  const markers = generateMarkers(proj.id);
+  const playheadPos = seededRandom(proj.id + "-ph")() * 0.6 + 0.15; // 15–75%
+  const duration = `${Math.floor(seededRandom(proj.id + "-dur")() * 4 + 1)}:${String(Math.floor(seededRandom(proj.id + "-ds")() * 60)).padStart(2, "0")}`;
+
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex flex-col rounded-xl border border-border-subtle bg-card hover:border-foreground/15 hover:shadow-sm transition-all overflow-hidden cursor-pointer"
+      className="group relative flex flex-col rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
+      style={{
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border-subtle) / 0.35)",
+        boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+      }}
     >
-      {/* Waveform placeholder */}
-      <div className="h-20 bg-muted/40 flex items-center justify-center border-b border-border/40">
-        <div className="flex items-end gap-[2px] h-10">
-          {Array.from({ length: 32 }).map((_, i) => {
-            const h = Math.sin((i / 31) * Math.PI) * 28 + 4 + Math.random() * 6;
+      {/* Waveform area — dark mini-player shell */}
+      <div
+        className="relative px-3 pt-3 pb-2 overflow-hidden"
+        style={{
+          background: "hsl(0 0% 11%)",
+          borderBottom: "1px solid hsl(0 0% 16%)",
+        }}
+      >
+        {/* Waveform bars */}
+        <div className="relative flex items-center justify-center h-10 gap-[1.5px]">
+          {bars.map((v, i) => {
+            const h = Math.max(3, v * 32);
+            const pos = i / bars.length;
+            const played = pos < playheadPos;
             return (
               <div
                 key={i}
-                className="w-[3px] rounded-sm bg-foreground/10 group-hover:bg-foreground/15 transition-colors"
-                style={{ height: h }}
+                className="rounded-[0.5px] transition-colors duration-300"
+                style={{
+                  width: 2,
+                  height: h,
+                  background: played
+                    ? "hsl(0 0% 58%)"
+                    : "hsl(0 0% 28%)",
+                  opacity: played ? 1 : 0.7,
+                }}
               />
             );
           })}
+
+          {/* Playhead */}
+          <div
+            className="absolute top-0 bottom-0 w-[1.5px] rounded-full"
+            style={{
+              left: `${playheadPos * 100}%`,
+              background: "hsl(0 0% 92%)",
+              boxShadow: "0 0 4px hsl(0 0% 100% / 0.3)",
+            }}
+          />
+
+          {/* Analysis markers */}
+          {markers.map((pos, i) => (
+            <div
+              key={i}
+              className="absolute top-0"
+              style={{ left: `${pos * 100}%` }}
+            >
+              <div
+                className="w-[5px] h-[5px] rounded-full -translate-x-1/2"
+                style={{
+                  background: "hsl(0 60% 55% / 0.7)",
+                  boxShadow: "0 0 3px hsl(0 60% 50% / 0.4)",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Timestamps */}
+        <div className="flex items-center justify-between mt-1.5">
+          <span
+            className="text-[8px] text-white/20 tracking-wider"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
+            0:00
+          </span>
+          <span
+            className="text-[8px] text-white/20 tracking-wider"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
+            {duration}
+          </span>
         </div>
       </div>
 
-      <div className="p-4 flex-1 flex flex-col">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <h3 className="text-sm font-medium truncate group-hover:text-foreground/80 transition-colors">{proj.name}</h3>
+      {/* Info area */}
+      <div className="px-4 py-3.5 flex-1 flex flex-col">
+        {/* Track name + delete */}
+        <div className="flex items-start justify-between gap-2 mb-2.5">
+          <h3 className="text-[13px] font-medium tracking-[-0.01em] truncate text-foreground/80 group-hover:text-foreground transition-colors leading-tight">
+            {proj.name}
+          </h3>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-            className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
+            className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
             title="Delete project"
           >
             <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${colorClass}`}>
+        {/* Badges */}
+        <div className="flex items-center gap-1.5 flex-wrap mb-auto">
+          <span
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider"
+            style={{
+              background: "hsl(var(--surface-b))",
+              border: "1px solid hsl(var(--border-subtle) / 0.3)",
+              color: "hsl(var(--muted-foreground))",
+            }}
+          >
             <ModeIcon className="w-2.5 h-2.5" />{mode}
           </span>
           {versionCount > 1 && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">v{latestAnalysis.version}</span>
+            <span
+              className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground/60"
+              style={{
+                background: "hsl(var(--surface-b) / 0.6)",
+                border: "1px solid hsl(var(--border-subtle) / 0.2)",
+              }}
+            >
+              v{latestAnalysis.version}
+            </span>
           )}
+          <span
+            className="inline-flex items-center gap-1 text-[9px] text-muted-foreground/30"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
+            {markers.length} issues
+          </span>
         </div>
 
-        <p className="text-[11px] text-muted-foreground/50 mt-auto pt-2">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+        {/* Timestamp */}
+        <div
+          className="flex items-center justify-between pt-2.5 mt-2"
+          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.15)" }}
+        >
+          <p className="text-[10px] text-muted-foreground/35">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
+          <span className="text-[9px] text-muted-foreground/20 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide uppercase" style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}>
+            Open →
+          </span>
+        </div>
       </div>
+
+      {/* Hover border overlay */}
+      <div
+        className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        style={{ border: "1px solid hsl(var(--foreground) / 0.12)" }}
+      />
     </div>
   );
 };
