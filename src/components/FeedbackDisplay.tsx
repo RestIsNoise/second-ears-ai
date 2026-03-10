@@ -1406,6 +1406,98 @@ const FeedbackDisplay = ({
           }}
         />
       </div>
+
+      {/* ═══ WORKSTATION CLOSING FRAME ═══ */}
+      <div
+        className="mt-2 sm:mt-3"
+        style={{
+          backgroundColor: "hsl(0 0% 8%)",
+          border: "2px solid hsl(var(--foreground) / 0.1)",
+          borderRadius: 3,
+          overflow: "hidden",
+        }}
+      >
+        {/* Machined top edge */}
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.04)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.3)" }} />
+
+        <div className="px-4 sm:px-5 py-4 sm:py-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            {/* Left: wordmark + trust */}
+            <div className="flex flex-col gap-1.5">
+              <span
+                className="tracking-tight font-bold"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  color: "hsl(0 0% 40%)",
+                }}
+              >
+                SecondEar™
+              </span>
+              <div className="flex items-center gap-1.5">
+                <div
+                  className="w-1 h-1 rounded-full"
+                  style={{ backgroundColor: "hsl(145 40% 45% / 0.6)" }}
+                />
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 8,
+                    letterSpacing: "0.08em",
+                    color: "hsl(0 0% 35%)",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Private by default · Not used for AI training
+                </span>
+              </div>
+            </div>
+
+            {/* Right: links */}
+            <div className="flex items-center gap-3">
+              {[
+                { href: "/privacy", label: "Privacy" },
+                { href: "/terms", label: "Terms" },
+              ].map((link, i) => (
+                <span key={link.href} className="flex items-center gap-3">
+                  {i > 0 && (
+                    <span style={{ color: "hsl(0 0% 20%)" }}>·</span>
+                  )}
+                  <a
+                    href={link.href}
+                    className="transition-colors"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 8.5,
+                      letterSpacing: "0.06em",
+                      color: "hsl(0 0% 38%)",
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </span>
+              ))}
+              <span style={{ color: "hsl(0 0% 20%)" }}>·</span>
+              <a
+                href="mailto:hello@secondears.io"
+                className="transition-colors"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 8.5,
+                  letterSpacing: "0.06em",
+                  color: "hsl(0 0% 38%)",
+                }}
+              >
+                hello@secondears.io
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom edge line */}
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
+      </div>
     </div>
   );
 };
