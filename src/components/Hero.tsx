@@ -6,7 +6,7 @@ import { useScrollProgress } from "@/hooks/useScrollReveal";
 import heroScreenshot from "@/assets/hero-screenshot.png";
 
 const trustItems = [
-  "No credit card",
+  "No card required",
   "Not used for AI training",
   "Private by default",
 ];
