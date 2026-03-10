@@ -861,12 +861,12 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-6 overflow-hidden"
+        className="mt-3 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
-          border: "2px solid hsl(var(--foreground) / 0.1)",
-          borderRadius: 6,
-          boxShadow: "0 4px 20px 0 rgba(0,0,0,0.1), 0 0 0 1px hsl(var(--foreground) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
+          border: "3px solid hsl(var(--foreground) / 0.14)",
+          borderRadius: 4,
+          boxShadow: "0 6px 30px 0 rgba(0,0,0,0.15), 0 0 0 1px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
         }}
       >
         {/* ── WAVEFORM PLAYER ── */}
