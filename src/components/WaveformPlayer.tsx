@@ -346,7 +346,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const handleMouseLeave = useCallback(() => setHoverX(null), []);
 
     const playheadPct = duration > 0 ? (currentTime / duration) * 100 : 0;
-    const WAVEFORM_HEIGHT = 88;
+    const WAVEFORM_HEIGHT = 94;
 
     const deckLabel = deckVariant === "a" ? "A" : "B";
 
