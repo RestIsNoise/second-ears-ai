@@ -27,7 +27,7 @@ const VersionPills = ({ versions, currentAnalysisId, projectId, trackName, mode 
       projectId,
       trackName,
       mode,
-      parentAnalysisId: versions[0]?.analysisId || currentAnalysisId,
+      parentAnalysisId: currentAnalysisId || versions[versions.length - 1]?.analysisId,
       nextVersion: String((versions.length > 0 ? Math.max(...versions.map(v => v.version)) : 1) + 1),
     });
     navigate(`/analyze?${params.toString()}`);
