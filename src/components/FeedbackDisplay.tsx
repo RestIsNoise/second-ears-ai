@@ -1066,7 +1066,7 @@ const FeedbackDisplay = ({
           {n.yourFocus.question && (
             <div className="flex flex-col">
               <h3
-                className="text-[11px] text-muted-foreground/70 tracking-[0.14em] uppercase mb-3 font-medium"
+                className="text-[9px] text-foreground/50 tracking-[0.16em] uppercase mb-2.5 font-bold"
                 style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
               >
                 Your Focus

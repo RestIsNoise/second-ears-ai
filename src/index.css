@@ -150,12 +150,14 @@
     --surface-elevated: 0 0% 8%;
     --text-tertiary: 0 0% 50%;
     --border-subtle: 0 0% 14%;
-    --panel-bg: 0 0% 5%;
-    --panel-header: 0 0% 7%;
-    --panel-content: 0 0% 4%;
-    --workspace-bg: 0 0% 8%;
-    --workspace-frame: 0 0% 12%;
-    --panel-inset: 0 0% 100% / 0.03;
+    --panel-bg: 0 0% 6%;
+    --panel-header: 0 0% 9%;
+    --panel-content: 0 0% 5%;
+    --workspace-bg: 0 0% 10%;
+    --workspace-frame: 0 0% 14%;
+    --panel-inset: 0 0% 100% / 0.04;
+    --rack-screw: 0 0% 18%;
+    --channel-divider: 0 0% 100% / 0.06;
   }
 
   /* Section surface variants for contrast rhythm */
