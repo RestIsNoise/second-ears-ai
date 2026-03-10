@@ -89,33 +89,37 @@ const Analyze = () => {
       try {
         const n = feedbackResult.normalized;
 
-        // 1. Create project
         const { data: project, error: projErr } = await supabase
           .from("projects")
           .insert({ user_id: user.id, name: n.trackName })
           .select("id")
           .single();
-
-        if (projErr || !project) {
-          console.error("[Analyze] Project insert failed:", JSON.stringify(projErr, null, 2));
+        if (projErr) {
+          console.error("[Analyze] Project insert failed:", JSON.stringify(projErr));
           throw projErr;
         }
-        console.log("[Analyze] Project created:", project.id);
 
-        // 2. Insert analysis linked to project
-        const analysisPayload = {
-          project_id: project.id,
+        const { data: version, error: verErr } = await supabase
+          .from("versions")
+          .insert({ project_id: project.id, version_number: 1, track_name: n.trackName })
+          .select("id")
+          .single();
+        if (verErr) {
+          console.error("[Analyze] Version insert failed:", JSON.stringify(verErr));
+          throw verErr;
+        }
+
+        const insertPayload: any = {
+          version_id: version.id,
+          user_id: user.id,
+          track_name: n.trackName,
           mode: n.mode,
-          feedback: feedbackResult.rawResult ?? {},
-          metrics: {},
-          version: 1,
-          storage_path: feedbackResult.storagePath ?? null,
+          result: feedbackResult.rawResult,
         };
-        console.log("[Analyze] Inserting analysis:", JSON.stringify(analysisPayload, null, 2));
 
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
-          .insert(analysisPayload)
+          .insert(insertPayload)
           .select("id")
           .single();
 
