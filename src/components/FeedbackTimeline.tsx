@@ -16,25 +16,34 @@ const formatTime = (s: number) => {
 const MONO = "'IBM Plex Mono', monospace";
 
 /** Mode-linked accent colors */
-const modeAccent: Record<string, { border: string; bg: string; text: string }> = {
+const modeAccent: Record<string, { border: string; bg: string; text: string; tag: string }> = {
   technical: {
     border: "hsl(35 55% 55%)",
-    bg: "hsl(35 40% 50% / 0.08)",
+    bg: "hsl(35 40% 50% / 0.06)",
     text: "hsl(35 45% 45%)",
+    tag: "TECH",
   },
   musical: {
     border: "hsl(215 45% 55%)",
-    bg: "hsl(215 35% 50% / 0.08)",
+    bg: "hsl(215 35% 50% / 0.06)",
     text: "hsl(215 40% 48%)",
+    tag: "MUSC",
   },
   perception: {
     border: "hsl(270 35% 55%)",
-    bg: "hsl(270 28% 50% / 0.08)",
+    bg: "hsl(270 28% 50% / 0.06)",
     text: "hsl(270 30% 48%)",
+    tag: "PERC",
   },
 };
 
 const defaultAccent = modeAccent.technical;
+
+const severityConfig: Record<string, { label: string; color: string; glow: string }> = {
+  high: { label: "HIGH", color: "hsl(0 55% 50%)", glow: "0 0 4px hsl(0 55% 50% / 0.35)" },
+  med: { label: "MED", color: "hsl(35 70% 55%)", glow: "0 0 4px hsl(35 70% 55% / 0.3)" },
+  low: { label: "LOW", color: "hsl(var(--foreground) / 0.2)", glow: "none" },
+};
 
 /* ── Observation with 3-line clamp + expand ── */
 const ClampedObservation = ({ text }: { text: string }) => {
@@ -48,10 +57,10 @@ const ClampedObservation = ({ text }: { text: string }) => {
   }, [text]);
 
   return (
-    <div>
+    <div className="mt-1.5">
       <p
         ref={textRef}
-        className="text-[12px] text-foreground/55 mt-1"
+        className="text-[11px] text-foreground/50"
         style={{
           fontFamily: MONO,
           lineHeight: 1.55,
@@ -66,11 +75,11 @@ const ClampedObservation = ({ text }: { text: string }) => {
       {isClamped && !expanded && (
         <button
           onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="inline-flex items-center gap-0.5 mt-0.5 text-[9px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-wider font-bold"
+          className="inline-flex items-center gap-0.5 mt-0.5 text-[8px] text-foreground/25 hover:text-foreground/50 transition-colors uppercase tracking-[0.1em] font-bold"
           style={{ fontFamily: MONO }}
         >
           <ChevronDown className="w-2.5 h-2.5" />
-          more
+          expand
         </button>
       )}
     </div>
@@ -93,7 +102,7 @@ const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-1 text-[9px] text-foreground/25 hover:text-foreground/60 transition-colors shrink-0 uppercase tracking-wider font-bold"
+      className="inline-flex items-center gap-1 text-[8px] text-foreground/20 hover:text-foreground/50 transition-colors shrink-0 uppercase tracking-[0.1em] font-bold"
       style={{ fontFamily: MONO }}
       title="Copy"
     >
@@ -150,6 +159,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
           const isActive = activeItemId === item.id;
           const alreadyAdded = todoItemIds?.has(item.id);
           const accent = modeAccent[item.mode] || defaultAccent;
+          const sev = severityConfig[item.severity] || severityConfig.low;
 
           return (
             <div
@@ -159,116 +169,175 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              className="group relative w-full text-left cursor-pointer transition-colors duration-100"
+              className="group relative w-full text-left cursor-pointer transition-all duration-100"
               style={{
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
-                padding: "8px 10px",
-                borderLeft: `3px solid ${accent.border}`,
-                borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
-                backgroundColor: isActive ? accent.bg : "transparent",
-                boxShadow: isActive ? `inset 0 0 0 1px hsl(var(--foreground) / 0.06)` : "none",
               }}
             >
-              {/* Hover actions — top right */}
-              <div className="absolute top-1.5 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                {onAddToDo && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
-                    disabled={alreadyAdded}
-                    className={`inline-flex items-center gap-0.5 text-[8px] uppercase tracking-wider font-bold transition-colors shrink-0 ${
-                      alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
-                    }`}
-                    style={{ fontFamily: MONO }}
-                  >
-                    {alreadyAdded ? <Check className="w-2.5 h-2.5" /> : <Plus className="w-2.5 h-2.5" />}
-                  </button>
-                )}
-                <CopyFixInline item={item} />
-              </div>
-
-              {/* Index + timestamp header line */}
-              <div className="flex items-center gap-2 mb-1">
+              {/* ═══ EVENT HEADER STRIP ═══ */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "4px 10px",
+                  backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
+                  borderLeft: `3px solid ${accent.border}`,
+                  borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                  borderTop: idx === 0 ? "none" : "1px solid hsl(var(--foreground) / 0.06)",
+                }}
+              >
+                {/* Index */}
                 <span
-                  className="text-foreground/20 font-bold"
-                  style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.04em" }}
+                  className="text-foreground/18 font-extrabold shrink-0"
+                  style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.04em", minWidth: 14 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
+
+                {/* Timestamp — tabular, monospaced, prominent */}
                 <span
-                  className="text-foreground/40 tabular-nums font-bold"
-                  style={{ fontFamily: MONO, fontSize: 9 }}
-                >
-                  @{formatTime(item.timestampSec)}
-                </span>
-                {/* Severity pip */}
-                <div
-                  className="w-[5px] h-[5px] rounded-full"
+                  className="text-foreground/50 tabular-nums font-bold shrink-0"
                   style={{
-                    backgroundColor: item.severity === "high" ? "hsl(0 55% 50%)" : item.severity === "med" ? "hsl(35 70% 55%)" : "hsl(var(--foreground) / 0.15)",
+                    fontFamily: MONO,
+                    fontSize: 10,
+                    backgroundColor: "hsl(var(--foreground) / 0.04)",
+                    padding: "1px 5px",
+                    borderRadius: 2,
+                    letterSpacing: "-0.01em",
                   }}
-                />
-              </div>
+                >
+                  {formatTime(item.timestampSec)}
+                </span>
 
-              {/* Title */}
-              <h3
-                className="text-[13px] font-bold tracking-tight text-foreground/85 leading-snug pr-10"
-                title={item.title}
-              >
-                {item.title}
-              </h3>
-
-              {/* Observation */}
-              {item.observation && <ClampedObservation text={item.observation} />}
-
-              {/* FIX block */}
-              {item.fix && (
-                <>
+                {/* Severity LED + label */}
+                <div className="flex items-center gap-1 shrink-0">
                   <div
-                    className="my-1.5"
+                    className="w-[5px] h-[5px] rounded-full"
                     style={{
-                      height: 1,
-                      background: `linear-gradient(to right, ${accent.border}40, transparent)`,
+                      backgroundColor: sev.color,
+                      boxShadow: sev.glow,
                     }}
                   />
-                  <div className="flex items-start gap-1.5">
-                    <span
-                      className="shrink-0 mt-[1px] inline-flex items-center"
-                      style={{
-                        fontFamily: MONO,
-                        fontSize: 8,
-                        fontWeight: 800,
-                        letterSpacing: "0.06em",
-                        lineHeight: 1,
-                        padding: "2px 5px",
-                        backgroundColor: accent.border,
-                        color: "hsl(0 0% 100%)",
-                        borderRadius: 2,
-                      }}
-                    >
-                      {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
-                    </span>
-                    <p
-                      className="text-[11px] text-foreground/65"
-                      style={{ lineHeight: 1.5, fontFamily: MONO }}
-                    >
-                      {item.fix}
-                    </p>
-                  </div>
-                </>
-              )}
-
-              {/* Vote buttons */}
-              {analysisId && (
-                <div className="mt-1">
-                  <FeedbackVoteButtons
-                    analysisId={analysisId}
-                    priorityIndex={sorted.indexOf(item)}
-                    userId={user?.id}
-                    initialUserVote={null}
-                  />
+                  <span
+                    className="font-extrabold uppercase tracking-[0.08em]"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 7,
+                      color: sev.color,
+                    }}
+                  >
+                    {sev.label}
+                  </span>
                 </div>
-              )}
+
+                {/* Mode tag */}
+                <span
+                  className="text-foreground/25 font-bold uppercase tracking-[0.08em] shrink-0 ml-auto"
+                  style={{ fontFamily: MONO, fontSize: 7 }}
+                >
+                  {accent.tag}
+                </span>
+
+                {/* Hover actions */}
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                  {onAddToDo && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
+                      disabled={alreadyAdded}
+                      className={`inline-flex items-center text-[8px] uppercase tracking-wider font-bold transition-colors shrink-0 ${
+                        alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/25 hover:text-foreground/55"
+                      }`}
+                      style={{ fontFamily: MONO }}
+                    >
+                      {alreadyAdded ? <Check className="w-2.5 h-2.5" /> : <Plus className="w-2.5 h-2.5" />}
+                    </button>
+                  )}
+                  <CopyFixInline item={item} />
+                </div>
+              </div>
+
+              {/* ═══ ISSUE BODY ═══ */}
+              <div
+                style={{
+                  padding: "7px 10px 8px 16px",
+                  borderLeft: `3px solid ${isActive ? accent.border : "hsl(var(--foreground) / 0.04)"}`,
+                  backgroundColor: isActive ? accent.bg : "transparent",
+                  transition: "background-color 0.1s, border-color 0.15s",
+                }}
+              >
+                {/* Title */}
+                <h3
+                  className="text-[12.5px] font-bold tracking-tight text-foreground/85 leading-snug"
+                  title={item.title}
+                >
+                  {item.title}
+                </h3>
+
+                {/* Observation */}
+                {item.observation && <ClampedObservation text={item.observation} />}
+
+                {/* ── FIX / ACTION BLOCK ── */}
+                {item.fix && (
+                  <div
+                    className="mt-2"
+                    style={{
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.05)",
+                      borderLeft: `2px solid ${accent.border}`,
+                      borderRadius: "0 2px 2px 0",
+                      padding: "5px 8px",
+                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                    }}
+                  >
+                    <div className="flex items-start gap-2">
+                      <span
+                        className="shrink-0 mt-[2px] inline-flex items-center"
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: 7,
+                          fontWeight: 800,
+                          letterSpacing: "0.08em",
+                          lineHeight: 1,
+                          padding: "2px 5px",
+                          backgroundColor: accent.border,
+                          color: "hsl(0 0% 100%)",
+                          borderRadius: 1,
+                        }}
+                      >
+                        {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
+                      </span>
+                      <p
+                        className="text-[10.5px] text-foreground/65"
+                        style={{ lineHeight: 1.5, fontFamily: MONO }}
+                      >
+                        {item.fix}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Vote buttons */}
+                {analysisId && (
+                  <div className="mt-1.5">
+                    <FeedbackVoteButtons
+                      analysisId={analysisId}
+                      priorityIndex={sorted.indexOf(item)}
+                      userId={user?.id}
+                      initialUserVote={null}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom separator — heavier groove between events */}
+              <div
+                style={{
+                  height: 2,
+                  background: "linear-gradient(to bottom, hsl(var(--foreground) / 0.06), hsl(0 0% 100% / 0.02))",
+                }}
+              />
             </div>
           );
         })}
