@@ -1035,7 +1035,7 @@ const FeedbackDisplay = ({
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
-                    <div key={i} className="flex-1 rounded-lg border border-border-subtle/50 bg-card/40 p-4">
+                    <div key={i} className="flex-1 rounded-md p-4" style={{ backgroundColor: "hsl(var(--panel-bg))", border: "1px solid hsl(var(--foreground) / 0.07)", boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))" }}>
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="text-[14px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
                         {tags.length > 0 && (
