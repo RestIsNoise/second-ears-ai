@@ -42,7 +42,7 @@ const SampleFeedback = () => {
   const [activeCursor, setActiveCursor] = useState<Phase>("time");
   const [started, setStarted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const { ref: revealRef, isVisible } = useScrollReveal();
+  const { ref: revealRef, isVisible } = useScrollReveal<HTMLElement>();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -100,18 +100,19 @@ const SampleFeedback = () => {
     return () => { cancelled = true; };
   }, [started]);
 
+  // Merge refs
+  const setRefs = (el: HTMLElement | null) => {
+    (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+    (revealRef as React.MutableRefObject<HTMLElement | null>).current = el;
+  };
+
   return (
     <section
-      ref={(el) => {
-        (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-        if (revealRef && typeof revealRef === 'object') {
-          (revealRef as React.MutableRefObject<HTMLElement | null>).current = el;
-        }
-      }}
-      className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal-base ${isVisible ? "reveal-visible" : ""}`}
+      ref={setRefs}
+      className={`py-16 md:py-20 px-6 border-t border-border-subtle/50 reveal ${isVisible ? "is-visible" : ""}`}
     >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12 reveal-child" style={{ "--reveal-delay": "0ms" } as React.CSSProperties}>
+        <div className="text-center mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
@@ -128,7 +129,7 @@ const SampleFeedback = () => {
 
         <div
           className="max-w-2xl mx-auto rounded-xl border overflow-hidden reveal-child"
-          style={{ borderColor: "hsl(0 0% 100% / 0.08)", background: "hsl(0 0% 7%)", "--reveal-delay": "100ms" } as React.CSSProperties}
+          style={{ borderColor: "hsl(0 0% 100% / 0.08)", background: "hsl(0 0% 7%)", "--stagger": "120ms" } as React.CSSProperties}
         >
           {/* Title bar */}
           <div

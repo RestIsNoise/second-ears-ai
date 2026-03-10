@@ -29,9 +29,13 @@ const ListeningModes = () => {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} id="modes" className={`py-16 md:py-20 px-6 bg-secondary/40 overflow-visible reveal-base ${isVisible ? "reveal-visible" : ""}`}>
+    <section
+      ref={ref}
+      id="modes"
+      className={`py-16 md:py-20 px-6 bg-secondary/40 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
+    >
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10 md:mb-12">
+        <div className="text-center mb-10 md:mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
             className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
@@ -45,10 +49,10 @@ const ListeningModes = () => {
             <div
               key={mode.name}
               className="bg-background rounded-lg border border-border-subtle/50 p-6 md:p-7 flex flex-col gap-4 hover:border-foreground/10 transition-colors reveal-child"
-              style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}
+              style={{ "--stagger": `${100 + i * 100}ms` } as React.CSSProperties}
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center reveal-pop" style={{ "--stagger": `${200 + i * 100}ms` } as React.CSSProperties}>
                   <mode.icon className="w-[18px] h-[18px] text-foreground/80" />
                 </div>
                 <div>

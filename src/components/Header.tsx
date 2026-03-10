@@ -25,7 +25,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 32);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -40,19 +40,22 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 border-b border-border-subtle transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out",
         scrolled
-          ? "bg-background/98 backdrop-blur-[12px] h-12"
-          : "bg-background/95 backdrop-blur-[6px] h-14"
+          ? "h-11 bg-background/98 backdrop-blur-[16px] border-b border-foreground/[0.08] shadow-[0_1px_8px_-2px_hsl(0_0%_0%/0.12)]"
+          : "h-14 bg-background/90 backdrop-blur-[6px] border-b border-border-subtle"
       )}
     >
       <div className={cn(
-        "flex items-center justify-between max-w-5xl mx-auto px-6 transition-all duration-300",
-        scrolled ? "h-12" : "h-14"
+        "flex items-center justify-between max-w-5xl mx-auto px-6 transition-all duration-500",
+        scrolled ? "h-11" : "h-14"
       )}>
         <Link to="/" className="flex items-center gap-2">
           <span
-            className="text-[13px] font-medium tracking-tight"
+            className={cn(
+              "font-medium tracking-tight transition-all duration-500",
+              scrolled ? "text-[12px]" : "text-[13px]"
+            )}
             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
           >
             SecondEar
@@ -60,7 +63,10 @@ const Header = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8 text-[13px] text-muted-foreground/65">
+        <nav className={cn(
+          "hidden md:flex items-center text-muted-foreground/65 transition-all duration-500",
+          scrolled ? "gap-6 text-[12px]" : "gap-8 text-[13px]"
+        )}>
           {navItems.map((item) =>
             item.href.startsWith("/") && !item.href.startsWith("/#") ? (
               <Link key={item.label} to={item.href} className="hover:text-foreground transition-colors">
@@ -79,7 +85,7 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}>
                     {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Avatar" />}
                     <AvatarFallback className="text-xs font-medium">{initials}</AvatarFallback>
                   </Avatar>
@@ -105,12 +111,11 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="hero" size="sm" className="text-xs h-8 px-4" asChild>
+            <Button variant="hero" size="sm" className={cn("text-xs px-4 transition-all duration-500", scrolled ? "h-7" : "h-8")} asChild>
               <Link to="/auth">Sign in</Link>
             </Button>
           )}
 
-          {/* Mobile menu toggle */}
           <button
             className="md:hidden p-1.5 text-muted-foreground hover:text-foreground transition-colors"
             onClick={() => setMobileOpen((v) => !v)}
@@ -121,7 +126,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile nav dropdown */}
       {mobileOpen && (
         <div className="md:hidden border-t border-border-subtle/40 bg-background/98 backdrop-blur-sm px-6 py-4 space-y-3">
           {navItems.map((item) =>

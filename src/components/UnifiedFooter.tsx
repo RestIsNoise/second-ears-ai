@@ -9,42 +9,44 @@ const UnifiedFooter = () => {
 
   return (
     <footer>
-      {/* ── Minimal CTA block ── */}
+      {/* ── CTA block ── */}
       <section
         ref={ctaRef}
-        className={`bg-background py-12 md:py-16 px-6 reveal-base ${ctaVisible ? "reveal-visible" : ""}`}
+        className={`bg-background py-12 md:py-16 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
       >
         <div className="max-w-xl mx-auto text-center">
-          <Button variant="hero" size="lg" className="h-14 px-14 text-[15px] gap-2.5 reveal-child" style={{ "--reveal-delay": "0ms" } as React.CSSProperties} asChild>
-            <Link to="/analyze">
-              <Upload className="w-4 h-4" />
-              Start free analysis
-            </Link>
-          </Button>
-          <p className="mt-4 text-[11px] tracking-wide text-muted-foreground/45 reveal-child" style={{ "--reveal-delay": "80ms" } as React.CSSProperties}>
+          <div className="reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+            <Button variant="hero" size="lg" className="h-14 px-14 text-[15px] gap-2.5" asChild>
+              <Link to="/analyze">
+                <Upload className="w-4 h-4" />
+                Start free analysis
+              </Link>
+            </Button>
+          </div>
+          <p className="mt-4 text-[11px] tracking-wide text-muted-foreground/45 reveal-child" style={{ "--stagger": "100ms" } as React.CSSProperties}>
             No credit card required
           </p>
         </div>
       </section>
 
+      {/* ── Layered gradient transition band ── */}
+      <div
+        className="h-32 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background: "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(0 0% 6%) 40%, hsl(0 0% 5%) 100%)",
+        }}
+      />
+
       {/* ── Dark Contact + Legal area ── */}
       <section
         ref={contactRef}
-        className={`relative overflow-hidden reveal-base ${contactVisible ? "reveal-visible" : ""}`}
+        className={`relative overflow-hidden reveal ${contactVisible ? "is-visible" : ""}`}
         style={{ background: "hsl(0 0% 5%)" }}
       >
-        {/* Wider, smoother top gradient for better transition */}
+        {/* Moving noise grain — dark region only */}
         <div
-          className="absolute top-0 left-0 right-0 h-24 pointer-events-none"
-          aria-hidden="true"
-          style={{
-            background: "linear-gradient(to bottom, hsl(var(--background)), hsl(0 0% 5%))",
-          }}
-        />
-
-        {/* Noise grain */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.035]"
+          className="absolute inset-0 pointer-events-none opacity-[0.04]"
           aria-hidden="true"
           style={{
             backgroundImage:
@@ -67,27 +69,27 @@ const UnifiedFooter = () => {
 
         <div className="relative">
           {/* Contact */}
-          <div className="pt-20 md:pt-24 pb-10 md:pb-12 px-6">
+          <div className="pt-12 md:pt-16 pb-10 md:pb-12 px-6">
             <div className="max-w-5xl mx-auto text-center">
               <p
                 className="text-[10px] tracking-[0.18em] uppercase mb-3 reveal-child"
-                style={{ color: "hsl(0 0% 52%)", fontFamily: "'IBM Plex Mono', monospace", "--reveal-delay": "0ms" } as React.CSSProperties}
+                style={{ color: "hsl(0 0% 52%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
               >
                 Get in touch
               </p>
               <h2
                 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight mb-2.5 reveal-child"
-                style={{ color: "hsl(0 0% 93%)", "--reveal-delay": "60ms" } as React.CSSProperties}
+                style={{ color: "hsl(0 0% 93%)", "--stagger": "90ms" } as React.CSSProperties}
               >
                 Contact
               </h2>
               <p
                 className="text-[13px] max-w-sm mx-auto mb-6 leading-relaxed reveal-child"
-                style={{ color: "hsl(0 0% 58%)", "--reveal-delay": "120ms" } as React.CSSProperties}
+                style={{ color: "hsl(0 0% 58%)", "--stagger": "180ms" } as React.CSSProperties}
               >
                 Billing, feedback quality, feature requests. We read every message.
               </p>
-              <div className="reveal-child" style={{ "--reveal-delay": "180ms" } as React.CSSProperties}>
+              <div className="reveal-child" style={{ "--stagger": "260ms" } as React.CSSProperties}>
                 <Button variant="hero" size="lg" className="h-11 px-8 text-[13px] gap-2" asChild>
                   <a href="mailto:hello@secondears.io">
                     <Mail className="w-4 h-4" />
@@ -95,7 +97,7 @@ const UnifiedFooter = () => {
                   </a>
                 </Button>
               </div>
-              <p className="text-[11px] mt-3 reveal-child" style={{ color: "hsl(0 0% 46%)", "--reveal-delay": "220ms" } as React.CSSProperties}>
+              <p className="text-[11px] mt-3 reveal-child" style={{ color: "hsl(0 0% 46%)", "--stagger": "320ms" } as React.CSSProperties}>
                 Response within 24–48h
               </p>
             </div>
