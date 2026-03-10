@@ -1017,16 +1017,16 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── PANELS WORKSTATION — machined transition ── */}
-        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.1)" }} />
-        <div style={{ height: 1, background: "hsl(var(--foreground) / 0.1)" }} />
-        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
+        <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
+        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
         <div
           className="flex overflow-hidden"
           style={{
-            height: "calc(100vh - 340px)",
-            minHeight: 380,
+            height: "calc(100vh - 300px)",
+            minHeight: 420,
             backgroundColor: "hsl(var(--panel-bg))",
-            boxShadow: "inset 0 3px 8px hsl(var(--panel-inset))",
+            boxShadow: "inset 0 4px 12px hsl(var(--panel-inset))",
           }}
         >
         {/* Desktop sidebar */}
