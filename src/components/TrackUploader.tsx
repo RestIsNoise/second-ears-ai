@@ -90,15 +90,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       onProgressStep?.(2);
       const { data: { user: currentUser } } = await supabase.auth.getUser();
 
-      // Project + analysis creation is handled in Analyze.tsx after feedback returns
-      let versionId: string | undefined;
-
       const feedbackRes = await fetch(
         "https://secondears-backend-production.up.railway.app/api/feedback",
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": "secondears-secret-2024" },
-          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal, user_id: currentUser?.id, version_id: versionId }),
+          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal }),
         }
       );
       if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);

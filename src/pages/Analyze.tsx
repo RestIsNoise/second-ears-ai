@@ -89,33 +89,35 @@ const Analyze = () => {
       try {
         const n = feedbackResult.normalized;
 
-        const { data: project, error: projErr } = await supabase
-          .from("projects")
-          .insert({ user_id: user.id, name: n.trackName })
-          .select("id")
-          .single();
-        if (projErr) {
-          console.error("[Analyze] Project insert failed:", JSON.stringify(projErr));
-          throw projErr;
-        }
+        let projectId: string;
 
-        const { data: version, error: verErr } = await supabase
-          .from("versions")
-          .insert({ project_id: project.id, version_number: 1, track_name: n.trackName })
-          .select("id")
-          .single();
-        if (verErr) {
-          console.error("[Analyze] Version insert failed:", JSON.stringify(verErr));
-          throw verErr;
+        if (isNewVersion && parentProjectId) {
+          projectId = parentProjectId;
+        } else {
+          const { data: project, error: projErr } = await supabase
+            .from("projects")
+            .insert({ user_id: user.id, name: n.trackName })
+            .select("id")
+            .single();
+          if (projErr) {
+            console.error("[Analyze] Project insert failed:", JSON.stringify(projErr));
+            throw projErr;
+          }
+          projectId = project.id;
         }
 
         const insertPayload: any = {
-          version_id: version.id,
-          user_id: user.id,
-          track_name: n.trackName,
+          project_id: projectId,
           mode: n.mode,
-          result: feedbackResult.rawResult,
+          feedback: feedbackResult.rawResult ?? {},
+          metrics: feedbackResult.rawResult?.technical_metrics ?? {},
+          version: isNewVersion ? nextVersion : 1,
+          storage_path: feedbackResult.storagePath ?? null,
         };
+
+        if (isNewVersion && parentAnalysisId) {
+          insertPayload.parent_analysis_id = parentAnalysisId;
+        }
 
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
@@ -129,6 +131,10 @@ const Analyze = () => {
         }
         if (analysisRow) {
           setSavedAnalysisId(analysisRow.id);
+          if (isNewVersion && parentProjectId) {
+            navigate(`/project/${parentProjectId}?analysis=${analysisRow.id}`, { replace: true });
+            return;
+          }
         }
         console.log("[Analyze] Analysis saved:", analysisRow?.id);
       } catch (err) {

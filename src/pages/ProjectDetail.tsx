@@ -285,7 +285,9 @@ const ProjectDetail = () => {
         onClose={() => setShowVersionModal(false)}
         projectId={id!}
         trackName={projectName}
-        onVersionCreated={loadProject}
+        currentAnalysisId={analysisId ?? undefined}
+        nextVersion={allAnalyses.length > 0 ? Math.max(...allAnalyses.map(a => a.version)) + 1 : 2}
+        mode={allAnalyses[allAnalyses.length - 1]?.mode}
       />
     </div>
   );
