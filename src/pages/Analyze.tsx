@@ -40,6 +40,7 @@ export interface FullAnalysis {
 
 export interface FeedbackResult {
   normalized: NormalizedFeedback;
+  rawResult?: any;
   audioFile?: File;
   storagePath?: string;
 }
@@ -88,49 +89,13 @@ const Analyze = () => {
       try {
         const n = feedbackResult.normalized;
 
-        let projectId: string;
-
-        if (isNewVersion && parentProjectId) {
-          // Re-use existing project for new version
-          projectId = parentProjectId;
-        } else {
-          // Create new project
-          const { data: project, error: projErr } = await supabase
-            .from("projects")
-            .insert({ user_id: user.id, name: n.trackName })
-            .select("id")
-            .single();
-          if (projErr) {
-            console.error("[Analyze] Project insert failed:", JSON.stringify(projErr, null, 2));
-            throw projErr;
-          }
-          projectId = project.id;
-        }
-
         const insertPayload: any = {
-          project_id: projectId,
+          user_id: user.id,
+          track_name: n.trackName,
           mode: n.mode,
-          storage_path: feedbackResult.storagePath || null,
-          feedback: {
-            overallImpression: n.overallImpression,
-            topIssue: n.topIssue,
-            biggestWin: n.biggestWin,
-            releaseStatus: n.releaseStatus,
-            timelineItems: n.timelineItems,
-            whatWorks: n.whatWorks,
-            ifFixOneThing: n.ifFixOneThing,
-            yourFocus: n.yourFocus,
-            fullAnalysis: n.fullAnalysis,
-          },
-          metrics: n.metrics,
+          result: feedbackResult.rawResult,
         };
 
-        if (isNewVersion && parentAnalysisId) {
-          insertPayload.parent_analysis_id = parentAnalysisId;
-          insertPayload.version = nextVersion;
-        }
-
-        console.log("[Analyze] Inserting analysis with payload:", JSON.stringify(insertPayload, null, 2));
         const { data: analysisRow, error: analysisErr } = await supabase
           .from("analyses")
           .insert(insertPayload)
@@ -143,13 +108,8 @@ const Analyze = () => {
         }
         if (analysisRow) {
           setSavedAnalysisId(analysisRow.id);
-          // If new version, navigate to project page to see version pills
-          if (isNewVersion && parentProjectId) {
-            navigate(`/project/${parentProjectId}?analysis=${analysisRow.id}`, { replace: true });
-            return;
-          }
         }
-        console.log("[Analyze] Saved project:", projectId);
+        console.log("[Analyze] Analysis saved:", analysisRow?.id);
       } catch (err) {
         console.error("[Analyze] Failed to save analysis:", err);
       }

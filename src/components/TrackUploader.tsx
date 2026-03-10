@@ -141,7 +141,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
       // Give step 3 "Finalizing" enough time to animate to ~95%+ before switching view
       await new Promise((r) => setTimeout(r, 1800));
-      onResult({ normalized, audioFile: file, storagePath });
+      onResult({ normalized, rawResult: result, audioFile: file, storagePath });
     } catch (err: any) {
       const msg = err.message || "Something went wrong. Please try again.";
       onError?.(msg);
