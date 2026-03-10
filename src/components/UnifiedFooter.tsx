@@ -9,11 +9,13 @@ const UnifiedFooter = () => {
 
   return (
     <footer>
-      {/* ── CTA block ── */}
+      {/* ── CTA block on graduated surface ── */}
       <section
         ref={ctaRef}
-        className={`relative py-14 md:py-18 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
-        style={{ background: "hsl(var(--surface-a))" }}
+        className={`relative py-16 md:py-20 px-6 reveal ${ctaVisible ? "is-visible" : ""}`}
+        style={{
+          background: "linear-gradient(to bottom, hsl(var(--surface-a)), hsl(var(--surface-b)) 60%, hsl(var(--surface-c)))",
+        }}
       >
         <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
@@ -25,7 +27,7 @@ const UnifiedFooter = () => {
             Ready to hear your mix
           </p>
           <div className="reveal-child" style={{ "--stagger": "80ms" } as React.CSSProperties}>
-            <Button variant="hero" size="lg" className="h-13 px-12 text-[13px] gap-2.5" asChild>
+            <Button variant="hero" size="lg" className="h-14 px-14 text-[13px] gap-2.5" asChild>
               <Link to="/analyze">
                 <Upload className="w-4 h-4" />
                 Start free analysis
@@ -41,15 +43,25 @@ const UnifiedFooter = () => {
         </div>
       </section>
 
-      {/* ── Waveform transition to dark ── */}
-      <div className="waveform-separator" style={{ background: "hsl(var(--surface-a))" }} />
+      {/* ── Graduated dark transition ── */}
       <div
-        className="h-16 pointer-events-none"
+        className="relative h-24 md:h-32 pointer-events-none overflow-hidden"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, hsl(var(--surface-a)) 0%, hsl(0 0% 6%) 60%, hsl(0 0% 5%) 100%)",
+          background: "linear-gradient(to bottom, hsl(var(--surface-c)) 0%, hsl(0 0% 12%) 35%, hsl(0 0% 7%) 70%, hsl(0 0% 5%) 100%)",
         }}
-      />
+      >
+        {/* Faint center line running through */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px"
+          style={{ background: "linear-gradient(to bottom, hsl(var(--border-subtle) / 0.2), hsl(0 0% 100% / 0.03), transparent)" }}
+        />
+        {/* Horizontal rule at midpoint */}
+        <div
+          className="absolute top-1/2 left-0 right-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent 10%, hsl(0 0% 100% / 0.04) 30%, hsl(0 0% 100% / 0.04) 70%, transparent 90%)" }}
+        />
+      </div>
 
       {/* ── Dark Contact + Legal area ── */}
       <section
@@ -68,16 +80,29 @@ const UnifiedFooter = () => {
           }}
         />
 
+        {/* Subtle top glow */}
+        <div
+          className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background: "radial-gradient(ellipse 50% 100% at 50% 0%, hsl(0 0% 10% / 0.6), transparent)",
+          }}
+        />
+
         <div className="relative">
           {/* Contact */}
-          <div className="pt-12 md:pt-14 pb-10 md:pb-12 px-6">
+          <div className="pt-16 md:pt-20 pb-12 md:pb-14 px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <p
-                className="text-[10px] tracking-[0.18em] uppercase mb-3 reveal-child"
-                style={{ color: "hsl(0 0% 42%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "0ms" } as React.CSSProperties}
-              >
-                Get in touch
-              </p>
+              <div className="flex items-center gap-3 justify-center mb-4 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
+                <div className="h-px w-10" style={{ background: "hsl(0 0% 100% / 0.06)" }} />
+                <p
+                  className="text-[10px] tracking-[0.18em] uppercase"
+                  style={{ color: "hsl(0 0% 38%)", fontFamily: "'IBM Plex Mono', monospace" }}
+                >
+                  Get in touch
+                </p>
+                <div className="h-px w-10" style={{ background: "hsl(0 0% 100% / 0.06)" }} />
+              </div>
               <h2
                 className="text-[1.35rem] md:text-[1.5rem] font-semibold tracking-[-0.03em] mb-3 reveal-child"
                 style={{ color: "hsl(0 0% 90%)", "--stagger": "90ms" } as React.CSSProperties}
@@ -85,8 +110,8 @@ const UnifiedFooter = () => {
                 Contact
               </h2>
               <p
-                className="text-[12.5px] max-w-sm mx-auto mb-6 leading-relaxed reveal-child"
-                style={{ color: "hsl(0 0% 48%)", "--stagger": "180ms" } as React.CSSProperties}
+                className="text-[12.5px] max-w-sm mx-auto mb-7 leading-relaxed reveal-child"
+                style={{ color: "hsl(0 0% 45%)", "--stagger": "180ms" } as React.CSSProperties}
               >
                 Billing, feedback quality, feature requests. We read every message.
               </p>
@@ -98,7 +123,7 @@ const UnifiedFooter = () => {
                   </a>
                 </Button>
               </div>
-              <p className="text-[10px] mt-3 reveal-child" style={{ color: "hsl(0 0% 40%)", "--stagger": "320ms" } as React.CSSProperties}>
+              <p className="text-[10px] mt-3 reveal-child" style={{ color: "hsl(0 0% 38%)", "--stagger": "320ms" } as React.CSSProperties}>
                 Response within 24–48h
               </p>
             </div>
