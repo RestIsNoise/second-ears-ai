@@ -147,93 +147,156 @@ const TrackGridCard = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex flex-col rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
+      className="group relative flex flex-col rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-[2px]"
       style={{
         background: "hsl(var(--card))",
-        border: "1px solid hsl(var(--border-subtle) / 0.35)",
-        boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+        border: "1px solid hsl(var(--border-subtle) / 0.3)",
+        boxShadow: "0 1px 4px hsl(0 0% 0% / 0.04)",
       }}
     >
-      {/* Waveform area — dark mini-player shell */}
+      {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
       <div
-        className="relative px-3 pt-3 pb-2 overflow-hidden"
+        className="relative overflow-hidden"
         style={{
-          background: "hsl(0 0% 11%)",
-          borderBottom: "1px solid hsl(0 0% 16%)",
+          background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 7%) 100%)",
+          minHeight: 110,
         }}
       >
-        {/* Waveform bars */}
-        <div className="relative flex items-center justify-center h-10 gap-[1.5px]">
-          {bars.map((v, i) => {
-            const h = Math.max(3, v * 32);
-            const pos = i / bars.length;
-            const played = pos < playheadPos;
-            return (
-              <div
-                key={i}
-                className="rounded-[0.5px] transition-colors duration-300"
-                style={{
-                  width: 2,
-                  height: h,
-                  background: played
-                    ? "hsl(0 0% 58%)"
-                    : "hsl(0 0% 28%)",
-                  opacity: played ? 1 : 0.7,
-                }}
-              />
-            );
-          })}
+        {/* Faint grid lines */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, hsl(0 0% 100% / 0.03) 1px, transparent 1px), linear-gradient(hsl(0 0% 100% / 0.02) 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
 
-          {/* Playhead */}
-          <div
-            className="absolute top-0 bottom-0 w-[1.5px] rounded-full"
-            style={{
-              left: `${playheadPos * 100}%`,
-              background: "hsl(0 0% 92%)",
-              boxShadow: "0 0 4px hsl(0 0% 100% / 0.3)",
-            }}
-          />
-
-          {/* Analysis markers */}
-          {markers.map((pos, i) => (
-            <div
-              key={i}
-              className="absolute top-0"
-              style={{ left: `${pos * 100}%` }}
-            >
-              <div
-                className="w-[5px] h-[5px] rounded-full -translate-x-1/2"
-                style={{
-                  background: "hsl(0 60% 55% / 0.7)",
-                  boxShadow: "0 0 3px hsl(0 60% 50% / 0.4)",
-                }}
-              />
+        {/* Header bar */}
+        <div
+          className="relative flex items-center justify-between px-3 py-2"
+          style={{ borderBottom: "1px solid hsl(0 0% 100% / 0.06)" }}
+        >
+          <div className="flex items-center gap-2">
+            <div className="flex gap-[4px]">
+              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 30%)" }} />
+              <div className="w-[6px] h-[6px] rounded-full" style={{ background: "hsl(0 0% 22%)" }} />
             </div>
-          ))}
-        </div>
-
-        {/* Timestamps */}
-        <div className="flex items-center justify-between mt-1.5">
+            <span
+              className="text-[8px] text-white/15 tracking-[0.15em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            >
+              Analysis
+            </span>
+          </div>
           <span
-            className="text-[8px] text-white/20 tracking-wider"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
-          >
-            0:00
-          </span>
-          <span
-            className="text-[8px] text-white/20 tracking-wider"
+            className="text-[9px] text-white/25 tabular-nums"
             style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
           >
             {duration}
           </span>
         </div>
+
+        {/* Waveform lane */}
+        <div className="relative px-3 py-3">
+          {/* Main waveform — mirrored bars */}
+          <div className="relative flex items-center justify-center h-[36px]">
+            {bars.map((v, i) => {
+              const halfH = Math.max(1.5, v * 16);
+              const pos = i / bars.length;
+              const played = pos < playheadPos;
+              return (
+                <div
+                  key={i}
+                  className="flex flex-col items-center justify-center gap-[1px]"
+                  style={{ width: 2.5, marginRight: 0.5 }}
+                >
+                  <div
+                    className="rounded-[1px]"
+                    style={{
+                      width: 2,
+                      height: halfH,
+                      background: played ? "hsl(0 0% 65%)" : "hsl(0 0% 30%)",
+                      transition: "background 0.2s",
+                    }}
+                  />
+                  <div
+                    className="rounded-[1px]"
+                    style={{
+                      width: 2,
+                      height: halfH * 0.6,
+                      background: played ? "hsl(0 0% 45%)" : "hsl(0 0% 20%)",
+                      opacity: 0.7,
+                      transition: "background 0.2s",
+                    }}
+                  />
+                </div>
+              );
+            })}
+
+            {/* Playhead */}
+            <div
+              className="absolute top-0 bottom-0 w-[1.5px]"
+              style={{
+                left: `${playheadPos * 100}%`,
+                background: "hsl(0 0% 95%)",
+                boxShadow: "0 0 6px hsl(0 0% 100% / 0.35)",
+              }}
+            />
+          </div>
+
+          {/* Issue markers row */}
+          <div className="relative h-[14px] mt-1">
+            {/* Baseline */}
+            <div
+              className="absolute left-0 right-0 top-1/2 h-px"
+              style={{ background: "hsl(0 0% 100% / 0.06)" }}
+            />
+            {markers.map((pos, i) => (
+              <div
+                key={i}
+                className="absolute top-1/2 -translate-y-1/2 flex flex-col items-center"
+                style={{ left: `${pos * 100}%` }}
+              >
+                {/* Marker line */}
+                <div
+                  className="w-px h-[10px] -translate-x-1/2"
+                  style={{ background: "hsl(0 55% 52% / 0.6)" }}
+                />
+                {/* Marker dot */}
+                <div
+                  className="w-[4px] h-[4px] rounded-full -translate-x-1/2 mt-[-2px]"
+                  style={{
+                    background: "hsl(0 55% 52% / 0.8)",
+                    boxShadow: "0 0 4px hsl(0 55% 50% / 0.5)",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom timestamps */}
+          <div className="flex items-center justify-between mt-1">
+            <span
+              className="text-[7px] text-white/15"
+              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            >
+              0:00
+            </span>
+            <span
+              className="text-[7px] text-white/15"
+              style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+            >
+              {duration}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Info area */}
+      {/* ══════ LIGHT INFO BOTTOM HALF ══════ */}
       <div className="px-4 py-3.5 flex-1 flex flex-col">
-        {/* Track name + delete */}
         <div className="flex items-start justify-between gap-2 mb-2.5">
-          <h3 className="text-[13px] font-medium tracking-[-0.01em] truncate text-foreground/80 group-hover:text-foreground transition-colors leading-tight">
+          <h3 className="text-[13px] font-semibold tracking-[-0.015em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight">
             {proj.name}
           </h3>
           <button
@@ -245,7 +308,6 @@ const TrackGridCard = ({
           </button>
         </div>
 
-        {/* Badges */}
         <div className="flex items-center gap-1.5 flex-wrap mb-auto">
           <span
             className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider"
@@ -276,22 +338,27 @@ const TrackGridCard = ({
           </span>
         </div>
 
-        {/* Timestamp */}
         <div
           className="flex items-center justify-between pt-2.5 mt-2"
-          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.15)" }}
+          style={{ borderTop: "1px solid hsl(var(--border-subtle) / 0.12)" }}
         >
           <p className="text-[10px] text-muted-foreground/35">{formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}</p>
-          <span className="text-[9px] text-muted-foreground/20 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide uppercase" style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}>
+          <span
+            className="text-[9px] text-muted-foreground/20 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide uppercase"
+            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+          >
             Open →
           </span>
         </div>
       </div>
 
-      {/* Hover border overlay */}
+      {/* Hover glow overlay */}
       <div
-        className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        style={{ border: "1px solid hsl(var(--foreground) / 0.12)" }}
+        className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300"
+        style={{
+          border: "1px solid hsl(var(--foreground) / 0.15)",
+          boxShadow: "0 8px 24px -8px hsl(0 0% 0% / 0.12)",
+        }}
       />
     </div>
   );
