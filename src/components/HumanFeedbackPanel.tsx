@@ -105,7 +105,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 15 }}>›</span>
           <span
             className="text-foreground/35 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 12 }}
+            style={{ fontFamily: MONO, fontSize: 13 }}
           >
             @{formatTime(currentTime)}
           </span>
