@@ -378,8 +378,8 @@ const SectionDivider = ({ label }: { label: string }) => (
     }}
   >
     <span
-      className="text-foreground/25 uppercase tracking-[0.12em] font-bold"
-      style={{ fontFamily: MONO, fontSize: 9 }}
+      className="text-foreground/30 uppercase tracking-[0.12em] font-medium"
+      style={{ fontFamily: MONO, fontSize: 10 }}
     >
       {label}
     </span>
