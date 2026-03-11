@@ -94,8 +94,8 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           }}
         >
           <span
-            className="text-foreground/45 uppercase tracking-[0.04em] font-medium truncate"
-            style={{ fontFamily: MONO, fontSize: 9 }}
+            className="text-foreground/50 uppercase tracking-[0.04em] font-medium truncate"
+            style={{ fontFamily: MONO, fontSize: 10 }}
           >
             {label}
           </span>
