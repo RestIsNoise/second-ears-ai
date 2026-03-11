@@ -604,7 +604,7 @@ const FeedbackDisplay = ({
 
       case "tech-metrics":
         return (
-          <div className="p-3">
+          <div className="p-4">
             {technicalMetrics ? (
               <TechnicalMetrics metrics={technicalMetrics} compact />
             ) : (
