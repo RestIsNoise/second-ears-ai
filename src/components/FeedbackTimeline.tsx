@@ -214,7 +214,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Severity LED + label */}
                 <div className="flex items-center gap-1.5 shrink-0">
                   <div
-                    className="w-[6px] h-[6px] rounded-full"
+                    className="w-[7px] h-[7px] rounded-full"
                     style={{
                       backgroundColor: sev.color,
                       boxShadow: sev.glow,
