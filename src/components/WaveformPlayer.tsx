@@ -227,19 +227,13 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const composerRef = useRef<HTMLTextAreaElement>(null);
     const [composerState, setComposerState] = useState<ComposerState | null>(null);
 
-    // Poll composer state from markers ref (lightweight — driven by renders)
-    const updateComposer = useCallback(() => {
-      const cs = markersRef.current?.getComposerState() ?? null;
-      setComposerState(cs);
-      if (cs) setTimeout(() => composerRef.current?.focus(), 60);
+    const handleComposerChange = useCallback((state: ComposerState | null) => {
+      setComposerState(state);
+      if (state) {
+        setComposerText("");
+        setTimeout(() => composerRef.current?.focus(), 60);
+      }
     }, []);
-
-    // Listen for composer open via a MutationObserver-like approach: 
-    // We call updateComposer after any click on the waveform
-    const originalTriggerAddAt = useCallback((time: number, x: number) => {
-      markersRef.current?.triggerAddAt(time, x);
-      setTimeout(updateComposer, 20);
-    }, [updateComposer]);
 
     const handleComposerSubmit = useCallback(() => {
       const trimmed = composerText.trim();
