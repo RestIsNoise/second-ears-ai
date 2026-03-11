@@ -144,7 +144,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
                   className="absolute text-foreground/18 font-medium"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 7,
+                    fontSize: 8,
                     top: -9,
                     left: "50%",
                     transform: "translateX(-50%)",
