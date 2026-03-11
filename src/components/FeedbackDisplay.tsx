@@ -616,6 +616,7 @@ const FeedbackDisplay = ({
             onAddToDo={handleAddToDoWithTimestamp}
             pendingComment={pendingComment}
             onPendingCommentHandled={() => setPendingComment(null)}
+            onCommentsChange={setHumanComments}
           />
         );
 
