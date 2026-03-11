@@ -186,8 +186,8 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             </span>
           )}
           <span
-            className="text-foreground/85 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "-0.03em" }}
+            className="text-foreground/85 tabular-nums font-medium"
+            style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "-0.03em" }}
           >
             {isMissing ? "—" : value.toFixed(decimals)}
           </span>
