@@ -456,6 +456,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
       )}
     </div>
   );
-};
+});
 
 export default WaveformMarkers;
