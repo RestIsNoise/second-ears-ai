@@ -77,7 +77,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               {doneCount}/{totalCount}
             </span>
             <div
-              className="flex-1 h-[3px] rounded-sm overflow-hidden"
+              className="flex-1 h-[4px] rounded-sm overflow-hidden"
               style={{ backgroundColor: "hsl(var(--foreground) / 0.06)" }}
             >
               <div
