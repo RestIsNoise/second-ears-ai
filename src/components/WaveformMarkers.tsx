@@ -197,7 +197,18 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
     setPopoverAt({ time, x });
   }, [onAddNote, onAddToDo]);
 
-  useImperativeHandle(ref, () => ({ triggerAddAt }), [triggerAddAt]);
+  useImperativeHandle(ref, () => ({
+    triggerAddAt,
+    getComposerState: () => inputAt && inputMode ? { mode: inputMode, time: inputAt.time, x: inputAt.x } : null,
+    submitComposer: (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || !inputAt || !inputMode) return;
+      if (inputMode === "todo") onAddToDo?.(trimmed, inputAt.time);
+      else onAddNote?.(trimmed, inputAt.time);
+      setInputAt(null); setInputMode(null); setNoteText("");
+    },
+    cancelComposer: () => { setInputAt(null); setInputMode(null); setPopoverAt(null); setNoteText(""); },
+  }), [triggerAddAt, inputAt, inputMode, onAddNote, onAddToDo, noteText]);
 
   // Single hovered marker with 100ms delay
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
