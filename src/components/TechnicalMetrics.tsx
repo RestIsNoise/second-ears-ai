@@ -371,7 +371,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
 const SectionDivider = ({ label }: { label: string }) => (
   <div
     style={{
-      padding: "3px 8px",
+      padding: "5px 10px",
       backgroundColor: "hsl(var(--panel-header))",
       borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
       borderTop: "1px solid hsl(var(--foreground) / 0.06)",
