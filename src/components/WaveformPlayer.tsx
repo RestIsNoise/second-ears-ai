@@ -270,7 +270,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         barRadius: 0,
         height: 80,
         normalize: true,
-        interact: true,
+        interact: false,
       };
 
       if (outlineMode) {
