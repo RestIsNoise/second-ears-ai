@@ -161,7 +161,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
           <button
             key={item.id}
             onClick={() => onItemClick(item)}
-            className="w-full text-left flex items-start gap-2 px-2.5 py-2 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
+            className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
             style={{
               borderBottom: idx < filtered.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
