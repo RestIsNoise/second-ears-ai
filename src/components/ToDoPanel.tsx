@@ -189,7 +189,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             <div className="flex-1 min-w-0">
               <p
                 className={cn(
-                  "text-[13px] leading-snug transition-colors",
+                  "text-[14px] leading-snug transition-colors",
                   item.done ? "line-through text-foreground/25" : "text-foreground/65"
                 )}
                 style={{ fontFamily: MONO }}
