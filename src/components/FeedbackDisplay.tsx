@@ -107,7 +107,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.7 }}>
+    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.75 }}>
       {displayText}
     </p>
   );
@@ -622,16 +622,16 @@ const FeedbackDisplay = ({
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div
+                   <div
                     key={key}
                     style={{
-                      padding: "10px 14px",
+                      padding: "12px 16px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-1.5"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                     >
                       {label}
                     </h3>
@@ -649,22 +649,22 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "12px 14px",
+                  padding: "14px 16px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
                 }}
               >
                 <p
-                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2.5"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
-                <div
+                  <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "8px 10px",
+                    padding: "10px 12px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (

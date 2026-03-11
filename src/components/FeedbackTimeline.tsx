@@ -63,7 +63,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
         className="text-[13px] text-foreground/55"
         style={{
           fontFamily: MONO,
-          lineHeight: 1.65,
+          lineHeight: 1.7,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
@@ -180,8 +180,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
-                  padding: "6px 12px",
+                  gap: 10,
+                  padding: "8px 14px",
                   backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
                   borderLeft: `3px solid ${accent.border}`,
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
@@ -190,8 +190,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Index */}
                 <span
-                  className="text-foreground/20 font-medium shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.02em", minWidth: 16 }}
+                  className="text-foreground/22 font-medium shrink-0"
+                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em", minWidth: 18 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
@@ -201,7 +201,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   className="text-foreground/55 tabular-nums font-medium shrink-0"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 11,
+                    fontSize: 12,
                     backgroundColor: "hsl(var(--foreground) / 0.04)",
                     padding: "2px 6px",
                     borderRadius: 2,
@@ -214,7 +214,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Severity LED + label */}
                 <div className="flex items-center gap-1.5 shrink-0">
                   <div
-                    className="w-[6px] h-[6px] rounded-full"
+                    className="w-[7px] h-[7px] rounded-full"
                     style={{
                       backgroundColor: sev.color,
                       boxShadow: sev.glow,
@@ -224,7 +224,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     className="font-medium uppercase tracking-[0.06em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 8,
+                      fontSize: 9,
                       color: sev.color,
                     }}
                   >
@@ -235,7 +235,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Mode tag */}
                 <span
                   className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
-                  style={{ fontFamily: MONO, fontSize: 8 }}
+                  style={{ fontFamily: MONO, fontSize: 9 }}
                 >
                   {accent.tag}
                 </span>
@@ -261,7 +261,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ ISSUE BODY ═══ */}
               <div
                 style={{
-                  padding: "10px 14px 12px 18px",
+                  padding: "12px 16px 14px 20px",
                   borderLeft: `3px solid ${isActive ? accent.border : "hsl(var(--foreground) / 0.04)"}`,
                   backgroundColor: isActive ? accent.bg : "transparent",
                   transition: "background-color 0.1s, border-color 0.15s",
@@ -269,7 +269,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Title */}
                 <h3
-                  className="text-[14px] font-medium tracking-tight text-foreground/85 leading-snug"
+                  className="text-[15px] font-medium tracking-tight text-foreground/85 leading-snug"
                   title={item.title}
                 >
                   {item.title}
@@ -291,12 +291,12 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <div className="flex items-start gap-2.5">
+                    <div className="flex items-start gap-3">
                       <span
                         className="shrink-0 mt-[2px] inline-flex items-center"
                         style={{
                           fontFamily: MONO,
-                          fontSize: 8,
+                          fontSize: 9,
                           fontWeight: 600,
                           letterSpacing: "0.06em",
                           lineHeight: 1,
@@ -309,8 +309,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
                       </span>
                       <p
-                        className="text-[12px] text-foreground/65"
-                        style={{ lineHeight: 1.6, fontFamily: MONO }}
+                        className="text-[13px] text-foreground/65"
+                        style={{ lineHeight: 1.65, fontFamily: MONO }}
                       >
                         {item.fix}
                       </p>

@@ -102,7 +102,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className="flex-1 px-2 py-[6px] text-[10px] font-medium uppercase tracking-[0.06em] transition-all duration-100"
+              className="flex-1 px-2.5 py-[7px] text-[11px] font-medium uppercase tracking-[0.06em] transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 color: filter === f.key ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.3)",
@@ -161,7 +161,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
           <button
             key={item.id}
             onClick={() => onItemClick(item)}
-            className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
+            className="w-full text-left flex items-start gap-3 px-3.5 py-3 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
             style={{
               borderBottom: idx < filtered.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
@@ -174,8 +174,8 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               }}
               className="mt-[2px] shrink-0 flex items-center justify-center transition-all duration-100"
               style={{
-                width: 14,
-                height: 14,
+                width: 16,
+                height: 16,
                 borderRadius: 2,
                 border: item.done
                   ? "1px solid hsl(var(--foreground) / 0.12)"
@@ -183,7 +183,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
                 backgroundColor: item.done ? "hsl(var(--foreground) / 0.06)" : "transparent",
               }}
             >
-              {item.done && <Check className="w-2.5 h-2.5 text-foreground/35" />}
+              {item.done && <Check className="w-3 h-3 text-foreground/35" />}
             </button>
 
             <div className="flex-1 min-w-0">

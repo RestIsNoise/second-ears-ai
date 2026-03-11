@@ -154,34 +154,34 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {comments.map((c, idx) => (
           <div
             key={c.id}
-            className="group px-3 py-2.5 transition-colors hover:bg-foreground/[0.02]"
+            className="group px-3.5 py-3 transition-colors hover:bg-foreground/[0.02]"
             style={{
               borderBottom: idx < comments.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
           >
-            <div className="flex items-center gap-1.5 mb-0.5">
+            <div className="flex items-center gap-2 mb-1">
               <div
-                className="w-[14px] h-[14px] rounded-[2px] flex items-center justify-center shrink-0"
+                className="w-[16px] h-[16px] rounded-[2px] flex items-center justify-center shrink-0"
                 style={{
                   backgroundColor: "hsl(var(--foreground) / 0.06)",
                   border: "1px solid hsl(var(--foreground) / 0.06)",
                 }}
               >
-                <User className="w-[8px] h-[8px] text-foreground/25" />
+                <User className="w-[9px] h-[9px] text-foreground/25" />
               </div>
               <span
                 className="text-foreground/40 tabular-nums font-medium"
-                style={{ fontFamily: MONO, fontSize: 10 }}
+                style={{ fontFamily: MONO, fontSize: 11 }}
               >
                 @{formatTime(c.timestamp_in_track)}
               </span>
-              <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 9 }}>
+              <span className="text-foreground/22" style={{ fontFamily: MONO, fontSize: 10 }}>
                 {formatDate(c.created_at)}
               </span>
             </div>
             <p
-              className="text-[13px] text-foreground/60 ml-[20px]"
-              style={{ fontFamily: MONO, lineHeight: 1.6 }}
+              className="text-[13px] text-foreground/60 ml-[24px]"
+              style={{ fontFamily: MONO, lineHeight: 1.65 }}
             >
               {c.text}
             </p>

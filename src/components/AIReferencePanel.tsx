@@ -137,16 +137,16 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
         >
           {/* Table header */}
           <div
-            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-3 py-[5px]"
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-3 py-[7px]"
             style={{
               backgroundColor: "hsl(var(--panel-header))",
               borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
             }}
           >
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 7 }}>Metric</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>You</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>Ref</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[44px]" style={{ fontFamily: MONO, fontSize: 7 }}>Δ</span>
+    <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 8 }}>Metric</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[52px]" style={{ fontFamily: MONO, fontSize: 8 }}>You</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[52px]" style={{ fontFamily: MONO, fontSize: 8 }}>Ref</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 8 }}>Δ</span>
           </div>
 
           {metricEntries.map(([key, diff], idx) => {
@@ -158,16 +158,16 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
             return (
               <div
                 key={key}
-                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[5px]"
+                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[7px]"
                 style={{
                   borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--foreground) / 0.03)" : "none",
                 }}
               >
-                <span className="text-[9px] font-bold text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
-                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
-                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
-                <div className="flex items-center justify-end gap-1.5 w-[44px]">
-                  <span className="text-[10px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
+                <span className="text-[10px] font-bold text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
+                <span className="text-[10px] text-foreground/50 text-right tabular-nums w-[52px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
+                <span className="text-[10px] text-foreground/50 text-right tabular-nums w-[52px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
+                <div className="flex items-center justify-end gap-1.5 w-[48px]">
+                  <span className="text-[11px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
                     {sign}{d.toFixed(1)}
                   </span>
                   <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
@@ -182,7 +182,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
       {gemini_feedback && (
         <div className="p-3 space-y-2">
           {gemini_feedback.summary && (
-            <p className="text-[11px] text-foreground/50" style={{ lineHeight: 1.6, fontFamily: MONO }}>
+            <p className="text-[12px] text-foreground/50" style={{ lineHeight: 1.65, fontFamily: MONO }}>
               {gemini_feedback.summary}
             </p>
           )}
@@ -196,7 +196,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                 className="group"
                 style={{
                   borderLeft: "3px solid hsl(0 55% 50% / 0.5)",
-                  padding: "6px 8px",
+                  padding: "8px 10px",
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
                 }}
               >
@@ -206,7 +206,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[11px] font-bold tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
+                      <h4 className="text-[12px] font-bold tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
                       {p.whyItMatters && (
                         <p
                           className={cn("text-[10px] text-foreground/45 mt-1 transition-all", !isExpanded && "line-clamp-3")}
@@ -236,7 +236,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                           >
                             FIX
                           </span>
-                          <p className="text-[10px] text-foreground/55" style={{ lineHeight: 1.5, fontFamily: MONO }}>{p.suggestedFix}</p>
+                          <p className="text-[11px] text-foreground/55" style={{ lineHeight: 1.55, fontFamily: MONO }}>{p.suggestedFix}</p>
                         </div>
                       )}
                     </div>
