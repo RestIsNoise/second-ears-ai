@@ -135,7 +135,7 @@ const HowItWorks = () => {
 
                   {/* Proof */}
                   <p
-                    className="text-[12px] text-foreground/35 tracking-[0.14em] uppercase font-bold"
+                    className="text-[12px] text-foreground/50 tracking-[0.14em] uppercase font-bold"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {step.proof}
