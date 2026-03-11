@@ -625,13 +625,13 @@ const FeedbackDisplay = ({
                   <div
                     key={key}
                     style={{
-                      padding: "8px 10px",
+                      padding: "10px 14px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.1em] font-extrabold mb-1"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-1.5"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                     >
                       {label}
                     </h3>
