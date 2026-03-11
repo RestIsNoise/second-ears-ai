@@ -85,7 +85,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               onClick={() => !disabled && onToggle(panel.id)}
               disabled={disabled}
               className={cn(
-                "w-full flex items-center gap-2 text-left transition-all duration-75",
+                "w-full flex items-center gap-2.5 text-left transition-all duration-75",
                 disabled && "cursor-not-allowed opacity-40",
               )}
               style={{
