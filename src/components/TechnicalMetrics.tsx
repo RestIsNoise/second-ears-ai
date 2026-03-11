@@ -444,8 +444,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         }}
       >
         <span
-          className="text-foreground/45 uppercase tracking-[0.14em] font-extrabold"
-          style={{ fontFamily: MONO, fontSize: 9 }}
+          className="text-foreground/50 uppercase tracking-[0.14em] font-medium"
+          style={{ fontFamily: MONO, fontSize: 11 }}
         >
           Metering
         </span>
