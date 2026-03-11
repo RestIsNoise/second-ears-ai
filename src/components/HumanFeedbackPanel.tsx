@@ -175,7 +175,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
               >
                 @{formatTime(c.timestamp_in_track)}
               </span>
-              <span className="text-foreground/22" style={{ fontFamily: MONO, fontSize: 10 }}>
+              <span className="text-foreground/22" style={{ fontFamily: MONO, fontSize: 11 }}>
                 {formatDate(c.created_at)}
               </span>
             </div>
