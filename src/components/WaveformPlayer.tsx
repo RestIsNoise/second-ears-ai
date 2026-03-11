@@ -502,6 +502,18 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               className="relative"
               style={{ height: WAVEFORM_HEIGHT, marginTop: 1, cursor: "crosshair" }}
               onMouseMove={handleMouseMove}
+              onClick={(e) => {
+                // Don't trigger if clicking on a marker button (pointer-events-auto elements)
+                if ((e.target as HTMLElement).closest('[data-marker-btn]')) return;
+                if (!wrapperRef.current || duration <= 0) return;
+                const rect = wrapperRef.current.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const pct = Math.max(0, Math.min(1, x / rect.width));
+                const timeSec = pct * duration;
+                // Dispatch to WaveformMarkers via a custom event
+                const event = new CustomEvent('waveform-body-click', { detail: { time: timeSec, x } });
+                wrapperRef.current.dispatchEvent(event);
+              }}
             >
               {loading && !error && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">

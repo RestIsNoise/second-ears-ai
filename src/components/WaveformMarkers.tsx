@@ -358,30 +358,7 @@ const WaveformMarkers = ({
         );
       })}
 
-      {/* "+" button on hover */}
-      {showPlusButton && hoverX !== null && hasAnyAction && (
-        <div
-          className="absolute pointer-events-auto z-[6]"
-          style={{
-            left: hoverX,
-            top: MARKER_ZONE_HEIGHT + 2,
-            transform: "translateX(-50%)",
-          }}
-        >
-          <button
-            onClick={handlePlusClick}
-            className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-100 hover:scale-110"
-            style={{
-              backgroundColor: "hsl(var(--foreground) / 0.08)",
-              border: "1px solid hsl(var(--foreground) / 0.12)",
-              color: "hsl(var(--foreground) / 0.4)",
-            }}
-            title="Add annotation"
-          >
-            <Plus className="w-3 h-3" />
-          </button>
-        </div>
-      )}
+      {/* No floating + button — waveform body click handles adding markers */}
 
       {/* Popover menu */}
       {popoverAt && (
