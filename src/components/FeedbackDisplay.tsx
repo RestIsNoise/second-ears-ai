@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, Layers, Music, Link2 } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, LayoutGrid, Disc, Link2 } from "lucide-react";
 import CompactFooter from "@/components/CompactFooter";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -943,7 +943,7 @@ const FeedbackDisplay = ({
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Layers className="w-3.5 h-3.5" />
+                    <LayoutGrid className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
                     <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
                   </button>
@@ -963,7 +963,7 @@ const FeedbackDisplay = ({
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Music className="w-3.5 h-3.5" />
+                    <Disc className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Reference</span>
                     <span className="sm:hidden">Ref</span>
                   </button>
