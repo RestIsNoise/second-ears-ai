@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
-import { Play, Pause, RotateCcw, X, RefreshCw, Headphones, Volume2, VolumeX, Repeat, AudioWaveform } from "lucide-react";
+import { Play, Pause, RotateCcw, X, RefreshCw, Headphones, Volume2, VolumeX, Repeat, SkipBack, SkipForward } from "lucide-react";
 import WaveformPlayer from "@/components/WaveformPlayer";
 import type { WaveformPlayerHandle } from "@/components/WaveformPlayer";
 import type { WaveformMarker } from "@/types/feedback";
@@ -112,6 +112,45 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const [masterVolume, setMasterVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
+  const [soloMode, setSoloMode] = useState<"off" | "a" | "b">("off");
+
+  // Marker navigation helpers
+  const sortedMarkers = [...markersA].sort((a, b) => a.time - b.time);
+  const markerCount = sortedMarkers.length;
+
+  const jumpToMarker = useCallback((direction: "prev" | "next") => {
+    if (sortedMarkers.length === 0) return;
+    const t = playerARef.current?.getCurrentTime() ?? 0;
+    let target: WaveformMarker | null = null;
+    if (direction === "next") {
+      target = sortedMarkers.find((m) => m.time > t + 0.5) || null;
+      if (!target) target = sortedMarkers[0]; // wrap
+    } else {
+      for (let i = sortedMarkers.length - 1; i >= 0; i--) {
+        if (sortedMarkers[i].time < t - 1) { target = sortedMarkers[i]; break; }
+      }
+      if (!target) target = sortedMarkers[sortedMarkers.length - 1]; // wrap
+    }
+    if (target) {
+      playerARef.current?.seekTo(target.time);
+      playerBRef.current?.seekTo(target.time);
+      onMarkerClick?.(target);
+    }
+  }, [sortedMarkers, onMarkerClick]);
+
+  const handleSoloToggle = useCallback((deck: "a" | "b") => {
+    const mv = isMuted ? 0 : masterVolume / 100;
+    if (soloMode === deck) {
+      // Unsolo — return to crossfade
+      setSoloMode("off");
+      playerARef.current?.setVolume((1 - crossfade / 100) * mv);
+      playerBRef.current?.setVolume((crossfade / 100) * mv);
+    } else {
+      setSoloMode(deck);
+      playerARef.current?.setVolume(deck === "a" ? mv : 0);
+      playerBRef.current?.setVolume(deck === "b" ? mv : 0);
+    }
+  }, [soloMode, crossfade, isMuted, masterVolume]);
 
   const activeRefFile = audioFileB || localRefFile;
   const activeRefName = refTrackName || localRefFile?.name || "";
@@ -280,9 +319,30 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             <RotateCcw className="w-3 h-3" />
           </MixerBtn>
 
+          {/* Divider */}
+          <div style={{ width: 1, height: 18, backgroundColor: "rgba(255,255,255,0.08)", marginLeft: 2, marginRight: 2 }} />
+
+          {/* Prev / Next marker */}
+          <MixerBtn onClick={() => jumpToMarker("prev")} disabled={markerCount === 0} title="Previous marker">
+            <SkipBack className="w-3 h-3" />
+          </MixerBtn>
+          <MixerBtn onClick={() => jumpToMarker("next")} disabled={markerCount === 0} title="Next marker">
+            <SkipForward className="w-3 h-3" />
+          </MixerBtn>
+
+          {/* Marker count */}
+          {markerCount > 0 && (
+            <span
+              className="tabular-nums shrink-0"
+              style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.25)", fontWeight: 600, letterSpacing: "0.04em", marginLeft: 2 }}
+            >
+              {markerCount}
+            </span>
+          )}
+
           {/* Time */}
           <span
-            className="tabular-nums leading-none ml-1 shrink-0"
+            className="tabular-nums leading-none ml-2 shrink-0"
             style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "0.02em", color: "rgba(255,255,255,0.85)", fontWeight: 500 }}
           >
             {formatTime(currentTime)}
@@ -294,20 +354,25 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         {/* CENTER: Crossfader */}
         <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 280, width: "100%" }}>
           <div className="flex items-center gap-2.5 w-full">
-            {/* A label */}
-            <span
-              className="shrink-0 uppercase tabular-nums"
+            {/* A label + solo */}
+            <button
+              onClick={() => handleSoloToggle("a")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)",
-                transition: "color 0.15s",
+                color: soloMode === "a" ? "#000" : (cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)"),
+                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "transparent",
+                padding: "2px 5px",
+                borderRadius: 2,
+                border: soloMode === "a" ? `1px solid ${DECK_A_COLOR}` : "1px solid transparent",
               }}
+              title={soloMode === "a" ? "Unsolo A" : "Solo A"}
             >
               A
-            </span>
+            </button>
 
             {/* Crossfader track */}
             <div className="flex-1 relative" style={{ height: 22 }}>
@@ -361,20 +426,25 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               />
             </div>
 
-            {/* B label */}
-            <span
-              className="shrink-0 uppercase tabular-nums"
+            {/* B label + solo */}
+            <button
+              onClick={() => handleSoloToggle("b")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)",
-                transition: "color 0.15s",
+                color: soloMode === "b" ? "#000" : (cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)"),
+                backgroundColor: soloMode === "b" ? DECK_B_COLOR : "transparent",
+                padding: "2px 5px",
+                borderRadius: 2,
+                border: soloMode === "b" ? `1px solid ${DECK_B_COLOR}` : "1px solid transparent",
               }}
+              title={soloMode === "b" ? "Unsolo B" : "Solo B"}
             >
               B
-            </span>
+            </button>
           </div>
         </div>
 
@@ -443,10 +513,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           <MixerBtn onClick={() => setIsLooping(!isLooping)} active={isLooping} title="Loop">
             <Repeat className="w-3.5 h-3.5" />
           </MixerBtn>
-
-          <span className="flex items-center justify-center" style={{ width: 28, height: 28, color: "rgba(255,255,255,0.25)" }}>
-            <AudioWaveform className="w-3.5 h-3.5" />
-          </span>
         </div>
       </div>
 
