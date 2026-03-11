@@ -226,7 +226,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             onChange={(e) => setNoteText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="add task…"
-            className="flex-1 bg-transparent text-[11px] outline-none text-foreground/60 placeholder:text-foreground/20"
+            className="flex-1 bg-transparent text-[13px] outline-none text-foreground/60 placeholder:text-foreground/22"
             style={{ fontFamily: MONO }}
           />
           <button
