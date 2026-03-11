@@ -36,10 +36,10 @@ const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: st
     icon: "hsl(270 60% 70%)",
   },
   user: {
-    bg: "hsl(40 90% 55% / 0.3)",
-    border: "hsl(40 90% 50% / 0.6)",
-    text: "hsl(40 90% 45%)",
-    icon: "hsl(40 90% 55%)",
+    bg: "hsl(45 100% 72% / 0.18)",
+    border: "hsl(45 90% 58% / 0.55)",
+    text: "hsl(42 95% 62%)",
+    icon: "hsl(42 90% 58%)",
   },
 };
 
