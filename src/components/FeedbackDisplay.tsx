@@ -1081,9 +1081,9 @@ const FeedbackDisplay = ({
             boxShadow: "inset 0 3px 10px hsl(var(--panel-inset))",
           }}
         >
-          {/* On md+ use fixed height for horizontal layout */}
-          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 260px) !important; min-height: 480px !important; max-height: 720px !important; } }`}</style>
-          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 260px)", minHeight: 480 }}>
+          {/* On md+ fill remaining viewport height */}
+          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 120px) !important; min-height: 540px !important; } }`}</style>
+          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 120px)", minHeight: 540 }}>
         {/* Desktop sidebar */}
           <PanelSidebar
             panels={PANELS}
