@@ -956,7 +956,7 @@ const FeedbackDisplay = ({
                       fontWeight: 500,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      padding: "5px 10px",
+                      padding: "6px 12px",
                       backgroundColor: "hsl(var(--panel-bg))",
                       border: "1px solid hsl(var(--foreground) / 0.08)",
                       borderRadius: 2,
