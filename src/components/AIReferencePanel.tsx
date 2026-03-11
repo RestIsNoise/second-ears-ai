@@ -202,7 +202,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
               >
                 <div className="flex items-start justify-between gap-1.5">
                   <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                    <span className="text-foreground/18 font-bold shrink-0" style={{ fontFamily: MONO, fontSize: 11 }}>
+                    <span className="text-foreground/22 font-medium shrink-0" style={{ fontFamily: MONO, fontSize: 13 }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 flex-1">
