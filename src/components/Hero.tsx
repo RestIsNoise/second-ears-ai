@@ -185,8 +185,8 @@ const Hero = () => {
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="w-full h-auto block"
-                  style={{ objectFit: "cover", objectPosition: "top center" }}
+                  className="w-full h-full block"
+                  style={{ objectFit: "cover", objectPosition: "top left" }}
                   loading="eager"
                 />
               </div>
