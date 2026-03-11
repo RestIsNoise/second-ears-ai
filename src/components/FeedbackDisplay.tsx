@@ -248,7 +248,7 @@ const FeedbackDisplay = ({
 
       const { data, error } = await supabase
         .from("todos")
-        .select("id, analysis_id, text, timestamp_in_track, is_done, source_id, created_at")
+        .select("id, analysis_id, user_id, content, is_done, created_at")
         .in("analysis_id", analysisIds)
         .order("created_at", { ascending: true });
 
@@ -256,10 +256,9 @@ const FeedbackDisplay = ({
         setTodoItems(
           data.map((row: any) => ({
             id: row.id,
-            text: row.text,
-            timestampSec: row.timestamp_in_track,
+            text: row.content,
+            timestampSec: 0,
             done: row.is_done,
-            sourceId: row.source_id || undefined,
           }))
         );
       }
@@ -371,10 +370,8 @@ const FeedbackDisplay = ({
     if (!analysisId || !user) return null;
     const { data, error } = await supabase.from("todos").insert({
       analysis_id: analysisId,
-      text: todo.text,
-      timestamp_in_track: todo.timestampSec,
-      source_id: todo.sourceId || null,
-      created_by: user.id,
+      user_id: user.id,
+      content: todo.text,
     } as any).select("id").single();
     if (error) { console.error("[ToDo] persist failed:", error); return null; }
     return data?.id || null;
@@ -432,6 +429,11 @@ const FeedbackDisplay = ({
     );
     await supabase.from("todos").update({ is_done: newDone } as any).eq("id", id);
   }, [todoItems]);
+
+  const handleDeleteToDo = useCallback(async (id: string) => {
+    setTodoItems((prev) => prev.filter((t) => t.id !== id));
+    await supabase.from("todos").delete().eq("id", id);
+  }, []);
 
   const handleToDoItemClick = useCallback((item: ToDoItem) => {
     if (item.timestampSec > 0) {
@@ -722,6 +724,7 @@ const FeedbackDisplay = ({
             items={todoItems}
             onToggle={handleToggleToDo}
             onAdd={handleAddToDoNote}
+            onDelete={handleDeleteToDo}
             onItemClick={handleToDoItemClick}
             loading={todosLoading}
           />

@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Check, Plus, CircleDashed, ClipboardList } from "lucide-react";
+import { Check, Plus, CircleDashed, ClipboardList, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ToDoItem } from "@/types/feedback";
 
@@ -16,13 +16,14 @@ interface Props {
   items: ToDoItem[];
   onToggle: (id: string) => void;
   onAdd: (text: string) => void;
+  onDelete?: (id: string) => void;
   onItemClick: (item: ToDoItem) => void;
   loading?: boolean;
 }
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
-const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
+const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: Props) => {
   const [filter, setFilter] = useState<Filter>("all");
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -205,6 +206,18 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
                 </span>
               )}
             </div>
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(item.id);
+                }}
+                className="mt-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Remove"
+              >
+                <X className="w-3 h-3" style={{ color: "rgba(150, 140, 125, 0.4)" }} />
+              </button>
+            )}
           </button>
         ))}
       </div>
