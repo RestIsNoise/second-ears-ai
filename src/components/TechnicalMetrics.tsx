@@ -434,22 +434,8 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         overflow: "hidden",
       }}
     >
-      {/* Module header */}
-      <div
-        className="flex items-center"
-        style={{
-          padding: "10px 14px",
-          backgroundColor: "hsl(var(--panel-header))",
-          borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
-        }}
-      >
-        <span
-          className="text-foreground/50 uppercase tracking-[0.14em] font-medium"
-          style={{ fontFamily: MONO, fontSize: 11 }}
-        >
-          Metering
-        </span>
-      </div>
+
+
 
       {/* Loudness section */}
       <SectionDivider label="Loudness" />
