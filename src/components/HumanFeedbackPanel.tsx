@@ -74,10 +74,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
-        .select(COMMENT_SELECT)
+        .select("*")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
-      if (data) setComments(data as unknown as Comment[]);
+      if (data) setComments((data as RawComment[]).map(normalizeComment));
       setLoadingComments(false);
     };
     load();
