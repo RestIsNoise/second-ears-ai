@@ -255,7 +255,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
     setInputAt({ time: popoverAt.time, x: popoverAt.x });
     setPopoverAt(null);
     setNoteText("");
-    setTimeout(() => inputRef.current?.focus(), 50);
   }, [popoverAt]);
 
   const handleSubmit = useCallback(() => {
