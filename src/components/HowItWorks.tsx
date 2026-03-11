@@ -41,17 +41,17 @@ const HowItWorks = () => {
         <div className="mb-12 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div className="flex items-center gap-4 mb-4">
             <p
-              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase shrink-0"
+              className="text-[12px] text-muted-foreground/70 tracking-[0.2em] uppercase shrink-0 font-semibold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Process
             </p>
-            <div className="h-px flex-1" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
+            <div className="h-px flex-1" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
           </div>
-          <h2 className="text-[1.5rem] md:text-[1.75rem] font-semibold tracking-[-0.035em] leading-tight">
+          <h2 className="text-[1.75rem] md:text-[2.1rem] font-bold tracking-[-0.035em] leading-tight text-foreground">
             Upload, analyze, fix
           </h2>
-          <p className="text-[12.5px] text-muted-foreground/50 mt-2 leading-relaxed max-w-sm">
+          <p className="text-[14px] text-muted-foreground/75 mt-2.5 leading-relaxed max-w-md">
             Three steps from raw file to a ranked list of improvements.
           </p>
         </div>
@@ -62,25 +62,25 @@ const HowItWorks = () => {
           style={{
             "--stagger": "100ms",
             background: "hsl(var(--card))",
-            border: "1px solid hsl(var(--border-subtle) / 0.35)",
-            boxShadow: "0 1px 3px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+            border: "1px solid hsl(var(--border-subtle) / 0.5)",
+            boxShadow: "0 2px 6px hsl(0 0% 0% / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
           } as React.CSSProperties}
         >
           {/* Top bar — module header strip */}
           <div
-            className="flex items-center gap-3 px-5 py-2.5"
+            className="flex items-center gap-3 px-5 py-3"
             style={{
-              background: "hsl(var(--surface-b) / 0.7)",
-              borderBottom: "1px solid hsl(var(--border-subtle) / 0.25)",
+              background: "hsl(var(--surface-b) / 0.8)",
+              borderBottom: "1px solid hsl(var(--border-subtle) / 0.4)",
             }}
           >
             <div className="flex gap-[5px]">
-              <div className="w-[7px] h-[7px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
-              <div className="w-[7px] h-[7px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.35)" }} />
-              <div className="w-[7px] h-[7px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.2)" }} />
+              <div className="w-[8px] h-[8px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.7)" }} />
+              <div className="w-[8px] h-[8px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.5)" }} />
+              <div className="w-[8px] h-[8px] rounded-full" style={{ background: "hsl(var(--border-subtle) / 0.35)" }} />
             </div>
             <span
-              className="text-[9px] text-muted-foreground/30 tracking-[0.18em] uppercase"
+              className="text-[11px] text-muted-foreground/55 tracking-[0.18em] uppercase font-semibold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Signal chain
@@ -96,46 +96,46 @@ const HowItWorks = () => {
                 style={{ "--stagger": `${200 + i * 100}ms` } as React.CSSProperties}
               >
                 <div
-                  className="relative px-5 py-5 md:py-6 flex flex-col h-full"
+                  className="relative px-6 py-6 md:py-7 flex flex-col h-full"
                   style={{
-                    borderRight: i < 2 ? "1px solid hsl(var(--border-subtle) / 0.2)" : "none",
-                    borderBottom: i < 2 ? "1px solid hsl(var(--border-subtle) / 0.2)" : "none",
+                    borderRight: i < 2 ? "1px solid hsl(var(--border-subtle) / 0.35)" : "none",
+                    borderBottom: i < 2 ? "1px solid hsl(var(--border-subtle) / 0.35)" : "none",
                   }}
                 >
                   {/* Number + Icon row */}
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3.5 mb-5">
                     <div
-                      className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 reveal-pop"
+                      className="w-10 h-10 rounded-md flex items-center justify-center shrink-0 reveal-pop"
                       style={{
                         "--stagger": `${300 + i * 100}ms`,
                         background: "hsl(var(--surface-b))",
-                        border: "1px solid hsl(var(--border-subtle) / 0.4)",
-                        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 2px hsl(0 0% 0% / 0.04)",
+                        border: "1px solid hsl(var(--border-subtle) / 0.55)",
+                        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 3px hsl(0 0% 0% / 0.06)",
                       } as React.CSSProperties}
                     >
-                      <step.icon className="w-[14px] h-[14px] text-foreground/50" strokeWidth={1.5} />
+                      <step.icon className="w-[18px] h-[18px] text-foreground/65" strokeWidth={1.8} />
                     </div>
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex items-baseline gap-2.5">
                       <span
-                        className="text-[10px] text-muted-foreground/20 tracking-wider"
+                        className="text-[12px] text-muted-foreground/40 tracking-wider font-medium"
                         style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                       >
                         {step.number}
                       </span>
-                      <h3 className="text-[13px] font-semibold tracking-[-0.02em] text-foreground/85">
+                      <h3 className="text-[17px] font-bold tracking-[-0.02em] text-foreground/90">
                         {step.title}
                       </h3>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-[11.5px] text-muted-foreground/45 leading-[1.7] mb-3 flex-1">
+                  <p className="text-[14px] text-muted-foreground/70 leading-[1.7] mb-4 flex-1">
                     {step.description}
                   </p>
 
                   {/* Proof */}
                   <p
-                    className="text-[9px] text-muted-foreground/25 tracking-[0.14em] uppercase"
+                    className="text-[11px] text-muted-foreground/50 tracking-[0.14em] uppercase font-medium"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {step.proof}
@@ -152,10 +152,10 @@ const HowItWorks = () => {
                       <path
                         d="M1 1L8 8L1 15"
                         stroke="hsl(var(--border-subtle))"
-                        strokeWidth="1"
+                        strokeWidth="1.2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        opacity="0.3"
+                        opacity="0.5"
                       />
                     </svg>
                   </div>
@@ -166,21 +166,21 @@ const HowItWorks = () => {
 
           {/* Bottom bar — signal flow indicator */}
           <div
-            className="flex items-center justify-between px-5 py-2"
+            className="flex items-center justify-between px-5 py-2.5"
             style={{
-              background: "hsl(var(--surface-b) / 0.5)",
-              borderTop: "1px solid hsl(var(--border-subtle) / 0.2)",
+              background: "hsl(var(--surface-b) / 0.6)",
+              borderTop: "1px solid hsl(var(--border-subtle) / 0.35)",
             }}
           >
             <span
-              className="text-[8px] text-muted-foreground/20 tracking-[0.15em] uppercase"
+              className="text-[10px] text-muted-foreground/45 tracking-[0.15em] uppercase font-semibold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Input
             </span>
-            <div className="flex-1 mx-4 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--border-subtle) / 0.25), hsl(var(--border-subtle) / 0.08))" }} />
+            <div className="flex-1 mx-4 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--border-subtle) / 0.4), hsl(var(--border-subtle) / 0.12))" }} />
             <span
-              className="text-[8px] text-muted-foreground/20 tracking-[0.15em] uppercase"
+              className="text-[10px] text-muted-foreground/45 tracking-[0.15em] uppercase font-semibold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Output
