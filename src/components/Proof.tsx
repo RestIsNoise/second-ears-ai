@@ -43,7 +43,7 @@ const Proof = () => {
     <section
       ref={ref}
       id="features"
-      className={`relative py-16 md:py-22 px-6 scroll-mt-20 reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-24 md:py-32 px-6 scroll-mt-20 reveal ${isVisible ? "is-visible" : ""}`}
       style={{ background: "hsl(var(--surface-b))" }}
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
