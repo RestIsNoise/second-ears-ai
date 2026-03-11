@@ -180,8 +180,8 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
               </span>
             </div>
             <p
-              className="text-[13px] text-foreground/60 ml-[24px]"
-              style={{ fontFamily: MONO, lineHeight: 1.65 }}
+              className="text-[14px] text-foreground/60 ml-[26px]"
+              style={{ fontFamily: MONO, lineHeight: 1.7 }}
             >
               {c.text}
             </p>
