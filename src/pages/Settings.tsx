@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, Music, Eye, Trash2, Camera } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -12,9 +12,9 @@ import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
 
 const modes = [
-  { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
+  { id: "technical", label: "Technical", tag: "The engineer", icon: SlidersHorizontal },
   { id: "musical", label: "Musical", tag: "The producer", icon: Music },
-  { id: "perception", label: "Perception", tag: "The listener", icon: Eye },
+  { id: "perception", label: "Perception", tag: "The listener", icon: Ear },
 ] as const;
 
 const Settings = () => {

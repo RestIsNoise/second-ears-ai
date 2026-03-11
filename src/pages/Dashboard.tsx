@@ -5,15 +5,15 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Activity, Music, Eye, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
-const modeIcons: Record<string, typeof Activity> = {
-  technical: Activity,
+const modeIcons: Record<string, typeof SlidersHorizontal> = {
+  technical: SlidersHorizontal,
   musical: Music,
-  perception: Eye,
+  perception: Ear,
 };
 
 const modeColors: Record<string, string> = {
@@ -56,7 +56,7 @@ const TrackRow = ({
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
-  const ModeIcon = modeIcons[mode] || Activity;
+  const ModeIcon = modeIcons[mode] || SlidersHorizontal;
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
@@ -174,7 +174,7 @@ const TrackGridCard = ({
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
-  const ModeIcon = modeIcons[mode] || Activity;
+  const ModeIcon = modeIcons[mode] || SlidersHorizontal;
   const colorClass = modeColors[mode] || modeColors.technical;
 
   const bars = generateWaveform(proj.id, 56);

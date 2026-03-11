@@ -1,9 +1,9 @@
-import { Activity, Music, Eye } from "lucide-react";
+import { SlidersHorizontal, Music, Ear } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const modes = [
   {
-    icon: Activity,
+    icon: SlidersHorizontal,
     name: "Technical",
     tag: "Engineer view",
     accent: "0 0% 40%",
@@ -19,7 +19,7 @@ const modes = [
     points: ["Arrangement pacing", "Tonal balance", "Vocal presence", "Low-end weight"],
   },
   {
-    icon: Eye,
+    icon: Ear,
     name: "Perception",
     tag: "Listener view",
     accent: "0 0% 20%",
