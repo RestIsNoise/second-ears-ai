@@ -222,24 +222,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [popoverAt]);
 
-  const handlePlusClick = useCallback(() => {
-    if (hoverTimeSec === null || hoverX === null) return;
-    if (onAddNote && !onAddToDo) {
-      setInputMode("note");
-      setInputAt({ time: hoverTimeSec, x: hoverX });
-      setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-      return;
-    }
-    if (onAddToDo && !onAddNote) {
-      setInputMode("todo");
-      setInputAt({ time: hoverTimeSec, x: hoverX });
-      setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-      return;
-    }
-    setPopoverAt({ time: hoverTimeSec, x: hoverX });
-  }, [hoverTimeSec, hoverX, onAddNote, onAddToDo]);
 
   const handleSelectMode = useCallback((mode: InputMode) => {
     if (!popoverAt) return;
