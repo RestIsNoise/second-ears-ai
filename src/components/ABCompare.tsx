@@ -319,9 +319,30 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             <RotateCcw className="w-3 h-3" />
           </MixerBtn>
 
+          {/* Divider */}
+          <div style={{ width: 1, height: 18, backgroundColor: "rgba(255,255,255,0.08)", marginLeft: 2, marginRight: 2 }} />
+
+          {/* Prev / Next marker */}
+          <MixerBtn onClick={() => jumpToMarker("prev")} disabled={markerCount === 0} title="Previous marker">
+            <SkipBack className="w-3 h-3" />
+          </MixerBtn>
+          <MixerBtn onClick={() => jumpToMarker("next")} disabled={markerCount === 0} title="Next marker">
+            <SkipForward className="w-3 h-3" />
+          </MixerBtn>
+
+          {/* Marker count */}
+          {markerCount > 0 && (
+            <span
+              className="tabular-nums shrink-0"
+              style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.25)", fontWeight: 600, letterSpacing: "0.04em", marginLeft: 2 }}
+            >
+              {markerCount}
+            </span>
+          )}
+
           {/* Time */}
           <span
-            className="tabular-nums leading-none ml-1 shrink-0"
+            className="tabular-nums leading-none ml-2 shrink-0"
             style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "0.02em", color: "rgba(255,255,255,0.85)", fontWeight: 500 }}
           >
             {formatTime(currentTime)}
