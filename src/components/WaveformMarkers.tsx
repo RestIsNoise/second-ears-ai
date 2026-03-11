@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo, useEffect, forwardRef, useImperativeHandle } from "react";
-import { SlidersHorizontal, Music, Ear, X, User, CheckSquare, MessageCircle } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, X, CheckSquare, MessageCircle } from "lucide-react";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
 const formatTime = (s: number) => {
