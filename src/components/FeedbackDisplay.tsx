@@ -669,7 +669,7 @@ const FeedbackDisplay = ({
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-[11px] text-foreground/65" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
+                      <p className="text-[13px] text-foreground/65" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
                       <CopyFixButton text={n.ifFixOneThing.how} />
                     </div>
                   ) : (
