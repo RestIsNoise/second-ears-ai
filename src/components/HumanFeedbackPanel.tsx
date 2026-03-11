@@ -43,7 +43,11 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Notify parent when comments change
   useEffect(() => {
+    onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.content, timestamp: c.timestamp })));
+  }, [comments, onCommentsChange]);
+
     if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
       setLoadingComments(true);
