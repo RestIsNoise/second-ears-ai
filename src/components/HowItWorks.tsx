@@ -169,7 +169,7 @@ const HowItWorks = () => {
             className="flex items-center justify-between px-6 py-3"
             style={{
               background: "hsl(var(--surface-b) / 0.7)",
-              borderTop: "1px solid hsl(var(--foreground) / 0.07)",
+              borderTop: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <span
