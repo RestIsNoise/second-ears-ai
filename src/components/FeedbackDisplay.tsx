@@ -986,7 +986,7 @@ const FeedbackDisplay = ({
                         className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
                         style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                       >Issue</span>
-                      <span className="text-[13px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                      <span className="text-[14px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
                     </span>
                   )}
                   {n.biggestWin && (
