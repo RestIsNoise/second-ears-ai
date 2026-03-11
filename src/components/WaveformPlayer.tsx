@@ -270,7 +270,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
         barRadius: 0,
         height: 80,
         normalize: true,
-        interact: true,
+        interact: false,
       };
 
       if (outlineMode) {
@@ -467,29 +467,42 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           {/* Ruler + waveform + markers */}
           <div
             ref={wrapperRef}
-            className="relative overflow-visible cursor-crosshair"
-            onMouseMove={handleMouseMove}
+            className="relative overflow-visible"
             onMouseLeave={handleMouseLeave}
           >
-            {/* Time ruler */}
-            {duration > 0 && containerWidth > 0 && (
-              <TimeRuler
-                duration={duration}
-                containerWidth={containerWidth}
-                currentTime={currentTime}
-                playing={playing}
-                hoverX={hoverX}
-                hoverTime={hoverTime}
-                markers={markers}
-                snappedMarkerId={snappedMarkerId_hover}
-                accentColor={colors.accent}
-              />
-            )}
+            {/* Time ruler — SEEK zone */}
+            <div
+              className="relative"
+              style={{ cursor: "ew-resize" }}
+              onMouseMove={handleMouseMove}
+              onClick={(e) => {
+                if (!wrapperRef.current || duration <= 0) return;
+                const rect = wrapperRef.current.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                wsRef.current?.seekTo(pct);
+              }}
+            >
+              {duration > 0 && containerWidth > 0 && (
+                <TimeRuler
+                  duration={duration}
+                  containerWidth={containerWidth}
+                  currentTime={currentTime}
+                  playing={playing}
+                  hoverX={hoverX}
+                  hoverTime={hoverTime}
+                  markers={markers}
+                  snappedMarkerId={snappedMarkerId_hover}
+                  accentColor={colors.accent}
+                />
+              )}
+            </div>
 
-            {/* Waveform container */}
-            <div className="relative" style={{ height: WAVEFORM_HEIGHT, marginTop: 1 }}>
-              {/* Deck glow removed — clean edge */}
-
+            {/* Waveform container — ADD MARKER zone */}
+            <div
+              className="relative"
+              style={{ height: WAVEFORM_HEIGHT, marginTop: 1, cursor: "crosshair" }}
+              onMouseMove={handleMouseMove}
+            >
               {loading && !error && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.accent, opacity: 0.6 }} />
@@ -525,7 +538,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 </div>
               )}
 
-              {/* Playhead — bright accent */}
+              {/* Playhead */}
               {duration > 0 && (
                 <div
                   className="absolute top-0 bottom-0 pointer-events-none z-[3]"
