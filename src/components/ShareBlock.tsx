@@ -10,12 +10,12 @@ const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
 const btnStyle = {
   fontFamily: MONO,
-  fontSize: 14,
+  fontSize: 12,
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase" as const,
-  padding: "12px 16px",
-  height: 40,
+  padding: "8px 12px",
+  height: 34,
   backgroundColor: "hsl(var(--panel-bg))",
   border: "1px solid hsl(var(--foreground) / 0.06)",
   borderRadius: 2,
