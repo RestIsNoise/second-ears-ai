@@ -176,7 +176,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
             />
             <span
               className="text-foreground/22 uppercase tracking-[0.14em] font-extrabold"
-              style={{ fontFamily: MONO, fontSize: 6.5 }}
+              style={{ fontFamily: MONO, fontSize: 8 }}
             >
               Controls
             </span>

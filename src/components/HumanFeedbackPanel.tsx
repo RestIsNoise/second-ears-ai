@@ -188,7 +188,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
             {onAddToDo && (
               <button
                 onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
-                className="opacity-0 group-hover:opacity-100 ml-[26px] mt-1.5 text-[10px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
+                className="opacity-0 group-hover:opacity-100 ml-[30px] mt-2 text-[11px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
                 style={{ fontFamily: MONO }}
               >
                 <Plus className="w-3 h-3 inline mr-0.5" />

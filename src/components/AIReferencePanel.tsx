@@ -256,9 +256,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
               </span>
               <div className="space-y-1.5">
                 {gemini_feedback.whatWorks.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2 text-[12px] text-foreground/45" style={{ fontFamily: MONO }}>
-                    <span className="shrink-0 mt-0.5" style={{ color: "hsl(145 60% 42%)", fontSize: 11 }}>✓</span>
-                    <span style={{ lineHeight: 1.5 }}>{item}</span>
+                  <div key={i} className="flex items-start gap-2.5 text-[14px] text-foreground/50" style={{ fontFamily: MONO }}>
+                    <span className="shrink-0 mt-0.5" style={{ color: "hsl(145 60% 42%)", fontSize: 13 }}>✓</span>
+                    <span style={{ lineHeight: 1.6 }}>{item}</span>
                   </div>
                 ))}
               </div>
