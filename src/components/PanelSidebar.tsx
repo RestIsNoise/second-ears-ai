@@ -89,7 +89,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                 disabled && "cursor-not-allowed opacity-40",
               )}
               style={{
-                padding: "5px 8px 5px 0",
+                padding: "7px 10px 7px 0",
                 marginLeft: 0,
                 borderLeft: isActive
                   ? "3px solid hsl(var(--foreground) / 0.7)"
