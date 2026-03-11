@@ -123,7 +123,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
   const dropdownItemStyle = {
     fontFamily: MONO,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: 600,
     letterSpacing: "0.06em",
     textTransform: "uppercase" as const,
