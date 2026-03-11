@@ -41,7 +41,7 @@ const HowItWorks = () => {
         <div className="mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div className="flex items-center gap-4 mb-5">
             <p
-              className="text-[13px] text-foreground/50 tracking-[0.2em] uppercase shrink-0 font-bold"
+              className="text-[13px] text-foreground/60 tracking-[0.2em] uppercase shrink-0 font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Process
@@ -51,7 +51,7 @@ const HowItWorks = () => {
           <h2 className="text-[2rem] md:text-[2.5rem] font-bold tracking-[-0.035em] leading-tight text-foreground">
             Upload, analyze, fix
           </h2>
-          <p className="text-[15px] text-foreground/60 mt-3 leading-relaxed max-w-md">
+          <p className="text-[15px] text-foreground/70 mt-3 leading-relaxed max-w-md">
             Three steps from raw file to a ranked list of improvements.
           </p>
         </div>
@@ -62,7 +62,7 @@ const HowItWorks = () => {
           style={{
             "--stagger": "100ms",
             background: "hsl(var(--card))",
-            border: "1px solid hsl(var(--foreground) / 0.1)",
+            border: "1px solid hsl(var(--foreground) / 0.14)",
             boxShadow: "0 2px 8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
           } as React.CSSProperties}
         >
@@ -71,7 +71,7 @@ const HowItWorks = () => {
             className="flex items-center gap-3 px-6 py-3"
             style={{
               background: "hsl(var(--surface-b) / 0.9)",
-              borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
+              borderBottom: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <div className="flex gap-[6px]">
@@ -80,7 +80,7 @@ const HowItWorks = () => {
               <div className="w-[9px] h-[9px] rounded-full" style={{ background: "hsl(var(--foreground) / 0.07)" }} />
             </div>
             <span
-              className="text-[12px] text-foreground/40 tracking-[0.18em] uppercase font-bold"
+              className="text-[12px] text-foreground/50 tracking-[0.18em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Signal chain
@@ -98,8 +98,8 @@ const HowItWorks = () => {
                 <div
                   className="relative px-7 py-7 md:py-8 flex flex-col h-full"
                   style={{
-                    borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.07)" : "none",
-                    borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.07)" : "none",
+                    borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
+                    borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
                   }}
                 >
                   {/* Number + Icon row */}
@@ -113,11 +113,11 @@ const HowItWorks = () => {
                         boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 3px hsl(0 0% 0% / 0.07)",
                       } as React.CSSProperties}
                     >
-                      <step.icon className="w-5 h-5 text-foreground/70" strokeWidth={1.8} />
+                      <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
                     </div>
                     <div className="flex items-baseline gap-2.5">
                       <span
-                        className="text-[13px] text-foreground/30 tracking-wider font-semibold"
+                        className="text-[13px] text-foreground/45 tracking-wider font-semibold"
                         style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                       >
                         {step.number}
@@ -129,13 +129,13 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-[15px] text-foreground/55 leading-[1.75] mb-5 flex-1">
+                  <p className="text-[15px] text-foreground/75 leading-[1.75] mb-5 flex-1">
                     {step.description}
                   </p>
 
                   {/* Proof */}
                   <p
-                    className="text-[12px] text-foreground/35 tracking-[0.14em] uppercase font-bold"
+                    className="text-[12px] text-foreground/50 tracking-[0.14em] uppercase font-bold"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
                     {step.proof}
@@ -169,18 +169,18 @@ const HowItWorks = () => {
             className="flex items-center justify-between px-6 py-3"
             style={{
               background: "hsl(var(--surface-b) / 0.7)",
-              borderTop: "1px solid hsl(var(--foreground) / 0.07)",
+              borderTop: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <span
-              className="text-[11px] text-foreground/35 tracking-[0.15em] uppercase font-bold"
+              className="text-[11px] text-foreground/45 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Input
             </span>
             <div className="flex-1 mx-4 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--foreground) / 0.1), hsl(var(--foreground) / 0.03))" }} />
             <span
-              className="text-[11px] text-foreground/35 tracking-[0.15em] uppercase font-bold"
+              className="text-[11px] text-foreground/45 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Output
