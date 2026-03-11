@@ -118,7 +118,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                     "w-3 h-3",
                     isActive ? "text-foreground/70" : "text-foreground/30",
                   )}
-                  strokeWidth={isActive ? 2.4 : 1.6}
+                  strokeWidth={isActive ? 2.2 : 1.6}
                 />
               </div>
 
