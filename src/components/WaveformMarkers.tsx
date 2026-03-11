@@ -165,7 +165,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
   const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   // Expose triggerAddAt for waveform body clicks
