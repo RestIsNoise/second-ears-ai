@@ -481,4 +481,5 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   );
 });
 
+WaveformMarkers.displayName = "WaveformMarkers";
 export default WaveformMarkers;
