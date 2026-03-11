@@ -758,7 +758,7 @@ const FeedbackDisplay = ({
   const orderedActivePanels = PANELS.filter((p) => activePanels.has(p.id));
 
   return (
-    <div className="animate-fade-up space-y-0" style={{ position: "relative" }}>
+    <div className="animate-fade-up space-y-0" style={{ position: "relative", zoom: 0.9 }}>
       {/* Micro-texture background for the entire workspace area */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.025] z-0"
