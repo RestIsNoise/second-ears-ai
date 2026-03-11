@@ -436,35 +436,20 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         overflow: "hidden",
       }}
     >
-      {/* Module header — rack label */}
+      {/* Module header */}
       <div
-        className="flex items-center justify-between"
+        className="flex items-center"
         style={{
           padding: "4px 8px",
           backgroundColor: "hsl(var(--panel-header))",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
         }}
       >
-        <div className="flex items-center gap-2">
-          <div
-            className="w-[6px] h-[6px] rounded-full"
-            style={{
-              background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-              boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-            }}
-          />
-          <span
-            className="text-foreground/45 uppercase tracking-[0.16em] font-extrabold"
-            style={{ fontFamily: MONO, fontSize: 7 }}
-          >
-            Metering
-          </span>
-        </div>
         <span
-          className="text-foreground/15 uppercase tracking-[0.1em] font-bold tabular-nums"
-          style={{ fontFamily: MONO, fontSize: 6 }}
+          className="text-foreground/45 uppercase tracking-[0.14em] font-extrabold"
+          style={{ fontFamily: MONO, fontSize: 7 }}
         >
-          {[il, stl, dr, peak, sc, cf, lra].filter(v => v !== null).length} ch
+          Metering
         </span>
       </div>
 
