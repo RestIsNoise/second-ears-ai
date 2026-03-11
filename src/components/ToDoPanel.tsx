@@ -65,14 +65,14 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
     <div className="flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header — console style */}
       <div
-        className="px-3 pt-3 pb-2.5"
+        className="px-3 pt-3 pb-3"
         style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.06)" }}
       >
         {totalCount > 0 && (
           <div className="flex items-center gap-2 mb-2">
             <span
-              className="tabular-nums font-medium"
-              style={{ fontFamily: MONO, fontSize: 9, color: "hsl(var(--foreground) / 0.45)" }}
+              className="tabular-nums font-normal"
+              style={{ fontFamily: MONO, fontSize: 10, color: "hsl(var(--foreground) / 0.5)" }}
             >
               {doneCount}/{totalCount}
             </span>
@@ -102,7 +102,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className="flex-1 px-2 py-[5px] text-[9px] font-bold uppercase tracking-[0.08em] transition-all duration-100"
+              className="flex-1 px-2 py-[6px] text-[10px] font-medium uppercase tracking-[0.06em] transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 color: filter === f.key ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.3)",
@@ -138,12 +138,12 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               }}
             >
               <ClipboardList className="w-4 h-4 text-foreground/15" />
-              <p className="text-[9px] text-center text-foreground/30" style={{ fontFamily: MONO }}>
+              <p className="text-[10px] text-center text-foreground/35" style={{ fontFamily: MONO }}>
                 {filter === "done" ? "No completed tasks" : filter === "open" ? "All clear" : "Track your fixes"}
               </p>
               <button
                 onClick={() => inputRef.current?.focus()}
-                className="rounded-sm px-3 py-1 text-[9px] font-bold uppercase tracking-wider transition-all duration-100"
+                className="rounded-sm px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider transition-all duration-100"
                 style={{
                   fontFamily: MONO,
                   backgroundColor: "hsl(var(--foreground) / 0.08)",
@@ -161,7 +161,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
           <button
             key={item.id}
             onClick={() => onItemClick(item)}
-            className="w-full text-left flex items-start gap-2 px-2.5 py-2 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
+            className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 rounded-sm transition-colors group hover:bg-foreground/[0.03]"
             style={{
               borderBottom: idx < filtered.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
@@ -189,7 +189,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             <div className="flex-1 min-w-0">
               <p
                 className={cn(
-                  "text-[11px] leading-snug transition-colors",
+                  "text-[13px] leading-snug transition-colors",
                   item.done ? "line-through text-foreground/25" : "text-foreground/65"
                 )}
                 style={{ fontFamily: MONO }}
@@ -198,8 +198,8 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               </p>
               {item.timestampSec > 0 && (
                 <span
-                  className="tabular-nums mt-0.5 block text-foreground/25"
-                  style={{ fontFamily: MONO, fontSize: 8 }}
+                  className="tabular-nums mt-0.5 block text-foreground/28"
+                  style={{ fontFamily: MONO, fontSize: 9 }}
                 >
                   @{formatTime(item.timestampSec)}
                 </span>
@@ -218,7 +218,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
         }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 10 }}>›</span>
+          <span className="text-foreground/25" style={{ fontFamily: MONO, fontSize: 11 }}>›</span>
           <input
             ref={inputRef}
             type="text"
@@ -226,13 +226,13 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             onChange={(e) => setNoteText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="add task…"
-            className="flex-1 bg-transparent text-[11px] outline-none text-foreground/60 placeholder:text-foreground/20"
+            className="flex-1 bg-transparent text-[13px] outline-none text-foreground/60 placeholder:text-foreground/22"
             style={{ fontFamily: MONO }}
           />
           <button
             onClick={handleSubmitNote}
             disabled={!noteText.trim()}
-            className="text-[9px] transition-colors disabled:opacity-20 text-foreground/40 hover:text-foreground/70 uppercase tracking-wider font-bold"
+            className="text-[10px] transition-colors disabled:opacity-20 text-foreground/40 hover:text-foreground/70 uppercase tracking-wider font-medium"
             style={{ fontFamily: MONO }}
           >
             <Plus className="w-3 h-3" />

@@ -107,7 +107,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.6 }}>
+    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.7 }}>
       {displayText}
     </p>
   );
@@ -625,13 +625,13 @@ const FeedbackDisplay = ({
                   <div
                     key={key}
                     style={{
-                      padding: "8px 10px",
+                      padding: "10px 14px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.1em] font-extrabold mb-1"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-1.5"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                     >
                       {label}
                     </h3>
@@ -649,43 +649,43 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "10px",
+                  padding: "12px 14px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
                 }}
               >
                 <p
-                  className="text-foreground/35 uppercase tracking-[0.12em] font-extrabold mb-2"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7 }}
+                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
                 <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "6px 8px",
+                    padding: "8px 10px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-[11px] text-foreground/65" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
+                      <p className="text-[13px] text-foreground/65" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
                       <CopyFixButton text={n.ifFixOneThing.how} />
                     </div>
                   ) : (
                     <>
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-[12px] font-bold tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
+                        <h3 className="text-[14px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
                         <CopyFixButton text={`${n.ifFixOneThing.title}\n${n.ifFixOneThing.why || ""}\n${n.ifFixOneThing.how || ""}`} />
                       </div>
                       {n.ifFixOneThing.why && (
-                        <p className="text-[10px] text-foreground/45 mt-1" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>
+                        <p className="text-[12px] text-foreground/50 mt-1.5" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
                           {n.ifFixOneThing.why}
                         </p>
                       )}
                       {n.ifFixOneThing.how && (
-                        <p className="text-[10px] text-foreground/60 mt-1.5" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>
-                          <span className="text-foreground/30 uppercase tracking-wider font-extrabold mr-1.5" style={{ fontSize: 7 }}>How</span>
+                        <p className="text-[12px] text-foreground/60 mt-2" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
+                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 8 }}>How</span>
                           {n.ifFixOneThing.how}
                         </p>
                       )}
@@ -920,7 +920,7 @@ const FeedbackDisplay = ({
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 {n.overallImpression && (
-                  <p className="text-[12px] sm:text-[13px] text-foreground/65 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <p className="text-[13px] sm:text-[14px] text-foreground/65 max-w-[72ch] flex-1 min-w-0" style={{ lineHeight: 1.8, fontFamily: "'IBM Plex Mono', monospace" }}>
                     {n.overallImpression}
                   </p>
                 )}
@@ -932,18 +932,18 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                     style={{
                       fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 9,
-                      fontWeight: 700,
+                      fontSize: 10,
+                      fontWeight: 500,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      padding: "5px 10px",
+                      padding: "6px 12px",
                       backgroundColor: "hsl(var(--panel-bg))",
                       border: "1px solid hsl(var(--foreground) / 0.08)",
                       borderRadius: 2,
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Layers className="w-3 h-3" />
+                    <Layers className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
                     <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
                   </button>
@@ -952,18 +952,18 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                     style={{
                       fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 9,
-                      fontWeight: 700,
+                      fontSize: 10,
+                      fontWeight: 500,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      padding: "5px 10px",
+                      padding: "6px 12px",
                       backgroundColor: "hsl(var(--panel-bg))",
                       border: "1px solid hsl(var(--foreground) / 0.08)",
                       borderRadius: 2,
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Music className="w-3 h-3" />
+                    <Music className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Reference</span>
                     <span className="sm:hidden">Ref</span>
                   </button>
@@ -974,53 +974,53 @@ const FeedbackDisplay = ({
                 <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-5 pt-5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.06)" : "none" }}>
                   {n.topIssue && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Issue</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
                     </span>
                   )}
                   {n.biggestWin && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Win</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
                     </span>
                   )}
                   {releaseReadiness && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Release</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
                     </span>
                   )}
                 </div>

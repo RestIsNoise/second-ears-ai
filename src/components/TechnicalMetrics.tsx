@@ -88,24 +88,24 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div
           className="flex items-center shrink-0"
           style={{
-            width: 72,
-            padding: "6px 0 6px 8px",
+            width: 80,
+            padding: "8px 0 8px 10px",
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
           <span
-            className="text-foreground/40 uppercase tracking-[0.06em] font-bold truncate"
-            style={{ fontFamily: MONO, fontSize: 8 }}
+            className="text-foreground/45 uppercase tracking-[0.04em] font-medium truncate"
+            style={{ fontFamily: MONO, fontSize: 9 }}
           >
             {label}
           </span>
         </div>
 
         {/* Center: meter + thresholds */}
-        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "7px 8px" }}>
+        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "9px 10px" }}>
           {/* Segmented bar */}
           <div className="relative">
-            <div className="flex gap-px" style={{ height: 4 }}>
+            <div className="flex gap-px" style={{ height: 5 }}>
               {Array.from({ length: SEGMENTS }).map((_, i) => {
                 const segPct = ((i + 1) / SEGMENTS) * 100;
                 const filled = pct >= segPct;
@@ -141,11 +141,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
                 }}
               >
                 <span
-                  className="absolute text-foreground/15 font-bold"
+                  className="absolute text-foreground/18 font-medium"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 5.5,
-                    top: -8,
+                    fontSize: 7,
+                    top: -9,
                     left: "50%",
                     transform: "translateX(-50%)",
                     whiteSpace: "nowrap",
@@ -160,25 +160,25 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 
         {/* Right: value + unit + LED */}
         <div
-          className="flex items-center gap-1.5 shrink-0"
+          className="flex items-center gap-2 shrink-0"
           style={{
-            padding: "6px 8px 6px 0",
+            padding: "8px 10px 8px 0",
             borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 80,
+            minWidth: 90,
             justifyContent: "flex-end",
           }}
         >
           {/* Status tag */}
           {!isMissing && led && (
             <span
-              className="font-extrabold uppercase tracking-[0.06em]"
+              className="font-medium uppercase tracking-[0.04em]"
               style={{
                 fontFamily: MONO,
-                fontSize: 6.5,
+                fontSize: 7.5,
                 color: led.bg,
-                padding: "1px 4px",
+                padding: "2px 5px",
                 backgroundColor: led.muted,
-                borderRadius: 1,
+                borderRadius: 2,
                 lineHeight: 1,
               }}
             >
@@ -186,20 +186,20 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             </span>
           )}
           <span
-            className="text-foreground/85 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "-0.03em" }}
+            className="text-foreground/85 tabular-nums font-medium"
+            style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "-0.03em" }}
           >
             {isMissing ? "—" : value.toFixed(decimals)}
           </span>
           <span
-            className="text-foreground/25 font-medium uppercase"
-            style={{ fontFamily: MONO, fontSize: 7 }}
+            className="text-foreground/30 font-normal uppercase"
+            style={{ fontFamily: MONO, fontSize: 8 }}
           >
             {unit}
           </span>
           {/* LED */}
           <div
-            className="w-[5px] h-[5px] rounded-full shrink-0"
+            className="w-[6px] h-[6px] rounded-full shrink-0"
             style={{
               backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.08)",
               boxShadow: led ? led.glow : "none",

@@ -102,10 +102,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         }}
       >
         <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-foreground/15" style={{ fontFamily: MONO, fontSize: 9 }}>›</span>
+          <span className="text-foreground/18" style={{ fontFamily: MONO, fontSize: 11 }}>›</span>
           <span
-            className="text-foreground/30 tabular-nums font-bold"
-            style={{ fontFamily: MONO, fontSize: 9 }}
+            className="text-foreground/35 tabular-nums font-medium"
+            style={{ fontFamily: MONO, fontSize: 10 }}
           >
             @{formatTime(currentTime)}
           </span>
@@ -117,14 +117,14 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           onKeyDown={handleKeyDown}
           placeholder="Add note…"
           rows={2}
-          className="w-full bg-transparent text-[11px] text-foreground/65 placeholder:text-foreground/18 outline-none resize-none"
-          style={{ fontFamily: MONO, lineHeight: 1.5 }}
+          className="w-full bg-transparent text-[13px] text-foreground/65 placeholder:text-foreground/20 outline-none resize-none"
+          style={{ fontFamily: MONO, lineHeight: 1.6 }}
         />
         <div className="flex justify-end mt-1">
           <button
             onClick={handleSubmit}
             disabled={!newText.trim() || !analysisId}
-            className="text-[8px] uppercase tracking-[0.1em] font-extrabold text-foreground/35 hover:text-foreground/65 transition-colors disabled:opacity-20"
+            className="text-[9px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
             style={{ fontFamily: MONO }}
           >
             <Plus className="w-3 h-3 inline mr-0.5" />
@@ -143,10 +143,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {!loadingComments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-3">
             <MessageSquare className="w-6 h-6 text-foreground/10" strokeWidth={1.5} />
-            <p className="text-[9px] text-foreground/25 uppercase tracking-wider font-bold" style={{ fontFamily: MONO }}>
+            <p className="text-[10px] text-foreground/30 uppercase tracking-wider font-medium" style={{ fontFamily: MONO }}>
               No notes yet
             </p>
-            <p className="text-[9px] text-foreground/15 max-w-[180px]" style={{ fontFamily: MONO, lineHeight: 1.5 }}>
+            <p className="text-[10px] text-foreground/20 max-w-[200px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
               Click waveform to add timestamped notes
             </p>
           </div>
@@ -154,7 +154,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {comments.map((c, idx) => (
           <div
             key={c.id}
-            className="group px-2.5 py-2 transition-colors hover:bg-foreground/[0.02]"
+            className="group px-3 py-2.5 transition-colors hover:bg-foreground/[0.02]"
             style={{
               borderBottom: idx < comments.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
@@ -170,25 +170,25 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 <User className="w-[8px] h-[8px] text-foreground/25" />
               </div>
               <span
-                className="text-foreground/35 tabular-nums font-bold"
-                style={{ fontFamily: MONO, fontSize: 9 }}
+                className="text-foreground/40 tabular-nums font-medium"
+                style={{ fontFamily: MONO, fontSize: 10 }}
               >
                 @{formatTime(c.timestamp_in_track)}
               </span>
-              <span className="text-foreground/15" style={{ fontFamily: MONO, fontSize: 8 }}>
+              <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 9 }}>
                 {formatDate(c.created_at)}
               </span>
             </div>
             <p
-              className="text-[11px] text-foreground/60 ml-[20px]"
-              style={{ fontFamily: MONO, lineHeight: 1.5 }}
+              className="text-[13px] text-foreground/60 ml-[20px]"
+              style={{ fontFamily: MONO, lineHeight: 1.6 }}
             >
               {c.text}
             </p>
             {onAddToDo && (
               <button
                 onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
-                className="opacity-0 group-hover:opacity-100 ml-[20px] mt-0.5 text-[8px] uppercase tracking-wider font-bold text-foreground/20 hover:text-foreground/50 transition-all"
+                className="opacity-0 group-hover:opacity-100 ml-[20px] mt-1 text-[9px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
                 style={{ fontFamily: MONO }}
               >
                 <Plus className="w-2.5 h-2.5 inline mr-0.5" />
