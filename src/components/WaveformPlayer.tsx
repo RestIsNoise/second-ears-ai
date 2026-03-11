@@ -536,7 +536,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 const x = e.clientX - rect.left;
                 const pct = Math.max(0, Math.min(1, x / rect.width));
                 const timeSec = pct * duration;
-                originalTriggerAddAt(timeSec, x);
+                markersRef.current?.triggerAddAt(timeSec, x);
               }}
             >
               {loading && !error && (
