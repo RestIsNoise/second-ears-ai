@@ -679,7 +679,7 @@ const FeedbackDisplay = ({
                         <CopyFixButton text={`${n.ifFixOneThing.title}\n${n.ifFixOneThing.why || ""}\n${n.ifFixOneThing.how || ""}`} />
                       </div>
                       {n.ifFixOneThing.why && (
-                        <p className="text-[10px] text-foreground/45 mt-1" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>
+                        <p className="text-[12px] text-foreground/50 mt-1.5" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
                           {n.ifFixOneThing.why}
                         </p>
                       )}
