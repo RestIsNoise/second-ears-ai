@@ -22,7 +22,7 @@ interface Props {
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
   const flex = PANEL_FLEX[id] ?? 1;
-  const minWidth = id === "ai-feedback" ? 340 : id === "session" ? 300 : id === "todo" ? 240 : 200;
+  const minWidth = id === "ai-feedback" ? 380 : id === "session" ? 320 : id === "todo" ? 260 : 240;
 
   return (
     <div
