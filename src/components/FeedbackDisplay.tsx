@@ -1427,14 +1427,14 @@ const FeedbackDisplay = ({
       >
         <div
           className="flex items-center justify-between px-5 sm:px-6"
-          style={{ height: 42 }}
+          style={{ height: 52 }}
         >
           {/* Left: wordmark · status */}
           <div className="flex items-center gap-2.5 min-w-0">
             <span
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9.5,
+                fontSize: 12,
                 fontWeight: 500,
                 letterSpacing: "0.02em",
                 color: "hsl(0 0% 38%)",
@@ -1446,7 +1446,7 @@ const FeedbackDisplay = ({
               className="hidden sm:inline"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 8,
+                fontSize: 10,
                 letterSpacing: "0.06em",
                 color: "hsl(0 0% 22%)",
               }}
@@ -1457,7 +1457,7 @@ const FeedbackDisplay = ({
               className="hidden sm:inline"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9.5,
+                fontSize: 11,
                 letterSpacing: "0.14em",
                 color: "hsl(0 0% 34%)",
                 textTransform: "uppercase",
@@ -1481,7 +1481,7 @@ const FeedbackDisplay = ({
                 className="transition-colors"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 7.5,
+                  fontSize: 10,
                   fontWeight: 500,
                   letterSpacing: "0.1em",
                   color: "hsl(0 0% 28%)",
