@@ -117,7 +117,7 @@ const HowItWorks = () => {
                     </div>
                     <div className="flex items-baseline gap-2.5">
                       <span
-                        className="text-[13px] text-foreground/30 tracking-wider font-semibold"
+                        className="text-[13px] text-foreground/45 tracking-wider font-semibold"
                         style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                       >
                         {step.number}
