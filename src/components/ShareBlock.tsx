@@ -134,7 +134,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
       {/* ── Share + Export row ── */}
       <div className="flex flex-col gap-1.5">
         {/* Share button with popover */}
-        <div className="flex-1 relative" ref={popoverRef}>
+        <div className="relative" ref={popoverRef}>
           <button
             onClick={() => { setPopoverOpen(!popoverOpen); setShowInvite(false); }}
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
