@@ -113,7 +113,7 @@ const HowItWorks = () => {
                         boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 3px hsl(0 0% 0% / 0.07)",
                       } as React.CSSProperties}
                     >
-                      <step.icon className="w-5 h-5 text-foreground/70" strokeWidth={1.8} />
+                      <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
                     </div>
                     <div className="flex items-baseline gap-2.5">
                       <span
