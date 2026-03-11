@@ -232,8 +232,8 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         </div>
 
         {/* Bipolar meter */}
-        <div className="flex-1 flex flex-col justify-center" style={{ padding: "7px 8px" }}>
-          <div className="relative" style={{ height: 4 }}>
+        <div className="flex-1 flex flex-col justify-center" style={{ padding: "9px 10px" }}>
+          <div className="relative" style={{ height: 6 }}>
             {/* Background segments */}
             <div className="absolute inset-0 flex gap-px">
               {Array.from({ length: SEGMENTS }).map((_, i) => (
