@@ -56,7 +56,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       >
         <div className="flex items-center gap-2">
           <span
-            className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase font-extrabold"
+            className="text-[9px] text-foreground/45 tracking-[0.12em] uppercase font-medium"
             style={{ fontFamily: MONO }}
           >
             Modules
