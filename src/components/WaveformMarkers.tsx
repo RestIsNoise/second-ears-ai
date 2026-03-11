@@ -292,6 +292,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
           <div
             key={m.id}
             className="absolute pointer-events-auto"
+            data-marker-btn
             style={{
               left: `${leftPct}%`,
               top: "50%",
