@@ -280,7 +280,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         {/* Value */}
         <div
           className="flex items-center gap-1.5 shrink-0"
-          style={{ padding: "6px 8px 6px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 80, justifyContent: "flex-end" }}
+          style={{ padding: "8px 12px 8px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 95, justifyContent: "flex-end" }}
         >
           <span
             className="font-extrabold uppercase tracking-[0.06em]"
