@@ -138,15 +138,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     }
   }, [sortedMarkers, onMarkerClick]);
 
-  const handleSoloToggle = useCallback((deck: "a" | "b") => {
+  const handleSourceSelect = useCallback((deck: "a" | "b") => {
     const mv = isMuted ? 0 : masterVolume / 100;
     if (soloMode === deck) {
-      // Unsolo — return to crossfade
+      // Deselect — return to crossfade blend
       setSoloMode("off");
       playerARef.current?.setVolume((1 - crossfade / 100) * mv);
       playerBRef.current?.setVolume((crossfade / 100) * mv);
     } else {
+      // Snap to selected source
       setSoloMode(deck);
+      setCrossfade(deck === "a" ? 0 : 100);
       playerARef.current?.setVolume(deck === "a" ? mv : 0);
       playerBRef.current?.setVolume(deck === "b" ? mv : 0);
     }
