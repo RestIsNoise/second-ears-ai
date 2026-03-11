@@ -160,28 +160,28 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
         >
           {/* Section label */}
           <div
-            className="flex items-center gap-1.5"
+            className="flex items-center gap-2"
             style={{
-              padding: "6px 12px",
+              padding: "8px 14px",
               borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
             }}
           >
             <div
               style={{
-                width: 4,
-                height: 4,
-                backgroundColor: "hsl(var(--foreground) / 0.12)",
+                width: 5,
+                height: 5,
+                backgroundColor: "hsl(var(--foreground) / 0.15)",
                 borderRadius: 1,
               }}
             />
             <span
-              className="text-foreground/30 uppercase tracking-[0.14em] font-extrabold"
-              style={{ fontFamily: MONO, fontSize: 11 }}
+              className="text-foreground/35 uppercase tracking-[0.14em] font-extrabold"
+              style={{ fontFamily: MONO, fontSize: 13 }}
             >
               Controls
             </span>
           </div>
-          <div style={{ padding: "10px 12px", backgroundColor: "hsl(var(--workspace-bg))" }}>
+          <div style={{ padding: "14px 14px", backgroundColor: "hsl(var(--workspace-bg))" }}>
             {footer}
           </div>
         </div>

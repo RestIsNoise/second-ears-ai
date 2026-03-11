@@ -242,11 +242,11 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
       {/* ── Brand mark ── */}
       <div
-        className="flex items-center gap-1.5 pt-2"
+        className="flex items-center gap-2 pt-3"
         style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}
       >
         <div
-          className="w-[14px] h-[14px] rounded-[2px] flex items-center justify-center shrink-0"
+          className="w-[18px] h-[18px] rounded-[2px] flex items-center justify-center shrink-0"
           style={{
             border: "1px solid hsl(var(--foreground) / 0.08)",
             backgroundColor: "hsl(var(--panel-bg))",
@@ -254,14 +254,14 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
         >
           <span
             className="text-foreground/25 leading-none"
-            style={{ fontFamily: MONO, fontSize: 6, fontWeight: 800 }}
+            style={{ fontFamily: MONO, fontSize: 8, fontWeight: 800 }}
           >
             SE
           </span>
         </div>
         <span
-          className="text-foreground/18 tracking-[0.04em]"
-          style={{ fontFamily: MONO, fontSize: 7 }}
+          className="text-foreground/22 tracking-[0.04em]"
+          style={{ fontFamily: MONO, fontSize: 16, fontWeight: 500 }}
         >
           SecondEar
         </span>
