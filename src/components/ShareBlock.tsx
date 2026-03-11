@@ -179,17 +179,17 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
                   <button
                     onClick={handleTogglePublic}
                     disabled={toggling}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
                     style={dropdownItemStyle}
                   >
                     {isPublic ? (
                       <>
-                        <Lock className="w-3.5 h-3.5" strokeWidth={2} />
+                        <Lock className="w-4 h-4" strokeWidth={2} />
                         Make private
                       </>
                     ) : (
                       <>
-                        <Globe className="w-3.5 h-3.5" strokeWidth={2} />
+                        <Globe className="w-4 h-4" strokeWidth={2} />
                         Make public
                       </>
                     )}
