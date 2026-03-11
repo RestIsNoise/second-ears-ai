@@ -630,8 +630,8 @@ const FeedbackDisplay = ({
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2.5"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
+                      className="text-foreground/55 uppercase tracking-[0.08em] font-medium mb-3"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12 }}
                     >
                       {label}
                     </h3>
