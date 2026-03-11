@@ -71,7 +71,7 @@ const HowItWorks = () => {
             className="flex items-center gap-3 px-6 py-3"
             style={{
               background: "hsl(var(--surface-b) / 0.9)",
-              borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
+              borderBottom: "1px solid hsl(var(--foreground) / 0.1)",
             }}
           >
             <div className="flex gap-[6px]">
