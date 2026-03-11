@@ -190,7 +190,7 @@ const FeedbackDisplay = ({
       if (!next.has("ai-reference")) {
         if (next.size >= MAX_PANELS) {
           // Remove oldest non-essential panel
-          const removable = ["full-analysis", "session", "tech-metrics"];
+          const removable = ["full-analysis", "tech-metrics"];
           for (const r of removable) {
             if (next.has(r)) { next.delete(r); break; }
           }
