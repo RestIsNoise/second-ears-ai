@@ -971,7 +971,7 @@ const FeedbackDisplay = ({
               </div>
 
               {(n.topIssue || n.biggestWin || releaseReadiness) && (
-                <div className={cn("flex flex-wrap items-center gap-2", n.overallImpression && "mt-4")}>
+                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-5 pt-5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.06)" : "none" }}>
                   {n.topIssue && (
                     <span
                       className="inline-flex items-center gap-1.5"
