@@ -146,7 +146,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
             <p className="text-[12px] text-foreground/30 uppercase tracking-wider font-medium" style={{ fontFamily: MONO }}>
               No notes yet
             </p>
-            <p className="text-[11px] text-foreground/20 max-w-[200px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
+            <p className="text-[12px] text-foreground/25 max-w-[220px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
               Click waveform to add timestamped notes
             </p>
           </div>
