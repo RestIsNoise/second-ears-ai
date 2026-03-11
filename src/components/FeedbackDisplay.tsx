@@ -963,7 +963,7 @@ const FeedbackDisplay = ({
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Music className="w-3 h-3" />
+                    <Music className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Reference</span>
                     <span className="sm:hidden">Ref</span>
                   </button>
