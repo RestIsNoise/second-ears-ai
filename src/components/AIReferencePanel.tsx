@@ -180,9 +180,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
 
       {/* ── Feedback ── */}
       {gemini_feedback && (
-        <div className="p-3 space-y-2">
+        <div className="p-4 space-y-3">
           {gemini_feedback.summary && (
-            <p className="text-[12px] text-foreground/50" style={{ lineHeight: 1.65, fontFamily: MONO }}>
+            <p className="text-[13px] text-foreground/50" style={{ lineHeight: 1.7, fontFamily: MONO }}>
               {gemini_feedback.summary}
             </p>
           )}
