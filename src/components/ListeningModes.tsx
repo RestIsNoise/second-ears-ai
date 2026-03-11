@@ -1,4 +1,4 @@
-import { Activity, Music, Eye } from "lucide-react";
+import { SlidersHorizontal, Music, Ear } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const modes = [
