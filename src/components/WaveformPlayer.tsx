@@ -501,7 +501,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
 
             {/* Waveform container — ADD MARKER zone */}
             <div
-              className="relative"
+              className="relative overflow-visible"
               style={{ height: WAVEFORM_HEIGHT, marginTop: 1, cursor: "crosshair" }}
               onMouseMove={handleMouseMove}
               onClick={(e) => {
@@ -528,7 +528,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               {/* Markers */}
               {duration > 0 && containerWidth > 0 && (markers.length > 0 || onAddNote || onAddToDo) && (
                 <div
-                  className="absolute left-0 right-0 z-[5] pointer-events-none"
+                  className="absolute left-0 right-0 z-[5] pointer-events-none overflow-visible"
                   style={{
                     top: (WAVEFORM_HEIGHT - MARKER_ZONE_HEIGHT) / 2,
                     height: MARKER_ZONE_HEIGHT,
