@@ -1,4 +1,4 @@
-import { X, Minus } from "lucide-react";
+import { X } from "lucide-react";
 
 /** Flex weight per panel id */
 const PANEL_FLEX: Record<string, number> = {
@@ -50,38 +50,21 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
         <div className="flex items-center justify-between px-3 py-[6px]">
           <div className="flex items-center gap-2 min-w-0">
-            {/* Rack screw — double ring */}
-            <div
-              className="w-[8px] h-[8px] rounded-full shrink-0"
-              style={{
-                background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.18), hsl(var(--foreground) / 0.06))",
-                boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 1px 2px hsl(0 0% 0% / 0.15), 0 0 0 1px hsl(var(--foreground) / 0.06)",
-              }}
-            />
             <h3
-              className="text-[9px] text-foreground/60 tracking-[0.16em] uppercase truncate font-extrabold"
+              className="text-[9px] text-foreground/55 tracking-[0.14em] uppercase truncate font-extrabold"
               style={{ fontFamily: MONO }}
             >
               {title}
             </h3>
           </div>
 
-          <div className="flex items-center gap-0.5 shrink-0 ml-2">
-            {/* Panel ID chip — like a hardware serial label */}
-            <span
-              className="text-[7px] text-foreground/20 tracking-[0.12em] uppercase mr-1.5"
-              style={{ fontFamily: MONO }}
-            >
-              {id.split("-").pop()?.slice(0, 4).toUpperCase()}
-            </span>
-            <button
-              onClick={onClose}
-              className="text-foreground/15 hover:text-foreground/50 transition-colors rounded-[2px] p-[3px] hover:bg-foreground/[0.06]"
-              title="Close panel"
-            >
-              <X className="w-[10px] h-[10px]" strokeWidth={2.5} />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="text-foreground/15 hover:text-foreground/50 transition-colors rounded-[2px] p-[3px] hover:bg-foreground/[0.06] shrink-0 ml-2"
+            title="Close panel"
+          >
+            <X className="w-[10px] h-[10px]" strokeWidth={2.5} />
+          </button>
         </div>
 
         {/* Bottom machined edge — double bevel */}
