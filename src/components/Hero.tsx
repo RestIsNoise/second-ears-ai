@@ -181,12 +181,11 @@ const Hero = () => {
               </div>
 
               {/* Screenshot */}
-              <div className="w-full overflow-hidden" style={{ height: "clamp(260px, 34vw, 450px)" }}>
+              <div className="w-full overflow-hidden">
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="w-full h-full block"
-                  style={{ objectFit: "cover", objectPosition: "top left" }}
+                  className="w-full h-auto block"
                   loading="eager"
                 />
               </div>
