@@ -1234,13 +1234,13 @@ const FeedbackDisplay = ({
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
           className={cn(
-            "mt-2 sm:mt-3 grid gap-0",
+            "mt-4 sm:mt-6 grid gap-0",
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
             backgroundColor: "hsl(var(--workspace-bg))",
-            border: "3px solid hsl(var(--foreground) / 0.12)",
-            borderRadius: 4,
+            border: "2px solid hsl(var(--foreground) / 0.1)",
+            borderRadius: 3,
             boxShadow: "inset 0 2px 6px hsl(var(--panel-inset)), 0 4px 16px hsl(0 0% 0% / 0.08)",
             overflow: "hidden",
           }}
