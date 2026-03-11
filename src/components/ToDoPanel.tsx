@@ -138,7 +138,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               }}
             >
               <ClipboardList className="w-4 h-4 text-foreground/15" />
-              <p className="text-[9px] text-center text-foreground/30" style={{ fontFamily: MONO }}>
+              <p className="text-[10px] text-center text-foreground/35" style={{ fontFamily: MONO }}>
                 {filter === "done" ? "No completed tasks" : filter === "open" ? "All clear" : "Track your fixes"}
               </p>
               <button
