@@ -535,6 +535,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   }}
                 >
                   <WaveformMarkers
+                    ref={markersRef}
                     markers={markers}
                     duration={duration}
                     containerWidth={containerWidth}
