@@ -75,7 +75,7 @@ const Hero = () => {
             </p>
 
             <h1
-              className="text-[1.85rem] sm:text-[2.4rem] md:text-[3rem] lg:text-[3.5rem] font-semibold tracking-tight leading-[1.1] mb-5 sm:mb-6 animate-fade-up"
+              className="text-[2rem] sm:text-[2.6rem] md:text-[3.2rem] lg:text-[3.75rem] font-semibold tracking-tight leading-[1.08] mb-5 sm:mb-6 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
               Actionable mix
