@@ -696,8 +696,6 @@ const FeedbackDisplay = ({
           </div>
         );
 
-      case "session":
-        return <SessionPanel />;
 
       case "todo":
         return (
