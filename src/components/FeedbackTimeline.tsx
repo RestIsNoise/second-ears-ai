@@ -281,7 +281,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* ── FIX / ACTION BLOCK ── */}
                 {item.fix && (
                   <div
-                    className="mt-3"
+                    className="mt-3.5"
                     style={{
                       backgroundColor: "hsl(var(--panel-bg))",
                       border: "1px solid hsl(var(--foreground) / 0.05)",
