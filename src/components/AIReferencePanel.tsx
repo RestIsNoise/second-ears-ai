@@ -158,7 +158,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
             return (
               <div
                 key={key}
-                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[5px]"
+                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 items-center px-3 py-[7px]"
                 style={{
                   borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--foreground) / 0.03)" : "none",
                 }}
