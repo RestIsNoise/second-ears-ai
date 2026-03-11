@@ -146,55 +146,50 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
           {popoverOpen && (
             <div
-              className="absolute left-0 right-0 mt-1.5 z-50 rounded-[3px] overflow-hidden"
+              className="absolute left-0 right-0 mt-1 z-50 rounded-sm overflow-hidden"
               style={{
                 backgroundColor: "hsl(var(--panel-bg))",
-                border: "1px solid hsl(var(--foreground) / 0.1)",
-                boxShadow: "0 6px 16px hsl(0 0% 0% / 0.18)",
+                border: "1px solid hsl(var(--foreground) / 0.08)",
+                boxShadow: "0 4px 12px hsl(0 0% 0% / 0.15), inset 0 1px 2px hsl(var(--panel-inset))",
               }}
             >
               {!showInvite ? (
-                <>
-                  {/* Copy link */}
+                <div className="py-1">
                   <button
                     onClick={handleCopyLink}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors"
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
                     style={dropdownItemStyle}
                   >
-                    <Link2 className="w-4 h-4" strokeWidth={2} />
+                    <Link2 className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                     Copy link
                   </button>
-                  <div style={{ height: 1, backgroundColor: "hsl(var(--foreground) / 0.06)" }} />
-                  {/* Invite collaborator */}
                   <button
                     onClick={() => setShowInvite(true)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors"
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
                     style={dropdownItemStyle}
                   >
-                    <UserPlus className="w-4 h-4" strokeWidth={2} />
-                    Invite collaborator
+                    <UserPlus className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                    Invite
                   </button>
-                  <div style={{ height: 1, backgroundColor: "hsl(var(--foreground) / 0.06)" }} />
-                  {/* Make public / Make private */}
                   <button
                     onClick={handleTogglePublic}
                     disabled={toggling}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
                     style={dropdownItemStyle}
                   >
                     {isPublic ? (
                       <>
-                        <Lock className="w-4 h-4" strokeWidth={2} />
+                        <Lock className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         Make private
                       </>
                     ) : (
                       <>
-                        <Globe className="w-4 h-4" strokeWidth={2} />
+                        <Globe className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         Make public
                       </>
                     )}
                   </button>
-                </>
+                </div>
               ) : (
                 <div className="p-3 space-y-2">
                   <span
