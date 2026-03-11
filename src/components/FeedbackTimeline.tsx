@@ -57,13 +57,13 @@ const ClampedObservation = ({ text }: { text: string }) => {
   }, [text]);
 
   return (
-    <div className="mt-2">
+    <div className="mt-2.5">
       <p
         ref={textRef}
-        className="text-[13px] text-foreground/55"
+        className="text-[14px] text-foreground/55"
         style={{
           fontFamily: MONO,
-          lineHeight: 1.7,
+          lineHeight: 1.75,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
