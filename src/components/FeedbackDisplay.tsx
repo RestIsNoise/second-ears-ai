@@ -133,7 +133,6 @@ const PANELS: PanelConfig[] = [
   { id: "tech-metrics", label: "Technical Metrics" },
   { id: "full-analysis", label: "Full Analysis" },
   { id: "todo", label: "To-Do List" },
-  { id: "todo", label: "To-Do List" },
 ];
 
 const MAX_PANELS = 3;
