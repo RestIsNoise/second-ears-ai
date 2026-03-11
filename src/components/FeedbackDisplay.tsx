@@ -768,10 +768,10 @@ const FeedbackDisplay = ({
       />
       {/* ═══ HEADER — industrial track strip ═══ */}
       <div
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6 px-3 sm:px-5"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6 px-3 sm:px-4"
         style={{
-          paddingTop: 10,
-          paddingBottom: 10,
+          paddingTop: 8,
+          paddingBottom: 8,
           backgroundColor: "hsl(var(--analysis-header))",
           border: "2px solid hsl(var(--foreground) / 0.08)",
           borderRadius: 3,
