@@ -1279,28 +1279,28 @@ const FeedbackDisplay = ({
             >
               {/* Section header strip */}
               <div
-                className="flex items-center px-4"
+                className="flex items-center px-5"
                 style={{
-                  paddingTop: 7,
-                  paddingBottom: 7,
+                  paddingTop: 10,
+                  paddingBottom: 10,
                   backgroundColor: "hsl(var(--panel-header))",
                   borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
                 }}
               >
                 <h3
-                  className="text-[8px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
+                  className="text-[11px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
                   style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
                 >
                   {modeWhatWorksLabel[mode] || "What Works"}
                 </h3>
               </div>
-              <div className="p-4 space-y-2 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+              <div className="p-5 space-y-3 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
                     <div
                       key={i}
-                      className="flex-1 p-3"
+                      className="flex-1 p-4"
                       style={{
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.07)",
@@ -1309,7 +1309,7 @@ const FeedbackDisplay = ({
                       }}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="text-[13px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
+                        <h4 className="text-[15px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
                         {tags.length > 0 && (
                           <div className="flex items-center gap-1 shrink-0">
                             {tags.map((tag) => (
@@ -1318,7 +1318,7 @@ const FeedbackDisplay = ({
                                 className="inline-block border px-2 py-0.5 text-foreground/45"
                                 style={{
                                   fontFamily: "'IBM Plex Mono', monospace",
-                                  fontSize: 8,
+                                  fontSize: 9,
                                   letterSpacing: "0.06em",
                                   borderColor: "hsl(var(--foreground) / 0.08)",
                                   borderRadius: 2,
@@ -1332,7 +1332,7 @@ const FeedbackDisplay = ({
                         )}
                       </div>
                       {item.description && (
-                        <p className="text-[12px] text-foreground/60 mt-1.5" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>{item.description}</p>
+                        <p className="text-[14px] text-foreground/60 mt-2" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>{item.description}</p>
                       )}
                     </div>
                   );
