@@ -137,7 +137,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
         >
           {/* Table header */}
           <div
-            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-3 py-[5px]"
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-3 py-[7px]"
             style={{
               backgroundColor: "hsl(var(--panel-header))",
               borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
