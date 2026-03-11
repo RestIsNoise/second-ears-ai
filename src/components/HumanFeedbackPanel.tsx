@@ -32,7 +32,7 @@ interface Props {
   onAddToDo?: (text: string, timestampSec: number) => void;
   pendingComment?: { text: string; timestampSec: number } | null;
   onPendingCommentHandled?: () => void;
-  onCommentsChange?: React.Dispatch<React.SetStateAction<Comment[]>>;
+  onCommentsChange?: (comments: { id: string; content: string; timestamp: number }[]) => void;
 }
 
 const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled }: Props) => {
