@@ -571,6 +571,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                     onAddNote={onAddNote}
                     onAddToDo={onAddToDo}
                     onEditNote={onEditNote}
+                    onComposerChange={handleComposerChange}
                   />
                 </div>
               )}
