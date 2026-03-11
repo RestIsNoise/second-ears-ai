@@ -1047,7 +1047,7 @@ const FeedbackDisplay = ({
                     <span
                       className="inline-flex items-center gap-2.5"
                       style={{
-                        padding: "7px 14px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.07)",
                         borderRadius: 2,
