@@ -16,55 +16,40 @@ export type Database = {
     Tables: {
       analyses: {
         Row: {
-          created_at: string | null
+          created_at: string
           feedback: Json
           id: string
-          is_public: boolean | null
+          is_public: boolean
           metrics: Json
-          mode: string | null
+          mode: string
           parent_analysis_id: string | null
-          project_id: string | null
-          result: Json | null
-          share_token: string | null
+          project_id: string
           storage_path: string | null
-          track_name: string | null
-          user_id: string | null
           version: number
-          version_id: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           feedback?: Json
           id?: string
-          is_public?: boolean | null
+          is_public?: boolean
           metrics?: Json
-          mode?: string | null
+          mode: string
           parent_analysis_id?: string | null
-          project_id?: string | null
-          result?: Json | null
-          share_token?: string | null
+          project_id: string
           storage_path?: string | null
-          track_name?: string | null
-          user_id?: string | null
           version?: number
-          version_id?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           feedback?: Json
           id?: string
-          is_public?: boolean | null
+          is_public?: boolean
           metrics?: Json
-          mode?: string | null
+          mode?: string
           parent_analysis_id?: string | null
-          project_id?: string | null
-          result?: Json | null
-          share_token?: string | null
+          project_id?: string
           storage_path?: string | null
-          track_name?: string | null
-          user_id?: string | null
           version?: number
-          version_id?: string | null
         }
         Relationships: [
           {
@@ -85,35 +70,38 @@ export type Database = {
       }
       collaborators: {
         Row: {
+          analysis_id: string
           created_at: string
           id: string
-          invited_by: string | null
-          project_id: string
-          role: string
-          user_id: string
+          invited_by: string
+          invited_email: string
+          role: Database["public"]["Enums"]["collaborator_role"]
+          user_id: string | null
         }
         Insert: {
+          analysis_id: string
           created_at?: string
           id?: string
-          invited_by?: string | null
-          project_id: string
-          role?: string
-          user_id: string
+          invited_by: string
+          invited_email: string
+          role?: Database["public"]["Enums"]["collaborator_role"]
+          user_id?: string | null
         }
         Update: {
+          analysis_id?: string
           created_at?: string
           id?: string
-          invited_by?: string | null
-          project_id?: string
-          role?: string
-          user_id?: string
+          invited_by?: string
+          invited_email?: string
+          role?: Database["public"]["Enums"]["collaborator_role"]
+          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "collaborators_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "collaborators_analysis_id_fkey"
+            columns: ["analysis_id"]
             isOneToOne: false
-            referencedRelation: "projects"
+            referencedRelation: "analyses"
             referencedColumns: ["id"]
           },
         ]
@@ -131,7 +119,7 @@ export type Database = {
           created_at?: string
           id?: string
           user_id: string
-          vote?: number
+          vote: number
         }
         Update: {
           comment_id?: string
@@ -153,29 +141,32 @@ export type Database = {
       comments: {
         Row: {
           analysis_id: string
-          content: string
           created_at: string
+          downvotes: number
           id: string
-          timestamp: number | null
-          updated_at: string
+          text: string
+          timestamp_in_track: number
+          upvotes: number
           user_id: string
         }
         Insert: {
           analysis_id: string
-          content: string
           created_at?: string
+          downvotes?: number
           id?: string
-          timestamp?: number | null
-          updated_at?: string
+          text: string
+          timestamp_in_track?: number
+          upvotes?: number
           user_id: string
         }
         Update: {
           analysis_id?: string
-          content?: string
           created_at?: string
+          downvotes?: number
           id?: string
-          timestamp?: number | null
-          updated_at?: string
+          text?: string
+          timestamp_in_track?: number
+          upvotes?: number
           user_id?: string
         }
         Relationships: [
@@ -188,78 +179,89 @@ export type Database = {
           },
         ]
       }
-      feedback_votes: {
+      feedback: {
         Row: {
-          analysis_id: string
-          created_at: string | null
+          created_at: string
+          feedback: Json
           id: string
-          priority_index: number
-          user_id: string
-          vote: string | null
+          listening_mode: string
+          storage_path: string
+          track_name: string
         }
         Insert: {
-          analysis_id: string
-          created_at?: string | null
+          created_at?: string
+          feedback?: Json
           id?: string
-          priority_index: number
-          user_id: string
-          vote?: string | null
+          listening_mode: string
+          storage_path: string
+          track_name: string
         }
         Update: {
-          analysis_id?: string
-          created_at?: string | null
+          created_at?: string
+          feedback?: Json
           id?: string
-          priority_index?: number
-          user_id?: string
-          vote?: string | null
+          listening_mode?: string
+          storage_path?: string
+          track_name?: string
         }
         Relationships: []
       }
-      jobs: {
+      feedback_votes: {
         Row: {
-          created_at: string | null
-          error: string | null
+          analysis_id: string
+          created_at: string
+          feedback_item_id: string
           id: string
-          result: Json | null
-          status: string
-          updated_at: string | null
+          user_id: string
+          vote: number
         }
         Insert: {
-          created_at?: string | null
-          error?: string | null
-          id: string
-          result?: Json | null
-          status?: string
-          updated_at?: string | null
+          analysis_id: string
+          created_at?: string
+          feedback_item_id: string
+          id?: string
+          user_id: string
+          vote: number
         }
         Update: {
-          created_at?: string | null
-          error?: string | null
+          analysis_id?: string
+          created_at?: string
+          feedback_item_id?: string
           id?: string
-          result?: Json | null
-          status?: string
-          updated_at?: string | null
+          user_id?: string
+          vote?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "feedback_votes_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "analyses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           avatar_url: string | null
-          created_at: string | null
+          created_at: string
+          default_mode: string
           display_name: string | null
           email: string | null
           id: string
         }
         Insert: {
           avatar_url?: string | null
-          created_at?: string | null
+          created_at?: string
+          default_mode?: string
           display_name?: string | null
           email?: string | null
           id: string
         }
         Update: {
           avatar_url?: string | null
-          created_at?: string | null
+          created_at?: string
+          default_mode?: string
           display_name?: string | null
           email?: string | null
           id?: string
@@ -268,49 +270,55 @@ export type Database = {
       }
       projects: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
-          name: string | null
-          user_id: string | null
+          name: string
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
-          name?: string | null
-          user_id?: string | null
+          name: string
+          user_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
-          name?: string | null
-          user_id?: string | null
+          name?: string
+          user_id?: string
         }
         Relationships: []
       }
       todos: {
         Row: {
           analysis_id: string
-          content: string
           created_at: string
+          created_by: string
           id: string
           is_done: boolean
-          user_id: string
+          source_id: string | null
+          text: string
+          timestamp_in_track: number
         }
         Insert: {
           analysis_id: string
-          content: string
           created_at?: string
+          created_by: string
           id?: string
           is_done?: boolean
-          user_id: string
+          source_id?: string | null
+          text: string
+          timestamp_in_track?: number
         }
         Update: {
           analysis_id?: string
-          content?: string
           created_at?: string
+          created_by?: string
           id?: string
           is_done?: boolean
-          user_id?: string
+          source_id?: string | null
+          text?: string
+          timestamp_in_track?: number
         }
         Relationships: [
           {
@@ -327,10 +335,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_email: { Args: { uid: string }; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      collaborator_role: "viewer" | "editor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -457,6 +465,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      collaborator_role: ["viewer", "editor"],
+    },
   },
 } as const
