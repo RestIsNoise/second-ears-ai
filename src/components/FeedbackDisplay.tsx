@@ -649,15 +649,15 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "14px 16px",
+                  padding: "16px 18px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
                 }}
               >
                 <p
-                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2.5"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-3"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
