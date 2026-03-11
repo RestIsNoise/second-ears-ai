@@ -382,7 +382,7 @@ const FeedbackDisplay = ({
   const handleAddToDoWithTimestamp = useCallback(async (text: string, timestampSec: number) => {
     const tempId = `ht-${Date.now()}`;
     setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec, done: false }]);
-    toast({ title: "Added to To-Do", duration: 1200 });
+    toast({ title: "Added to Next Moves", duration: 1200 });
     const dbId = await persistTodo({ text, timestampSec });
     if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
   }, [persistTodo]);
