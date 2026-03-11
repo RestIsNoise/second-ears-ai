@@ -83,8 +83,8 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
         </div>
       </div>
 
-      {/* ═══ GROUPED PANEL BUTTONS ═══ */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin">
+      {/* ═══ PANEL SELECTOR ═══ */}
+      <div className="flex-1 overflow-y-auto scrollbar-thin" style={{ padding: "2px 0" }}>
         {PANEL_ORDER.map((id) => {
           const panel = panelMap.get(id);
           if (!panel) return null;
@@ -98,63 +98,63 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               onClick={() => !disabled && onToggle(panel.id)}
               disabled={disabled}
               className={cn(
-                "w-full flex items-center gap-2.5 text-left transition-all duration-100",
-                disabled && "cursor-not-allowed",
+                "w-full flex items-center gap-2 text-left transition-all duration-75",
+                disabled && "cursor-not-allowed opacity-40",
               )}
               style={{
-                padding: "6px 10px",
+                padding: "5px 8px 5px 0",
+                marginLeft: 0,
                 borderLeft: isActive
-                  ? "3px solid hsl(var(--foreground) / 0.6)"
+                  ? "3px solid hsl(var(--foreground) / 0.7)"
                   : "3px solid transparent",
                 backgroundColor: isActive
-                  ? "hsl(var(--panel-content))"
+                  ? "hsl(var(--foreground) / 0.04)"
                   : "transparent",
                 boxShadow: isActive
-                  ? "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)"
+                  ? "inset 0 1px 0 hsl(0 0% 100% / 0.04), inset 0 -1px 0 hsl(0 0% 0% / 0.03)"
                   : "none",
-                borderBottom: "1px solid hsl(var(--foreground) / 0.03)",
               }}
             >
+              {/* Icon well */}
               <div
-                className="shrink-0 flex items-center justify-center"
+                className="shrink-0 flex items-center justify-center ml-[7px]"
                 style={{
-                  width: 20,
-                  height: 20,
+                  width: 18,
+                  height: 18,
                   borderRadius: 2,
-                  backgroundColor: isActive ? "hsl(var(--foreground) / 0.06)" : "transparent",
-                  border: isActive ? "1px solid hsl(var(--foreground) / 0.06)" : "1px solid transparent",
-                  boxShadow: isActive ? "inset 0 1px 2px hsl(0 0% 0% / 0.06)" : "none",
+                  backgroundColor: isActive ? "hsl(var(--foreground) / 0.08)" : "transparent",
+                  boxShadow: isActive ? "inset 0 1px 2px hsl(0 0% 0% / 0.08)" : "none",
                 }}
               >
                 <Icon
                   className={cn(
-                    "w-[11px] h-[11px]",
-                    isActive ? "text-foreground/65" : disabled ? "text-foreground/12" : "text-foreground/25",
+                    "w-[10px] h-[10px]",
+                    isActive ? "text-foreground/75" : "text-foreground/30",
                   )}
-                  strokeWidth={isActive ? 2.2 : 1.8}
+                  strokeWidth={isActive ? 2.4 : 1.6}
                 />
               </div>
 
+              {/* Label */}
               <span
                 className={cn(
-                  "text-[9px] tracking-[0.02em] truncate",
+                  "text-[8.5px] tracking-[0.04em] truncate uppercase",
                   isActive
-                    ? "text-foreground/80 font-bold"
-                    : disabled
-                      ? "text-foreground/15 font-medium"
-                      : "text-foreground/45 font-medium hover:text-foreground/65",
+                    ? "text-foreground/85 font-bold"
+                    : "text-foreground/35 font-semibold",
                 )}
-                style={{ fontFamily: MONO }}
+                style={{ fontFamily: MONO, lineHeight: 1 }}
               >
                 {panel.label}
               </span>
 
+              {/* Status LED */}
               {isActive && (
                 <div
-                  className="w-[4px] h-[4px] rounded-full ml-auto shrink-0"
+                  className="w-[3.5px] h-[3.5px] rounded-full ml-auto shrink-0 mr-1"
                   style={{
-                    backgroundColor: "hsl(145 60% 42%)",
-                    boxShadow: "0 0 4px hsl(145 60% 42% / 0.4)",
+                    backgroundColor: "hsl(145 55% 45%)",
+                    boxShadow: "0 0 3px hsl(145 55% 45% / 0.5)",
                   }}
                 />
               )}
