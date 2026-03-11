@@ -191,7 +191,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Index */}
                 <span
                   className="text-foreground/22 font-medium shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em", minWidth: 18 }}
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.02em", minWidth: 20 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
