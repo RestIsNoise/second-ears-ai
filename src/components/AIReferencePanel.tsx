@@ -116,12 +116,12 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
     <div className="overflow-y-auto h-full scrollbar-thin">
       {/* Reference name */}
       <div
-        className="flex items-center gap-2 px-4 py-3"
+        className="flex items-center gap-2.5 px-5 py-4"
         style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.06)" }}
       >
-        <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: "hsl(35 85% 50%)", boxShadow: "0 0 3px hsl(35 85% 50% / 0.4)" }} />
+        <div className="w-[7px] h-[7px] rounded-full" style={{ backgroundColor: "hsl(35 85% 50%)", boxShadow: "0 0 3px hsl(35 85% 50% / 0.4)" }} />
         <span
-          className="text-[11px] font-extrabold text-foreground/55 tracking-[0.1em] uppercase truncate"
+          className="text-[13px] font-medium text-foreground/55 tracking-[0.1em] uppercase truncate"
           style={{ fontFamily: MONO }}
         >
           vs {result.reference_track_name || refTrackName}
