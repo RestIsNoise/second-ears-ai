@@ -729,7 +729,6 @@ const FeedbackDisplay = ({
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
     "full-analysis": "Full Analysis",
-    "session": "Session",
     "todo": "To-Do List",
   };
 
