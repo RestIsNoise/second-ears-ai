@@ -94,27 +94,26 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         return;
       }
 
+      const nowIso = new Date().toISOString();
       const row = {
+        id: crypto.randomUUID(),
         analysis_id: analysisId,
         user_id: userId,
         timestamp: pendingComment.timestampSec,
         content: pendingComment.text,
-        updated_at: new Date().toISOString(),
+        created_at: nowIso,
+        updated_at: nowIso,
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("comments")
-        .insert(row as any)
-        .select(COMMENT_SELECT)
-        .single();
-
-      if (!error && data) {
-        setComments((prev) => [...prev, data as unknown as Comment]);
-        toast({ title: "Comment added", duration: 1200 });
-      }
+        .insert(row as any);
 
       if (error) {
         toast({ title: error.message || "Failed to save comment", variant: "destructive", duration: 1800 });
+      } else {
+        setComments((prev) => [...prev, normalizeComment(row)]);
+        toast({ title: "Comment added", duration: 1200 });
       }
 
       onPendingCommentHandled?.();
