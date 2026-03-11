@@ -80,7 +80,7 @@ const HowItWorks = () => {
               <div className="w-[9px] h-[9px] rounded-full" style={{ background: "hsl(var(--foreground) / 0.07)" }} />
             </div>
             <span
-              className="text-[12px] text-foreground/40 tracking-[0.18em] uppercase font-bold"
+              className="text-[12px] text-foreground/50 tracking-[0.18em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Signal chain
