@@ -57,13 +57,13 @@ const ClampedObservation = ({ text }: { text: string }) => {
   }, [text]);
 
   return (
-    <div className="mt-2">
+    <div className="mt-2.5">
       <p
         ref={textRef}
-        className="text-[13px] text-foreground/55"
+        className="text-[14px] text-foreground/55"
         style={{
           fontFamily: MONO,
-          lineHeight: 1.7,
+          lineHeight: 1.75,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
@@ -75,7 +75,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
       {isClamped && !expanded && (
         <button
           onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="inline-flex items-center gap-0.5 mt-1 text-[9px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
+          className="inline-flex items-center gap-0.5 mt-1.5 text-[10px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
           style={{ fontFamily: MONO }}
         >
           <ChevronDown className="w-3 h-3" />
@@ -180,8 +180,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
-                  padding: "8px 14px",
+                  gap: 12,
+                  padding: "10px 16px",
                   backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
                   borderLeft: `3px solid ${accent.border}`,
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
@@ -191,7 +191,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Index */}
                 <span
                   className="text-foreground/22 font-medium shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em", minWidth: 18 }}
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.02em", minWidth: 20 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
@@ -201,9 +201,9 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   className="text-foreground/55 tabular-nums font-medium shrink-0"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 12,
+                    fontSize: 13,
                     backgroundColor: "hsl(var(--foreground) / 0.04)",
-                    padding: "2px 6px",
+                    padding: "3px 8px",
                     borderRadius: 2,
                     letterSpacing: "-0.01em",
                   }}
@@ -224,7 +224,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     className="font-medium uppercase tracking-[0.06em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 9,
+                      fontSize: 10,
                       color: sev.color,
                     }}
                   >
@@ -235,7 +235,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Mode tag */}
                 <span
                   className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
-                  style={{ fontFamily: MONO, fontSize: 9 }}
+                  style={{ fontFamily: MONO, fontSize: 10 }}
                 >
                   {accent.tag}
                 </span>
@@ -246,12 +246,12 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     <button
                       onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
                       disabled={alreadyAdded}
-                      className={`inline-flex items-center text-[9px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
+                      className={`inline-flex items-center text-[10px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
                         alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
                       }`}
                       style={{ fontFamily: MONO }}
                     >
-                      {alreadyAdded ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                      {alreadyAdded ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                     </button>
                   )}
                   <CopyFixInline item={item} />
@@ -261,7 +261,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ ISSUE BODY ═══ */}
               <div
                 style={{
-                  padding: "12px 16px 14px 20px",
+                  padding: "14px 18px 16px 22px",
                   borderLeft: `3px solid ${isActive ? accent.border : "hsl(var(--foreground) / 0.04)"}`,
                   backgroundColor: isActive ? accent.bg : "transparent",
                   transition: "background-color 0.1s, border-color 0.15s",
@@ -269,7 +269,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Title */}
                 <h3
-                  className="text-[15px] font-medium tracking-tight text-foreground/85 leading-snug"
+                  className="text-[16px] font-medium tracking-tight text-foreground/85 leading-snug"
                   title={item.title}
                 >
                   {item.title}
@@ -281,13 +281,13 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* ── FIX / ACTION BLOCK ── */}
                 {item.fix && (
                   <div
-                    className="mt-3"
+                    className="mt-3.5"
                     style={{
                       backgroundColor: "hsl(var(--panel-bg))",
                       border: "1px solid hsl(var(--foreground) / 0.05)",
                       borderLeft: `2px solid ${accent.border}`,
                       borderRadius: "0 2px 2px 0",
-                      padding: "8px 10px",
+                      padding: "10px 12px",
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
@@ -296,11 +296,11 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         className="shrink-0 mt-[2px] inline-flex items-center"
                         style={{
                           fontFamily: MONO,
-                          fontSize: 9,
+                          fontSize: 10,
                           fontWeight: 600,
                           letterSpacing: "0.06em",
                           lineHeight: 1,
-                          padding: "2px 6px",
+                          padding: "3px 7px",
                           backgroundColor: accent.border,
                           color: "hsl(0 0% 100%)",
                           borderRadius: 1,
@@ -309,8 +309,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
                       </span>
                       <p
-                        className="text-[13px] text-foreground/65"
-                        style={{ lineHeight: 1.65, fontFamily: MONO }}
+                        className="text-[14px] text-foreground/65"
+                        style={{ lineHeight: 1.7, fontFamily: MONO }}
                       >
                         {item.fix}
                       </p>

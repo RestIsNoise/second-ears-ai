@@ -95,17 +95,17 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     <div className="flex flex-col h-full">
       {/* Input — console style */}
       <div
-        className="p-2.5"
+        className="p-3.5"
         style={{
           borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
           boxShadow: "inset 0 -1px 0 hsl(0 0% 100% / 0.02)",
         }}
       >
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-foreground/18" style={{ fontFamily: MONO, fontSize: 11 }}>›</span>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 13 }}>›</span>
           <span
             className="text-foreground/35 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 10 }}
+            style={{ fontFamily: MONO, fontSize: 12 }}
           >
             @{formatTime(currentTime)}
           </span>
@@ -117,17 +117,17 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           onKeyDown={handleKeyDown}
           placeholder="Add note…"
           rows={2}
-          className="w-full bg-transparent text-[13px] text-foreground/65 placeholder:text-foreground/20 outline-none resize-none"
-          style={{ fontFamily: MONO, lineHeight: 1.6 }}
+          className="w-full bg-transparent text-[14px] text-foreground/65 placeholder:text-foreground/20 outline-none resize-none"
+          style={{ fontFamily: MONO, lineHeight: 1.65 }}
         />
         <div className="flex justify-end mt-1">
           <button
             onClick={handleSubmit}
             disabled={!newText.trim() || !analysisId}
-            className="text-[9px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
+            className="text-[10px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
             style={{ fontFamily: MONO }}
           >
-            <Plus className="w-3 h-3 inline mr-0.5" />
+            <Plus className="w-3.5 h-3.5 inline mr-0.5" />
             Add
           </button>
         </div>
@@ -143,10 +143,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {!loadingComments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-3">
             <MessageSquare className="w-6 h-6 text-foreground/10" strokeWidth={1.5} />
-            <p className="text-[10px] text-foreground/30 uppercase tracking-wider font-medium" style={{ fontFamily: MONO }}>
+            <p className="text-[11px] text-foreground/30 uppercase tracking-wider font-medium" style={{ fontFamily: MONO }}>
               No notes yet
             </p>
-            <p className="text-[10px] text-foreground/20 max-w-[200px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
+            <p className="text-[11px] text-foreground/20 max-w-[200px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
               Click waveform to add timestamped notes
             </p>
           </div>
@@ -154,44 +154,44 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {comments.map((c, idx) => (
           <div
             key={c.id}
-            className="group px-3.5 py-3 transition-colors hover:bg-foreground/[0.02]"
+            className="group px-4 py-3.5 transition-colors hover:bg-foreground/[0.02]"
             style={{
               borderBottom: idx < comments.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
           >
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1.5">
               <div
-                className="w-[16px] h-[16px] rounded-[2px] flex items-center justify-center shrink-0"
+                className="w-[18px] h-[18px] rounded-[2px] flex items-center justify-center shrink-0"
                 style={{
                   backgroundColor: "hsl(var(--foreground) / 0.06)",
                   border: "1px solid hsl(var(--foreground) / 0.06)",
                 }}
               >
-                <User className="w-[9px] h-[9px] text-foreground/25" />
+                <User className="w-[10px] h-[10px] text-foreground/25" />
               </div>
               <span
                 className="text-foreground/40 tabular-nums font-medium"
-                style={{ fontFamily: MONO, fontSize: 11 }}
+                style={{ fontFamily: MONO, fontSize: 12 }}
               >
                 @{formatTime(c.timestamp_in_track)}
               </span>
-              <span className="text-foreground/22" style={{ fontFamily: MONO, fontSize: 10 }}>
+              <span className="text-foreground/22" style={{ fontFamily: MONO, fontSize: 11 }}>
                 {formatDate(c.created_at)}
               </span>
             </div>
             <p
-              className="text-[13px] text-foreground/60 ml-[24px]"
-              style={{ fontFamily: MONO, lineHeight: 1.65 }}
+              className="text-[14px] text-foreground/60 ml-[26px]"
+              style={{ fontFamily: MONO, lineHeight: 1.7 }}
             >
               {c.text}
             </p>
             {onAddToDo && (
               <button
                 onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
-                className="opacity-0 group-hover:opacity-100 ml-[20px] mt-1 text-[9px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
+                className="opacity-0 group-hover:opacity-100 ml-[26px] mt-1.5 text-[10px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
                 style={{ fontFamily: MONO }}
               >
-                <Plus className="w-2.5 h-2.5 inline mr-0.5" />
+                <Plus className="w-3 h-3 inline mr-0.5" />
                 todo
               </button>
             )}

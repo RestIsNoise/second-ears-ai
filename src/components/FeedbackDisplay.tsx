@@ -107,7 +107,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.75 }}>
+    <p className="text-[14px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.8 }}>
       {displayText}
     </p>
   );
@@ -625,13 +625,13 @@ const FeedbackDisplay = ({
                    <div
                     key={key}
                     style={{
-                      padding: "12px 16px",
+                      padding: "14px 18px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2.5"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                     >
                       {label}
                     </h3>
@@ -649,43 +649,43 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "14px 16px",
+                  padding: "16px 18px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
                 }}
               >
                 <p
-                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2.5"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-3"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
                   <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "10px 12px",
+                    padding: "12px 14px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-[13px] text-foreground/65" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
+                      <p className="text-[14px] text-foreground/65" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
                       <CopyFixButton text={n.ifFixOneThing.how} />
                     </div>
                   ) : (
                     <>
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-[14px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
+                        <h3 className="text-[15px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
                         <CopyFixButton text={`${n.ifFixOneThing.title}\n${n.ifFixOneThing.why || ""}\n${n.ifFixOneThing.how || ""}`} />
                       </div>
                       {n.ifFixOneThing.why && (
-                        <p className="text-[12px] text-foreground/50 mt-1.5" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
+                        <p className="text-[13px] text-foreground/50 mt-2" style={{ lineHeight: 1.65, fontFamily: "'IBM Plex Mono', monospace" }}>
                           {n.ifFixOneThing.why}
                         </p>
                       )}
                       {n.ifFixOneThing.how && (
-                        <p className="text-[12px] text-foreground/60 mt-2" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
-                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 8 }}>How</span>
+                        <p className="text-[13px] text-foreground/60 mt-2.5" style={{ lineHeight: 1.65, fontFamily: "'IBM Plex Mono', monospace" }}>
+                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 9 }}>How</span>
                           {n.ifFixOneThing.how}
                         </p>
                       )}
