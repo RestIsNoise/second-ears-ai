@@ -49,7 +49,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       {/* ═══ HEADER ═══ */}
       <div
         style={{
-          padding: "6px 10px",
+          padding: "8px 12px",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
           backgroundColor: "hsl(var(--panel-header))",
         }}
