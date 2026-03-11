@@ -56,7 +56,7 @@ const TrackRow = ({
 }) => {
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
-  const ModeIcon = modeIcons[mode] || Activity;
+  const ModeIcon = modeIcons[mode] || SlidersHorizontal;
   const colorClass = modeColors[mode] || modeColors.technical;
 
   return (
