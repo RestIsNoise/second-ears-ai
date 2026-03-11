@@ -225,12 +225,12 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                         </button>
                       )}
                       {p.suggestedFix && (
-                        <div className="mt-1.5 pt-1.5 flex items-start gap-1.5" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
+                        <div className="mt-2 pt-2 flex items-start gap-2" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
                           <span
                             className="shrink-0 mt-[1px]"
                             style={{
-                              fontFamily: MONO, fontSize: 7, fontWeight: 800,
-                              letterSpacing: "0.06em", padding: "1px 4px",
+                              fontFamily: MONO, fontSize: 8, fontWeight: 800,
+                              letterSpacing: "0.06em", padding: "2px 5px",
                               backgroundColor: "hsl(0 55% 50% / 0.7)", color: "white", borderRadius: 1,
                             }}
                           >
