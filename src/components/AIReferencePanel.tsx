@@ -250,8 +250,8 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
           })}
 
           {gemini_feedback.whatWorks && gemini_feedback.whatWorks.length > 0 && (
-            <div className="mt-2 pt-2" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
-              <span className="text-[7px] text-foreground/25 uppercase tracking-[0.14em] mb-1.5 block font-extrabold" style={{ fontFamily: MONO }}>
+            <div className="mt-3 pt-3" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
+              <span className="text-[9px] text-foreground/25 uppercase tracking-[0.14em] mb-2 block font-extrabold" style={{ fontFamily: MONO }}>
                 Matching
               </span>
               <div className="space-y-1">
