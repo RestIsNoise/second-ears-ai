@@ -71,8 +71,8 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
         {totalCount > 0 && (
           <div className="flex items-center gap-2 mb-2">
             <span
-              className="tabular-nums font-medium"
-              style={{ fontFamily: MONO, fontSize: 9, color: "hsl(var(--foreground) / 0.45)" }}
+              className="tabular-nums font-normal"
+              style={{ fontFamily: MONO, fontSize: 10, color: "hsl(var(--foreground) / 0.5)" }}
             >
               {doneCount}/{totalCount}
             </span>
