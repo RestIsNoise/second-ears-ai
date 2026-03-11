@@ -56,6 +56,7 @@ interface Props {
   onAddNote?: (text: string, timestampSec: number) => void;
   onAddToDo?: (text: string, timestampSec: number) => void;
   onEditNote?: (markerId: string) => void;
+  onComposerChange?: (state: ComposerState | null) => void;
 }
 
 /* ── Tooltip with boundary-aware positioning ── */
