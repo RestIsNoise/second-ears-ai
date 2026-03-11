@@ -199,7 +199,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           </span>
           {/* LED */}
           <div
-            className="w-[6px] h-[6px] rounded-full shrink-0"
+            className="w-[7px] h-[7px] rounded-full shrink-0"
             style={{
               backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.08)",
               boxShadow: led ? led.glow : "none",
