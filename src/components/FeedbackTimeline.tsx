@@ -57,13 +57,13 @@ const ClampedObservation = ({ text }: { text: string }) => {
   }, [text]);
 
   return (
-    <div className="mt-1.5">
+    <div className="mt-2">
       <p
         ref={textRef}
-        className="text-[11px] text-foreground/50"
+        className="text-[13px] text-foreground/55"
         style={{
           fontFamily: MONO,
-          lineHeight: 1.55,
+          lineHeight: 1.65,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
@@ -75,10 +75,10 @@ const ClampedObservation = ({ text }: { text: string }) => {
       {isClamped && !expanded && (
         <button
           onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="inline-flex items-center gap-0.5 mt-0.5 text-[8px] text-foreground/25 hover:text-foreground/50 transition-colors uppercase tracking-[0.1em] font-bold"
+          className="inline-flex items-center gap-0.5 mt-1 text-[9px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
           style={{ fontFamily: MONO }}
         >
-          <ChevronDown className="w-2.5 h-2.5" />
+          <ChevronDown className="w-3 h-3" />
           expand
         </button>
       )}
