@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardR
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
 import WaveformMarkers, { MARKER_ZONE_HEIGHT } from "@/components/WaveformMarkers";
+import type { WaveformMarkersHandle } from "@/components/WaveformMarkers";
 import FrequencyEnergyBar from "@/components/FrequencyEnergyBar";
 import type { WaveformMarker } from "@/types/feedback";
 import type { FrequencyData } from "@/lib/parseFrequencyData";
@@ -212,6 +213,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
   ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle, frequencyData }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const markersRef = useRef<WaveformMarkersHandle>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -502,6 +504,15 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               className="relative"
               style={{ height: WAVEFORM_HEIGHT, marginTop: 1, cursor: "crosshair" }}
               onMouseMove={handleMouseMove}
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest('[data-marker-btn]')) return;
+                if (!wrapperRef.current || duration <= 0) return;
+                const rect = wrapperRef.current.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const pct = Math.max(0, Math.min(1, x / rect.width));
+                const timeSec = pct * duration;
+                markersRef.current?.triggerAddAt(timeSec, x);
+              }}
             >
               {loading && !error && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -524,6 +535,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   }}
                 >
                   <WaveformMarkers
+                    ref={markersRef}
                     markers={markers}
                     duration={duration}
                     containerWidth={containerWidth}

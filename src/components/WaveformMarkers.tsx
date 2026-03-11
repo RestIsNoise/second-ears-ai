@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback, useMemo, useEffect } from "react";
-import { SlidersHorizontal, LayoutGrid, Ear, Plus, X, User, CheckSquare, MessageCircle } from "lucide-react";
+import { useState, useRef, useCallback, useMemo, useEffect, forwardRef, useImperativeHandle } from "react";
+import { SlidersHorizontal, LayoutGrid, Ear, X, User, CheckSquare, MessageCircle } from "lucide-react";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -144,7 +144,11 @@ const MarkerTooltip = ({
 
 type InputMode = "todo" | "note";
 
-const WaveformMarkers = ({
+export interface WaveformMarkersHandle {
+  triggerAddAt: (time: number, x: number) => void;
+}
+
+const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   markers,
   duration,
   containerWidth,
@@ -155,13 +159,35 @@ const WaveformMarkers = ({
   onAddNote,
   onAddToDo,
   onEditNote,
-}: Props) => {
+}, ref) => {
   const [popoverAt, setPopoverAt] = useState<{ time: number; x: number } | null>(null);
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
   const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  // Expose triggerAddAt for waveform body clicks
+  const triggerAddAt = useCallback((time: number, x: number) => {
+    if (onAddNote && !onAddToDo) {
+      setInputMode("note");
+      setInputAt({ time, x });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    if (onAddToDo && !onAddNote) {
+      setInputMode("todo");
+      setInputAt({ time, x });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    // Both available — show popover
+    setPopoverAt({ time, x });
+  }, [onAddNote, onAddToDo]);
+
+  useImperativeHandle(ref, () => ({ triggerAddAt }), [triggerAddAt]);
 
   // Single hovered marker with 100ms delay
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
@@ -182,7 +208,6 @@ const WaveformMarkers = ({
     return (hoverX / containerWidth) * duration;
   }, [hoverX, duration, containerWidth]);
 
-  const showPlusButton = hoverX !== null && !snappedMarkerId && !popoverAt && !inputAt;
   const hasAnyAction = onAddNote || onAddToDo;
 
   // Close popover on outside click
@@ -197,24 +222,6 @@ const WaveformMarkers = ({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [popoverAt]);
 
-  const handlePlusClick = useCallback(() => {
-    if (hoverTimeSec === null || hoverX === null) return;
-    if (onAddNote && !onAddToDo) {
-      setInputMode("note");
-      setInputAt({ time: hoverTimeSec, x: hoverX });
-      setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-      return;
-    }
-    if (onAddToDo && !onAddNote) {
-      setInputMode("todo");
-      setInputAt({ time: hoverTimeSec, x: hoverX });
-      setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-      return;
-    }
-    setPopoverAt({ time: hoverTimeSec, x: hoverX });
-  }, [hoverTimeSec, hoverX, onAddNote, onAddToDo]);
 
   const handleSelectMode = useCallback((mode: InputMode) => {
     if (!popoverAt) return;
@@ -267,6 +274,7 @@ const WaveformMarkers = ({
           <div
             key={m.id}
             className="absolute pointer-events-auto"
+            data-marker-btn
             style={{
               left: `${leftPct}%`,
               top: "50%",
@@ -313,6 +321,7 @@ const WaveformMarkers = ({
           <div
             key={m.id}
             className="absolute pointer-events-auto"
+            data-marker-btn
             style={{
               left: `${leftPct}%`,
               top: "50%",
@@ -358,30 +367,7 @@ const WaveformMarkers = ({
         );
       })}
 
-      {/* "+" button on hover */}
-      {showPlusButton && hoverX !== null && hasAnyAction && (
-        <div
-          className="absolute pointer-events-auto z-[6]"
-          style={{
-            left: hoverX,
-            top: MARKER_ZONE_HEIGHT + 2,
-            transform: "translateX(-50%)",
-          }}
-        >
-          <button
-            onClick={handlePlusClick}
-            className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-100 hover:scale-110"
-            style={{
-              backgroundColor: "hsl(var(--foreground) / 0.08)",
-              border: "1px solid hsl(var(--foreground) / 0.12)",
-              color: "hsl(var(--foreground) / 0.4)",
-            }}
-            title="Add annotation"
-          >
-            <Plus className="w-3 h-3" />
-          </button>
-        </div>
-      )}
+      {/* No floating + button — waveform body click handles adding markers */}
 
       {/* Popover menu */}
       {popoverAt && (
@@ -475,6 +461,7 @@ const WaveformMarkers = ({
       )}
     </div>
   );
-};
+});
 
+WaveformMarkers.displayName = "WaveformMarkers";
 export default WaveformMarkers;
