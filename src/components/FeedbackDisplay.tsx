@@ -342,9 +342,27 @@ const FeedbackDisplay = ({
       }));
   }, [todoItems]);
 
+  // Human comment markers
+  const [humanComments, setHumanComments] = useState<{ id: string; content: string; timestamp: number }[]>([]);
+
+  const commentMarkers: WaveformMarker[] = useMemo(() => {
+    return humanComments
+      .filter((c) => c.timestamp > 0)
+      .map((c) => ({
+        id: `comment-${c.id}`,
+        time: c.timestamp,
+        label: c.content.length > 40 ? c.content.slice(0, 40) + "…" : c.content,
+        severity: "low" as const,
+        type: "user" as const,
+      }));
+  }, [humanComments]);
+
   const markers: WaveformMarker[] = useMemo(() => {
-    return [...aiMarkers, ...userAnnotationMarkers];
-  }, [aiMarkers, userAnnotationMarkers]);
+    // Deduplicate: comment markers that overlap with annotation markers at same timestamp
+    const annotationTimes = new Set(userAnnotationMarkers.map(m => m.time.toFixed(1)));
+    const uniqueCommentMarkers = commentMarkers.filter(m => !annotationTimes.has(m.time.toFixed(1)));
+    return [...aiMarkers, ...userAnnotationMarkers, ...uniqueCommentMarkers];
+  }, [aiMarkers, userAnnotationMarkers, commentMarkers]);
 
   // To-Do management — persist to DB
   const todoSourceIds = useMemo(() => new Set(todoItems.filter(t => t.sourceId).map(t => t.sourceId!)), [todoItems]);
@@ -598,6 +616,7 @@ const FeedbackDisplay = ({
             onAddToDo={handleAddToDoWithTimestamp}
             pendingComment={pendingComment}
             onPendingCommentHandled={() => setPendingComment(null)}
+            onCommentsChange={setHumanComments}
           />
         );
 
