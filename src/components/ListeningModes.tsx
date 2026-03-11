@@ -19,7 +19,7 @@ const modes = [
     points: ["Arrangement pacing", "Tonal balance", "Vocal presence", "Low-end weight"],
   },
   {
-    icon: Eye,
+    icon: Ear,
     name: "Perception",
     tag: "Listener view",
     accent: "0 0% 20%",

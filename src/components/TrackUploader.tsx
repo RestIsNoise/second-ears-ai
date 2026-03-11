@@ -6,10 +6,10 @@ import { toast } from "@/hooks/use-toast";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
-const modes: { id: ListeningMode; label: string; tag: string; icon: typeof Activity }[] = [
-  { id: "technical", label: "Technical", tag: "The engineer", icon: Activity },
+const modes: { id: ListeningMode; label: string; tag: string; icon: typeof SlidersHorizontal }[] = [
+  { id: "technical", label: "Technical", tag: "The engineer", icon: SlidersHorizontal },
   { id: "musical", label: "Musical", tag: "The producer", icon: Music },
-  { id: "perception", label: "Perception", tag: "The listener", icon: Eye },
+  { id: "perception", label: "Perception", tag: "The listener", icon: Ear },
 ];
 
 type Goal = "mixing" | "mastering" | "release_check";

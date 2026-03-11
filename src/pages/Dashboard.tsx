@@ -10,10 +10,10 @@ import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
-const modeIcons: Record<string, typeof Activity> = {
-  technical: Activity,
+const modeIcons: Record<string, typeof SlidersHorizontal> = {
+  technical: SlidersHorizontal,
   musical: Music,
-  perception: Eye,
+  perception: Ear,
 };
 
 const modeColors: Record<string, string> = {
