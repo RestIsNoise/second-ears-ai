@@ -3,7 +3,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const modes = [
   {
-    icon: Activity,
+    icon: SlidersHorizontal,
     name: "Technical",
     tag: "Engineer view",
     accent: "0 0% 40%",
