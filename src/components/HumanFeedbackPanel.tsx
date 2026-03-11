@@ -78,12 +78,31 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
 
   const handleSubmit = useCallback(async () => {
     const trimmed = newText.trim();
-    if (!trimmed || !analysisId || !user) return;
+    if (!trimmed || !analysisId || !user) {
+      if (!analysisId) toast({ title: "Analysis not saved yet", description: "Please wait a moment and try again.", variant: "destructive", duration: 2000 });
+      return;
+    }
     const comment = { analysis_id: analysisId, user_id: user.id, timestamp_in_track: currentTime, text: trimmed };
-    const { data, error } = await supabase.from("comments").insert(comment).select().single();
-    if (error) { toast({ title: "Failed to save", variant: "destructive", duration: 1500 }); return; }
-    setComments((prev) => [...prev, data as unknown as Comment]);
     setNewText("");
+    const optimistic: Comment = {
+      id: crypto.randomUUID(),
+      analysis_id: analysisId,
+      user_id: user.id,
+      timestamp_in_track: currentTime,
+      text: trimmed,
+      created_at: new Date().toISOString(),
+    };
+    setComments((prev) => [...prev, optimistic]);
+    const { data, error } = await supabase.from("comments").insert(comment).select().single();
+    if (error) {
+      console.error("[HumanFeedback] Insert failed:", error);
+      setComments((prev) => prev.filter((c) => c.id !== optimistic.id));
+      setNewText(trimmed);
+      toast({ title: "Failed to save comment", variant: "destructive", duration: 1500 });
+      return;
+    }
+    // Replace optimistic with real row
+    setComments((prev) => prev.map((c) => (c.id === optimistic.id ? (data as unknown as Comment) : c)));
     inputRef.current?.focus();
   }, [newText, analysisId, user, currentTime]);
 
