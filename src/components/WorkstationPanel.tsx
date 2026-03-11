@@ -1,14 +1,14 @@
 import { X } from "lucide-react";
 
-/** Flex weight per panel id */
-const PANEL_FLEX: Record<string, number> = {
-  "ai-reference": 2,
-  "ai-feedback": 2.5,
-  "full-analysis": 2,
-  "session": 2,
-  "tech-metrics": 1.5,
-  "human-feedback": 1.5,
-  "todo": 1.2,
+/** Width tuning per panel id */
+const PANEL_SIZING: Record<string, { flex: number; minWidth: number; maxWidth?: number }> = {
+  "ai-reference": { flex: 2, minWidth: 240 },
+  "ai-feedback": { flex: 2.15, minWidth: 320, maxWidth: 440 },
+  "full-analysis": { flex: 2, minWidth: 240 },
+  "session": { flex: 2, minWidth: 320 },
+  "tech-metrics": { flex: 1.2, minWidth: 210, maxWidth: 300 },
+  "human-feedback": { flex: 1.5, minWidth: 240 },
+  "todo": { flex: 0.95, minWidth: 220, maxWidth: 280 },
 };
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
@@ -21,15 +21,15 @@ interface Props {
 }
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
-  const flex = PANEL_FLEX[id] ?? 1;
-  const minWidth = id === "ai-feedback" ? 380 : id === "session" ? 320 : id === "todo" ? 260 : 240;
+  const panelSizing = PANEL_SIZING[id] ?? { flex: 1, minWidth: 220 };
 
   return (
     <div
       className="flex flex-col h-full min-w-0"
       style={{
-        flex,
-        minWidth,
+        flex: `${panelSizing.flex} 1 0`,
+        minWidth: panelSizing.minWidth,
+        maxWidth: panelSizing.maxWidth,
         /* Hard channel-strip divider between panels */
         borderRight: "3px solid hsl(var(--foreground) / 0.14)",
         boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03), inset 1px 0 0 hsl(0 0% 0% / 0.04)",
