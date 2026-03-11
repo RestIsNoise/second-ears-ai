@@ -370,7 +370,6 @@ const SubKickChannel = ({ value }: { value: number }) => {
 /* ── Section Divider ── */
 const SectionDivider = ({ label }: { label: string }) => (
   <div
-    className="flex items-center gap-2 px-2"
     style={{
       padding: "3px 8px",
       backgroundColor: "hsl(var(--panel-header))",
@@ -378,9 +377,8 @@ const SectionDivider = ({ label }: { label: string }) => (
       borderTop: "1px solid hsl(var(--foreground) / 0.06)",
     }}
   >
-    <div style={{ width: 3, height: 3, backgroundColor: "hsl(var(--foreground) / 0.15)", borderRadius: 1 }} />
     <span
-      className="text-foreground/25 uppercase tracking-[0.14em] font-extrabold"
+      className="text-foreground/22 uppercase tracking-[0.12em] font-bold"
       style={{ fontFamily: MONO, fontSize: 6.5 }}
     >
       {label}
