@@ -513,10 +513,6 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
           <MixerBtn onClick={() => setIsLooping(!isLooping)} active={isLooping} title="Loop">
             <Repeat className="w-3.5 h-3.5" />
           </MixerBtn>
-
-          <span className="flex items-center justify-center" style={{ width: 28, height: 28, color: "rgba(255,255,255,0.25)" }}>
-            <AudioWaveform className="w-3.5 h-3.5" />
-          </span>
         </div>
       </div>
 
