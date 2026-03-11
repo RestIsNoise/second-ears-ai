@@ -180,7 +180,7 @@ const HowItWorks = () => {
             </span>
             <div className="flex-1 mx-4 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--foreground) / 0.1), hsl(var(--foreground) / 0.03))" }} />
             <span
-              className="text-[11px] text-foreground/35 tracking-[0.15em] uppercase font-bold"
+              className="text-[11px] text-foreground/45 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Output
