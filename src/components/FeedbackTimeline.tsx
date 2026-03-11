@@ -246,7 +246,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     <button
                       onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
                       disabled={alreadyAdded}
-                      className={`inline-flex items-center text-[9px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
+                      className={`inline-flex items-center text-[10px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
                         alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
                       }`}
                       style={{ fontFamily: MONO }}
