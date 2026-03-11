@@ -213,6 +213,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
   ({ audioFile, markers = [], activeMarkerId, onMarkerClick, onTimeUpdate, onDurationReady, onAddNote, onAddToDo, onEditNote, hideControls, label, waveColor, progressColor, outlineMode, deckVariant = "a", containerStyle, frequencyData }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const markersRef = useRef<WaveformMarkersHandle>(null);
     const wsRef = useRef<WaveSurfer | null>(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
