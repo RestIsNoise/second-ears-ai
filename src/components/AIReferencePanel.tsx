@@ -236,7 +236,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                           >
                             FIX
                           </span>
-                          <p className="text-[12px] text-foreground/55" style={{ lineHeight: 1.6, fontFamily: MONO }}>{p.suggestedFix}</p>
+                          <p className="text-[14px] text-foreground/55" style={{ lineHeight: 1.7, fontFamily: MONO }}>{p.suggestedFix}</p>
                         </div>
                       )}
                     </div>
