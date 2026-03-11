@@ -102,7 +102,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className="flex-1 px-2 py-[6px] text-[10px] font-medium uppercase tracking-[0.06em] transition-all duration-100"
+              className="flex-1 px-2.5 py-[7px] text-[11px] font-medium uppercase tracking-[0.06em] transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 color: filter === f.key ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.3)",
