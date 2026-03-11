@@ -160,7 +160,7 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full max-w-[360px] sm:max-w-[480px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full max-w-[430px] sm:max-w-[560px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
@@ -181,7 +181,7 @@ const Hero = () => {
               </div>
 
               {/* Screenshot */}
-              <div className="w-full overflow-hidden" style={{ height: "clamp(220px, 28vw, 380px)" }}>
+              <div className="w-full overflow-hidden" style={{ height: "clamp(260px, 34vw, 450px)" }}>
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
