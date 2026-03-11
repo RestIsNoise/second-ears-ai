@@ -218,7 +218,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                       {p.whyItMatters && p.whyItMatters.length > 150 && (
                         <button
                           onClick={() => toggleCard(i)}
-                          className="mt-0.5 text-[8px] text-foreground/20 hover:text-foreground/45 uppercase tracking-wider font-bold"
+                          className="mt-1 text-[9px] text-foreground/20 hover:text-foreground/45 uppercase tracking-wider font-bold"
                           style={{ fontFamily: MONO }}
                         >
                           {isExpanded ? "Less" : "More"}
