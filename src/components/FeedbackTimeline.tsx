@@ -176,40 +176,40 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               }}
             >
               {/* ═══ EVENT HEADER STRIP ═══ */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  padding: "14px 18px",
-                  backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
-                  borderLeft: `3px solid ${accent.border}`,
-                  borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
-                  borderTop: idx === 0 ? "none" : "1px solid hsl(var(--foreground) / 0.06)",
-                }}
-              >
-                {/* Index */}
-                <span
-                  className="text-foreground/22 font-medium shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 13, letterSpacing: "0.02em", minWidth: 22 }}
-                >
-                  {String(idx + 1).padStart(2, "0")}
-                </span>
-
-                {/* Timestamp */}
-                <span
-                  className="text-foreground/55 tabular-nums font-medium shrink-0"
+                <div
                   style={{
-                    fontFamily: MONO,
-                    fontSize: 14,
-                    backgroundColor: "hsl(var(--foreground) / 0.04)",
-                    padding: "3px 8px",
-                    borderRadius: 2,
-                    letterSpacing: "-0.01em",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 16px",
+                    backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
+                    borderLeft: `3px solid ${accent.border}`,
+                    borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
+                    borderTop: idx === 0 ? "none" : "1px solid hsl(var(--foreground) / 0.06)",
                   }}
                 >
-                  {formatTime(item.timestampSec)}
-                </span>
+                  {/* Index */}
+                  <span
+                    className="text-foreground/22 font-medium shrink-0"
+                    style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em" }}
+                  >
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* Timestamp */}
+                  <span
+                    className="text-foreground/55 tabular-nums font-medium shrink-0"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 11,
+                      backgroundColor: "hsl(var(--foreground) / 0.04)",
+                      padding: "2px 5px",
+                      borderRadius: 2,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {formatTime(item.timestampSec)}
+                  </span>
 
                 {/* Severity LED + label */}
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -221,10 +221,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     }}
                   />
                   <span
-                    className="font-medium uppercase tracking-[0.06em]"
+                    className="font-medium uppercase tracking-[0.04em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 11,
+                      fontSize: 10,
                       color: sev.color,
                     }}
                   >
