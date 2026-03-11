@@ -143,10 +143,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {!loadingComments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-3">
             <MessageSquare className="w-6 h-6 text-foreground/10" strokeWidth={1.5} />
-            <p className="text-[9px] text-foreground/25 uppercase tracking-wider font-bold" style={{ fontFamily: MONO }}>
+            <p className="text-[10px] text-foreground/30 uppercase tracking-wider font-medium" style={{ fontFamily: MONO }}>
               No notes yet
             </p>
-            <p className="text-[9px] text-foreground/15 max-w-[180px]" style={{ fontFamily: MONO, lineHeight: 1.5 }}>
+            <p className="text-[10px] text-foreground/20 max-w-[200px]" style={{ fontFamily: MONO, lineHeight: 1.6 }}>
               Click waveform to add timestamped notes
             </p>
           </div>
