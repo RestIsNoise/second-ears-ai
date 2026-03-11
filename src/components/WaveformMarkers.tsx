@@ -378,7 +378,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
                     boxShadow: isActive ? `0 0 10px hsl(40 90% 55% / 0.3)` : "none",
                   }}
                 >
-                  <User className="w-2.5 h-2.5" strokeWidth={2.5} />
+                  <MessageCircle className="w-2.5 h-2.5" strokeWidth={2.5} />
                 </div>
                 <div
                   style={{
