@@ -35,7 +35,7 @@ const ListeningModes = () => {
     <section
       ref={ref}
       id="modes"
-      className={`relative py-18 md:py-24 px-6 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
+      className={`relative py-24 md:py-32 px-6 overflow-visible reveal ${isVisible ? "is-visible" : ""}`}
       style={{ background: "hsl(var(--surface-c))" }}
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />

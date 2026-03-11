@@ -15,8 +15,8 @@ const Index = () => (
       <Hero />
       <HowItWorks />
       <SampleFeedback />
-      <Proof />
       <ListeningModes />
+      <Proof />
       <Pricing />
       <TrustStrip />
     </main>
