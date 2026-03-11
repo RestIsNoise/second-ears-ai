@@ -180,8 +180,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 6,
-                  padding: "4px 10px",
+                  gap: 8,
+                  padding: "6px 12px",
                   backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
                   borderLeft: `3px solid ${accent.border}`,
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
@@ -190,20 +190,20 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Index */}
                 <span
-                  className="text-foreground/18 font-extrabold shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.04em", minWidth: 14 }}
+                  className="text-foreground/20 font-medium shrink-0"
+                  style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.02em", minWidth: 16 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
 
-                {/* Timestamp — tabular, monospaced, prominent */}
+                {/* Timestamp */}
                 <span
-                  className="text-foreground/50 tabular-nums font-bold shrink-0"
+                  className="text-foreground/55 tabular-nums font-medium shrink-0"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 10,
+                    fontSize: 11,
                     backgroundColor: "hsl(var(--foreground) / 0.04)",
-                    padding: "1px 5px",
+                    padding: "2px 6px",
                     borderRadius: 2,
                     letterSpacing: "-0.01em",
                   }}
@@ -212,19 +212,19 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 </span>
 
                 {/* Severity LED + label */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
                   <div
-                    className="w-[5px] h-[5px] rounded-full"
+                    className="w-[6px] h-[6px] rounded-full"
                     style={{
                       backgroundColor: sev.color,
                       boxShadow: sev.glow,
                     }}
                   />
                   <span
-                    className="font-extrabold uppercase tracking-[0.08em]"
+                    className="font-medium uppercase tracking-[0.06em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 7,
+                      fontSize: 8,
                       color: sev.color,
                     }}
                   >
@@ -234,24 +234,24 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
 
                 {/* Mode tag */}
                 <span
-                  className="text-foreground/25 font-bold uppercase tracking-[0.08em] shrink-0 ml-auto"
-                  style={{ fontFamily: MONO, fontSize: 7 }}
+                  className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
+                  style={{ fontFamily: MONO, fontSize: 8 }}
                 >
                   {accent.tag}
                 </span>
 
                 {/* Hover actions */}
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   {onAddToDo && (
                     <button
                       onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
                       disabled={alreadyAdded}
-                      className={`inline-flex items-center text-[8px] uppercase tracking-wider font-bold transition-colors shrink-0 ${
-                        alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/25 hover:text-foreground/55"
+                      className={`inline-flex items-center text-[9px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
+                        alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
                       }`}
                       style={{ fontFamily: MONO }}
                     >
-                      {alreadyAdded ? <Check className="w-2.5 h-2.5" /> : <Plus className="w-2.5 h-2.5" />}
+                      {alreadyAdded ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
                     </button>
                   )}
                   <CopyFixInline item={item} />
