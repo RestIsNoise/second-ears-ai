@@ -48,6 +48,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.content, timestamp: c.timestamp })));
   }, [comments, onCommentsChange]);
 
+  useEffect(() => {
     if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
       setLoadingComments(true);
