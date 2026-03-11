@@ -137,16 +137,16 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
         >
           {/* Table header */}
           <div
-            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-2"
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-x-5 px-5 py-3"
             style={{
               backgroundColor: "hsl(var(--panel-header))",
               borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
             }}
           >
-    <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 9 }}>Metric</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[56px]" style={{ fontFamily: MONO, fontSize: 9 }}>You</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[56px]" style={{ fontFamily: MONO, fontSize: 9 }}>Ref</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[52px]" style={{ fontFamily: MONO, fontSize: 9 }}>Δ</span>
+    <span className="text-foreground/35 uppercase tracking-[0.1em] font-medium" style={{ fontFamily: MONO, fontSize: 10 }}>Metric</span>
+            <span className="text-foreground/35 uppercase tracking-[0.1em] font-medium text-right w-[60px]" style={{ fontFamily: MONO, fontSize: 10 }}>You</span>
+            <span className="text-foreground/35 uppercase tracking-[0.1em] font-medium text-right w-[60px]" style={{ fontFamily: MONO, fontSize: 10 }}>Ref</span>
+            <span className="text-foreground/35 uppercase tracking-[0.1em] font-medium text-right w-[56px]" style={{ fontFamily: MONO, fontSize: 10 }}>Δ</span>
           </div>
 
           {metricEntries.map(([key, diff], idx) => {
