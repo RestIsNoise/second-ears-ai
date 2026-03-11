@@ -664,7 +664,7 @@ const FeedbackDisplay = ({
                 <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "6px 8px",
+                    padding: "8px 10px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
