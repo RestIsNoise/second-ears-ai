@@ -62,7 +62,7 @@ const HowItWorks = () => {
           style={{
             "--stagger": "100ms",
             background: "hsl(var(--card))",
-            border: "1px solid hsl(var(--foreground) / 0.1)",
+            border: "1px solid hsl(var(--foreground) / 0.14)",
             boxShadow: "0 2px 8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
           } as React.CSSProperties}
         >
