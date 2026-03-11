@@ -12,7 +12,10 @@ export default {
         "2xl": "1400px",
       },
     },
-    extend: {
+      fontFamily: {
+        sans: ["'IBM Plex Mono'", "'DM Mono'", "monospace"],
+        mono: ["'IBM Plex Mono'", "'DM Mono'", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
