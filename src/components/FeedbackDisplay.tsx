@@ -1254,23 +1254,16 @@ const FeedbackDisplay = ({
             >
               {/* Section header strip */}
               <div
-                className="flex items-center gap-2 px-4"
+                className="flex items-center px-4"
                 style={{
-                  paddingTop: 6,
-                  paddingBottom: 6,
+                  paddingTop: 7,
+                  paddingBottom: 7,
                   backgroundColor: "hsl(var(--panel-header))",
                   borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
                 }}
               >
-                <div
-                  className="w-[6px] h-[6px] rounded-full shrink-0"
-                  style={{
-                    background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-                    boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-                  }}
-                />
                 <h3
-                  className="text-[8px] text-foreground/50 tracking-[0.16em] uppercase font-extrabold"
+                  className="text-[8px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
                   style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
                 >
                   {modeWhatWorksLabel[mode] || "What Works"}
