@@ -143,7 +143,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               </p>
               <button
                 onClick={() => inputRef.current?.focus()}
-                className="rounded-sm px-3 py-1 text-[9px] font-bold uppercase tracking-wider transition-all duration-100"
+                className="rounded-sm px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider transition-all duration-100"
                 style={{
                   fontFamily: MONO,
                   backgroundColor: "hsl(var(--foreground) / 0.08)",
