@@ -30,12 +30,8 @@ const panelIcons: Record<string, React.ElementType> = {
   "todo": ListChecks,
 };
 
-/* Panel grouping for visual structure */
-const GROUPS: { label: string; ids: string[] }[] = [
-  { label: "Analysis", ids: ["ai-feedback", "ai-reference", "full-analysis"] },
-  { label: "Data", ids: ["tech-metrics", "session"] },
-  { label: "Workflow", ids: ["human-feedback", "todo"] },
-];
+/* Ordered panel IDs */
+const PANEL_ORDER = ["ai-feedback", "ai-reference", "full-analysis", "tech-metrics", "session", "human-feedback", "todo"];
 
 const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }: Props) => {
   const atMax = activePanels.size >= maxPanels;
