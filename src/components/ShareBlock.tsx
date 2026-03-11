@@ -130,7 +130,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {/* ── Share + Export row ── */}
       <div className="flex gap-2">
         {/* Share button with popover */}
