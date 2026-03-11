@@ -174,7 +174,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
               className="font-medium uppercase tracking-[0.04em]"
               style={{
                 fontFamily: MONO,
-                fontSize: 7.5,
+                fontSize: 8.5,
                 color: led.bg,
                 padding: "2px 5px",
                 backgroundColor: led.muted,
