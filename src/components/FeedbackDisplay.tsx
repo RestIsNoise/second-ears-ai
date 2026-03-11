@@ -1269,7 +1269,7 @@ const FeedbackDisplay = ({
                   {modeWhatWorksLabel[mode] || "What Works"}
                 </h3>
               </div>
-              <div className="p-3 space-y-1.5 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+              <div className="p-4 space-y-2 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
