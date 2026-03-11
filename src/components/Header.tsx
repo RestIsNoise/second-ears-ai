@@ -57,7 +57,7 @@ const Header = () => {
           <span
             className={cn(
               "font-bold tracking-tight transition-all duration-300 uppercase",
-              scrolled ? "text-[10px]" : "text-[11px]"
+              scrolled ? "text-[13px]" : "text-[14px]"
             )}
             style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em" }}
           >
