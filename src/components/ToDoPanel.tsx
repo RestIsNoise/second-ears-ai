@@ -218,7 +218,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
         }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 10 }}>›</span>
+          <span className="text-foreground/25" style={{ fontFamily: MONO, fontSize: 11 }}>›</span>
           <input
             ref={inputRef}
             type="text"
