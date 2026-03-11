@@ -926,7 +926,7 @@ const FeedbackDisplay = ({
             <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
-              className="px-5 py-4 md:px-8 md:py-5"
+              className="px-5 py-3 md:px-8 md:py-3.5"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
