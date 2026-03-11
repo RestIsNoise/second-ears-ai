@@ -228,9 +228,9 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                         <div className="mt-2 pt-2 flex items-start gap-2" style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}>
                           <span
                             className="shrink-0 mt-[1px]"
-                            style={{
-                              fontFamily: MONO, fontSize: 8, fontWeight: 800,
-                              letterSpacing: "0.06em", padding: "2px 5px",
+                             style={{
+                              fontFamily: MONO, fontSize: 10, fontWeight: 700,
+                              letterSpacing: "0.06em", padding: "3px 7px",
                               backgroundColor: "hsl(0 55% 50% / 0.7)", color: "white", borderRadius: 1,
                             }}
                           >
