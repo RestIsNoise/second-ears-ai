@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef, useMemo } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
+import { Play, Pause, RotateCcw, AlertCircle, CheckSquare, MessageCircle, X } from "lucide-react";
 import WaveformMarkers, { MARKER_ZONE_HEIGHT } from "@/components/WaveformMarkers";
-import type { WaveformMarkersHandle } from "@/components/WaveformMarkers";
+import type { WaveformMarkersHandle, ComposerState } from "@/components/WaveformMarkers";
 import FrequencyEnergyBar from "@/components/FrequencyEnergyBar";
 import type { WaveformMarker } from "@/types/feedback";
 import type { FrequencyData } from "@/lib/parseFrequencyData";
