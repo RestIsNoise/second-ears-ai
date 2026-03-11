@@ -367,7 +367,7 @@ const FeedbackDisplay = ({
     const tempId = `todo-${Date.now()}`;
     const newItem: ToDoItem = { id: tempId, text: actionText, timestampSec: item.timestampSec, done: false, sourceId: item.id };
     setTodoItems((prev) => [...prev, newItem]);
-    toast({ title: "Added to To-Do", duration: 1200 });
+    toast({ title: "Added to Next Moves", duration: 1200 });
     const dbId = await persistTodo({ text: actionText, timestampSec: item.timestampSec, sourceId: item.id });
     if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
   }, [persistTodo]);
