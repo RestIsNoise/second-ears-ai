@@ -934,7 +934,7 @@ const FeedbackDisplay = ({
             >
               {/* Summary text — full width for comfortable reading */}
               {n.overallImpression && (
-                <p className="text-[15px] sm:text-[16px] text-foreground/70 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em", maxWidth: "90ch" }}>
+                <p className="text-[15px] sm:text-[16px] text-foreground/70 w-full" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
                   {n.overallImpression}
                 </p>
               )}
