@@ -684,8 +684,8 @@ const FeedbackDisplay = ({
                         </p>
                       )}
                       {n.ifFixOneThing.how && (
-                        <p className="text-[10px] text-foreground/60 mt-1.5" style={{ lineHeight: 1.5, fontFamily: "'IBM Plex Mono', monospace" }}>
-                          <span className="text-foreground/30 uppercase tracking-wider font-extrabold mr-1.5" style={{ fontSize: 7 }}>How</span>
+                        <p className="text-[12px] text-foreground/60 mt-2" style={{ lineHeight: 1.6, fontFamily: "'IBM Plex Mono', monospace" }}>
+                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 8 }}>How</span>
                           {n.ifFixOneThing.how}
                         </p>
                       )}
