@@ -943,7 +943,7 @@ const FeedbackDisplay = ({
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <Layers className="w-3 h-3" />
+                    <Layers className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
                     <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
                   </button>
