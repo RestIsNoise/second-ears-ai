@@ -224,7 +224,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     className="font-medium uppercase tracking-[0.06em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 10,
+                      fontSize: 11,
                       color: sev.color,
                     }}
                   >
