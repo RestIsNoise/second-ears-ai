@@ -284,7 +284,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         >
           <span
             className="font-extrabold uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 6.5, color: led.bg, padding: "1px 4px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
+            style={{ fontFamily: MONO, fontSize: 8, color: led.bg, padding: "2px 5px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
           >
             {status.label}
           </span>
