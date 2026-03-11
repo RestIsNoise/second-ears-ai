@@ -167,7 +167,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                   border: "1px solid hsl(var(--foreground) / 0.06)",
                 }}
               >
-                <User className="w-[9px] h-[9px] text-foreground/25" />
+                <User className="w-[10px] h-[10px] text-foreground/25" />
               </div>
               <span
                 className="text-foreground/40 tabular-nums font-medium"
