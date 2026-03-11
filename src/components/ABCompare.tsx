@@ -138,15 +138,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
     }
   }, [sortedMarkers, onMarkerClick]);
 
-  const handleSoloToggle = useCallback((deck: "a" | "b") => {
+  const handleSourceSelect = useCallback((deck: "a" | "b") => {
     const mv = isMuted ? 0 : masterVolume / 100;
     if (soloMode === deck) {
-      // Unsolo — return to crossfade
+      // Deselect — return to crossfade blend
       setSoloMode("off");
       playerARef.current?.setVolume((1 - crossfade / 100) * mv);
       playerBRef.current?.setVolume((crossfade / 100) * mv);
     } else {
+      // Snap to selected source
       setSoloMode(deck);
+      setCrossfade(deck === "a" ? 0 : 100);
       playerARef.current?.setVolume(deck === "a" ? mv : 0);
       playerBRef.current?.setVolume(deck === "b" ? mv : 0);
     }
@@ -354,29 +356,29 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         {/* CENTER: Crossfader */}
         <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 280, width: "100%" }}>
           <div className="flex items-center gap-2.5 w-full">
-            {/* A label + solo */}
+            {/* A source select */}
             <button
-              onClick={() => handleSoloToggle("a")}
-              className="shrink-0 uppercase tabular-nums transition-all duration-100"
+              onClick={() => handleSourceSelect("a")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-150"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
-                letterSpacing: "0.04em",
-                color: soloMode === "a" ? "#000" : (cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)"),
+                letterSpacing: "0.06em",
+                color: soloMode === "a" ? "#000" : (soloMode === "off" && cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.25)"),
                 backgroundColor: soloMode === "a" ? DECK_A_COLOR : "transparent",
-                padding: "2px 5px",
-                borderRadius: 2,
-                border: soloMode === "a" ? `1px solid ${DECK_A_COLOR}` : "1px solid transparent",
+                padding: "3px 8px",
+                borderRadius: 3,
+                border: `1px solid ${soloMode === "a" ? DECK_A_COLOR : "rgba(255,255,255,0.10)"}`,
+                boxShadow: soloMode === "a" ? `0 0 8px ${DECK_A_COLOR}44` : "none",
               }}
-              title={soloMode === "a" ? "Unsolo A" : "Solo A"}
+              title={soloMode === "a" ? "Return to blend" : "Monitor A only"}
             >
               A
             </button>
 
             {/* Crossfader track */}
             <div className="flex-1 relative" style={{ height: 22 }}>
-              {/* Track groove */}
               <div
                 className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
                 style={{
@@ -386,17 +388,15 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                   boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
                 }}
               />
-              {/* Color fill */}
               <div
                 className="absolute top-1/2 left-0 right-0 -translate-y-1/2 pointer-events-none"
                 style={{
                   height: 4,
                   borderRadius: 2,
                   background: `linear-gradient(to right, ${DECK_A_COLOR} ${100 - cfPct}%, ${DECK_B_COLOR} ${100 - cfPct}%)`,
-                  opacity: 0.50,
+                  opacity: soloMode !== "off" ? 0.2 : 0.50,
                 }}
               />
-              {/* Center detent */}
               <div
                 className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none"
                 style={{
@@ -422,26 +422,28 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                   cursor: "pointer",
                   position: "relative",
                   zIndex: 2,
+                  opacity: soloMode !== "off" ? 0.4 : 1,
                 }}
               />
             </div>
 
-            {/* B label + solo */}
+            {/* B source select */}
             <button
-              onClick={() => handleSoloToggle("b")}
-              className="shrink-0 uppercase tabular-nums transition-all duration-100"
+              onClick={() => handleSourceSelect("b")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-150"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
-                letterSpacing: "0.04em",
-                color: soloMode === "b" ? "#000" : (cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)"),
+                letterSpacing: "0.06em",
+                color: soloMode === "b" ? "#000" : (soloMode === "off" && cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.25)"),
                 backgroundColor: soloMode === "b" ? DECK_B_COLOR : "transparent",
-                padding: "2px 5px",
-                borderRadius: 2,
-                border: soloMode === "b" ? `1px solid ${DECK_B_COLOR}` : "1px solid transparent",
+                padding: "3px 8px",
+                borderRadius: 3,
+                border: `1px solid ${soloMode === "b" ? DECK_B_COLOR : "rgba(255,255,255,0.10)"}`,
+                boxShadow: soloMode === "b" ? `0 0 8px ${DECK_B_COLOR}44` : "none",
               }}
-              title={soloMode === "b" ? "Unsolo B" : "Solo B"}
+              title={soloMode === "b" ? "Return to blend" : "Monitor B only"}
             >
               B
             </button>
