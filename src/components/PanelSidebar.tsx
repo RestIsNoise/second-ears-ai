@@ -114,8 +114,8 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                 }}
               >
                 <Icon
-                  className={cn(
-                    "w-3 h-3",
+                    className={cn(
+                    "w-3.5 h-3.5",
                     isActive ? "text-foreground/70" : "text-foreground/30",
                   )}
                   strokeWidth={isActive ? 2.2 : 1.6}
