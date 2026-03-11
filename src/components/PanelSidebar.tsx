@@ -31,7 +31,7 @@ const panelIcons: Record<string, React.ElementType> = {
 };
 
 /* Ordered panel IDs */
-const PANEL_ORDER = ["ai-feedback", "ai-reference", "full-analysis", "tech-metrics", "session", "human-feedback", "todo"];
+const PANEL_ORDER = ["ai-feedback", "ai-reference", "full-analysis", "tech-metrics", "human-feedback", "todo"];
 
 const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }: Props) => {
   const atMax = activePanels.size >= maxPanels;
