@@ -932,65 +932,63 @@ const FeedbackDisplay = ({
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
               }}
             >
-              {/* Top row: paragraph + action buttons */}
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-                {n.overallImpression && (
-                  <p className="text-[15px] sm:text-[16px] text-foreground/70 max-w-[68ch] flex-1 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
-                    {n.overallImpression}
-                  </p>
-                )}
+              {/* Summary text — full width for comfortable reading */}
+              {n.overallImpression && (
+                <p className="text-[15px] sm:text-[16px] text-foreground/70 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em", maxWidth: "90ch" }}>
+                  {n.overallImpression}
+                </p>
+              )}
 
-                {/* Action controls — industrial buttons */}
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => setShowArrangement((v) => !v)}
-                    className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      padding: "7px 14px",
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.08)",
-                      borderRadius: 2,
-                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                    }}
-                  >
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
-                    <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
-                  </button>
-                  <button
-                    onClick={() => setRefModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      padding: "7px 14px",
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.08)",
-                      borderRadius: 2,
-                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                    }}
-                  >
-                    <Disc className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Reference</span>
-                    <span className="sm:hidden">Ref</span>
-                  </button>
-                </div>
-                {/* SE monogram — stamped identity plate */}
+              {/* Action controls row — compact utilities */}
+              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-5")}>
+                <button
+                  onClick={() => setShowArrangement((v) => !v)}
+                  className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    padding: "7px 14px",
+                    backgroundColor: "hsl(var(--panel-bg))",
+                    border: "1px solid hsl(var(--foreground) / 0.08)",
+                    borderRadius: 2,
+                    boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                  }}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
+                  <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
+                </button>
+                <button
+                  onClick={() => setRefModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    padding: "7px 14px",
+                    backgroundColor: "hsl(var(--panel-bg))",
+                    border: "1px solid hsl(var(--foreground) / 0.08)",
+                    borderRadius: 2,
+                    boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                  }}
+                >
+                  <Disc className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Reference</span>
+                  <span className="sm:hidden">Ref</span>
+                </button>
+
+                {/* SE monogram */}
                 <div
-                  className="flex items-center justify-center mt-3"
-                  style={{ opacity: 0.18 }}
+                  className="ml-auto flex items-center justify-center"
+                  style={{ opacity: 0.15 }}
                   aria-hidden="true"
                 >
                   <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* S */}
                     <path
                       d="M2 12.5C2.8 13.5 4.2 14 6 14C8.5 14 10 12.8 10 11C10 9.2 8.5 8.5 6.2 7.8C4 7.1 2.5 6.2 2.5 4.2C2.5 2.2 4.2 1 6.5 1C8 1 9.3 1.5 10 2.5"
                       stroke="currentColor"
@@ -998,7 +996,6 @@ const FeedbackDisplay = ({
                       strokeLinecap="square"
                       fill="none"
                     />
-                    {/* E */}
                     <path
                       d="M16 1H24.5M16 7.5H23M16 14H24.5M16 1V14"
                       stroke="currentColor"
