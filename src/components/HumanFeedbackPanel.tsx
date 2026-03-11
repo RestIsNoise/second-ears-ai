@@ -44,6 +44,12 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const getCurrentUserId = useCallback(async () => {
+    if (user?.id) return user.id;
+    const { data } = await supabase.auth.getUser();
+    return data.user?.id ?? null;
+  }, [user?.id]);
+
   // Sync comment markers to parent
   useEffect(() => {
     onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.content, timestamp: c.timestamp })));
@@ -67,37 +73,59 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
 
   // Handle external comments from waveform "Add Note"
   useEffect(() => {
-    if (!pendingComment || !analysisId || !user) return;
+    if (!pendingComment || !analysisId) return;
     const insert = async () => {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        toast({ title: "Please sign in to add comments", variant: "destructive", duration: 1500 });
+        onPendingCommentHandled?.();
+        return;
+      }
+
       const row = {
         analysis_id: analysisId,
-        user_id: user.id,
+        user_id: userId,
         timestamp: pendingComment.timestampSec,
         content: pendingComment.text,
+        updated_at: new Date().toISOString(),
       };
+
       const { data, error } = await supabase
         .from("comments")
         .insert(row as any)
         .select(COMMENT_SELECT)
         .single();
+
       if (!error && data) {
         setComments((prev) => [...prev, data as unknown as Comment]);
         toast({ title: "Comment added", duration: 1200 });
       }
+
+      if (error) {
+        toast({ title: error.message || "Failed to save comment", variant: "destructive", duration: 1800 });
+      }
+
       onPendingCommentHandled?.();
     };
     insert();
-  }, [pendingComment, analysisId, user, onPendingCommentHandled]);
+  }, [pendingComment, analysisId, getCurrentUserId, onPendingCommentHandled]);
 
   const handleSubmit = useCallback(async () => {
     const trimmed = newText.trim();
-    if (!trimmed || !analysisId || !user) return;
+    if (!trimmed || !analysisId) return;
+
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      toast({ title: "Please sign in to add comments", variant: "destructive", duration: 1500 });
+      return;
+    }
 
     const row = {
       analysis_id: analysisId,
-      user_id: user.id,
+      user_id: userId,
       timestamp: currentTime,
       content: trimmed,
+      updated_at: new Date().toISOString(),
     };
 
     const { data, error } = await supabase
@@ -107,14 +135,14 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       .single();
 
     if (error) {
-      toast({ title: "Failed to save comment", variant: "destructive", duration: 1500 });
+      toast({ title: error.message || "Failed to save comment", variant: "destructive", duration: 1800 });
       return;
     }
 
     setComments((prev) => [...prev, data as unknown as Comment]);
     setNewText("");
     inputRef.current?.focus();
-  }, [newText, analysisId, user, currentTime]);
+  }, [newText, analysisId, currentTime, getCurrentUserId]);
 
   const handleDelete = useCallback(async (commentId: string) => {
     setComments((prev) => prev.filter((c) => c.id !== commentId));
