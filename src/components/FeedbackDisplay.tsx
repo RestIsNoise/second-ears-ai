@@ -661,10 +661,10 @@ const FeedbackDisplay = ({
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
-                <div
+                  <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "8px 10px",
+                    padding: "10px 12px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (

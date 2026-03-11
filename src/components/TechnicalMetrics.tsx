@@ -438,14 +438,14 @@ const TechnicalMetrics = ({ metrics }: Props) => {
       <div
         className="flex items-center"
         style={{
-          padding: "4px 8px",
+          padding: "6px 10px",
           backgroundColor: "hsl(var(--panel-header))",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
         }}
       >
         <span
           className="text-foreground/45 uppercase tracking-[0.14em] font-extrabold"
-          style={{ fontFamily: MONO, fontSize: 7 }}
+          style={{ fontFamily: MONO, fontSize: 8 }}
         >
           Metering
         </span>

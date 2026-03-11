@@ -183,7 +183,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
                 backgroundColor: item.done ? "hsl(var(--foreground) / 0.06)" : "transparent",
               }}
             >
-              {item.done && <Check className="w-2.5 h-2.5 text-foreground/35" />}
+              {item.done && <Check className="w-3 h-3 text-foreground/35" />}
             </button>
 
             <div className="flex-1 min-w-0">
