@@ -127,12 +127,12 @@ function toFeedbackItems(items: NormalizedTimelineItem[], mode: string): Feedbac
 }
 
 const PANELS: PanelConfig[] = [
-  { id: "ai-reference", label: "AI Reference" },
-  { id: "ai-feedback", label: "AI Feedback" },
+  { id: "ai-reference", label: "Reference Match" },
+  { id: "ai-feedback", label: "SecondEar Notes" },
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
-  { id: "full-analysis", label: "Full Analysis" },
-  { id: "todo", label: "To-Do List" },
+  { id: "full-analysis", label: "Deep Read" },
+  { id: "todo", label: "Next Moves" },
 ];
 
 const MAX_PANELS = 3;
@@ -367,7 +367,7 @@ const FeedbackDisplay = ({
     const tempId = `todo-${Date.now()}`;
     const newItem: ToDoItem = { id: tempId, text: actionText, timestampSec: item.timestampSec, done: false, sourceId: item.id };
     setTodoItems((prev) => [...prev, newItem]);
-    toast({ title: "Added to To-Do", duration: 1200 });
+    toast({ title: "Added to Next Moves", duration: 1200 });
     const dbId = await persistTodo({ text: actionText, timestampSec: item.timestampSec, sourceId: item.id });
     if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
   }, [persistTodo]);
@@ -382,7 +382,7 @@ const FeedbackDisplay = ({
   const handleAddToDoWithTimestamp = useCallback(async (text: string, timestampSec: number) => {
     const tempId = `ht-${Date.now()}`;
     setTodoItems((prev) => [...prev, { id: tempId, text, timestampSec, done: false }]);
-    toast({ title: "Added to To-Do", duration: 1200 });
+    toast({ title: "Added to Next Moves", duration: 1200 });
     const dbId = await persistTodo({ text, timestampSec });
     if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
   }, [persistTodo]);
@@ -724,12 +724,12 @@ const FeedbackDisplay = ({
   };
 
   const panelTitles: Record<string, string> = {
-    "ai-reference": "AI Reference",
-    "ai-feedback": "AI Feedback",
+    "ai-reference": "Reference Match",
+    "ai-feedback": "SecondEar Notes",
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
-    "full-analysis": "Full Analysis",
-    "todo": "To-Do List",
+    "full-analysis": "Deep Read",
+    "todo": "Next Moves",
   };
 
   // Ordered active panels (preserve sidebar order)

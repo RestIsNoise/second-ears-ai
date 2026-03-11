@@ -18,7 +18,7 @@ const blocks = [
     title: "What you get",
     items: [
       "Timeline issues with actionable fixes",
-      "Full analysis cards per listening mode",
+      "Deep Read cards per listening mode",
       "One highest-priority action highlighted",
       "Shareable report with a single link",
     ],

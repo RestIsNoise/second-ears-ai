@@ -266,7 +266,7 @@ const ProjectDetail = () => {
                             onClick={() => handleAnalyzeVersion(a.version)}
                           >
                             <Activity className="w-3 h-3" />
-                            Get AI Feedback
+                            Get SecondEar Notes
                           </Button>
                         </>
                       )}
