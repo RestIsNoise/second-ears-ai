@@ -127,12 +127,12 @@ function toFeedbackItems(items: NormalizedTimelineItem[], mode: string): Feedbac
 }
 
 const PANELS: PanelConfig[] = [
-  { id: "ai-reference", label: "AI Reference" },
-  { id: "ai-feedback", label: "AI Feedback" },
+  { id: "ai-reference", label: "Reference Match" },
+  { id: "ai-feedback", label: "SecondEar Notes" },
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
-  { id: "full-analysis", label: "Full Analysis" },
-  { id: "todo", label: "To-Do List" },
+  { id: "full-analysis", label: "Deep Read" },
+  { id: "todo", label: "Next Moves" },
 ];
 
 const MAX_PANELS = 3;
