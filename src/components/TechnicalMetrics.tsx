@@ -102,7 +102,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         </div>
 
         {/* Center: meter + thresholds */}
-        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "7px 8px" }}>
+        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "9px 10px" }}>
           {/* Segmented bar */}
           <div className="relative">
             <div className="flex gap-px" style={{ height: 4 }}>
