@@ -622,16 +622,16 @@ const FeedbackDisplay = ({
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
-                  <div
+                   <div
                     key={key}
                     style={{
-                      padding: "10px 14px",
+                      padding: "12px 16px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-1.5"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                     >
                       {label}
                     </h3>
