@@ -21,8 +21,8 @@ interface Comment {
   id: string;
   analysis_id: string;
   user_id: string;
-  timestamp_in_track: number;
-  text: string;
+  timestamp: number;
+  content: string;
   created_at: string;
 }
 
