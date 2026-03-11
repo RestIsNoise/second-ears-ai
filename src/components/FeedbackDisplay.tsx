@@ -1393,7 +1393,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WORKSTATION CLOSING FRAME ═══ */}
       <div
-        className="mt-2 sm:mt-3"
+        className="mt-4 sm:mt-6"
         style={{
           backgroundColor: "hsl(0 0% 8%)",
           border: "2px solid hsl(var(--foreground) / 0.1)",
