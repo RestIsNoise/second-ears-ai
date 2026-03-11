@@ -296,11 +296,11 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                         className="shrink-0 mt-[2px] inline-flex items-center"
                         style={{
                           fontFamily: MONO,
-                          fontSize: 9,
+                          fontSize: 10,
                           fontWeight: 600,
                           letterSpacing: "0.06em",
                           lineHeight: 1,
-                          padding: "2px 6px",
+                          padding: "3px 7px",
                           backgroundColor: accent.border,
                           color: "hsl(0 0% 100%)",
                           borderRadius: 1,
