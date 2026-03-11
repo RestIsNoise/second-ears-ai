@@ -98,8 +98,8 @@ const HowItWorks = () => {
                 <div
                   className="relative px-7 py-7 md:py-8 flex flex-col h-full"
                   style={{
-                    borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.07)" : "none",
-                    borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.07)" : "none",
+                    borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
+                    borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
                   }}
                 >
                   {/* Number + Icon row */}
