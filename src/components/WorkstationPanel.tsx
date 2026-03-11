@@ -1,4 +1,4 @@
-import { X, Minus } from "lucide-react";
+import { X } from "lucide-react";
 
 /** Flex weight per panel id */
 const PANEL_FLEX: Record<string, number> = {
