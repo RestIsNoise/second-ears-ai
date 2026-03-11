@@ -10,12 +10,12 @@ const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
 const btnStyle = {
   fontFamily: MONO,
-  fontSize: 14,
+  fontSize: 12,
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase" as const,
-  padding: "12px 16px",
-  height: 40,
+  padding: "8px 12px",
+  height: 34,
   backgroundColor: "hsl(var(--panel-bg))",
   border: "1px solid hsl(var(--foreground) / 0.06)",
   borderRadius: 2,
@@ -130,17 +130,17 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {/* ── Share + Export row ── */}
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-1.5">
         {/* Share button with popover */}
-        <div className="flex-1 relative" ref={popoverRef}>
+        <div className="relative" ref={popoverRef}>
           <button
             onClick={() => { setPopoverOpen(!popoverOpen); setShowInvite(false); }}
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
             style={btnStyle}
           >
-            <Share2 className="w-4 h-4" strokeWidth={2} />
+            <Share2 className="w-3.5 h-3.5" strokeWidth={2} />
             Share
           </button>
 
@@ -231,10 +231,10 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
         {onExportPdf && (
           <button
             onClick={onExportPdf}
-            className="flex-1 flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
+            className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
             style={btnStyle}
           >
-            <Download className="w-4 h-4" strokeWidth={2} />
+            <Download className="w-3.5 h-3.5" strokeWidth={2} />
             Export PDF
           </button>
         )}
@@ -242,11 +242,11 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
       {/* ── Brand mark ── */}
       <div
-        className="flex items-center gap-2 pt-3"
+        className="flex items-center gap-1.5 pt-2.5"
         style={{ borderTop: "1px solid hsl(var(--foreground) / 0.05)" }}
       >
         <div
-          className="w-[18px] h-[18px] rounded-[2px] flex items-center justify-center shrink-0"
+          className="w-[16px] h-[16px] rounded-[2px] flex items-center justify-center shrink-0"
           style={{
             border: "1px solid hsl(var(--foreground) / 0.08)",
             backgroundColor: "hsl(var(--panel-bg))",
@@ -254,14 +254,14 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
         >
           <span
             className="text-foreground/25 leading-none"
-            style={{ fontFamily: MONO, fontSize: 8, fontWeight: 800 }}
+            style={{ fontFamily: MONO, fontSize: 7, fontWeight: 800 }}
           >
             SE
           </span>
         </div>
         <span
           className="text-foreground/22 tracking-[0.04em]"
-          style={{ fontFamily: MONO, fontSize: 16, fontWeight: 500 }}
+          style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500 }}
         >
           SecondEar
         </span>
