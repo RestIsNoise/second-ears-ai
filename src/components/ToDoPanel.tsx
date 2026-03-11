@@ -232,7 +232,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
           <button
             onClick={handleSubmitNote}
             disabled={!noteText.trim()}
-            className="text-[9px] transition-colors disabled:opacity-20 text-foreground/40 hover:text-foreground/70 uppercase tracking-wider font-bold"
+            className="text-[10px] transition-colors disabled:opacity-20 text-foreground/40 hover:text-foreground/70 uppercase tracking-wider font-medium"
             style={{ fontFamily: MONO }}
           >
             <Plus className="w-3 h-3" />
