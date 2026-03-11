@@ -1380,7 +1380,7 @@ const FeedbackDisplay = ({
       <div
         ref={arrangementRef}
         className={cn(
-          "mt-4 rounded-md border border-[#3A3F47] p-0 transition-all duration-200 overflow-hidden",
+          "mt-4 sm:mt-6 overflow-hidden transition-all duration-200",
           !showArrangement && "hidden"
         )}
       >
