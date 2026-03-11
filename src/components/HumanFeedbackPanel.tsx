@@ -102,7 +102,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 13 }}>›</span>
+          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 15 }}>›</span>
           <span
             className="text-foreground/35 tabular-nums font-medium"
             style={{ fontFamily: MONO, fontSize: 12 }}
