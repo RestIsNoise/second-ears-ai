@@ -235,7 +235,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 {/* Mode tag */}
                 <span
                   className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
-                  style={{ fontFamily: MONO, fontSize: 8 }}
+                  style={{ fontFamily: MONO, fontSize: 9 }}
                 >
                   {accent.tag}
                 </span>
