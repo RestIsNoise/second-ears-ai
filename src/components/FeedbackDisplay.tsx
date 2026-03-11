@@ -940,7 +940,7 @@ const FeedbackDisplay = ({
               )}
 
               {/* Action controls row — compact utilities */}
-              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-3.5")}>
+              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
                 <button
                   onClick={() => setShowArrangement((v) => !v)}
                   className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
