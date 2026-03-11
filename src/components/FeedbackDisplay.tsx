@@ -1446,13 +1446,25 @@ const FeedbackDisplay = ({
               className="hidden sm:inline"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9,
-                letterSpacing: "0.12em",
-                color: "hsl(0 0% 32%)",
-                textTransform: "uppercase",
+                fontSize: 8,
+                letterSpacing: "0.06em",
+                color: "hsl(0 0% 22%)",
               }}
             >
-              Dream &nbsp;| &nbsp;Learn &nbsp;| &nbsp;Create &nbsp;| &nbsp;Evolve
+              ·
+            </span>
+            <span
+              className="hidden sm:inline"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                color: "hsl(0 0% 34%)",
+                textTransform: "uppercase",
+                fontWeight: 400,
+              }}
+            >
+              Dream{" "}<span style={{ color: "hsl(0 0% 22%)" }}>|</span>{" "}Learn{" "}<span style={{ color: "hsl(0 0% 22%)" }}>|</span>{" "}Create{" "}<span style={{ color: "hsl(0 0% 22%)" }}>|</span>{" "}Evolve
             </span>
           </div>
 
