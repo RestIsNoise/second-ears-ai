@@ -1395,53 +1395,48 @@ const FeedbackDisplay = ({
       <div
         className="mt-4 sm:mt-6"
         style={{
-          backgroundColor: "hsl(0 0% 8%)",
-          border: "1px solid hsl(var(--foreground) / 0.08)",
+          backgroundColor: "hsl(0 0% 7.5%)",
+          border: "1px solid hsl(var(--foreground) / 0.07)",
           borderRadius: 3,
-          overflow: "hidden",
         }}
       >
         <div
-          className="flex items-center justify-between gap-4 px-5 sm:px-6"
-          style={{ paddingTop: 14, paddingBottom: 14 }}
+          className="flex items-center justify-between px-5 sm:px-6"
+          style={{ height: 42 }}
         >
-          {/* Left: wordmark + trust on same baseline */}
-          <div className="flex items-center gap-3 min-w-0">
+          {/* Left: wordmark · status */}
+          <div className="flex items-center gap-2.5 min-w-0">
             <span
-              className="shrink-0"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: "-0.01em",
-                color: "hsl(0 0% 42%)",
+                fontSize: 9.5,
+                fontWeight: 500,
+                letterSpacing: "0.02em",
+                color: "hsl(0 0% 38%)",
               }}
             >
               SecondEar
             </span>
-            <span style={{ color: "hsl(0 0% 18%)", fontSize: 10 }}>·</span>
-            <div className="flex items-center gap-1.5">
-              <div
-                className="w-[3px] h-[3px] rounded-full shrink-0"
-                style={{ backgroundColor: "hsl(145 40% 45% / 0.5)" }}
-              />
-              <span
-                className="hidden sm:inline"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 8,
-                  letterSpacing: "0.06em",
-                  color: "hsl(0 0% 30%)",
-                  textTransform: "uppercase",
-                }}
-              >
-                Private by default
-              </span>
-            </div>
+            <div
+              className="w-[3px] h-[3px] rounded-full shrink-0 hidden sm:block"
+              style={{ backgroundColor: "hsl(145 45% 42% / 0.45)" }}
+            />
+            <span
+              className="hidden sm:inline"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 7.5,
+                letterSpacing: "0.08em",
+                color: "hsl(0 0% 26%)",
+                textTransform: "uppercase",
+              }}
+            >
+              Private by default
+            </span>
           </div>
 
-          {/* Right: links — single row, uniform */}
-          <nav className="flex items-center gap-4 shrink-0">
+          {/* Right: links */}
+          <nav className="flex items-center gap-5 shrink-0">
             {[
               { href: "/privacy", label: "Privacy" },
               { href: "/terms", label: "Terms" },
@@ -1450,14 +1445,17 @@ const FeedbackDisplay = ({
               <a
                 key={link.href}
                 href={link.href}
-                className="hover:text-white/50 transition-colors"
+                className="transition-colors"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 8,
-                  letterSpacing: "0.08em",
-                  color: "hsl(0 0% 30%)",
+                  fontSize: 7.5,
+                  fontWeight: 500,
+                  letterSpacing: "0.1em",
+                  color: "hsl(0 0% 28%)",
                   textTransform: "uppercase",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "hsl(0 0% 50%)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "hsl(0 0% 28%)")}
               >
                 {link.label}
               </a>
