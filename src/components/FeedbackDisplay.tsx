@@ -874,7 +874,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-2 sm:mt-3 overflow-hidden"
+        className="mt-3 sm:mt-5 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
           border: "2px solid hsl(var(--foreground) / 0.14)",
@@ -907,11 +907,11 @@ const FeedbackDisplay = ({
           <>
             {/* Machined transition — player to summary */}
             <div style={{ height: 1, background: "rgba(0,0,0,0.15)" }} />
-            <div style={{ height: 1, background: "hsl(var(--foreground) / 0.08)" }} />
+            <div style={{ height: 2, background: "hsl(var(--foreground) / 0.1)" }} />
             <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
-              className="px-5 py-5 md:px-7 md:py-6"
+              className="px-5 py-6 md:px-8 md:py-7"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
@@ -971,7 +971,7 @@ const FeedbackDisplay = ({
               </div>
 
               {(n.topIssue || n.biggestWin || releaseReadiness) && (
-                <div className={cn("flex flex-wrap items-center gap-2", n.overallImpression && "mt-4")}>
+                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-5 pt-5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.06)" : "none" }}>
                   {n.topIssue && (
                     <span
                       className="inline-flex items-center gap-1.5"
@@ -1029,21 +1029,19 @@ const FeedbackDisplay = ({
           </>
         )}
 
-        {/* ── PANELS WORKSTATION — machined transition ── */}
-        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
+        {/* ── PANELS WORKSTATION ── */}
         <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
-        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
         <div
           className="flex flex-col md:flex-row overflow-hidden"
           style={{
             minHeight: 340,
             backgroundColor: "hsl(var(--panel-bg))",
-            boxShadow: "inset 0 4px 12px hsl(var(--panel-inset))",
+            boxShadow: "inset 0 3px 10px hsl(var(--panel-inset))",
           }}
         >
           {/* On md+ use fixed height for horizontal layout */}
-          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 300px) !important; min-height: 420px !important; } }`}</style>
-          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 300px)", minHeight: 420 }}>
+          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 340px) !important; min-height: 460px !important; max-height: 680px !important; } }`}</style>
+          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 340px)", minHeight: 460 }}>
         {/* Desktop sidebar */}
           <PanelSidebar
             panels={PANELS}
@@ -1236,13 +1234,13 @@ const FeedbackDisplay = ({
       {(n.whatWorks.length > 0 || n.yourFocus.question) && (
         <div
           className={cn(
-            "mt-2 sm:mt-3 grid gap-0",
+            "mt-4 sm:mt-6 grid gap-0",
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
             backgroundColor: "hsl(var(--workspace-bg))",
-            border: "3px solid hsl(var(--foreground) / 0.12)",
-            borderRadius: 4,
+            border: "2px solid hsl(var(--foreground) / 0.1)",
+            borderRadius: 3,
             boxShadow: "inset 0 2px 6px hsl(var(--panel-inset)), 0 4px 16px hsl(0 0% 0% / 0.08)",
             overflow: "hidden",
           }}
@@ -1256,29 +1254,22 @@ const FeedbackDisplay = ({
             >
               {/* Section header strip */}
               <div
-                className="flex items-center gap-2 px-4"
+                className="flex items-center px-4"
                 style={{
-                  paddingTop: 6,
-                  paddingBottom: 6,
+                  paddingTop: 7,
+                  paddingBottom: 7,
                   backgroundColor: "hsl(var(--panel-header))",
                   borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
                 }}
               >
-                <div
-                  className="w-[6px] h-[6px] rounded-full shrink-0"
-                  style={{
-                    background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-                    boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-                  }}
-                />
                 <h3
-                  className="text-[8px] text-foreground/50 tracking-[0.16em] uppercase font-extrabold"
+                  className="text-[8px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
                   style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
                 >
                   {modeWhatWorksLabel[mode] || "What Works"}
                 </h3>
               </div>
-              <div className="p-3 space-y-1.5 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+              <div className="p-4 space-y-2 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
@@ -1329,29 +1320,22 @@ const FeedbackDisplay = ({
             <div className="flex flex-col">
               {/* Section header strip */}
               <div
-                className="flex items-center gap-2 px-4"
+                className="flex items-center px-4"
                 style={{
-                  paddingTop: 6,
-                  paddingBottom: 6,
+                  paddingTop: 7,
+                  paddingBottom: 7,
                   backgroundColor: "hsl(var(--panel-header))",
                   borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
                 }}
               >
-                <div
-                  className="w-[6px] h-[6px] rounded-full shrink-0"
-                  style={{
-                    background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-                    boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-                  }}
-                />
                 <h3
-                  className="text-[8px] text-foreground/50 tracking-[0.16em] uppercase font-extrabold"
+                  className="text-[8px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
                   style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
                 >
                   Your Focus
                 </h3>
               </div>
-              <div className="flex-1 flex flex-col gap-3 p-3" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+              <div className="flex-1 flex flex-col gap-3 p-4" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
                 <div
                   className="p-3"
                   style={{
@@ -1396,7 +1380,7 @@ const FeedbackDisplay = ({
       <div
         ref={arrangementRef}
         className={cn(
-          "mt-4 rounded-md border border-[#3A3F47] p-0 transition-all duration-200 overflow-hidden",
+          "mt-4 sm:mt-6 overflow-hidden transition-all duration-200",
           !showArrangement && "hidden"
         )}
       >
@@ -1409,7 +1393,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ WORKSTATION CLOSING FRAME ═══ */}
       <div
-        className="mt-2 sm:mt-3"
+        className="mt-4 sm:mt-6"
         style={{
           backgroundColor: "hsl(0 0% 8%)",
           border: "2px solid hsl(var(--foreground) / 0.1)",
