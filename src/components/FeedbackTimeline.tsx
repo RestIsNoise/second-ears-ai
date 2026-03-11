@@ -60,7 +60,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
     <div className="mt-2.5">
       <p
         ref={textRef}
-        className="text-[14px] text-foreground/55"
+        className="text-[15px] text-foreground/55"
         style={{
           fontFamily: MONO,
           lineHeight: 1.75,
