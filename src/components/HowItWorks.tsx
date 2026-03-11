@@ -51,7 +51,7 @@ const HowItWorks = () => {
           <h2 className="text-[2rem] md:text-[2.5rem] font-bold tracking-[-0.035em] leading-tight text-foreground">
             Upload, analyze, fix
           </h2>
-          <p className="text-[15px] text-foreground/60 mt-3 leading-relaxed max-w-md">
+          <p className="text-[15px] text-foreground/70 mt-3 leading-relaxed max-w-md">
             Three steps from raw file to a ranked list of improvements.
           </p>
         </div>
