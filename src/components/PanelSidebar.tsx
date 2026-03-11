@@ -106,8 +106,8 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               <div
                 className="shrink-0 flex items-center justify-center ml-2"
                 style={{
-                  width: 22,
-                  height: 22,
+                  width: 26,
+                  height: 26,
                   borderRadius: 3,
                   backgroundColor: isActive ? "hsl(var(--foreground) / 0.08)" : "transparent",
                   boxShadow: isActive ? "inset 0 1px 2px hsl(0 0% 0% / 0.08)" : "none",
