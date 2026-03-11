@@ -926,7 +926,7 @@ const FeedbackDisplay = ({
             <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
-              className="px-6 py-7 md:px-10 md:py-8"
+              className="px-5 py-4 md:px-8 md:py-5"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
@@ -934,7 +934,7 @@ const FeedbackDisplay = ({
             >
               {/* Summary text — full width for comfortable reading */}
               {n.overallImpression && (
-                <p className="text-[15px] sm:text-[16px] text-foreground/70 w-full" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+                <p className="text-[13.5px] sm:text-[14.5px] text-foreground/70 w-full" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
                   {n.overallImpression}
                 </p>
               )}
