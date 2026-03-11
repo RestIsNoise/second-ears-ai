@@ -209,8 +209,8 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                       <h4 className="text-[15px] font-medium tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
                       {p.whyItMatters && (
                         <p
-                          className={cn("text-[12px] text-foreground/45 mt-1.5 transition-all", !isExpanded && "line-clamp-3")}
-                          style={{ lineHeight: 1.6, fontFamily: MONO }}
+                          className={cn("text-[13px] text-foreground/45 mt-2 transition-all", !isExpanded && "line-clamp-3")}
+                          style={{ lineHeight: 1.7, fontFamily: MONO }}
                         >
                           {p.whyItMatters}
                         </p>
