@@ -625,7 +625,7 @@ const FeedbackDisplay = ({
                    <div
                     key={key}
                     style={{
-                      padding: "14px 18px",
+                      padding: "18px 22px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
