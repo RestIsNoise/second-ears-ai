@@ -167,6 +167,28 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   const inputRef = useRef<HTMLInputElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
+  // Expose triggerAddAt for waveform body clicks
+  const triggerAddAt = useCallback((time: number, x: number) => {
+    if (onAddNote && !onAddToDo) {
+      setInputMode("note");
+      setInputAt({ time, x });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    if (onAddToDo && !onAddNote) {
+      setInputMode("todo");
+      setInputAt({ time, x });
+      setNoteText("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+      return;
+    }
+    // Both available — show popover
+    setPopoverAt({ time, x });
+  }, [onAddNote, onAddToDo]);
+
+  useImperativeHandle(ref, () => ({ triggerAddAt }), [triggerAddAt]);
+
   // Single hovered marker with 100ms delay
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -186,7 +208,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
     return (hoverX / containerWidth) * duration;
   }, [hoverX, duration, containerWidth]);
 
-  const showPlusButton = hoverX !== null && !snappedMarkerId && !popoverAt && !inputAt;
   const hasAnyAction = onAddNote || onAddToDo;
 
   // Close popover on outside click
