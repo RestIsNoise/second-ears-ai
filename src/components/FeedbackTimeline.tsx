@@ -45,46 +45,17 @@ const severityConfig: Record<string, { label: string; color: string; glow: strin
   low: { label: "LOW", color: "hsl(var(--foreground) / 0.2)", glow: "none" },
 };
 
-/* ── Observation with 3-line clamp + expand ── */
-const ClampedObservation = ({ text }: { text: string }) => {
-  const [expanded, setExpanded] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const [isClamped, setIsClamped] = useState(false);
-
-  useEffect(() => {
-    const el = textRef.current;
-    if (el) setIsClamped(el.scrollHeight > el.clientHeight + 2);
-  }, [text]);
-
-  return (
-    <div className="mt-2.5">
-      <p
-        ref={textRef}
-        className="text-[15px] text-foreground/55"
-        style={{
-          fontFamily: MONO,
-          lineHeight: 1.75,
-          display: "-webkit-box",
-          WebkitBoxOrient: "vertical",
-          WebkitLineClamp: expanded ? "unset" : 3,
-          overflow: expanded ? "visible" : "hidden",
-        }}
-      >
-        {text}
-      </p>
-      {isClamped && !expanded && (
-        <button
-          onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="inline-flex items-center gap-0.5 mt-1.5 text-[10px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
-          style={{ fontFamily: MONO }}
-        >
-          <ChevronDown className="w-3 h-3" />
-          expand
-        </button>
-      )}
-    </div>
-  );
-};
+/* ── Observation (always fully visible) ── */
+const ClampedObservation = ({ text }: { text: string }) => (
+  <div className="mt-2.5">
+    <p
+      className="text-[15px] text-foreground/55"
+      style={{ fontFamily: MONO, lineHeight: 1.75 }}
+    >
+      {text}
+    </p>
+  </div>
+);
 
 const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   const [copied, setCopied] = useState(false);
