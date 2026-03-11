@@ -251,7 +251,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       }`}
                       style={{ fontFamily: MONO }}
                     >
-                      {alreadyAdded ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                      {alreadyAdded ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                     </button>
                   )}
                   <CopyFixInline item={item} />
