@@ -160,11 +160,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 
         {/* Right: value + unit + LED */}
         <div
-          className="flex items-center gap-1.5 shrink-0"
+          className="flex items-center gap-2 shrink-0"
           style={{
-            padding: "6px 8px 6px 0",
+            padding: "8px 10px 8px 0",
             borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 80,
+            minWidth: 90,
             justifyContent: "flex-end",
           }}
         >
