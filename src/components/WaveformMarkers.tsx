@@ -12,7 +12,7 @@ const formatTime = (s: number) => {
 const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
   technical: <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />,
   structural: <Music className="w-3.5 h-3.5" strokeWidth={2.5} />,
-  perceptual: <Ear className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  perceptual: <Ear className="w-3 h-3" strokeWidth={2.5} />,
   user: <MessageCircle className="w-3.5 h-3.5" strokeWidth={2.5} />,
 };
 
