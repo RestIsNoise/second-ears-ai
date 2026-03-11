@@ -246,9 +246,9 @@ const CorrelationChannel = ({ value }: { value: number }) => {
             {/* Center line */}
             <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: "hsl(var(--foreground) / 0.15)" }} />
             {/* L / R scale labels */}
-            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, left: 0 }}>−1</span>
-            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, left: "50%", transform: "translateX(-50%)" }}>0</span>
-            <span className="absolute text-foreground/12 font-bold" style={{ fontFamily: MONO, fontSize: 5.5, top: -8, right: 0 }}>+1</span>
+            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, left: 0 }}>−1</span>
+            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, left: "50%", transform: "translateX(-50%)" }}>0</span>
+            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, right: 0 }}>+1</span>
             {/* Fill */}
             {clampedPct >= 50 ? (
               <div
