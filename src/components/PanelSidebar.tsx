@@ -71,7 +71,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       </div>
 
       {/* ═══ PANEL SELECTOR ═══ */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin" style={{ padding: "2px 0" }}>
+      <div className="flex-1 overflow-y-auto scrollbar-thin" style={{ padding: "3px 0" }}>
         {PANEL_ORDER.map((id) => {
           const panel = panelMap.get(id);
           if (!panel) return null;
