@@ -101,16 +101,19 @@ const ListeningModes = () => {
                     <mode.icon className="w-4 h-4 text-foreground/50" strokeWidth={1.5} />
                   </div>
                   <span
-                    className="text-[9px] text-muted-foreground/30 tracking-[0.12em] uppercase"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    className="text-[8.5px] text-muted-foreground/35 uppercase"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.10em", fontWeight: 500 }}
                   >
                     {mode.tag}
                   </span>
                 </div>
-                <h3 className="text-[15px] font-semibold tracking-[-0.025em] text-foreground/90">
+                <h3
+                  className="text-[14px] text-foreground/85 uppercase"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 700 }}
+                >
                   {mode.name}
                 </h3>
-                <p className="text-[11.5px] text-muted-foreground/45 leading-[1.65] mt-1.5">
+                <p className="text-[11.5px] text-muted-foreground/45 leading-[1.65] mt-2">
                   {mode.description}
                 </p>
               </div>
