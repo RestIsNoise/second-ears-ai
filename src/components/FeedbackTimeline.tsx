@@ -201,9 +201,9 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   className="text-foreground/55 tabular-nums font-medium shrink-0"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 12,
+                    fontSize: 13,
                     backgroundColor: "hsl(var(--foreground) / 0.04)",
-                    padding: "2px 6px",
+                    padding: "3px 8px",
                     borderRadius: 2,
                     letterSpacing: "-0.01em",
                   }}
