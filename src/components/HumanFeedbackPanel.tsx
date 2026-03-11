@@ -95,7 +95,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     <div className="flex flex-col h-full">
       {/* Input — console style */}
       <div
-        className="p-2.5"
+        className="p-3.5"
         style={{
           borderBottom: "1px solid hsl(var(--foreground) / 0.08)",
           boxShadow: "inset 0 -1px 0 hsl(0 0% 100% / 0.02)",
