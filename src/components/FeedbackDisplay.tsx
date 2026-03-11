@@ -900,9 +900,160 @@ const FeedbackDisplay = ({
           boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12), 0 0 0 1px hsl(var(--foreground) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
         }}
       >
+        {/* ── SUMMARY SECTION (above waveform) ── */}
+        {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
+          <div
+            className="px-5 py-3 md:px-8 md:py-3.5"
+            style={{
+              backgroundColor: "hsl(var(--panel-content))",
+              boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+            }}
+          >
+            {/* Summary text — full width for comfortable reading */}
+            {n.overallImpression && (
+              <p className="text-[13.5px] sm:text-[14.5px] text-foreground/70 w-full" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+                {n.overallImpression}
+              </p>
+            )}
+
+            {/* Action controls row — compact utilities */}
+            <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
+              <button
+                onClick={() => setShowArrangement((v) => !v)}
+                className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  padding: "5px 12px",
+                  backgroundColor: "hsl(var(--panel-bg))",
+                  border: "1px solid hsl(var(--foreground) / 0.08)",
+                  borderRadius: 2,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                }}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
+                <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
+              </button>
+              <button
+                onClick={() => setRefModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  padding: "5px 12px",
+                  backgroundColor: "hsl(var(--panel-bg))",
+                  border: "1px solid hsl(var(--foreground) / 0.08)",
+                  borderRadius: 2,
+                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                }}
+              >
+                <Disc className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Reference</span>
+                <span className="sm:hidden">Ref</span>
+              </button>
+
+              {/* SE monogram */}
+              <div
+                className="ml-auto flex items-center justify-center"
+                style={{ opacity: 0.15 }}
+                aria-hidden="true"
+              >
+                <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M2 12.5C2.8 13.5 4.2 14 6 14C8.5 14 10 12.8 10 11C10 9.2 8.5 8.5 6.2 7.8C4 7.1 2.5 6.2 2.5 4.2C2.5 2.2 4.2 1 6.5 1C8 1 9.3 1.5 10 2.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                    fill="none"
+                  />
+                  <path
+                    d="M16 1H24.5M16 7.5H23M16 14H24.5M16 1V14"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {(n.topIssue || n.biggestWin || releaseReadiness) && (
+              <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-2.5 pt-2.5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.07)" : "none" }}>
+                {n.topIssue && (
+                  <span
+                    className="inline-flex items-center gap-2.5"
+                    style={{
+                      padding: "5px 12px",
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.07)",
+                      borderRadius: 2,
+                    }}
+                  >
+                     <span
+                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                    >Issue</span>
+                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                  </span>
+                )}
+                {n.biggestWin && (
+                  <span
+                    className="inline-flex items-center gap-2.5"
+                    style={{
+                      padding: "5px 12px",
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.07)",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <span
+                       className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                    >Win</span>
+                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
+                  </span>
+                )}
+                {releaseReadiness && (
+                  <span
+                    className="inline-flex items-center gap-2.5"
+                    style={{
+                      padding: "5px 12px",
+                      backgroundColor: "hsl(var(--panel-bg))",
+                      border: "1px solid hsl(var(--foreground) / 0.07)",
+                      borderRadius: 2,
+                    }}
+                  >
+                     <span
+                       className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                    >Release</span>
+                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Machined transition — summary to waveform */}
+        {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && audioFile && (
+          <>
+            <div style={{ height: 1, background: "rgba(0,0,0,0.15)" }} />
+            <div style={{ height: 2, background: "hsl(var(--foreground) / 0.1)" }} />
+            <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
+          </>
+        )}
+
         {/* ── WAVEFORM PLAYER ── */}
         {audioFile && (
-          <div className="w-full overflow-hidden" style={{ borderRadius: "4px 4px 0 0" }}>
+          <div className="w-full overflow-hidden">
             <ABCompare
               ref={waveformRef}
               audioFileA={audioFile}
@@ -918,155 +1069,6 @@ const FeedbackDisplay = ({
               onEditNote={handleEditAnnotation}
             />
           </div>
-        )}
-
-        {/* ── SUMMARY SECTION ── */}
-        {(n.overallImpression || n.topIssue || n.biggestWin || releaseReadiness) && (
-          <>
-            {/* Machined transition — player to summary */}
-            <div style={{ height: 1, background: "rgba(0,0,0,0.15)" }} />
-            <div style={{ height: 2, background: "hsl(var(--foreground) / 0.1)" }} />
-            <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
-
-            <div
-              className="px-5 py-3 md:px-8 md:py-3.5"
-              style={{
-                backgroundColor: "hsl(var(--panel-content))",
-                boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
-              }}
-            >
-              {/* Summary text — full width for comfortable reading */}
-              {n.overallImpression && (
-                <p className="text-[13.5px] sm:text-[14.5px] text-foreground/70 w-full" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
-                  {n.overallImpression}
-                </p>
-              )}
-
-              {/* Action controls row — compact utilities */}
-              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
-                <button
-                  onClick={() => setShowArrangement((v) => !v)}
-                  className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 11,
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    padding: "5px 12px",
-                    backgroundColor: "hsl(var(--panel-bg))",
-                    border: "1px solid hsl(var(--foreground) / 0.08)",
-                    borderRadius: 2,
-                    boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                  }}
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
-                  <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
-                </button>
-                <button
-                  onClick={() => setRefModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 11,
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    padding: "5px 12px",
-                    backgroundColor: "hsl(var(--panel-bg))",
-                    border: "1px solid hsl(var(--foreground) / 0.08)",
-                    borderRadius: 2,
-                    boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                  }}
-                >
-                  <Disc className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Reference</span>
-                  <span className="sm:hidden">Ref</span>
-                </button>
-
-                {/* SE monogram */}
-                <div
-                  className="ml-auto flex items-center justify-center"
-                  style={{ opacity: 0.15 }}
-                  aria-hidden="true"
-                >
-                  <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M2 12.5C2.8 13.5 4.2 14 6 14C8.5 14 10 12.8 10 11C10 9.2 8.5 8.5 6.2 7.8C4 7.1 2.5 6.2 2.5 4.2C2.5 2.2 4.2 1 6.5 1C8 1 9.3 1.5 10 2.5"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="square"
-                      fill="none"
-                    />
-                    <path
-                      d="M16 1H24.5M16 7.5H23M16 14H24.5M16 1V14"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="square"
-                      fill="none"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              {(n.topIssue || n.biggestWin || releaseReadiness) && (
-                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-2.5 pt-2.5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.07)" : "none" }}>
-                  {n.topIssue && (
-                    <span
-                      className="inline-flex items-center gap-2.5"
-                      style={{
-                        padding: "5px 12px",
-                        backgroundColor: "hsl(var(--panel-bg))",
-                        border: "1px solid hsl(var(--foreground) / 0.07)",
-                        borderRadius: 2,
-                      }}
-                    >
-                       <span
-                        className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                      >Issue</span>
-                      <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
-                    </span>
-                  )}
-                  {n.biggestWin && (
-                    <span
-                      className="inline-flex items-center gap-2.5"
-                      style={{
-                        padding: "5px 12px",
-                        backgroundColor: "hsl(var(--panel-bg))",
-                        border: "1px solid hsl(var(--foreground) / 0.07)",
-                        borderRadius: 2,
-                      }}
-                    >
-                      <span
-                         className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                      >Win</span>
-                      <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
-                    </span>
-                  )}
-                  {releaseReadiness && (
-                    <span
-                      className="inline-flex items-center gap-2.5"
-                      style={{
-                        padding: "5px 12px",
-                        backgroundColor: "hsl(var(--panel-bg))",
-                        border: "1px solid hsl(var(--foreground) / 0.07)",
-                        borderRadius: 2,
-                      }}
-                    >
-                       <span
-                         className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                      >Release</span>
-                      <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
         )}
 
         {/* ── PANELS WORKSTATION ── */}
