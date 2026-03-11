@@ -649,7 +649,7 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "12px 14px",
+                  padding: "14px 16px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
