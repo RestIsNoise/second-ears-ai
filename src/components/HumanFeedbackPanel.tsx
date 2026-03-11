@@ -35,12 +35,17 @@ interface Props {
   onCommentsChange?: (comments: { id: string; content: string; timestamp: number }[]) => void;
 }
 
-const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled }: Props) => {
+const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingComment, onPendingCommentHandled, onCommentsChange }: Props) => {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Sync comment markers to parent
+  useEffect(() => {
+    onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.text, timestamp: c.timestamp_in_track })));
+  }, [comments, onCommentsChange]);
 
   // Load comments
   useEffect(() => {
