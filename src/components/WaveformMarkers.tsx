@@ -63,6 +63,7 @@ const MarkerTooltip = ({
   marker,
   leftPct,
   containerWidth,
+  verticalPosition,
   children,
   hoveredId,
   onHover,
@@ -71,6 +72,7 @@ const MarkerTooltip = ({
   marker: WaveformMarker;
   leftPct: number;
   containerWidth: number;
+  verticalPosition?: "top" | "bottom";
   children: React.ReactNode;
   hoveredId: string | null;
   onHover: (id: string) => void;
@@ -78,26 +80,28 @@ const MarkerTooltip = ({
 }) => {
   const isVisible = hoveredId === marker.id;
   const isUser = marker.type === "user";
-  const tooltipRef = useRef<HTMLDivElement>(null);
 
-  // Compute pixel-based position for boundary detection
   const markerPx = (leftPct / 100) * containerWidth;
-  const TOOLTIP_WIDTH = 180; // approximate max tooltip width
+  const TOOLTIP_WIDTH = 200;
   const EDGE_MARGIN = 8;
 
   let translateX = "-50%";
   let leftOffset = "50%";
 
-  // Near left edge
   if (markerPx < TOOLTIP_WIDTH / 2 + EDGE_MARGIN) {
     translateX = "0%";
     leftOffset = "0";
-  }
-  // Near right edge
-  else if (containerWidth - markerPx < TOOLTIP_WIDTH / 2 + EDGE_MARGIN) {
+  } else if (containerWidth - markerPx < TOOLTIP_WIDTH / 2 + EDGE_MARGIN) {
     translateX = "-100%";
     leftOffset = "100%";
   }
+
+  // Vertical: default above, but if marker is in top portion show below
+  const showBelow = verticalPosition === "top";
+
+  const positionStyle: React.CSSProperties = showBelow
+    ? { top: "calc(100% + 6px)", left: leftOffset, transform: `translateX(${translateX})` }
+    : { bottom: "calc(100% + 6px)", left: leftOffset, transform: `translateX(${translateX})` };
 
   return (
     <div
@@ -108,12 +112,9 @@ const MarkerTooltip = ({
       {children}
       {isVisible && (
         <div
-          ref={tooltipRef}
           className="absolute pointer-events-none"
           style={{
-            bottom: "calc(100% + 6px)",
-            left: leftOffset,
-            transform: `translateX(${translateX})`,
+            ...positionStyle,
             zIndex: 50,
             whiteSpace: "nowrap",
           }}
