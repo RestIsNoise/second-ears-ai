@@ -65,7 +65,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
     <div className="flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header — console style */}
       <div
-        className="px-3 pt-3 pb-3"
+        className="px-3.5 pt-3.5 pb-3.5"
         style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.06)" }}
       >
         {totalCount > 0 && (
