@@ -154,7 +154,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
         {comments.map((c, idx) => (
           <div
             key={c.id}
-            className="group px-4 py-3.5 transition-colors hover:bg-foreground/[0.02]"
+            className="group px-5 py-4 transition-colors hover:bg-foreground/[0.02]"
             style={{
               borderBottom: idx < comments.length - 1 ? "1px solid hsl(var(--foreground) / 0.04)" : "none",
             }}
