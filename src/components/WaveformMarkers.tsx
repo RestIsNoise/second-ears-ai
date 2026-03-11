@@ -334,6 +334,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
               marker={m}
               leftPct={leftPct}
               containerWidth={containerWidth}
+              verticalPosition="top"
               hoveredId={hoveredMarkerId}
               onHover={handleMarkerHover}
               onLeave={handleMarkerLeave}
