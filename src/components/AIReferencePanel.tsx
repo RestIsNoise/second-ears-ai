@@ -206,7 +206,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[12px] font-bold tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
+                      <h4 className="text-[14px] font-bold tracking-tight text-foreground/75" style={{ fontFamily: MONO }}>{p.issue}</h4>
                       {p.whyItMatters && (
                         <p
                           className={cn("text-[10px] text-foreground/45 mt-1 transition-all", !isExpanded && "line-clamp-3")}
