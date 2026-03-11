@@ -261,7 +261,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ ISSUE BODY ═══ */}
               <div
                 style={{
-                  padding: "12px 16px 14px 20px",
+                  padding: "14px 18px 16px 22px",
                   borderLeft: `3px solid ${isActive ? accent.border : "hsl(var(--foreground) / 0.04)"}`,
                   backgroundColor: isActive ? accent.bg : "transparent",
                   transition: "background-color 0.1s, border-color 0.15s",
