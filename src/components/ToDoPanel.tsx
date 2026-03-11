@@ -211,7 +211,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
 
       {/* Input — console command line */}
       <div
-        className="px-3 py-2.5"
+        className="px-4 py-3"
         style={{
           borderTop: "1px solid hsl(var(--foreground) / 0.08)",
           boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.03)",
