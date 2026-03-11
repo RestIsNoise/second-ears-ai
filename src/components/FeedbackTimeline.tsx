@@ -221,10 +221,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     }}
                   />
                   <span
-                    className="font-medium uppercase tracking-[0.06em]"
+                    className="font-medium uppercase tracking-[0.04em]"
                     style={{
                       fontFamily: MONO,
-                      fontSize: 11,
+                      fontSize: 10,
                       color: sev.color,
                     }}
                   >
