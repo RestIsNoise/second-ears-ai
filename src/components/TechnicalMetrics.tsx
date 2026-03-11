@@ -88,8 +88,8 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div
           className="flex items-center shrink-0"
           style={{
-            width: 80,
-            padding: "8px 0 8px 10px",
+            width: 90,
+            padding: "10px 0 10px 12px",
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
