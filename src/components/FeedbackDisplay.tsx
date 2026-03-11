@@ -946,11 +946,11 @@ const FeedbackDisplay = ({
                   className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                   style={{
                     fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: 500,
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
-                    padding: "7px 14px",
+                    padding: "5px 12px",
                     backgroundColor: "hsl(var(--panel-bg))",
                     border: "1px solid hsl(var(--foreground) / 0.08)",
                     borderRadius: 2,
