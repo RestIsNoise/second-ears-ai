@@ -397,7 +397,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
               style={{ color: "hsl(var(--foreground) / 0.8)" }}
             >
               <CheckSquare className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(var(--foreground) / 0.45)" }} />
-              Add to To-Do
+              Add to Next Moves
             </button>
             <button
               onClick={() => handleSelectMode("note")}

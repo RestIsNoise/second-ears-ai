@@ -394,7 +394,7 @@ export function exportAnalysisPdf(n: NormalizedFeedback, releaseReadiness: strin
   const faCards = getFullAnalysisCards(n);
   const hasFA = faCards.some((c) => c.text);
   if (hasFA) {
-    y = sectionTitle(doc, "Full Analysis", y);
+    y = sectionTitle(doc, "Deep Read", y);
     for (const card of faCards) {
       if (!card.text) continue;
       y = checkPage(doc, y, 14);

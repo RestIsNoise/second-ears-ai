@@ -20,7 +20,7 @@ const steps = [
     icon: ListChecks,
     number: "03",
     title: "Fix",
-    description: "A to-do list ranks issues by impact. Share one link with collaborators.",
+    description: "Next Moves ranks issues by impact. Share one link with collaborators.",
     proof: "Shareable report",
   },
 ];

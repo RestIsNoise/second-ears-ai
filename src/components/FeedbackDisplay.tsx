@@ -724,12 +724,12 @@ const FeedbackDisplay = ({
   };
 
   const panelTitles: Record<string, string> = {
-    "ai-reference": "AI Reference",
-    "ai-feedback": "AI Feedback",
+    "ai-reference": "Reference Match",
+    "ai-feedback": "SecondEar Notes",
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
-    "full-analysis": "Full Analysis",
-    "todo": "To-Do List",
+    "full-analysis": "Deep Read",
+    "todo": "Next Moves",
   };
 
   // Ordered active panels (preserve sidebar order)

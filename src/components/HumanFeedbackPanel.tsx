@@ -217,7 +217,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 style={{ fontFamily: MONO }}
               >
                 <Plus className="w-3 h-3 inline mr-0.5" />
-                todo
+                next move
               </button>
             )}
           </div>
