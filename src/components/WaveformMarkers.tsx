@@ -144,7 +144,11 @@ const MarkerTooltip = ({
 
 type InputMode = "todo" | "note";
 
-const WaveformMarkers = ({
+export interface WaveformMarkersHandle {
+  triggerAddAt: (time: number, x: number) => void;
+}
+
+const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   markers,
   duration,
   containerWidth,
@@ -155,7 +159,7 @@ const WaveformMarkers = ({
   onAddNote,
   onAddToDo,
   onEditNote,
-}: Props) => {
+}, ref) => {
   const [popoverAt, setPopoverAt] = useState<{ time: number; x: number } | null>(null);
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
   const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
