@@ -203,9 +203,21 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   </span>
                 </div>
 
+                {/* Vote buttons — always visible in header */}
+                {analysisId && (
+                  <div className="shrink-0 ml-auto">
+                    <FeedbackVoteButtons
+                      analysisId={analysisId}
+                      priorityIndex={idx}
+                      userId={user?.id}
+                      initialUserVote={null}
+                    />
+                  </div>
+                )}
+
                 {/* Mode tag */}
                 <span
-                  className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
+                  className={cn("text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0", !analysisId && "ml-auto")}
                   style={{ fontFamily: MONO, fontSize: 11 }}
                 >
                   {accent.tag}
