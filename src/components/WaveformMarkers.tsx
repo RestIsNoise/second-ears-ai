@@ -411,54 +411,69 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
         </div>
       )}
 
-      {/* Inline text input */}
+      {/* Composer — positioned above the waveform to avoid popover conflict */}
       {inputAt && inputMode && (
         <div
-          className="absolute z-[10] pointer-events-auto"
+          className="absolute z-[20] pointer-events-auto"
           style={{
-            left: Math.min(Math.max(inputAt.x, 100), containerWidth - 100),
-            top: MARKER_ZONE_HEIGHT + 4,
+            left: Math.min(Math.max(inputAt.x, 140), containerWidth - 140),
+            bottom: "calc(100% - " + MARKER_ZONE_HEIGHT + "px + 6px)",
             transform: "translateX(-50%)",
           }}
         >
           <div
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5"
+            className="rounded-lg px-3 py-2.5 flex flex-col gap-1.5"
             style={{
               backgroundColor: "hsl(var(--background))",
               border: "1px solid hsl(var(--border))",
-              boxShadow: "0 2px 8px hsl(var(--foreground) / 0.06)",
-              minWidth: 200,
+              boxShadow: "0 4px 16px hsl(var(--foreground) / 0.10), 0 1px 3px hsl(var(--foreground) / 0.06)",
+              width: 280,
             }}
           >
-            {inputMode === "todo" ? (
-              <CheckSquare className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
-            ) : (
-              <MessageCircle className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
-            )}
-            <span
-              className="text-muted-foreground/50 tabular-nums shrink-0"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-            >
-              {formatTime(inputAt.time)}
-            </span>
-            <input
+            {/* Header row */}
+            <div className="flex items-center gap-2">
+              {inputMode === "todo" ? (
+                <CheckSquare className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
+              ) : (
+                <MessageCircle className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
+              )}
+              <span
+                className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                {inputMode === "todo" ? "Next Move" : "Note"} · {formatTime(inputAt.time)}
+              </span>
+              <button
+                onClick={handleCancel}
+                className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0 ml-auto"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+            {/* Auto-expanding textarea */}
+            <textarea
               ref={inputRef}
-              type="text"
               value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
+              onChange={(e) => {
+                setNoteText(e.target.value);
+                // Auto-expand
+                e.target.style.height = "auto";
+                e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+              }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") { e.preventDefault(); handleSubmit(); }
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
                 if (e.key === "Escape") handleCancel();
               }}
-              placeholder={inputMode === "todo" ? "Add a to-do…" : "Add a note…"}
-              className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none min-w-0"
+              placeholder={inputMode === "todo" ? "What needs to happen…" : "Add a note…"}
+              rows={2}
+              className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none resize-none leading-relaxed"
+              style={{ minHeight: 40, maxHeight: 120 }}
             />
-            <button
-              onClick={handleCancel}
-              className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0"
-            >
-              <X className="w-3 h-3" />
-            </button>
+            <div className="flex items-center justify-end">
+              <span className="text-[9px] text-muted-foreground/30 mr-auto" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                Enter to save · Esc to cancel
+              </span>
+            </div>
           </div>
         </div>
       )}
