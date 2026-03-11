@@ -101,11 +101,11 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           boxShadow: "inset 0 -1px 0 hsl(0 0% 100% / 0.02)",
         }}
       >
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-foreground/18" style={{ fontFamily: MONO, fontSize: 11 }}>›</span>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-foreground/20" style={{ fontFamily: MONO, fontSize: 13 }}>›</span>
           <span
             className="text-foreground/35 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 10 }}
+            style={{ fontFamily: MONO, fontSize: 12 }}
           >
             @{formatTime(currentTime)}
           </span>
