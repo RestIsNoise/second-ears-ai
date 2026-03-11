@@ -190,8 +190,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Index */}
                 <span
-                  className="text-foreground/20 font-medium shrink-0"
-                  style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.02em", minWidth: 16 }}
+                  className="text-foreground/22 font-medium shrink-0"
+                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em", minWidth: 18 }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
@@ -201,7 +201,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   className="text-foreground/55 tabular-nums font-medium shrink-0"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 11,
+                    fontSize: 12,
                     backgroundColor: "hsl(var(--foreground) / 0.04)",
                     padding: "2px 6px",
                     borderRadius: 2,
