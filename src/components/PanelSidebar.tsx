@@ -63,7 +63,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
           </span>
           <span
             className="text-foreground/22 font-medium tabular-nums ml-auto"
-            style={{ fontFamily: MONO, fontSize: 8 }}
+            style={{ fontFamily: MONO, fontSize: 10 }}
           >
             {activePanels.size}/{maxPanels}
           </span>
