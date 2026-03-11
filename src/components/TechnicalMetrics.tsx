@@ -160,23 +160,23 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 
         {/* Right: value + unit + LED */}
         <div
-          className="flex items-center gap-2 shrink-0"
+          className="flex items-center gap-2.5 shrink-0"
           style={{
-            padding: "10px 12px 10px 0",
+            padding: "14px 14px 14px 0",
             borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 100,
+            minWidth: 115,
             justifyContent: "flex-end",
           }}
         >
           {/* Status tag */}
           {!isMissing && led && (
             <span
-              className="font-medium uppercase tracking-[0.04em]"
+              className="font-medium uppercase tracking-[0.05em]"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 10,
                 color: led.bg,
-                padding: "3px 6px",
+                padding: "4px 7px",
                 backgroundColor: led.muted,
                 borderRadius: 2,
                 lineHeight: 1,
@@ -186,14 +186,14 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             </span>
           )}
           <span
-            className="text-foreground/85 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 16, letterSpacing: "-0.03em" }}
+            className="text-foreground/90 tabular-nums font-medium"
+            style={{ fontFamily: MONO, fontSize: 18, letterSpacing: "-0.03em" }}
           >
             {isMissing ? "—" : value.toFixed(decimals)}
           </span>
           <span
-            className="text-foreground/30 font-normal uppercase"
-            style={{ fontFamily: MONO, fontSize: 10 }}
+            className="text-foreground/35 font-normal uppercase"
+            style={{ fontFamily: MONO, fontSize: 11 }}
           >
             {unit}
           </span>
