@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { Copy, Check, Plus, AudioLines } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FeedbackVoteButtons from "@/components/FeedbackVoteButtons";
