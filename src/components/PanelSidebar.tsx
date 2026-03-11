@@ -46,7 +46,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
         boxShadow: "inset -1px 0 0 hsl(0 0% 100% / 0.03), 2px 0 6px hsl(0 0% 0% / 0.06)",
       }}
     >
-      {/* ═══ RACK HEADER ═══ */}
+      {/* ═══ HEADER ═══ */}
       <div
         style={{
           padding: "6px 10px",
@@ -54,28 +54,15 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
           backgroundColor: "hsl(var(--panel-header))",
         }}
       >
-        {/* Top bevel */}
-        <div
-          className="absolute top-0 left-0 right-0"
-          style={{ height: 1, background: "hsl(0 0% 100% / 0.05)" }}
-        />
         <div className="flex items-center gap-2">
-          <div
-            className="w-[7px] h-[7px] rounded-full shrink-0"
-            style={{
-              background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-              boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-            }}
-          />
           <span
-            className="text-[8px] text-foreground/45 tracking-[0.18em] uppercase font-extrabold"
+            className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase font-extrabold"
             style={{ fontFamily: MONO }}
           >
             Modules
           </span>
-          {/* Active count */}
           <span
-            className="text-foreground/20 font-bold tabular-nums ml-auto"
+            className="text-foreground/18 font-bold tabular-nums ml-auto"
             style={{ fontFamily: MONO, fontSize: 7 }}
           >
             {activePanels.size}/{maxPanels}
