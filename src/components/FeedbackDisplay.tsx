@@ -874,7 +874,7 @@ const FeedbackDisplay = ({
 
       {/* ═══ UNIFIED WORKSPACE MODULE ═══ */}
       <div
-        className="mt-2 sm:mt-3 overflow-hidden"
+        className="mt-3 sm:mt-5 overflow-hidden"
         style={{
           backgroundColor: "hsl(var(--workspace-bg))",
           border: "2px solid hsl(var(--foreground) / 0.14)",
