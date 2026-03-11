@@ -22,8 +22,8 @@ interface Comment {
   id: string;
   analysis_id: string;
   user_id: string;
-  timestamp_in_track: number;
-  text: string;
+  content: string;
+  timestamp: number;
   created_at: string;
 }
 
@@ -46,11 +46,14 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
       setLoadingComments(true);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("comments")
-        .select("id, analysis_id, user_id, timestamp_in_track, text, created_at")
+        .select("id, analysis_id, user_id, content, timestamp, created_at")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
+      if (error) {
+        console.error("[HumanFeedback] Load failed:", JSON.stringify(error));
+      }
       if (data) setComments(data as unknown as Comment[]);
       setLoadingComments(false);
     };
@@ -63,13 +66,15 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       const comment = {
         analysis_id: analysisId,
         user_id: user.id,
-        timestamp_in_track: pendingComment.timestampSec,
-        text: pendingComment.text,
+        timestamp: pendingComment.timestampSec,
+        content: pendingComment.text,
       };
-      const { data, error } = await supabase.from("comments").insert(comment).select().single();
+      const { data, error } = await supabase.from("comments").insert(comment as any).select().single();
       if (!error && data) {
         setComments((prev) => [...prev, data as unknown as Comment]);
         toast({ title: "Comment added", duration: 1200 });
+      } else if (error) {
+        console.error("[HumanFeedback] Pending insert failed:", JSON.stringify(error));
       }
       onPendingCommentHandled?.();
     };
@@ -82,19 +87,19 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       if (!analysisId) toast({ title: "Analysis not saved yet", description: "Please wait a moment and try again.", variant: "destructive", duration: 2000 });
       return;
     }
-    const comment = { analysis_id: analysisId, user_id: user.id, timestamp_in_track: currentTime, text: trimmed };
-    console.log("[HumanFeedback] Inserting comment:", JSON.stringify(comment));
+    const payload = { analysis_id: analysisId, user_id: user.id, timestamp: currentTime, content: trimmed };
+    console.log("[HumanFeedback] Inserting comment:", JSON.stringify(payload));
     setNewText("");
     const optimistic: Comment = {
       id: crypto.randomUUID(),
       analysis_id: analysisId,
       user_id: user.id,
-      timestamp_in_track: currentTime,
-      text: trimmed,
+      timestamp: currentTime,
+      content: trimmed,
       created_at: new Date().toISOString(),
     };
     setComments((prev) => [...prev, optimistic]);
-    const { data, error } = await supabase.from("comments").insert(comment).select().single();
+    const { data, error } = await supabase.from("comments").insert(payload as any).select().single();
     if (error) {
       console.error("[HumanFeedback] Insert failed:", JSON.stringify(error));
       setComments((prev) => prev.filter((c) => c.id !== optimistic.id));
@@ -193,7 +198,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 className="text-foreground/40 tabular-nums font-medium"
                 style={{ fontFamily: MONO, fontSize: 13 }}
               >
-                @{formatTime(c.timestamp_in_track)}
+                @{formatTime(c.timestamp)}
               </span>
               <span className="text-foreground/25" style={{ fontFamily: MONO, fontSize: 12 }}>
                 {formatDate(c.created_at)}
@@ -203,11 +208,11 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
               className="text-[15px] text-foreground/60 ml-[30px]"
               style={{ fontFamily: MONO, lineHeight: 1.75 }}
             >
-              {c.text}
+              {c.content}
             </p>
             {onAddToDo && (
               <button
-                onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
+                onClick={() => onAddToDo(c.content, c.timestamp)}
                 className="opacity-0 group-hover:opacity-100 ml-[30px] mt-2 text-[11px] uppercase tracking-wider font-medium text-foreground/25 hover:text-foreground/50 transition-all"
                 style={{ fontFamily: MONO }}
               >
