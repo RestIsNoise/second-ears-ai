@@ -438,7 +438,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
       <div
         className="flex items-center"
         style={{
-          padding: "7px 12px",
+          padding: "10px 14px",
           backgroundColor: "hsl(var(--panel-header))",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
         }}
