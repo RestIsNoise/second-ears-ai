@@ -357,7 +357,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
           >
             {status.label}
           </span>
-          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 12 }}>
+          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 14 }}>
             {value.toFixed(2)}
           </span>
           <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
