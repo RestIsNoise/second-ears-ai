@@ -199,7 +199,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               {item.timestampSec > 0 && (
                 <span
                   className="tabular-nums mt-1 block text-foreground/28"
-                  style={{ fontFamily: MONO, fontSize: 10 }}
+                  style={{ fontFamily: MONO, fontSize: 12 }}
                 >
                   @{formatTime(item.timestampSec)}
                 </span>
