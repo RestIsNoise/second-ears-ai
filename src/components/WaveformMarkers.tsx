@@ -145,8 +145,17 @@ const MarkerTooltip = ({
 
 type InputMode = "todo" | "note";
 
+export interface ComposerState {
+  mode: InputMode;
+  time: number;
+  x: number;
+}
+
 export interface WaveformMarkersHandle {
   triggerAddAt: (time: number, x: number) => void;
+  getComposerState: () => ComposerState | null;
+  submitComposer: (text: string) => void;
+  cancelComposer: () => void;
 }
 
 const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
