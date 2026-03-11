@@ -291,7 +291,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
           <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "-0.03em" }}>
             {value > 0 ? "+" : ""}{value.toFixed(2)}
           </span>
-          <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+          <div className="w-[6px] h-[6px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
         </div>
       </div>
     </div>
