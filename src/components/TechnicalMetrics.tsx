@@ -88,14 +88,14 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div
           className="flex items-center shrink-0"
           style={{
-            width: 72,
-            padding: "6px 0 6px 8px",
+            width: 80,
+            padding: "8px 0 8px 10px",
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
           <span
-            className="text-foreground/40 uppercase tracking-[0.06em] font-bold truncate"
-            style={{ fontFamily: MONO, fontSize: 8 }}
+            className="text-foreground/45 uppercase tracking-[0.04em] font-medium truncate"
+            style={{ fontFamily: MONO, fontSize: 9 }}
           >
             {label}
           </span>
