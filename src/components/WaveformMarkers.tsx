@@ -176,8 +176,13 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
   const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  // Notify parent of composer state changes
+  useEffect(() => {
+    const state = inputAt && inputMode ? { mode: inputMode, time: inputAt.time, x: inputAt.x } : null;
+    onComposerChange?.(state);
+  }, [inputAt, inputMode, onComposerChange]);
 
   // Expose triggerAddAt for waveform body clicks
   const triggerAddAt = useCallback((time: number, x: number) => {
@@ -185,14 +190,12 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
       setInputMode("note");
       setInputAt({ time, x });
       setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
       return;
     }
     if (onAddToDo && !onAddNote) {
       setInputMode("todo");
       setInputAt({ time, x });
       setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
       return;
     }
     // Both available — show popover
