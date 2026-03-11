@@ -75,7 +75,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
       {isClamped && !expanded && (
         <button
           onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="inline-flex items-center gap-0.5 mt-1 text-[9px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
+          className="inline-flex items-center gap-0.5 mt-1.5 text-[10px] text-foreground/30 hover:text-foreground/55 transition-colors uppercase tracking-[0.08em] font-medium"
           style={{ fontFamily: MONO }}
         >
           <ChevronDown className="w-3 h-3" />
