@@ -287,7 +287,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       border: "1px solid hsl(var(--foreground) / 0.05)",
                       borderLeft: `2px solid ${accent.border}`,
                       borderRadius: "0 2px 2px 0",
-                      padding: "10px 12px",
+                      padding: "12px 14px",
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
