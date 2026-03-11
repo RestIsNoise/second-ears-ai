@@ -88,24 +88,24 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div
           className="flex items-center shrink-0"
           style={{
-            width: 90,
-            padding: "10px 0 10px 12px",
+            width: 100,
+            padding: "14px 0 14px 14px",
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
           <span
-            className="text-foreground/50 uppercase tracking-[0.04em] font-medium truncate"
-            style={{ fontFamily: MONO, fontSize: 11 }}
+            className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate"
+            style={{ fontFamily: MONO, fontSize: 12 }}
           >
             {label}
           </span>
         </div>
 
         {/* Center: meter + thresholds */}
-        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "12px 14px" }}>
+        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "14px 16px" }}>
           {/* Segmented bar */}
           <div className="relative">
-            <div className="flex gap-px" style={{ height: 7 }}>
+            <div className="flex gap-px" style={{ height: 8 }}>
               {Array.from({ length: SEGMENTS }).map((_, i) => {
                 const segPct = ((i + 1) / SEGMENTS) * 100;
                 const filled = pct >= segPct;
