@@ -196,7 +196,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                 className="group"
                 style={{
                   borderLeft: "3px solid hsl(0 55% 50% / 0.5)",
-                  padding: "6px 8px",
+                  padding: "8px 10px",
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
                 }}
               >
