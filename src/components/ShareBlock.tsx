@@ -140,7 +140,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
             style={btnStyle}
           >
-            <Share2 className="w-3.5 h-3.5" strokeWidth={2} />
+            <Share2 className="w-4 h-4" strokeWidth={2} />
             Share
           </button>
 
