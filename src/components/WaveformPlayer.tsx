@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef, useMemo } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { Play, Pause, RotateCcw, AlertCircle } from "lucide-react";
+import { Play, Pause, RotateCcw, AlertCircle, CheckSquare, MessageCircle, X } from "lucide-react";
 import WaveformMarkers, { MARKER_ZONE_HEIGHT } from "@/components/WaveformMarkers";
-import type { WaveformMarkersHandle } from "@/components/WaveformMarkers";
+import type { WaveformMarkersHandle, ComposerState } from "@/components/WaveformMarkers";
 import FrequencyEnergyBar from "@/components/FrequencyEnergyBar";
 import type { WaveformMarker } from "@/types/feedback";
 import type { FrequencyData } from "@/lib/parseFrequencyData";
@@ -223,6 +223,31 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [hoverX, setHoverX] = useState<number | null>(null);
     const [hoverTime, setHoverTime] = useState<number>(0);
     const [containerWidth, setContainerWidth] = useState(0);
+    const [composerText, setComposerText] = useState("");
+    const composerRef = useRef<HTMLTextAreaElement>(null);
+    const [composerState, setComposerState] = useState<ComposerState | null>(null);
+
+    const handleComposerChange = useCallback((state: ComposerState | null) => {
+      setComposerState(state);
+      if (state) {
+        setComposerText("");
+        setTimeout(() => composerRef.current?.focus(), 60);
+      }
+    }, []);
+
+    const handleComposerSubmit = useCallback(() => {
+      const trimmed = composerText.trim();
+      if (!trimmed) return;
+      markersRef.current?.submitComposer(trimmed);
+      setComposerText("");
+      setComposerState(null);
+    }, [composerText]);
+
+    const handleComposerCancel = useCallback(() => {
+      markersRef.current?.cancelComposer();
+      setComposerText("");
+      setComposerState(null);
+    }, []);
 
     const colors = DECK_COLORS[deckVariant];
     const resolvedWaveColor = waveColor || colors.wave;
@@ -546,6 +571,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                     onAddNote={onAddNote}
                     onAddToDo={onAddToDo}
                     onEditNote={onEditNote}
+                    onComposerChange={handleComposerChange}
                   />
                 </div>
               )}
@@ -583,7 +609,98 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             </div>
           </div>
 
-          {/* Frequency energy bars */}
+          {/* ═══ Composer — rendered outside waveform clipping area ═══ */}
+          {composerState && (
+            <div
+              style={{
+                padding: "8px 10px",
+                borderTop: `1px solid ${DIVIDER}`,
+                backgroundColor: LANE_BG,
+              }}
+            >
+              <div
+                className="rounded-md flex flex-col gap-1.5"
+                style={{
+                  backgroundColor: "hsl(var(--background))",
+                  border: "1px solid hsl(var(--border))",
+                  boxShadow: "0 2px 12px hsl(var(--foreground) / 0.08)",
+                  padding: "10px 12px",
+                  maxWidth: 360,
+                }}
+              >
+                {/* Header */}
+                <div className="flex items-center gap-2">
+                  {composerState.mode === "todo" ? (
+                    <CheckSquare className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(var(--foreground) / 0.4)" }} />
+                  ) : (
+                    <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(var(--foreground) / 0.4)" }} />
+                  )}
+                  <span
+                    className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/55 font-semibold"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    {composerState.mode === "todo" ? "Next Move" : "Note"} · {formatTimePrecise(composerState.time)}
+                  </span>
+                  <button
+                    onClick={handleComposerCancel}
+                    className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0 ml-auto"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Auto-expanding textarea */}
+                <textarea
+                  ref={composerRef}
+                  value={composerText}
+                  onChange={(e) => {
+                    setComposerText(e.target.value);
+                    e.target.style.height = "auto";
+                    e.target.style.height = Math.min(e.target.scrollHeight, 140) + "px";
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleComposerSubmit(); }
+                    if (e.key === "Escape") handleComposerCancel();
+                  }}
+                  placeholder={composerState.mode === "todo" ? "What needs to happen…" : "Write your note…"}
+                  rows={2}
+                  className="w-full bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/35 outline-none resize-none leading-relaxed"
+                  style={{ minHeight: 48, maxHeight: 140 }}
+                />
+
+                {/* Footer */}
+                <div className="flex items-center gap-2 pt-0.5">
+                  <span
+                    className="text-[9px] text-muted-foreground/30"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    ↵ Save · Esc cancel
+                  </span>
+                  <div className="ml-auto flex items-center gap-1.5">
+                    <button
+                      onClick={handleComposerCancel}
+                      className="px-2 py-0.5 rounded text-[10px] text-muted-foreground/50 hover:text-foreground/70 transition-colors"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleComposerSubmit}
+                      className="px-2.5 py-0.5 rounded text-[10px] font-medium transition-colors"
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        backgroundColor: composerText.trim() ? "hsl(var(--foreground) / 0.12)" : "hsl(var(--foreground) / 0.04)",
+                        color: composerText.trim() ? "hsl(var(--foreground) / 0.8)" : "hsl(var(--foreground) / 0.25)",
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {frequencyData && (
             <FrequencyEnergyBar
               bands={[

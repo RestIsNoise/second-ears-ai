@@ -56,6 +56,7 @@ interface Props {
   onAddNote?: (text: string, timestampSec: number) => void;
   onAddToDo?: (text: string, timestampSec: number) => void;
   onEditNote?: (markerId: string) => void;
+  onComposerChange?: (state: ComposerState | null) => void;
 }
 
 /* ── Tooltip with boundary-aware positioning ── */
@@ -145,8 +146,17 @@ const MarkerTooltip = ({
 
 type InputMode = "todo" | "note";
 
+export interface ComposerState {
+  mode: InputMode;
+  time: number;
+  x: number;
+}
+
 export interface WaveformMarkersHandle {
   triggerAddAt: (time: number, x: number) => void;
+  getComposerState: () => ComposerState | null;
+  submitComposer: (text: string) => void;
+  cancelComposer: () => void;
 }
 
 const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
@@ -160,13 +170,19 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   onAddNote,
   onAddToDo,
   onEditNote,
+  onComposerChange,
 }, ref) => {
   const [popoverAt, setPopoverAt] = useState<{ time: number; x: number } | null>(null);
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
   const [inputAt, setInputAt] = useState<{ time: number; x: number } | null>(null);
   const [noteText, setNoteText] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  // Notify parent of composer state changes
+  useEffect(() => {
+    const state = inputAt && inputMode ? { mode: inputMode, time: inputAt.time, x: inputAt.x } : null;
+    onComposerChange?.(state);
+  }, [inputAt, inputMode, onComposerChange]);
 
   // Expose triggerAddAt for waveform body clicks
   const triggerAddAt = useCallback((time: number, x: number) => {
@@ -174,21 +190,30 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
       setInputMode("note");
       setInputAt({ time, x });
       setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
       return;
     }
     if (onAddToDo && !onAddNote) {
       setInputMode("todo");
       setInputAt({ time, x });
       setNoteText("");
-      setTimeout(() => inputRef.current?.focus(), 50);
       return;
     }
     // Both available — show popover
     setPopoverAt({ time, x });
   }, [onAddNote, onAddToDo]);
 
-  useImperativeHandle(ref, () => ({ triggerAddAt }), [triggerAddAt]);
+  useImperativeHandle(ref, () => ({
+    triggerAddAt,
+    getComposerState: () => inputAt && inputMode ? { mode: inputMode, time: inputAt.time, x: inputAt.x } : null,
+    submitComposer: (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || !inputAt || !inputMode) return;
+      if (inputMode === "todo") onAddToDo?.(trimmed, inputAt.time);
+      else onAddNote?.(trimmed, inputAt.time);
+      setInputAt(null); setInputMode(null); setNoteText("");
+    },
+    cancelComposer: () => { setInputAt(null); setInputMode(null); setPopoverAt(null); setNoteText(""); },
+  }), [triggerAddAt, inputAt, inputMode, onAddNote, onAddToDo, noteText]);
 
   // Single hovered marker with 100ms delay
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
@@ -230,7 +255,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
     setInputAt({ time: popoverAt.time, x: popoverAt.x });
     setPopoverAt(null);
     setNoteText("");
-    setTimeout(() => inputRef.current?.focus(), 50);
   }, [popoverAt]);
 
   const handleSubmit = useCallback(() => {
@@ -411,72 +435,6 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
         </div>
       )}
 
-      {/* Composer — positioned above the waveform to avoid popover conflict */}
-      {inputAt && inputMode && (
-        <div
-          className="absolute z-[20] pointer-events-auto"
-          style={{
-            left: Math.min(Math.max(inputAt.x, 140), containerWidth - 140),
-            bottom: "calc(100% - " + MARKER_ZONE_HEIGHT + "px + 6px)",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <div
-            className="rounded-lg px-3 py-2.5 flex flex-col gap-1.5"
-            style={{
-              backgroundColor: "hsl(var(--background))",
-              border: "1px solid hsl(var(--border))",
-              boxShadow: "0 4px 16px hsl(var(--foreground) / 0.10), 0 1px 3px hsl(var(--foreground) / 0.06)",
-              width: 280,
-            }}
-          >
-            {/* Header row */}
-            <div className="flex items-center gap-2">
-              {inputMode === "todo" ? (
-                <CheckSquare className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
-              ) : (
-                <MessageCircle className="w-3 h-3 shrink-0" style={{ color: "hsl(var(--foreground) / 0.35)" }} />
-              )}
-              <span
-                className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                {inputMode === "todo" ? "Next Move" : "Note"} · {formatTime(inputAt.time)}
-              </span>
-              <button
-                onClick={handleCancel}
-                className="text-muted-foreground/40 hover:text-foreground transition-colors shrink-0 ml-auto"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-            {/* Auto-expanding textarea */}
-            <textarea
-              ref={inputRef}
-              value={noteText}
-              onChange={(e) => {
-                setNoteText(e.target.value);
-                // Auto-expand
-                e.target.style.height = "auto";
-                e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
-                if (e.key === "Escape") handleCancel();
-              }}
-              placeholder={inputMode === "todo" ? "What needs to happen…" : "Add a note…"}
-              rows={2}
-              className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 outline-none resize-none leading-relaxed"
-              style={{ minHeight: 40, maxHeight: 120 }}
-            />
-            <div className="flex items-center justify-end">
-              <span className="text-[9px] text-muted-foreground/30 mr-auto" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-                Enter to save · Esc to cancel
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 });
