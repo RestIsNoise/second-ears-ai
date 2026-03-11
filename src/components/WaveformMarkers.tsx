@@ -336,12 +336,12 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
         );
       })}
 
-      {/* User annotation markers */}
+      {/* Human comment markers — compact badge style */}
       {userMarkers.map((m) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
         const leftPct = (m.time / duration) * 100;
-        const colors = markerTypeColor.user;
+        const highlighted = isActive || isSnapped;
 
         return (
           <div
@@ -367,25 +367,53 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
                 onClick={() => onEditNote?.(m.id)}
                 className="flex flex-col items-center transition-all duration-150"
               >
+                {/* Rounded-square badge — distinct from circular AI markers */}
                 <div
-                  className="flex items-center justify-center rounded-full"
+                  className="flex items-center gap-1 select-none"
                   style={{
-                    width: isActive || isSnapped ? 26 : 22,
-                    height: isActive || isSnapped ? 26 : 22,
-                    backgroundColor: isActive ? colors.border : colors.bg,
-                    border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
-                    color: isActive || isSnapped ? colors.text : "hsl(40 80% 45%)",
-                    boxShadow: isActive ? `0 0 10px hsl(40 90% 55% / 0.3)` : "none",
+                    padding: "2px 5px",
+                    borderRadius: 4,
+                    backgroundColor: highlighted
+                      ? "hsl(42 95% 62% / 0.25)"
+                      : "hsl(45 100% 72% / 0.12)",
+                    border: `1.5px solid ${highlighted ? "hsl(42 95% 62% / 0.7)" : "hsl(45 90% 58% / 0.4)"}`,
+                    boxShadow: highlighted
+                      ? "0 0 8px hsl(42 95% 62% / 0.2), 0 1px 3px rgba(0,0,0,0.3)"
+                      : "0 1px 3px rgba(0,0,0,0.35)",
+                    backdropFilter: "blur(6px)",
                   }}
                 >
-                  <MessageCircle className="w-2.5 h-2.5" strokeWidth={2.5} />
+                  <MessageCircle
+                    className="shrink-0"
+                    style={{
+                      width: 10,
+                      height: 10,
+                      color: highlighted ? "hsl(42 95% 68%)" : "hsl(42 80% 55%)",
+                    }}
+                    strokeWidth={2.5}
+                  />
+                  <span
+                    className="truncate"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 8,
+                      fontWeight: 600,
+                      letterSpacing: "0.04em",
+                      color: highlighted ? "hsl(42 95% 72%)" : "hsl(42 60% 50%)",
+                      maxWidth: 48,
+                      lineHeight: 1,
+                    }}
+                  >
+                    {formatTime(m.time)}
+                  </span>
                 </div>
+                {/* Stem */}
                 <div
                   style={{
-                    width: "1.5px",
-                    height: 6,
-                    backgroundColor: isActive ? colors.text : colors.border,
-                    marginTop: -1,
+                    width: 1,
+                    height: 5,
+                    backgroundColor: highlighted ? "hsl(42 95% 62% / 0.5)" : "hsl(45 90% 58% / 0.25)",
+                    marginTop: -0.5,
                   }}
                 />
               </button>
