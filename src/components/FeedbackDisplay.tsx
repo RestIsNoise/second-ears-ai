@@ -1442,21 +1442,17 @@ const FeedbackDisplay = ({
             >
               SecondEar
             </span>
-            <div
-              className="w-[3px] h-[3px] rounded-full shrink-0 hidden sm:block"
-              style={{ backgroundColor: "hsl(145 45% 42% / 0.45)" }}
-            />
             <span
               className="hidden sm:inline"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 7.5,
-                letterSpacing: "0.08em",
-                color: "hsl(0 0% 26%)",
+                fontSize: 9,
+                letterSpacing: "0.12em",
+                color: "hsl(0 0% 32%)",
                 textTransform: "uppercase",
               }}
             >
-              Private by default
+              Dream &nbsp;| &nbsp;Learn &nbsp;| &nbsp;Create &nbsp;| &nbsp;Evolve
             </span>
           </div>
 
