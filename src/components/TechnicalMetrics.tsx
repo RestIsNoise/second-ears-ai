@@ -171,14 +171,14 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           {/* Status tag */}
           {!isMissing && led && (
             <span
-              className="font-extrabold uppercase tracking-[0.06em]"
+              className="font-medium uppercase tracking-[0.04em]"
               style={{
                 fontFamily: MONO,
-                fontSize: 6.5,
+                fontSize: 7.5,
                 color: led.bg,
-                padding: "1px 4px",
+                padding: "2px 5px",
                 backgroundColor: led.muted,
-                borderRadius: 1,
+                borderRadius: 2,
                 lineHeight: 1,
               }}
             >
