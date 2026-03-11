@@ -974,53 +974,53 @@ const FeedbackDisplay = ({
                 <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-5 pt-5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.06)" : "none" }}>
                   {n.topIssue && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Issue</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
                     </span>
                   )}
                   {n.biggestWin && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Win</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
                     </span>
                   )}
                   {releaseReadiness && (
                     <span
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                       style={{
-                        padding: "4px 10px",
+                        padding: "5px 12px",
                         backgroundColor: "hsl(var(--panel-bg))",
                         border: "1px solid hsl(var(--foreground) / 0.06)",
                         borderRadius: 2,
                       }}
                     >
                       <span
-                        className="text-foreground/40 uppercase tracking-[0.08em] font-extrabold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 7.5 }}
+                        className="text-foreground/40 uppercase tracking-[0.06em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                       >Release</span>
-                      <span className="text-[11px] font-medium text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
+                      <span className="text-[12px] font-normal text-foreground/70" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
                     </span>
                   )}
                 </div>
