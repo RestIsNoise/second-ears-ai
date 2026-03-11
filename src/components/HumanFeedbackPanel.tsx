@@ -127,7 +127,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
             className="text-[11px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
             style={{ fontFamily: MONO }}
           >
-            <Plus className="w-3.5 h-3.5 inline mr-0.5" />
+            <Plus className="w-4 h-4 inline mr-0.5" />
             Add
           </button>
         </div>
