@@ -60,7 +60,7 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-40 md:pb-32">
+      <div className="relative max-w-6xl mx-auto px-6 pt-32 pb-24 sm:pt-44 sm:pb-36 md:pt-52 md:pb-44 lg:pt-56 lg:pb-48">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left column — Copy with parallax */}
           <div
@@ -75,7 +75,7 @@ const Hero = () => {
             </p>
 
             <h1
-              className="text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] lg:text-[3rem] font-semibold tracking-tight leading-[1.12] mb-5 sm:mb-6 animate-fade-up"
+              className="text-[1.85rem] sm:text-[2.4rem] md:text-[3rem] lg:text-[3.5rem] font-semibold tracking-tight leading-[1.1] mb-5 sm:mb-6 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
               Actionable mix
@@ -160,7 +160,7 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full min-w-[500px] max-w-[700px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full min-w-[520px] max-w-[760px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
