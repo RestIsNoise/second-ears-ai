@@ -318,10 +318,10 @@ const SubKickChannel = ({ value }: { value: number }) => {
         </div>
 
         {/* Bipolar meter with needle */}
-        <div className="flex-1 flex flex-col justify-center" style={{ padding: "7px 8px" }}>
+        <div className="flex-1 flex flex-col justify-center" style={{ padding: "9px 10px" }}>
           <div className="flex items-center gap-1.5">
-            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 6, fontWeight: 700 }}>K</span>
-            <div className="relative flex-1" style={{ height: 4 }}>
+            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700 }}>K</span>
+            <div className="relative flex-1" style={{ height: 6 }}>
               <div className="absolute inset-0 flex gap-px">
                 {Array.from({ length: SEGMENTS }).map((_, i) => (
                   <div key={i} style={{ flex: 1, backgroundColor: "hsl(var(--foreground) / 0.035)" }} />
