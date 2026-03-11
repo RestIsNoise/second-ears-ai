@@ -223,6 +223,37 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
     const [hoverX, setHoverX] = useState<number | null>(null);
     const [hoverTime, setHoverTime] = useState<number>(0);
     const [containerWidth, setContainerWidth] = useState(0);
+    const [composerText, setComposerText] = useState("");
+    const composerRef = useRef<HTMLTextAreaElement>(null);
+    const [composerState, setComposerState] = useState<ComposerState | null>(null);
+
+    // Poll composer state from markers ref (lightweight — driven by renders)
+    const updateComposer = useCallback(() => {
+      const cs = markersRef.current?.getComposerState() ?? null;
+      setComposerState(cs);
+      if (cs) setTimeout(() => composerRef.current?.focus(), 60);
+    }, []);
+
+    // Listen for composer open via a MutationObserver-like approach: 
+    // We call updateComposer after any click on the waveform
+    const originalTriggerAddAt = useCallback((time: number, x: number) => {
+      markersRef.current?.triggerAddAt(time, x);
+      setTimeout(updateComposer, 20);
+    }, [updateComposer]);
+
+    const handleComposerSubmit = useCallback(() => {
+      const trimmed = composerText.trim();
+      if (!trimmed) return;
+      markersRef.current?.submitComposer(trimmed);
+      setComposerText("");
+      setComposerState(null);
+    }, [composerText]);
+
+    const handleComposerCancel = useCallback(() => {
+      markersRef.current?.cancelComposer();
+      setComposerText("");
+      setComposerState(null);
+    }, []);
 
     const colors = DECK_COLORS[deckVariant];
     const resolvedWaveColor = waveColor || colors.wave;
