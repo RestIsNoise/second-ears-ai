@@ -176,7 +176,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
                 fontFamily: MONO,
                 fontSize: 9,
                 color: led.bg,
-                padding: "2px 5px",
+                padding: "3px 6px",
                 backgroundColor: led.muted,
                 borderRadius: 2,
                 lineHeight: 1,
