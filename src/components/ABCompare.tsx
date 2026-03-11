@@ -112,6 +112,45 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
   const [masterVolume, setMasterVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
+  const [soloMode, setSoloMode] = useState<"off" | "a" | "b">("off");
+
+  // Marker navigation helpers
+  const sortedMarkers = [...markersA].sort((a, b) => a.time - b.time);
+  const markerCount = sortedMarkers.length;
+
+  const jumpToMarker = useCallback((direction: "prev" | "next") => {
+    if (sortedMarkers.length === 0) return;
+    const t = playerARef.current?.getCurrentTime() ?? 0;
+    let target: WaveformMarker | null = null;
+    if (direction === "next") {
+      target = sortedMarkers.find((m) => m.time > t + 0.5) || null;
+      if (!target) target = sortedMarkers[0]; // wrap
+    } else {
+      for (let i = sortedMarkers.length - 1; i >= 0; i--) {
+        if (sortedMarkers[i].time < t - 1) { target = sortedMarkers[i]; break; }
+      }
+      if (!target) target = sortedMarkers[sortedMarkers.length - 1]; // wrap
+    }
+    if (target) {
+      playerARef.current?.seekTo(target.time);
+      playerBRef.current?.seekTo(target.time);
+      onMarkerClick?.(target);
+    }
+  }, [sortedMarkers, onMarkerClick]);
+
+  const handleSoloToggle = useCallback((deck: "a" | "b") => {
+    const mv = isMuted ? 0 : masterVolume / 100;
+    if (soloMode === deck) {
+      // Unsolo — return to crossfade
+      setSoloMode("off");
+      playerARef.current?.setVolume((1 - crossfade / 100) * mv);
+      playerBRef.current?.setVolume((crossfade / 100) * mv);
+    } else {
+      setSoloMode(deck);
+      playerARef.current?.setVolume(deck === "a" ? mv : 0);
+      playerBRef.current?.setVolume(deck === "b" ? mv : 0);
+    }
+  }, [soloMode, crossfade, isMuted, masterVolume]);
 
   const activeRefFile = audioFileB || localRefFile;
   const activeRefName = refTrackName || localRefFile?.name || "";
