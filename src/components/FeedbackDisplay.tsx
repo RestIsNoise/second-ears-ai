@@ -132,7 +132,6 @@ const PANELS: PanelConfig[] = [
   { id: "human-feedback", label: "Human Feedback" },
   { id: "tech-metrics", label: "Technical Metrics" },
   { id: "full-analysis", label: "Full Analysis" },
-  { id: "session", label: "Session" },
   { id: "todo", label: "To-Do List" },
 ];
 
@@ -191,7 +190,7 @@ const FeedbackDisplay = ({
       if (!next.has("ai-reference")) {
         if (next.size >= MAX_PANELS) {
           // Remove oldest non-essential panel
-          const removable = ["full-analysis", "session", "tech-metrics"];
+          const removable = ["full-analysis", "tech-metrics"];
           for (const r of removable) {
             if (next.has(r)) { next.delete(r); break; }
           }
@@ -697,8 +696,6 @@ const FeedbackDisplay = ({
           </div>
         );
 
-      case "session":
-        return <SessionPanel />;
 
       case "todo":
         return (
@@ -732,7 +729,6 @@ const FeedbackDisplay = ({
     "human-feedback": "Human Feedback",
     "tech-metrics": "Technical Metrics",
     "full-analysis": "Full Analysis",
-    "session": "Session",
     "todo": "To-Do List",
   };
 
