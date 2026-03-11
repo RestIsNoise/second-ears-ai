@@ -88,24 +88,24 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div
           className="flex items-center shrink-0"
           style={{
-            width: 90,
-            padding: "10px 0 10px 12px",
+            width: 100,
+            padding: "14px 0 14px 14px",
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
           <span
-            className="text-foreground/50 uppercase tracking-[0.04em] font-medium truncate"
-            style={{ fontFamily: MONO, fontSize: 11 }}
+            className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate"
+            style={{ fontFamily: MONO, fontSize: 12 }}
           >
             {label}
           </span>
         </div>
 
         {/* Center: meter + thresholds */}
-        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "12px 14px" }}>
+        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "14px 16px" }}>
           {/* Segmented bar */}
           <div className="relative">
-            <div className="flex gap-px" style={{ height: 7 }}>
+            <div className="flex gap-px" style={{ height: 8 }}>
               {Array.from({ length: SEGMENTS }).map((_, i) => {
                 const segPct = ((i + 1) / SEGMENTS) * 100;
                 const filled = pct >= segPct;
@@ -160,23 +160,23 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 
         {/* Right: value + unit + LED */}
         <div
-          className="flex items-center gap-2 shrink-0"
+          className="flex items-center gap-2.5 shrink-0"
           style={{
-            padding: "10px 12px 10px 0",
+            padding: "14px 14px 14px 0",
             borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 100,
+            minWidth: 115,
             justifyContent: "flex-end",
           }}
         >
           {/* Status tag */}
           {!isMissing && led && (
             <span
-              className="font-medium uppercase tracking-[0.04em]"
+              className="font-medium uppercase tracking-[0.05em]"
               style={{
                 fontFamily: MONO,
-                fontSize: 9,
+                fontSize: 10,
                 color: led.bg,
-                padding: "3px 6px",
+                padding: "4px 7px",
                 backgroundColor: led.muted,
                 borderRadius: 2,
                 lineHeight: 1,
@@ -186,14 +186,14 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             </span>
           )}
           <span
-            className="text-foreground/85 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 16, letterSpacing: "-0.03em" }}
+            className="text-foreground/90 tabular-nums font-medium"
+            style={{ fontFamily: MONO, fontSize: 18, letterSpacing: "-0.03em" }}
           >
             {isMissing ? "—" : value.toFixed(decimals)}
           </span>
           <span
-            className="text-foreground/30 font-normal uppercase"
-            style={{ fontFamily: MONO, fontSize: 10 }}
+            className="text-foreground/35 font-normal uppercase"
+            style={{ fontFamily: MONO, fontSize: 11 }}
           >
             {unit}
           </span>
@@ -226,7 +226,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 10 }}>
+          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
             Stereo
           </span>
         </div>
@@ -280,18 +280,18 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         {/* Value */}
         <div
           className="flex items-center gap-1.5 shrink-0"
-          style={{ padding: "8px 12px 8px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 95, justifyContent: "flex-end" }}
+          style={{ padding: "12px 14px 12px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 110, justifyContent: "flex-end" }}
         >
           <span
-            className="font-extrabold uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 8, color: led.bg, padding: "2px 5px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
+            className="font-medium uppercase tracking-[0.06em]"
+            style={{ fontFamily: MONO, fontSize: 10, color: led.bg, padding: "4px 7px", backgroundColor: led.muted, borderRadius: 2, lineHeight: 1 }}
           >
             {status.label}
           </span>
-          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "-0.03em" }}>
+          <span className="text-foreground/90 tabular-nums font-medium" style={{ fontFamily: MONO, fontSize: 16, letterSpacing: "-0.03em" }}>
             {value > 0 ? "+" : ""}{value.toFixed(2)}
           </span>
-          <div className="w-[6px] h-[6px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+          <div className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
         </div>
       </div>
     </div>
@@ -310,9 +310,9 @@ const SubKickChannel = ({ value }: { value: number }) => {
         {/* Label */}
         <div
           className="flex items-center shrink-0"
-          style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
+          style={{ width: 100, padding: "12px 0 12px 14px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 10 }}>
+          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
             Sub/Kick
           </span>
         </div>
@@ -349,18 +349,18 @@ const SubKickChannel = ({ value }: { value: number }) => {
         {/* Value */}
         <div
           className="flex items-center gap-1.5 shrink-0"
-          style={{ padding: "8px 12px 8px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 95, justifyContent: "flex-end" }}
+          style={{ padding: "12px 14px 12px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 110, justifyContent: "flex-end" }}
         >
           <span
-            className="font-extrabold uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 8, color: led.bg, padding: "2px 5px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
+            className="font-medium uppercase tracking-[0.06em]"
+            style={{ fontFamily: MONO, fontSize: 10, color: led.bg, padding: "4px 7px", backgroundColor: led.muted, borderRadius: 2, lineHeight: 1 }}
           >
             {status.label}
           </span>
-          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 14 }}>
+          <span className="text-foreground/90 tabular-nums font-medium" style={{ fontFamily: MONO, fontSize: 16 }}>
             {value.toFixed(2)}
           </span>
-          <div className="w-[6px] h-[6px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+          <div className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
         </div>
       </div>
     </div>
@@ -371,15 +371,15 @@ const SubKickChannel = ({ value }: { value: number }) => {
 const SectionDivider = ({ label }: { label: string }) => (
   <div
     style={{
-      padding: "6px 12px",
+      padding: "8px 14px",
       backgroundColor: "hsl(var(--panel-header))",
       borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
       borderTop: "1px solid hsl(var(--foreground) / 0.06)",
     }}
   >
     <span
-      className="text-foreground/25 uppercase tracking-[0.12em] font-bold"
-      style={{ fontFamily: MONO, fontSize: 9 }}
+      className="text-foreground/30 uppercase tracking-[0.12em] font-medium"
+      style={{ fontFamily: MONO, fontSize: 10 }}
     >
       {label}
     </span>
@@ -438,14 +438,14 @@ const TechnicalMetrics = ({ metrics }: Props) => {
       <div
         className="flex items-center"
         style={{
-          padding: "7px 12px",
+          padding: "10px 14px",
           backgroundColor: "hsl(var(--panel-header))",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
         }}
       >
         <span
-          className="text-foreground/45 uppercase tracking-[0.14em] font-extrabold"
-          style={{ fontFamily: MONO, fontSize: 9 }}
+          className="text-foreground/50 uppercase tracking-[0.14em] font-medium"
+          style={{ fontFamily: MONO, fontSize: 11 }}
         >
           Metering
         </span>
