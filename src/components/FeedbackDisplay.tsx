@@ -656,8 +656,8 @@ const FeedbackDisplay = ({
                 }}
               >
                 <p
-                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-2.5"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
