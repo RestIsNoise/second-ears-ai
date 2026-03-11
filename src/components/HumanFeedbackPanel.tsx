@@ -83,6 +83,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       return;
     }
     const comment = { analysis_id: analysisId, user_id: user.id, timestamp_in_track: currentTime, text: trimmed };
+    console.log("[HumanFeedback] Inserting comment:", JSON.stringify(comment));
     setNewText("");
     const optimistic: Comment = {
       id: crypto.randomUUID(),
@@ -95,10 +96,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     setComments((prev) => [...prev, optimistic]);
     const { data, error } = await supabase.from("comments").insert(comment).select().single();
     if (error) {
-      console.error("[HumanFeedback] Insert failed:", error);
+      console.error("[HumanFeedback] Insert failed:", JSON.stringify(error));
       setComments((prev) => prev.filter((c) => c.id !== optimistic.id));
       setNewText(trimmed);
-      toast({ title: "Failed to save comment", variant: "destructive", duration: 1500 });
+      toast({ title: "Failed to save comment", description: error.message, variant: "destructive", duration: 3000 });
       return;
     }
     // Replace optimistic with real row
