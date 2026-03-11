@@ -291,12 +291,12 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
                     }}
                   >
-                    <div className="flex items-start gap-2.5">
+                    <div className="flex items-start gap-3">
                       <span
                         className="shrink-0 mt-[2px] inline-flex items-center"
                         style={{
                           fontFamily: MONO,
-                          fontSize: 8,
+                          fontSize: 9,
                           fontWeight: 600,
                           letterSpacing: "0.06em",
                           lineHeight: 1,
