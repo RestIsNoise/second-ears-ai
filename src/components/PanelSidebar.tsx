@@ -39,7 +39,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
 
   return (
     <div
-      className="flex flex-col h-full w-[164px] min-w-[164px] shrink-0 overflow-visible select-none"
+      className="flex flex-col h-full w-[184px] min-w-[184px] shrink-0 overflow-visible select-none"
       style={{
         backgroundColor: "hsl(var(--workspace-bg))",
         borderRight: "3px solid hsl(var(--foreground) / 0.14)",
@@ -49,21 +49,21 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
       {/* ═══ HEADER ═══ */}
       <div
         style={{
-          padding: "8px 12px",
+          padding: "10px 14px",
           borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
           backgroundColor: "hsl(var(--panel-header))",
         }}
       >
         <div className="flex items-center gap-2">
           <span
-            className="text-[9px] text-foreground/45 tracking-[0.12em] uppercase font-medium"
+            className="text-[11px] text-foreground/45 tracking-[0.12em] uppercase font-medium"
             style={{ fontFamily: MONO }}
           >
             Modules
           </span>
           <span
             className="text-foreground/22 font-medium tabular-nums ml-auto"
-            style={{ fontFamily: MONO, fontSize: 8 }}
+            style={{ fontFamily: MONO, fontSize: 10 }}
           >
             {activePanels.size}/{maxPanels}
           </span>
@@ -89,7 +89,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                 disabled && "cursor-not-allowed opacity-40",
               )}
               style={{
-                padding: "7px 10px 7px 0",
+                padding: "9px 12px 9px 0",
                 marginLeft: 0,
                 borderLeft: isActive
                   ? "3px solid hsl(var(--foreground) / 0.7)"
@@ -106,16 +106,16 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               <div
                 className="shrink-0 flex items-center justify-center ml-2"
                 style={{
-                  width: 22,
-                  height: 22,
+                  width: 26,
+                  height: 26,
                   borderRadius: 3,
                   backgroundColor: isActive ? "hsl(var(--foreground) / 0.08)" : "transparent",
                   boxShadow: isActive ? "inset 0 1px 2px hsl(0 0% 0% / 0.08)" : "none",
                 }}
               >
                 <Icon
-                  className={cn(
-                    "w-3 h-3",
+                    className={cn(
+                    "w-3.5 h-3.5",
                     isActive ? "text-foreground/70" : "text-foreground/30",
                   )}
                   strokeWidth={isActive ? 2.2 : 1.6}
@@ -125,7 +125,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               {/* Label */}
               <span
                 className={cn(
-                  "text-[10px] tracking-[0.03em] truncate uppercase",
+                  "text-[12px] tracking-[0.03em] truncate uppercase",
                   isActive
                     ? "text-foreground/80 font-medium"
                     : "text-foreground/38 font-normal",
@@ -138,7 +138,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               {/* Status LED */}
               {isActive && (
                 <div
-                  className="w-1 h-1 rounded-full ml-auto shrink-0 mr-1.5"
+                  className="w-1.5 h-1.5 rounded-full ml-auto shrink-0 mr-1.5"
                   style={{
                     backgroundColor: "hsl(145 55% 45%)",
                     boxShadow: "0 0 3px hsl(145 55% 45% / 0.5)",
@@ -176,7 +176,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
             />
             <span
               className="text-foreground/22 uppercase tracking-[0.14em] font-extrabold"
-              style={{ fontFamily: MONO, fontSize: 6.5 }}
+              style={{ fontFamily: MONO, fontSize: 8 }}
             >
               Controls
             </span>

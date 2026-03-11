@@ -107,7 +107,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[14px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.8 }}>
+    <p className="text-[15px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.8 }}>
       {displayText}
     </p>
   );
@@ -604,7 +604,7 @@ const FeedbackDisplay = ({
 
       case "tech-metrics":
         return (
-          <div className="p-3">
+          <div className="p-4">
             {technicalMetrics ? (
               <TechnicalMetrics metrics={technicalMetrics} compact />
             ) : (
@@ -625,13 +625,13 @@ const FeedbackDisplay = ({
                    <div
                     key={key}
                     style={{
-                      padding: "14px 18px",
+                      padding: "18px 22px",
                       borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
                     }}
                   >
                     <h3
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium mb-2.5"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
+                      className="text-foreground/55 uppercase tracking-[0.08em] font-medium mb-3"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12 }}
                     >
                       {label}
                     </h3>
@@ -649,43 +649,43 @@ const FeedbackDisplay = ({
             {n.ifFixOneThing && (n.ifFixOneThing.title || n.ifFixOneThing.how || n.ifFixOneThing.why) && (
               <div
                 style={{
-                  padding: "16px 18px",
+                  padding: "18px 22px",
                   borderTop: "2px solid hsl(var(--foreground) / 0.08)",
                   backgroundColor: "hsl(var(--panel-bg))",
                   boxShadow: "inset 0 2px 4px hsl(var(--panel-inset))",
                 }}
               >
                 <p
-                  className="text-foreground/40 uppercase tracking-[0.1em] font-medium mb-3"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                  className="text-foreground/45 uppercase tracking-[0.1em] font-medium mb-3.5"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                 >
                   {modeFixOneLabel[mode] || "Priority fix"}
                 </p>
                   <div
                   style={{
                     borderLeft: "3px solid hsl(var(--foreground) / 0.2)",
-                    padding: "12px 14px",
+                    padding: "14px 16px",
                   }}
                 >
                   {n.ifFixOneThing.how && !n.ifFixOneThing.why && !n.ifFixOneThing.title ? (
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-[14px] text-foreground/65" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
+                      <p className="text-[15px] text-foreground/65" style={{ lineHeight: 1.75, fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.how}</p>
                       <CopyFixButton text={n.ifFixOneThing.how} />
                     </div>
                   ) : (
                     <>
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-[15px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
+                        <h3 className="text-[16px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
                         <CopyFixButton text={`${n.ifFixOneThing.title}\n${n.ifFixOneThing.why || ""}\n${n.ifFixOneThing.how || ""}`} />
                       </div>
                       {n.ifFixOneThing.why && (
-                        <p className="text-[13px] text-foreground/50 mt-2" style={{ lineHeight: 1.65, fontFamily: "'IBM Plex Mono', monospace" }}>
+                        <p className="text-[14px] text-foreground/50 mt-2.5" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>
                           {n.ifFixOneThing.why}
                         </p>
                       )}
                       {n.ifFixOneThing.how && (
-                        <p className="text-[13px] text-foreground/60 mt-2.5" style={{ lineHeight: 1.65, fontFamily: "'IBM Plex Mono', monospace" }}>
-                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 9 }}>How</span>
+                        <p className="text-[14px] text-foreground/60 mt-3" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>
+                          <span className="text-foreground/35 uppercase tracking-wider font-medium mr-1.5" style={{ fontSize: 10 }}>How</span>
                           {n.ifFixOneThing.how}
                         </p>
                       )}
@@ -920,7 +920,7 @@ const FeedbackDisplay = ({
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
                 {n.overallImpression && (
-                  <p className="text-[14px] sm:text-[15px] text-foreground/70 max-w-[68ch] flex-1 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+                  <p className="text-[15px] sm:text-[16px] text-foreground/70 max-w-[68ch] flex-1 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
                     {n.overallImpression}
                   </p>
                 )}
@@ -932,7 +932,7 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                     style={{
                       fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: 500,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
@@ -952,7 +952,7 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                     style={{
                       fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: 500,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
@@ -982,11 +982,11 @@ const FeedbackDisplay = ({
                         borderRadius: 2,
                       }}
                     >
-                      <span
-                        className="text-foreground/45 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                       <span
+                        className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                       >Issue</span>
-                      <span className="text-[13px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                      <span className="text-[14px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
                     </span>
                   )}
                   {n.biggestWin && (
@@ -1000,10 +1000,10 @@ const FeedbackDisplay = ({
                       }}
                     >
                       <span
-                        className="text-foreground/45 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                        className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                       >Win</span>
-                      <span className="text-[13px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
+                      <span className="text-[14px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
                     </span>
                   )}
                   {releaseReadiness && (
@@ -1016,11 +1016,11 @@ const FeedbackDisplay = ({
                         borderRadius: 2,
                       }}
                     >
-                      <span
-                        className="text-foreground/45 uppercase tracking-[0.08em] font-medium"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                       <span
+                        className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
+                        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}
                       >Release</span>
-                      <span className="text-[13px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
+                      <span className="text-[14px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
                     </span>
                   )}
                 </div>
@@ -1040,8 +1040,8 @@ const FeedbackDisplay = ({
           }}
         >
           {/* On md+ use fixed height for horizontal layout */}
-          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 340px) !important; min-height: 460px !important; max-height: 680px !important; } }`}</style>
-          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 340px)", minHeight: 460 }}>
+          <style>{`@media (min-width: 768px) { .workspace-panels-container { height: calc(100vh - 300px) !important; min-height: 520px !important; max-height: 760px !important; } }`}</style>
+          <div className="hidden md:flex md:flex-row flex-1 min-w-0 workspace-panels-container" style={{ height: "calc(100vh - 300px)", minHeight: 520 }}>
         {/* Desktop sidebar */}
           <PanelSidebar
             panels={PANELS}

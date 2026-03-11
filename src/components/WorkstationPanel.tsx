@@ -48,10 +48,10 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
         <div style={{ height: 1, background: "hsl(0 0% 100% / 0.06)" }} />
         <div style={{ height: 1, background: "hsl(0 0% 0% / 0.12)" }} />
 
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2 min-w-0">
             <h3
-              className="text-[13px] text-foreground/70 tracking-[0.08em] uppercase truncate font-medium"
+              className="text-[15px] text-foreground/75 tracking-[0.08em] uppercase truncate font-medium"
               style={{ fontFamily: MONO }}
             >
               {title}
@@ -60,10 +60,10 @@ const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
 
           <button
             onClick={onClose}
-            className="text-foreground/20 hover:text-foreground/55 transition-colors rounded-[2px] p-1.5 hover:bg-foreground/[0.06] shrink-0 ml-2"
+            className="text-foreground/25 hover:text-foreground/55 transition-colors rounded-[2px] p-2 hover:bg-foreground/[0.06] shrink-0 ml-2"
             title="Close panel"
           >
-            <X className="w-3.5 h-3.5" strokeWidth={2} />
+            <X className="w-4 h-4" strokeWidth={2} />
           </button>
         </div>
 
