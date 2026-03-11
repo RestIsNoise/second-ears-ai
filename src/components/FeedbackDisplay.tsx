@@ -107,7 +107,7 @@ const AnalysisCardText = ({ text }: { text: string }) => {
   const displayText = sentences.slice(0, 2).join("").trim();
 
   return (
-    <p className="text-[13px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.75 }}>
+    <p className="text-[14px] text-foreground/55 max-w-[70ch]" style={{ lineHeight: 1.8 }}>
       {displayText}
     </p>
   );
