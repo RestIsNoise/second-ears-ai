@@ -675,7 +675,7 @@ const FeedbackDisplay = ({
                   ) : (
                     <>
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-[15px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
+                        <h3 className="text-[16px] font-medium tracking-tight text-foreground/80" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.ifFixOneThing.title}</h3>
                         <CopyFixButton text={`${n.ifFixOneThing.title}\n${n.ifFixOneThing.why || ""}\n${n.ifFixOneThing.how || ""}`} />
                       </div>
                       {n.ifFixOneThing.why && (
