@@ -26,6 +26,8 @@ interface Comment {
   created_at: string;
 }
 
+const COMMENT_SELECT = "id, analysis_id, user_id, content, timestamp, created_at";
+
 interface Props {
   analysisId: string | null;
   currentTime?: number;
@@ -44,7 +46,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
 
   // Sync comment markers to parent
   useEffect(() => {
-    onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.text, timestamp: c.timestamp_in_track })));
+    onCommentsChange?.(comments.map(c => ({ id: c.id, content: c.content, timestamp: c.timestamp })));
   }, [comments, onCommentsChange]);
 
   // Load comments
@@ -54,10 +56,10 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
-        .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
+        .select(COMMENT_SELECT)
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
-      if (data) setComments(data as Comment[]);
+      if (data) setComments(data as unknown as Comment[]);
       setLoadingComments(false);
     };
     load();
@@ -70,16 +72,16 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       const row = {
         analysis_id: analysisId,
         user_id: user.id,
-        timestamp_in_track: pendingComment.timestampSec,
-        text: pendingComment.text,
+        timestamp: pendingComment.timestampSec,
+        content: pendingComment.text,
       };
       const { data, error } = await supabase
         .from("comments")
-        .insert(row)
-        .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
+        .insert(row as any)
+        .select(COMMENT_SELECT)
         .single();
       if (!error && data) {
-        setComments((prev) => [...prev, data as Comment]);
+        setComments((prev) => [...prev, data as unknown as Comment]);
         toast({ title: "Comment added", duration: 1200 });
       }
       onPendingCommentHandled?.();
@@ -94,14 +96,14 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     const row = {
       analysis_id: analysisId,
       user_id: user.id,
-      timestamp_in_track: currentTime,
-      text: trimmed,
+      timestamp: currentTime,
+      content: trimmed,
     };
 
     const { data, error } = await supabase
       .from("comments")
-      .insert(row)
-      .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
+      .insert(row as any)
+      .select(COMMENT_SELECT)
       .single();
 
     if (error) {
@@ -109,25 +111,23 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       return;
     }
 
-    setComments((prev) => [...prev, data as Comment]);
+    setComments((prev) => [...prev, data as unknown as Comment]);
     setNewText("");
     inputRef.current?.focus();
   }, [newText, analysisId, user, currentTime]);
 
   const handleDelete = useCallback(async (commentId: string) => {
-    // Optimistic remove
     setComments((prev) => prev.filter((c) => c.id !== commentId));
     const { error } = await supabase.from("comments").delete().eq("id", commentId);
     if (error) {
       toast({ title: "Failed to delete comment", variant: "destructive", duration: 1500 });
-      // Re-fetch to restore
       if (analysisId) {
         const { data } = await supabase
           .from("comments")
-          .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
+          .select(COMMENT_SELECT)
           .eq("analysis_id", analysisId)
           .order("created_at", { ascending: true });
-        if (data) setComments(data as Comment[]);
+        if (data) setComments(data as unknown as Comment[]);
       }
     }
   }, [analysisId]);
@@ -205,20 +205,20 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                     className="text-muted-foreground tabular-nums"
                     style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                   >
-                    @{formatTime(c.timestamp_in_track)}
+                    @{formatTime(c.timestamp)}
                   </span>
                   <span className="text-[10px] text-muted-foreground/40">
                     {formatDate(c.created_at)}
                   </span>
                 </div>
                 <p className="text-xs text-foreground/80 leading-relaxed mt-0.5">
-                  {c.text}
+                  {c.content}
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0 mt-0.5">
                 {onAddToDo && (
                   <button
-                    onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
+                    onClick={() => onAddToDo(c.content, c.timestamp)}
                     className="opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground/60 transition-all"
                     title="Add to To-Do"
                   >
