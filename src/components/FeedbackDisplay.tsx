@@ -968,6 +968,31 @@ const FeedbackDisplay = ({
                     <span className="sm:hidden">Ref</span>
                   </button>
                 </div>
+                {/* SE monogram — stamped identity plate */}
+                <div
+                  className="flex items-center justify-center mt-3"
+                  style={{ opacity: 0.18 }}
+                  aria-hidden="true"
+                >
+                  <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {/* S */}
+                    <path
+                      d="M2 12.5C2.8 13.5 4.2 14 6 14C8.5 14 10 12.8 10 11C10 9.2 8.5 8.5 6.2 7.8C4 7.1 2.5 6.2 2.5 4.2C2.5 2.2 4.2 1 6.5 1C8 1 9.3 1.5 10 2.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="square"
+                      fill="none"
+                    />
+                    {/* E */}
+                    <path
+                      d="M16 1H24.5M16 7.5H23M16 14H24.5M16 1V14"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="square"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
               </div>
 
               {(n.topIssue || n.biggestWin || releaseReadiness) && (
