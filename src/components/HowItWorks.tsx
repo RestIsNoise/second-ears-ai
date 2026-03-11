@@ -41,7 +41,7 @@ const HowItWorks = () => {
         <div className="mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div className="flex items-center gap-4 mb-5">
             <p
-              className="text-[13px] text-foreground/50 tracking-[0.2em] uppercase shrink-0 font-bold"
+              className="text-[13px] text-foreground/60 tracking-[0.2em] uppercase shrink-0 font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Process
