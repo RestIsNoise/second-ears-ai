@@ -143,10 +143,10 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
               borderBottom: "1px solid hsl(var(--foreground) / 0.06)",
             }}
           >
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 7 }}>Metric</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>You</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 7 }}>Ref</span>
-            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[44px]" style={{ fontFamily: MONO, fontSize: 7 }}>Δ</span>
+    <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold" style={{ fontFamily: MONO, fontSize: 8 }}>Metric</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[52px]" style={{ fontFamily: MONO, fontSize: 8 }}>You</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[52px]" style={{ fontFamily: MONO, fontSize: 8 }}>Ref</span>
+            <span className="text-foreground/30 uppercase tracking-[0.1em] font-extrabold text-right w-[48px]" style={{ fontFamily: MONO, fontSize: 8 }}>Δ</span>
           </div>
 
           {metricEntries.map(([key, diff], idx) => {
