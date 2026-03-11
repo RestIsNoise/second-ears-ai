@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, User, MessageSquare } from "lucide-react";
+import { Plus, User, MessageSquare, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,8 +21,8 @@ interface Comment {
   id: string;
   analysis_id: string;
   user_id: string;
-  timestamp: number;
-  content: string;
+  timestamp_in_track: number;
+  text: string;
   created_at: string;
 }
 
@@ -41,17 +41,17 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   const [newText, setNewText] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load comments + user votes
+  // Load comments
   useEffect(() => {
     if (!analysisId) { setLoadingComments(false); return; }
     const load = async () => {
       setLoadingComments(true);
       const { data } = await supabase
         .from("comments")
-        .select("id, analysis_id, user_id, content, timestamp, created_at")
+        .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
-      if (data) setComments(data as unknown as Comment[]);
+      if (data) setComments(data as Comment[]);
       setLoadingComments(false);
     };
     load();
@@ -61,19 +61,19 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
   useEffect(() => {
     if (!pendingComment || !analysisId || !user) return;
     const insert = async () => {
-      const comment = {
+      const row = {
         analysis_id: analysisId,
         user_id: user.id,
-        timestamp: pendingComment.timestampSec,
-        content: pendingComment.text,
+        timestamp_in_track: pendingComment.timestampSec,
+        text: pendingComment.text,
       };
       const { data, error } = await supabase
         .from("comments")
-        .insert(comment as any)
-        .select("id, analysis_id, user_id, content, timestamp, created_at")
+        .insert(row)
+        .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
         .single();
       if (!error && data) {
-        setComments((prev) => [...prev, data as unknown as Comment]);
+        setComments((prev) => [...prev, data as Comment]);
         toast({ title: "Comment added", duration: 1200 });
       }
       onPendingCommentHandled?.();
@@ -85,17 +85,17 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
     const trimmed = newText.trim();
     if (!trimmed || !analysisId || !user) return;
 
-    const comment = {
+    const row = {
       analysis_id: analysisId,
       user_id: user.id,
-      timestamp: currentTime,
-      content: trimmed,
+      timestamp_in_track: currentTime,
+      text: trimmed,
     };
 
     const { data, error } = await supabase
       .from("comments")
-      .insert(comment as any)
-      .select("id, analysis_id, user_id, content, timestamp, created_at")
+      .insert(row)
+      .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
       .single();
 
     if (error) {
@@ -103,10 +103,28 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
       return;
     }
 
-    setComments((prev) => [...prev, data as unknown as Comment]);
+    setComments((prev) => [...prev, data as Comment]);
     setNewText("");
     inputRef.current?.focus();
   }, [newText, analysisId, user, currentTime]);
+
+  const handleDelete = useCallback(async (commentId: string) => {
+    // Optimistic remove
+    setComments((prev) => prev.filter((c) => c.id !== commentId));
+    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+    if (error) {
+      toast({ title: "Failed to delete comment", variant: "destructive", duration: 1500 });
+      // Re-fetch to restore
+      if (analysisId) {
+        const { data } = await supabase
+          .from("comments")
+          .select("id, analysis_id, user_id, text, timestamp_in_track, created_at")
+          .eq("analysis_id", analysisId)
+          .order("created_at", { ascending: true });
+        if (data) setComments(data as Comment[]);
+      }
+    }
+  }, [analysisId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -181,25 +199,36 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                     className="text-muted-foreground tabular-nums"
                     style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
                   >
-                    @{formatTime(c.timestamp)}
+                    @{formatTime(c.timestamp_in_track)}
                   </span>
                   <span className="text-[10px] text-muted-foreground/40">
                     {formatDate(c.created_at)}
                   </span>
                 </div>
                 <p className="text-xs text-foreground/80 leading-relaxed mt-0.5">
-                  {c.content}
+                  {c.text}
                 </p>
               </div>
-              {onAddToDo && (
-                <button
-                  onClick={() => onAddToDo(c.content, c.timestamp)}
-                  className="opacity-0 group-hover:opacity-100 text-[10px] text-muted-foreground/40 hover:text-foreground/60 transition-all shrink-0 mt-0.5"
-                  title="Add to To-Do"
-                >
-                  <Plus className="w-3 h-3" />
-                </button>
-              )}
+              <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                {onAddToDo && (
+                  <button
+                    onClick={() => onAddToDo(c.text, c.timestamp_in_track)}
+                    className="opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground/60 transition-all"
+                    title="Add to To-Do"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                )}
+                {user && user.id === c.user_id && (
+                  <button
+                    onClick={() => handleDelete(c.id)}
+                    className="opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-destructive/70 transition-all"
+                    title="Delete comment"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
