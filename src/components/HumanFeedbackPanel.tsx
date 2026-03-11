@@ -117,8 +117,8 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           onKeyDown={handleKeyDown}
           placeholder="Add note…"
           rows={2}
-          className="w-full bg-transparent text-[14px] text-foreground/65 placeholder:text-foreground/20 outline-none resize-none"
-          style={{ fontFamily: MONO, lineHeight: 1.65 }}
+          className="w-full bg-transparent text-[15px] text-foreground/65 placeholder:text-foreground/20 outline-none resize-none"
+          style={{ fontFamily: MONO, lineHeight: 1.7 }}
         />
         <div className="flex justify-end mt-1">
           <button
