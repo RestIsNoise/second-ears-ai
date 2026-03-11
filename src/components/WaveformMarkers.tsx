@@ -170,6 +170,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
   onAddNote,
   onAddToDo,
   onEditNote,
+  onComposerChange,
 }, ref) => {
   const [popoverAt, setPopoverAt] = useState<{ time: number; x: number } | null>(null);
   const [inputMode, setInputMode] = useState<InputMode | null>(null);
