@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { Copy, Check, Plus, AudioLines } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import FeedbackVoteButtons from "@/components/FeedbackVoteButtons";
@@ -203,9 +204,21 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   </span>
                 </div>
 
+                {/* Vote buttons — always visible in header */}
+                {analysisId && (
+                  <div className="shrink-0 ml-auto">
+                    <FeedbackVoteButtons
+                      analysisId={analysisId}
+                      priorityIndex={idx}
+                      userId={user?.id}
+                      initialUserVote={null}
+                    />
+                  </div>
+                )}
+
                 {/* Mode tag */}
                 <span
-                  className="text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0 ml-auto"
+                  className={cn("text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0", !analysisId && "ml-auto")}
                   style={{ fontFamily: MONO, fontSize: 11 }}
                 >
                   {accent.tag}
@@ -289,17 +302,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   </div>
                 )}
 
-                {/* Vote buttons */}
-                {analysisId && (
-                  <div className="mt-1.5">
-                    <FeedbackVoteButtons
-                      analysisId={analysisId}
-                      priorityIndex={sorted.indexOf(item)}
-                      userId={user?.id}
-                      initialUserVote={null}
-                    />
-                  </div>
-                )}
               </div>
 
               {/* Bottom separator — heavier groove between events */}

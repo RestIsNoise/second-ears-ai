@@ -48,7 +48,7 @@ const FeedbackVoteButtons = ({
   );
 
   return (
-    <div className="flex items-center gap-0.5 shrink-0">
+    <div className="flex items-center gap-0 shrink-0">
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -56,13 +56,14 @@ const FeedbackVoteButtons = ({
             disabled={!userId}
             aria-label="Mark feedback as helpful"
             className={cn(
-              "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              "px-1 py-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring leading-none",
               userVote === 1
-                ? "text-primary bg-primary/10"
-                : "text-muted-foreground/40 hover:text-primary/70 hover:bg-primary/5"
+                ? "text-primary"
+                : "text-muted-foreground/25 hover:text-primary/70"
             )}
+            style={{ fontSize: 14, lineHeight: 1 }}
           >
-            <ChevronUp className="w-3.5 h-3.5" />
+            ▲
           </button>
         </TooltipTrigger>
         <TooltipContent side="top" className="text-xs">Helpful</TooltipContent>
@@ -75,13 +76,14 @@ const FeedbackVoteButtons = ({
             disabled={!userId}
             aria-label="Mark feedback as not helpful"
             className={cn(
-              "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              "px-1 py-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring leading-none",
               userVote === -1
-                ? "text-destructive bg-destructive/10"
-                : "text-muted-foreground/40 hover:text-destructive/70 hover:bg-destructive/5"
+                ? "text-destructive"
+                : "text-muted-foreground/25 hover:text-destructive/70"
             )}
+            style={{ fontSize: 14, lineHeight: 1 }}
           >
-            <ChevronDown className="w-3.5 h-3.5" />
+            ▼
           </button>
         </TooltipTrigger>
         <TooltipContent side="top" className="text-xs">Not Helpful</TooltipContent>
