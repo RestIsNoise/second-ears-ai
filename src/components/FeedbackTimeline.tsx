@@ -269,7 +269,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               >
                 {/* Title */}
                 <h3
-                  className="text-[15px] font-medium tracking-tight text-foreground/85 leading-snug"
+                  className="text-[16px] font-medium tracking-tight text-foreground/85 leading-snug"
                   title={item.title}
                 >
                   {item.title}
