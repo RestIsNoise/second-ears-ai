@@ -129,7 +129,7 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-[15px] text-foreground/55 leading-[1.75] mb-5 flex-1">
+                  <p className="text-[15px] text-foreground/75 leading-[1.75] mb-5 flex-1">
                     {step.description}
                   </p>
 
