@@ -162,26 +162,26 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
           <div
             className="flex items-center gap-1.5"
             style={{
-              padding: "3px 10px",
+              padding: "6px 12px",
               borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
             }}
           >
             <div
               style={{
-                width: 3,
-                height: 3,
+                width: 4,
+                height: 4,
                 backgroundColor: "hsl(var(--foreground) / 0.12)",
                 borderRadius: 1,
               }}
             />
             <span
-              className="text-foreground/22 uppercase tracking-[0.14em] font-extrabold"
-              style={{ fontFamily: MONO, fontSize: 8 }}
+              className="text-foreground/30 uppercase tracking-[0.14em] font-extrabold"
+              style={{ fontFamily: MONO, fontSize: 11 }}
             >
               Controls
             </span>
           </div>
-          <div style={{ padding: "8px 10px", backgroundColor: "hsl(var(--workspace-bg))" }}>
+          <div style={{ padding: "10px 12px", backgroundColor: "hsl(var(--workspace-bg))" }}>
             {footer}
           </div>
         </div>
