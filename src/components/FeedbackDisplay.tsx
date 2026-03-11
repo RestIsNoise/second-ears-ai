@@ -1029,16 +1029,14 @@ const FeedbackDisplay = ({
           </>
         )}
 
-        {/* ── PANELS WORKSTATION — machined transition ── */}
-        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 0% / 0.2)" }} />
+        {/* ── PANELS WORKSTATION ── */}
         <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
-        <div className="hidden sm:block" style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
         <div
           className="flex flex-col md:flex-row overflow-hidden"
           style={{
             minHeight: 340,
             backgroundColor: "hsl(var(--panel-bg))",
-            boxShadow: "inset 0 4px 12px hsl(var(--panel-inset))",
+            boxShadow: "inset 0 3px 10px hsl(var(--panel-inset))",
           }}
         >
           {/* On md+ use fixed height for horizontal layout */}
