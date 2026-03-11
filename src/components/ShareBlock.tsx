@@ -158,10 +158,10 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
                   {/* Copy link */}
                   <button
                     onClick={handleCopyLink}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/50 hover:text-foreground/80 hover:bg-foreground/[0.04] transition-colors"
                     style={dropdownItemStyle}
                   >
-                    <Link2 className="w-3.5 h-3.5" strokeWidth={2} />
+                    <Link2 className="w-4 h-4" strokeWidth={2} />
                     Copy link
                   </button>
                   <div style={{ height: 1, backgroundColor: "hsl(var(--foreground) / 0.06)" }} />
