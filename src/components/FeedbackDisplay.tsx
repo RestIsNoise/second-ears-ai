@@ -1396,91 +1396,74 @@ const FeedbackDisplay = ({
         className="mt-4 sm:mt-6"
         style={{
           backgroundColor: "hsl(0 0% 8%)",
-          border: "2px solid hsl(var(--foreground) / 0.1)",
+          border: "1px solid hsl(var(--foreground) / 0.08)",
           borderRadius: 3,
           overflow: "hidden",
         }}
       >
-        {/* Machined top edge */}
-        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.04)" }} />
-        <div style={{ height: 1, background: "hsl(0 0% 0% / 0.3)" }} />
-
-        <div className="px-4 sm:px-5 py-4 sm:py-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            {/* Left: wordmark + trust */}
-            <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center justify-between gap-4 px-5 sm:px-6"
+          style={{ paddingTop: 14, paddingBottom: 14 }}
+        >
+          {/* Left: wordmark + trust on same baseline */}
+          <div className="flex items-center gap-3 min-w-0">
+            <span
+              className="shrink-0"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "-0.01em",
+                color: "hsl(0 0% 42%)",
+              }}
+            >
+              SecondEar
+            </span>
+            <span style={{ color: "hsl(0 0% 18%)", fontSize: 10 }}>·</span>
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-[3px] h-[3px] rounded-full shrink-0"
+                style={{ backgroundColor: "hsl(145 40% 45% / 0.5)" }}
+              />
               <span
-                className="tracking-tight font-bold"
+                className="hidden sm:inline"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
-                  color: "hsl(0 0% 40%)",
-                }}
-              >
-                SecondEar™
-              </span>
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-1 h-1 rounded-full"
-                  style={{ backgroundColor: "hsl(145 40% 45% / 0.6)" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 8,
-                    letterSpacing: "0.08em",
-                    color: "hsl(0 0% 35%)",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Private by default · Not used for AI training
-                </span>
-              </div>
-            </div>
-
-            {/* Right: links */}
-            <div className="flex items-center gap-3">
-              {[
-                { href: "/privacy", label: "Privacy" },
-                { href: "/terms", label: "Terms" },
-              ].map((link, i) => (
-                <span key={link.href} className="flex items-center gap-3">
-                  {i > 0 && (
-                    <span style={{ color: "hsl(0 0% 20%)" }}>·</span>
-                  )}
-                  <a
-                    href={link.href}
-                    className="transition-colors"
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 8.5,
-                      letterSpacing: "0.06em",
-                      color: "hsl(0 0% 38%)",
-                    }}
-                  >
-                    {link.label}
-                  </a>
-                </span>
-              ))}
-              <span style={{ color: "hsl(0 0% 20%)" }}>·</span>
-              <a
-                href="mailto:hello@secondears.io"
-                className="transition-colors"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 8.5,
+                  fontSize: 8,
                   letterSpacing: "0.06em",
-                  color: "hsl(0 0% 38%)",
+                  color: "hsl(0 0% 30%)",
+                  textTransform: "uppercase",
                 }}
               >
-                hello@secondears.io
-              </a>
+                Private by default
+              </span>
             </div>
           </div>
-        </div>
 
-        {/* Bottom edge line */}
-        <div style={{ height: 1, background: "hsl(0 0% 100% / 0.03)" }} />
+          {/* Right: links — single row, uniform */}
+          <nav className="flex items-center gap-4 shrink-0">
+            {[
+              { href: "/privacy", label: "Privacy" },
+              { href: "/terms", label: "Terms" },
+              { href: "mailto:hello@secondears.io", label: "Contact" },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="hover:text-white/50 transition-colors"
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 8,
+                  letterSpacing: "0.08em",
+                  color: "hsl(0 0% 30%)",
+                  textTransform: "uppercase",
+                }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </div>
       </div>
     </div>
   );
