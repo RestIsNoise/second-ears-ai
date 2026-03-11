@@ -920,7 +920,7 @@ const FeedbackDisplay = ({
               {/* Top row: paragraph + action buttons */}
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
                 {n.overallImpression && (
-                  <p className="text-[14px] sm:text-[15px] text-foreground/70 max-w-[68ch] flex-1 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+                  <p className="text-[15px] sm:text-[16px] text-foreground/70 max-w-[68ch] flex-1 min-w-0" style={{ lineHeight: 1.85, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
                     {n.overallImpression}
                   </p>
                 )}
