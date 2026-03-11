@@ -283,15 +283,15 @@ const CorrelationChannel = ({ value }: { value: number }) => {
           style={{ padding: "8px 12px 8px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 95, justifyContent: "flex-end" }}
         >
           <span
-            className="font-extrabold uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 8, color: led.bg, padding: "2px 5px", backgroundColor: led.muted, borderRadius: 1, lineHeight: 1 }}
+            className="font-medium uppercase tracking-[0.06em]"
+            style={{ fontFamily: MONO, fontSize: 10, color: led.bg, padding: "4px 7px", backgroundColor: led.muted, borderRadius: 2, lineHeight: 1 }}
           >
             {status.label}
           </span>
-          <span className="text-foreground/85 tabular-nums font-bold" style={{ fontFamily: MONO, fontSize: 14, letterSpacing: "-0.03em" }}>
+          <span className="text-foreground/90 tabular-nums font-medium" style={{ fontFamily: MONO, fontSize: 16, letterSpacing: "-0.03em" }}>
             {value > 0 ? "+" : ""}{value.toFixed(2)}
           </span>
-          <div className="w-[6px] h-[6px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+          <div className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
         </div>
       </div>
     </div>
@@ -310,9 +310,9 @@ const SubKickChannel = ({ value }: { value: number }) => {
         {/* Label */}
         <div
           className="flex items-center shrink-0"
-          style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
+          style={{ width: 100, padding: "12px 0 12px 14px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 10 }}>
+          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
             Sub/Kick
           </span>
         </div>
