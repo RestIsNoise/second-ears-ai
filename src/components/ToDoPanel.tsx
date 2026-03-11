@@ -174,9 +174,9 @@ const ToDoPanel = ({ items, onToggle, onAdd, onItemClick, loading }: Props) => {
               }}
               className="mt-[2px] shrink-0 flex items-center justify-center transition-all duration-100"
               style={{
-                width: 18,
-                height: 18,
-                borderRadius: 2,
+                width: 20,
+                height: 20,
+                borderRadius: 3,
                 border: item.done
                   ? "1px solid hsl(var(--foreground) / 0.12)"
                   : "1px solid hsl(var(--foreground) / 0.2)",
