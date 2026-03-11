@@ -301,17 +301,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   </div>
                 )}
 
-                {/* Vote buttons */}
-                {analysisId && (
-                  <div className="mt-1.5">
-                    <FeedbackVoteButtons
-                      analysisId={analysisId}
-                      priorityIndex={sorted.indexOf(item)}
-                      userId={user?.id}
-                      initialUserVote={null}
-                    />
-                  </div>
-                )}
               </div>
 
               {/* Bottom separator — heavier groove between events */}
