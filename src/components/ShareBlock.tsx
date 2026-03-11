@@ -234,7 +234,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
             className="flex-1 flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
             style={btnStyle}
           >
-            <Download className="w-3.5 h-3.5" strokeWidth={2} />
+            <Download className="w-4 h-4" strokeWidth={2} />
             Export PDF
           </button>
         )}
