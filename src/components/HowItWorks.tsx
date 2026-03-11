@@ -173,7 +173,7 @@ const HowItWorks = () => {
             }}
           >
             <span
-              className="text-[11px] text-foreground/35 tracking-[0.15em] uppercase font-bold"
+              className="text-[11px] text-foreground/45 tracking-[0.15em] uppercase font-bold"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               Input
