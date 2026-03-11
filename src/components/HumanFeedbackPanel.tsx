@@ -161,7 +161,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           >
             <div className="flex items-center gap-2 mb-1.5">
               <div
-                className="w-[16px] h-[16px] rounded-[2px] flex items-center justify-center shrink-0"
+                className="w-[18px] h-[18px] rounded-[2px] flex items-center justify-center shrink-0"
                 style={{
                   backgroundColor: "hsl(var(--foreground) / 0.06)",
                   border: "1px solid hsl(var(--foreground) / 0.06)",
