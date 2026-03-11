@@ -125,7 +125,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               {/* Label */}
               <span
                 className={cn(
-                  "text-[10px] tracking-[0.03em] truncate uppercase",
+                  "text-[12px] tracking-[0.03em] truncate uppercase",
                   isActive
                     ? "text-foreground/80 font-medium"
                     : "text-foreground/38 font-normal",
