@@ -163,11 +163,11 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                   borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--foreground) / 0.03)" : "none",
                 }}
               >
-                <span className="text-[9px] font-bold text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
-                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
-                <span className="text-[9px] text-foreground/50 text-right tabular-nums w-[48px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
-                <div className="flex items-center justify-end gap-1.5 w-[44px]">
-                  <span className="text-[10px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
+                <span className="text-[10px] font-bold text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
+                <span className="text-[10px] text-foreground/50 text-right tabular-nums w-[52px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
+                <span className="text-[10px] text-foreground/50 text-right tabular-nums w-[52px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
+                <div className="flex items-center justify-end gap-1.5 w-[48px]">
+                  <span className="text-[11px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
                     {sign}{d.toFixed(1)}
                   </span>
                   <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
