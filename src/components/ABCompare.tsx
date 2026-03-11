@@ -327,7 +327,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 style={{
                   height: 4,
                   borderRadius: 2,
-                  background: `linear-gradient(to right, ${DECK_A_COLOR} ${cfPct}%, ${DECK_B_COLOR} ${cfPct}%)`,
+                  background: `linear-gradient(to right, ${DECK_A_COLOR} ${100 - cfPct}%, ${DECK_B_COLOR} ${100 - cfPct}%)`,
                   opacity: 0.50,
                 }}
               />
