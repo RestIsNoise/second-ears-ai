@@ -312,7 +312,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 8 }}>
+          <span className="text-foreground/40 uppercase tracking-[0.06em] font-bold" style={{ fontFamily: MONO, fontSize: 10 }}>
             Sub/Kick
           </span>
         </div>
