@@ -58,10 +58,11 @@ interface Props {
   onEditNote?: (markerId: string) => void;
 }
 
-/* ── Custom single-tooltip with smart positioning ── */
+/* ── Tooltip with boundary-aware positioning ── */
 const MarkerTooltip = ({
   marker,
   leftPct,
+  containerWidth,
   children,
   hoveredId,
   onHover,
@@ -69,6 +70,7 @@ const MarkerTooltip = ({
 }: {
   marker: WaveformMarker;
   leftPct: number;
+  containerWidth: number;
   children: React.ReactNode;
   hoveredId: string | null;
   onHover: (id: string) => void;
@@ -76,12 +78,25 @@ const MarkerTooltip = ({
 }) => {
   const isVisible = hoveredId === marker.id;
   const isUser = marker.type === "user";
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  // Compute pixel-based position for boundary detection
+  const markerPx = (leftPct / 100) * containerWidth;
+  const TOOLTIP_WIDTH = 180; // approximate max tooltip width
+  const EDGE_MARGIN = 8;
 
   let translateX = "-50%";
-  if (leftPct < 20) {
+  let leftOffset = "50%";
+
+  // Near left edge
+  if (markerPx < TOOLTIP_WIDTH / 2 + EDGE_MARGIN) {
     translateX = "0%";
-  } else if (leftPct > 80) {
+    leftOffset = "0";
+  }
+  // Near right edge
+  else if (containerWidth - markerPx < TOOLTIP_WIDTH / 2 + EDGE_MARGIN) {
     translateX = "-100%";
+    leftOffset = "100%";
   }
 
   return (
@@ -93,10 +108,11 @@ const MarkerTooltip = ({
       {children}
       {isVisible && (
         <div
+          ref={tooltipRef}
           className="absolute pointer-events-none"
           style={{
             bottom: "calc(100% + 6px)",
-            left: "50%",
+            left: leftOffset,
             transform: `translateX(${translateX})`,
             zIndex: 50,
             whiteSpace: "nowrap",
@@ -183,7 +199,6 @@ const WaveformMarkers = ({
 
   const handlePlusClick = useCallback(() => {
     if (hoverTimeSec === null || hoverX === null) return;
-    // If only one action available, go directly to input
     if (onAddNote && !onAddToDo) {
       setInputMode("note");
       setInputAt({ time: hoverTimeSec, x: hoverX });
@@ -198,7 +213,6 @@ const WaveformMarkers = ({
       setTimeout(() => inputRef.current?.focus(), 50);
       return;
     }
-    // Both available — show popover
     setPopoverAt({ time: hoverTimeSec, x: hoverX });
   }, [hoverTimeSec, hoverX, onAddNote, onAddToDo]);
 
@@ -231,7 +245,6 @@ const WaveformMarkers = ({
     setNoteText("");
   }, []);
 
-  // Split markers into AI and user types
   const aiMarkers = markers.filter(m => (m.type || "technical") !== "user");
   const userMarkers = markers.filter(m => m.type === "user");
 
@@ -242,7 +255,7 @@ const WaveformMarkers = ({
       className="absolute left-0 right-0 z-[5] pointer-events-none"
       style={{ height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
     >
-      {/* AI markers — circular with type icons */}
+      {/* AI markers */}
       {aiMarkers.slice(0, 6).map((m) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
@@ -263,6 +276,7 @@ const WaveformMarkers = ({
             <MarkerTooltip
               marker={m}
               leftPct={leftPct}
+              containerWidth={containerWidth}
               hoveredId={hoveredMarkerId}
               onHover={handleMarkerHover}
               onLeave={handleMarkerLeave}
@@ -288,7 +302,7 @@ const WaveformMarkers = ({
         );
       })}
 
-      {/* User annotation markers — pin style */}
+      {/* User annotation markers */}
       {userMarkers.map((m) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
@@ -308,6 +322,7 @@ const WaveformMarkers = ({
             <MarkerTooltip
               marker={m}
               leftPct={leftPct}
+              containerWidth={containerWidth}
               hoveredId={hoveredMarkerId}
               onHover={handleMarkerHover}
               onLeave={handleMarkerLeave}
