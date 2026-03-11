@@ -26,7 +26,19 @@ interface Comment {
   created_at: string;
 }
 
-const COMMENT_SELECT = "id, analysis_id, user_id, content, timestamp, created_at";
+type RawComment = Partial<Comment> & {
+  text?: string;
+  timestamp_in_track?: number;
+};
+
+const normalizeComment = (raw: RawComment): Comment => ({
+  id: raw.id ?? crypto.randomUUID(),
+  analysis_id: raw.analysis_id ?? "",
+  user_id: raw.user_id ?? "",
+  content: raw.content ?? raw.text ?? "",
+  timestamp: Number(raw.timestamp ?? raw.timestamp_in_track ?? 0),
+  created_at: raw.created_at ?? new Date().toISOString(),
+});
 
 interface Props {
   analysisId: string | null;
