@@ -124,7 +124,7 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           <button
             onClick={handleSubmit}
             disabled={!newText.trim() || !analysisId}
-            className="text-[10px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
+            className="text-[11px] uppercase tracking-[0.08em] font-medium text-foreground/40 hover:text-foreground/65 transition-colors disabled:opacity-20"
             style={{ fontFamily: MONO }}
           >
             <Plus className="w-3.5 h-3.5 inline mr-0.5" />
