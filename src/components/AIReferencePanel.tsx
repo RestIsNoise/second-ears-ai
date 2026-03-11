@@ -170,7 +170,7 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
                   <span className="text-[12px] font-extrabold tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
                     {sign}{d.toFixed(1)}
                   </span>
-                  <div className="w-[5px] h-[5px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+                  <div className="w-[6px] h-[6px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
                 </div>
               </div>
             );
