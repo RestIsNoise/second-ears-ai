@@ -342,7 +342,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
                 }}
               />
             </div>
-            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 6, fontWeight: 700 }}>S</span>
+            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700 }}>S</span>
           </div>
         </div>
 
