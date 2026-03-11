@@ -926,7 +926,7 @@ const FeedbackDisplay = ({
             <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
-              className="px-5 py-4 md:px-8 md:py-5"
+              className="px-5 py-3 md:px-8 md:py-3.5"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
@@ -940,7 +940,7 @@ const FeedbackDisplay = ({
               )}
 
               {/* Action controls row — compact utilities */}
-              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-3.5")}>
+              <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
                 <button
                   onClick={() => setShowArrangement((v) => !v)}
                   className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
@@ -1008,7 +1008,7 @@ const FeedbackDisplay = ({
               </div>
 
               {(n.topIssue || n.biggestWin || releaseReadiness) && (
-                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-4 pt-4")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.07)" : "none" }}>
+                <div className={cn("flex flex-wrap items-center gap-2.5", n.overallImpression && "mt-2.5 pt-2.5")} style={{ borderTop: n.overallImpression ? "1px solid hsl(var(--foreground) / 0.07)" : "none" }}>
                   {n.topIssue && (
                     <span
                       className="inline-flex items-center gap-2.5"
