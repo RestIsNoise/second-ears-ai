@@ -141,11 +141,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
                 }}
               >
                 <span
-                  className="absolute text-foreground/15 font-bold"
+                  className="absolute text-foreground/18 font-medium"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 5.5,
-                    top: -8,
+                    fontSize: 7,
+                    top: -9,
                     left: "50%",
                     transform: "translateX(-50%)",
                     whiteSpace: "nowrap",
