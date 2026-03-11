@@ -63,7 +63,7 @@ const ClampedObservation = ({ text }: { text: string }) => {
         className="text-[13px] text-foreground/55"
         style={{
           fontFamily: MONO,
-          lineHeight: 1.65,
+          lineHeight: 1.7,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: expanded ? "unset" : 3,
