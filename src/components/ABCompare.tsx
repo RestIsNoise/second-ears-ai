@@ -426,20 +426,25 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
               />
             </div>
 
-            {/* B label */}
-            <span
-              className="shrink-0 uppercase tabular-nums"
+            {/* B label + solo */}
+            <button
+              onClick={() => handleSoloToggle("b")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)",
-                transition: "color 0.15s",
+                color: soloMode === "b" ? "#000" : (cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.18)"),
+                backgroundColor: soloMode === "b" ? DECK_B_COLOR : "transparent",
+                padding: "2px 5px",
+                borderRadius: 2,
+                border: soloMode === "b" ? `1px solid ${DECK_B_COLOR}` : "1px solid transparent",
               }}
+              title={soloMode === "b" ? "Unsolo B" : "Solo B"}
             >
               B
-            </span>
+            </button>
           </div>
         </div>
 
