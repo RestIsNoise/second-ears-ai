@@ -354,20 +354,25 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
         {/* CENTER: Crossfader */}
         <div className="flex flex-col items-center mx-auto" style={{ maxWidth: 280, width: "100%" }}>
           <div className="flex items-center gap-2.5 w-full">
-            {/* A label */}
-            <span
-              className="shrink-0 uppercase tabular-nums"
+            {/* A label + solo */}
+            <button
+              onClick={() => handleSoloToggle("a")}
+              className="shrink-0 uppercase tabular-nums transition-all duration-100"
               style={{
                 fontFamily: MONO,
                 fontSize: 10,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)",
-                transition: "color 0.15s",
+                color: soloMode === "a" ? "#000" : (cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.18)"),
+                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "transparent",
+                padding: "2px 5px",
+                borderRadius: 2,
+                border: soloMode === "a" ? `1px solid ${DECK_A_COLOR}` : "1px solid transparent",
               }}
+              title={soloMode === "a" ? "Unsolo A" : "Solo A"}
             >
               A
-            </span>
+            </button>
 
             {/* Crossfader track */}
             <div className="flex-1 relative" style={{ height: 22 }}>
