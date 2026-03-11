@@ -164,7 +164,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           style={{
             padding: "10px 12px 10px 0",
             borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 90,
+            minWidth: 100,
             justifyContent: "flex-end",
           }}
         >
