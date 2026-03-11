@@ -907,11 +907,11 @@ const FeedbackDisplay = ({
           <>
             {/* Machined transition — player to summary */}
             <div style={{ height: 1, background: "rgba(0,0,0,0.15)" }} />
-            <div style={{ height: 1, background: "hsl(var(--foreground) / 0.08)" }} />
+            <div style={{ height: 2, background: "hsl(var(--foreground) / 0.1)" }} />
             <div style={{ height: 1, background: "hsl(0 0% 100% / 0.02)" }} />
 
             <div
-              className="px-5 py-5 md:px-7 md:py-6"
+              className="px-5 py-6 md:px-8 md:py-7"
               style={{
                 backgroundColor: "hsl(var(--panel-content))",
                 boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
