@@ -105,7 +105,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "10px 12px" }}>
           {/* Segmented bar */}
           <div className="relative">
-            <div className="flex gap-px" style={{ height: 5 }}>
+            <div className="flex gap-px" style={{ height: 6 }}>
               {Array.from({ length: SEGMENTS }).map((_, i) => {
                 const segPct = ((i + 1) / SEGMENTS) * 100;
                 const filled = pct >= segPct;
