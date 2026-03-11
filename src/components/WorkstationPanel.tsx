@@ -1,14 +1,14 @@
 import { X } from "lucide-react";
 
 /** Width tuning per panel id */
-const PANEL_SIZING: Record<string, { flex: number; minWidth: number; maxWidth?: number }> = {
+const PANEL_SIZING: Record<string, { flex: number; minWidth: number }> = {
   "ai-reference": { flex: 2, minWidth: 240 },
-  "ai-feedback": { flex: 2.15, minWidth: 320, maxWidth: 440 },
+  "ai-feedback": { flex: 2.15, minWidth: 320 },
   "full-analysis": { flex: 2, minWidth: 240 },
   "session": { flex: 2, minWidth: 320 },
-  "tech-metrics": { flex: 1.2, minWidth: 210, maxWidth: 300 },
+  "tech-metrics": { flex: 1.2, minWidth: 210 },
   "human-feedback": { flex: 1.5, minWidth: 240 },
-  "todo": { flex: 0.95, minWidth: 220, maxWidth: 280 },
+  "todo": { flex: 1, minWidth: 220 },
 };
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
