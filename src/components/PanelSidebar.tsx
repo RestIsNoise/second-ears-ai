@@ -138,7 +138,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               {/* Status LED */}
               {isActive && (
                 <div
-                  className="w-[3.5px] h-[3.5px] rounded-full ml-auto shrink-0 mr-1"
+                  className="w-1 h-1 rounded-full ml-auto shrink-0 mr-1.5"
                   style={{
                     backgroundColor: "hsl(145 55% 45%)",
                     boxShadow: "0 0 3px hsl(145 55% 45% / 0.5)",
