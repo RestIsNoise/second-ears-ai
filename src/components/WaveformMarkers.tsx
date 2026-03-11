@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo, useEffect, forwardRef, useImperativeHandle } from "react";
-import { SlidersHorizontal, LayoutGrid, Ear, X, User, CheckSquare, MessageCircle } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, X, User, CheckSquare, MessageCircle } from "lucide-react";
 import type { WaveformMarker, MarkerType } from "@/types/feedback";
 
 const formatTime = (s: number) => {
@@ -11,7 +11,7 @@ const formatTime = (s: number) => {
 
 const markerTypeIcon: Record<MarkerType, React.ReactNode> = {
   technical: <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />,
-  structural: <LayoutGrid className="w-3.5 h-3.5" strokeWidth={2.5} />,
+  structural: <Music className="w-3.5 h-3.5" strokeWidth={2.5} />,
   perceptual: <Ear className="w-3.5 h-3.5" strokeWidth={2.5} />,
   user: <User className="w-3.5 h-3.5" strokeWidth={2.5} />,
 };
