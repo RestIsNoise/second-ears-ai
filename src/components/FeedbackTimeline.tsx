@@ -180,8 +180,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
-                  padding: "8px 14px",
+                  gap: 12,
+                  padding: "10px 16px",
                   backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
                   borderLeft: `3px solid ${accent.border}`,
                   borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
