@@ -60,7 +60,7 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-32 sm:pt-48 sm:pb-44 md:pt-52 md:pb-48 lg:pt-52 lg:pb-44">
+      <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-36 sm:pt-48 sm:pb-48 md:pt-56 md:pb-56 lg:pt-60 lg:pb-56">
         <div className="grid lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center">
           {/* Left column — Copy with parallax */}
           <div
