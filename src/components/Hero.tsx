@@ -160,7 +160,7 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full min-w-[640px] max-w-[960px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full min-w-[832px] max-w-[1248px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
