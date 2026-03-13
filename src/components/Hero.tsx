@@ -148,7 +148,7 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0"
+            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:-mr-6"
             style={{ animationDelay: "0.2s" }}
           >
             {/* Glow behind frame */}
@@ -160,7 +160,7 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full max-w-[700px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full max-w-[780px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
