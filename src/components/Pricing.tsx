@@ -139,7 +139,7 @@ const Pricing = () => {
                   >
                     {plan.name}
                   </p>
-                  <div className="flex items-baseline gap-1.5">
+                  <div className="flex items-baseline gap-1.5 select-none" style={{ filter: "blur(8px)" }} title="Pricing coming soon">
                     <span className="text-[2rem] font-semibold tracking-[-0.04em] leading-none">
                       {plan.price}
                     </span>
