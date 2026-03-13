@@ -61,7 +61,7 @@ const Hero = () => {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-6 pt-36 pb-32 sm:pt-48 sm:pb-44 md:pt-56 md:pb-52 lg:pt-56 lg:pb-48">
-        <div className="grid lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-10 items-center">
+        <div className="grid lg:grid-cols-[0.9fr_1.25fr] gap-8 lg:gap-10 items-center">
           {/* Left column — Copy with parallax */}
           <div
             className="max-w-xl"
@@ -160,7 +160,7 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full max-w-[780px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full max-w-[840px] rounded-xl border overflow-hidden shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
