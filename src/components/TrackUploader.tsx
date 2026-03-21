@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
+import { compressAudio } from "@/lib/compressAudio";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof SlidersHorizontal }[] = [
@@ -114,8 +115,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     setIsAnalyzing(true);
     onProgressStep?.(0);
     try {
-      const storagePath = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage.from("tracks").upload(storagePath, file);
+      const fileToUpload = await compressAudio(file);
+      const storagePath = `${Date.now()}-${fileToUpload.name}`;
+      const { error: uploadError } = await supabase.storage.from("tracks").upload(storagePath, fileToUpload);
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
       onProgressStep?.(1);
       const { data: signedData, error: signedError } = await supabase.storage.from("tracks").createSignedUrl(storagePath, 3600);
