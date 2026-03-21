@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 const ACCEPTED = [".wav", ".mp3", ".aiff", ".aif"];
 
@@ -44,23 +45,18 @@ const ReferenceUploadModal = ({ open, onClose, onComparisonStart, userMetrics, u
       // 3. POST to reference comparison
       console.log("[reference] full userMetrics object:", JSON.stringify(userMetrics, null, 2));
       console.log("[reference] userTrackName:", userTrackName, "mode:", mode);
-      const res = await fetch(
-        "https://secondears-backend-production.up.railway.app/api/reference-comparison",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "secondears-secret-2024",
-          },
-          body: JSON.stringify({
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${BACKEND}/api/reference-comparison`, {
+        method: "POST",
+        headers: { ...authHeaders, "Content-Type": "application/json" },
+        body: JSON.stringify({
             referenceAudioUrl: urlData.signedUrl,
             userMetrics: userMetrics || {},
             userTrackName,
             referenceTrackName: file.name,
             mode,
           }),
-        }
-      );
+      });
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
       if (!data.jobId) throw new Error("No jobId returned");

@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Upload, Loader2, ChevronRight, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 /* ── Types from the backend ── */
 interface AlsClip {
@@ -143,14 +144,12 @@ const SessionPanel = () => {
       const form = new FormData();
       form.append("file", file);
 
-      const res = await fetch(
-        "https://secondears-backend-production.up.railway.app/api/parse-als",
-        {
-          method: "POST",
-          headers: { "x-api-key": "secondears-secret-2024" },
-          body: form,
-        }
-      );
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${BACKEND}/api/parse-als`, {
+        method: "POST",
+        headers: authHeaders,
+        body: form,
+      });
 
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data: AlsSession = await res.json();

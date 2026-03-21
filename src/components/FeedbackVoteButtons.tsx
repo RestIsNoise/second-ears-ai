@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 type VoteDir = 1 | -1 | null;
 
@@ -12,7 +13,6 @@ interface Props {
   initialUserVote: VoteDir;
 }
 
-const BACKEND_URL = "https://secondears-backend-production.up.railway.app/api/feedback-vote";
 
 const FeedbackVoteButtons = ({
   analysisId,
@@ -30,18 +30,17 @@ const FeedbackVoteButtons = ({
       setUserVote(newVote);
 
       // Fire and forget
-      fetch(BACKEND_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "secondears-secret-2024",
-        },
-        body: JSON.stringify({
-          analysis_id: analysisId,
-          priority_index: priorityIndex,
-          user_id: userId,
-          vote: newVote === 1 ? "up" : newVote === -1 ? "down" : null,
-        }),
+      getAuthHeaders().then((authHeaders) => {
+        fetch(`${BACKEND}/api/feedback-vote`, {
+          method: "POST",
+          headers: { ...authHeaders, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            analysis_id: analysisId,
+            priority_index: priorityIndex,
+            user_id: userId,
+            vote: newVote === 1 ? "up" : newVote === -1 ? "down" : null,
+          }),
+        }).catch(() => {/* silent */});
       }).catch(() => {/* silent */});
     },
     [analysisId, priorityIndex, userId, userVote]

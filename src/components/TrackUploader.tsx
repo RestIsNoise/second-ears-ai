@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import type { ListeningMode, FeedbackResult } from "@/pages/Analyze";
 
 const modes: { id: ListeningMode; label: string; tag: string; icon: typeof SlidersHorizontal }[] = [
@@ -35,6 +36,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState<Goal>("mixing");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeLoading, setUpgradeLoading] = useState(false);
 
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
@@ -73,8 +76,41 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     if (selected) validateAndSetFile(selected);
   };
 
+  const handleUpgrade = async () => {
+    setUpgradeLoading(true);
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${BACKEND}/api/stripe/checkout`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to create checkout session");
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err: any) {
+      toast({ title: "Error starting checkout", description: err.message, variant: "destructive" });
+      setUpgradeLoading(false);
+    }
+  };
+
   const analyze = async () => {
     if (!file) return;
+
+    // Check usage limit before uploading
+    try {
+      const headers = await getAuthHeaders();
+      if (headers["Authorization"]) {
+        const usageRes = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (usageRes.ok) {
+          const usage = await usageRes.json();
+          if (usage.plan === "free" && usage.remaining === 0) {
+            setShowUpgradeModal(true);
+            return;
+          }
+        }
+      }
+    } catch (_) { /* don't block analysis on usage check failure */ }
+
     setIsAnalyzing(true);
     onProgressStep?.(0);
     try {
@@ -88,17 +124,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         ? (signedData.signedUrl.startsWith("http") ? signedData.signedUrl : `https://nllfubvokhybmtnnqeuk.supabase.co/storage/v1${signedData.signedUrl}`)
         : undefined;
       onProgressStep?.(2);
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
 
-      const feedbackRes = await fetch(
-        "https://secondears-backend-production.up.railway.app/api/feedback",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-api-key": "secondears-secret-2024" },
-          body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal }),
+      const authHeaders = await getAuthHeaders();
+      const feedbackRes = await fetch(`${BACKEND}/api/feedback`, {
+        method: "POST",
+        headers: { ...authHeaders, "Content-Type": "application/json" },
+        body: JSON.stringify({ audioUrl: fullSignedUrl, fileName: file.name, mode, userContext: context.trim() || undefined, goal }),
+      });
+      if (!feedbackRes.ok) {
+        const errData = await feedbackRes.json().catch(() => ({}));
+        if (feedbackRes.status === 403 && errData.error === "limit_reached") {
+          setShowUpgradeModal(true);
+          setIsAnalyzing(false);
+          return;
         }
-      );
-      if (!feedbackRes.ok) throw new Error(`Backend error: ${feedbackRes.status}`);
+        throw new Error(`Backend error: ${feedbackRes.status}`);
+      }
       const initialRes = await feedbackRes.json();
 
       // If backend returns a jobId, poll for results
@@ -111,8 +152,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           await new Promise((r) => setTimeout(r, POLL_INTERVAL));
           polls++;
           const statusRes = await fetch(
-            `https://secondears-backend-production.up.railway.app/api/feedback/status/${initialRes.jobId}`,
-            { headers: { "x-api-key": "secondears-secret-2024" } }
+            `${BACKEND}/api/feedback/status/${initialRes.jobId}`,
+            { headers: authHeaders }
           );
           if (!statusRes.ok) throw new Error(`Status check failed: ${statusRes.status}`);
           const statusData = await statusRes.json();
@@ -133,7 +174,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         // Legacy: backend returned result directly
         result = initialRes;
       }
-      
+
       onProgressStep?.(3);
       const normalized = normalizeFeedbackResponse(result, mode, context.trim() || undefined, file.name);
       // Give step 3 "Finalizing" enough time to animate to ~95%+ before switching view
@@ -270,6 +311,45 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       >
         {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
       </Button>
+
+      {showUpgradeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm"
+          onClick={() => setShowUpgradeModal(false)}
+        >
+          <div
+            className="relative w-full max-w-sm mx-4 bg-card border border-foreground/10 shadow-xl"
+            style={{ borderRadius: 3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 space-y-4">
+              <div>
+                <p className="text-[13px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                  Límite alcanzado
+                </p>
+                <p className="text-[11px] text-foreground/50 mt-1.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                  Usaste tus 3 análisis gratuitos este mes.
+                </p>
+              </div>
+              <Button
+                className="w-full h-10 text-[11px] font-bold tracking-[0.06em] uppercase"
+                style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
+                disabled={upgradeLoading}
+                onClick={handleUpgrade}
+              >
+                {upgradeLoading ? "Redirigiendo…" : "Upgrade a Pro — $9/mes"}
+              </Button>
+              <button
+                onClick={() => setShowUpgradeModal(false)}
+                className="w-full text-[10px] text-foreground/30 hover:text-foreground/60 transition-colors"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

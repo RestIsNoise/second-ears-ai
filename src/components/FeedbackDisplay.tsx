@@ -30,6 +30,7 @@ import type { NormalizedFeedback, NormalizedTimelineItem } from "@/lib/normalize
 import type { FeedbackItem, WaveformMarker, ToDoItem, MarkerType } from "@/types/feedback";
 import { exportAnalysisPdf } from "@/lib/exportPdf";
 import { supabase } from "@/lib/supabaseClient";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 const modeLabels: Record<string, string> = {
   technical: "Technical",
@@ -203,6 +204,7 @@ const FeedbackDisplay = ({
 
     let attempts = 0;
     const maxAttempts = 90; // 6 minutes
+    const authHeaders = await getAuthHeaders();
     const poll = setInterval(async () => {
       attempts++;
       if (attempts > maxAttempts) {
@@ -213,8 +215,8 @@ const FeedbackDisplay = ({
       }
       try {
         const res = await fetch(
-          `https://secondears-backend-production.up.railway.app/api/reference-comparison/status/${jobId}`,
-          { headers: { "x-api-key": "secondears-secret-2024" } }
+          `${BACKEND}/api/reference-comparison/status/${jobId}`,
+          { headers: authHeaders }
         );
         if (!res.ok) return;
         const data = await res.json();

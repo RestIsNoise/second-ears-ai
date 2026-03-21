@@ -3,6 +3,7 @@ import { Upload, Loader2, Music, ChevronRight, ChevronDown, Maximize2, ZoomIn } 
 import { toast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 /* ── Types ── */
 interface AlsClip {
@@ -123,10 +124,12 @@ const AlsAnalyzer = ({ onLoaded }: AlsAnalyzerProps) => {
     try {
       const form = new FormData();
       form.append("als", file);
-      const res = await fetch(
-        "https://secondears-backend-production.up.railway.app/api/parse-als",
-        { method: "POST", headers: { "x-api-key": "secondears-secret-2024" }, body: form }
-      );
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${BACKEND}/api/parse-als`, {
+        method: "POST",
+        headers: authHeaders,
+        body: form,
+      });
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data: AlsSession = await res.json();
       setSession(data);
