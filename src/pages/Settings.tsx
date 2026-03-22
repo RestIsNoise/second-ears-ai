@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { SlidersHorizontal, Music, Ear, Trash2, Camera } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, Camera, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 const modes = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: SlidersHorizontal },
@@ -30,10 +31,27 @@ const Settings = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("free");
+  const [portalLoading, setPortalLoading] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
+
+  // Fetch user plan
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, [user]);
 
   useEffect(() => {
     if (profile) {
@@ -278,6 +296,43 @@ const Settings = () => {
               </p>
             </div>
           </section>
+
+          <div className="border-t border-border-subtle" />
+
+          {/* ═══ SUBSCRIPTION (Pro only) ═══ */}
+          {userPlan === "pro" && (
+            <section className="my-10">
+              <h2 className="text-sm font-semibold tracking-tight mb-4">Subscription</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={portalLoading}
+                onClick={async () => {
+                  setPortalLoading(true);
+                  try {
+                    const headers = await getAuthHeaders();
+                    const res = await fetch(`${BACKEND}/api/stripe/portal`, {
+                      method: "POST",
+                      headers: { ...headers, "Content-Type": "application/json" },
+                    });
+                    if (!res.ok) throw new Error("Failed to open portal");
+                    const { url } = await res.json();
+                    window.location.href = url;
+                  } catch {
+                    toast({ title: "Could not open subscription portal", variant: "destructive", duration: 2500 });
+                    setPortalLoading(false);
+                  }
+                }}
+                className="h-8 text-xs gap-1.5"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                {portalLoading ? "Redirecting…" : "Manage subscription"}
+              </Button>
+              <p className="text-[10px] text-muted-foreground/50 mt-2">
+                Cancel, change payment method, or view billing history
+              </p>
+            </section>
+          )}
 
           <div className="border-t border-border-subtle" />
 
