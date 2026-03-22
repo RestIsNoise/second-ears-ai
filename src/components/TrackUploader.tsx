@@ -185,7 +185,18 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             break;
           }
           if (statusData.status === "error") {
-            throw new Error(statusData.error || "Analysis failed on the server");
+            const errMsg = (statusData.error || "").toLowerCase();
+            let userMessage: string;
+            if (errMsg.includes("too short")) {
+              userMessage = "El track es muy corto. Se necesitan al menos 10 segundos.";
+            } else if (errMsg.includes("too large")) {
+              userMessage = "El archivo es muy grande. Máximo 150MB.";
+            } else if (errMsg.includes("download")) {
+              userMessage = "No se pudo descargar el audio. Intentá subirlo de nuevo.";
+            } else {
+              userMessage = "Hubo un error analizando tu track. Intentá de nuevo.";
+            }
+            throw new Error(userMessage);
           }
           // still processing — continue polling
         }
