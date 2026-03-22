@@ -299,6 +299,43 @@ const Settings = () => {
 
           <div className="border-t border-border-subtle" />
 
+          {/* ═══ SUBSCRIPTION (Pro only) ═══ */}
+          {userPlan === "pro" && (
+            <section className="my-10">
+              <h2 className="text-sm font-semibold tracking-tight mb-4">Subscription</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={portalLoading}
+                onClick={async () => {
+                  setPortalLoading(true);
+                  try {
+                    const headers = await getAuthHeaders();
+                    const res = await fetch(`${BACKEND}/api/stripe/portal`, {
+                      method: "POST",
+                      headers: { ...headers, "Content-Type": "application/json" },
+                    });
+                    if (!res.ok) throw new Error("Failed to open portal");
+                    const { url } = await res.json();
+                    window.location.href = url;
+                  } catch {
+                    toast({ title: "Could not open subscription portal", variant: "destructive", duration: 2500 });
+                    setPortalLoading(false);
+                  }
+                }}
+                className="h-8 text-xs gap-1.5"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                {portalLoading ? "Redirecting…" : "Manage subscription"}
+              </Button>
+              <p className="text-[10px] text-muted-foreground/50 mt-2">
+                Cancel, change payment method, or view billing history
+              </p>
+            </section>
+          )}
+
+          <div className="border-t border-border-subtle" />
+
           {/* ═══ ACCOUNT ═══ */}
           <section className="mt-10">
             <h2 className="text-sm font-semibold tracking-tight mb-4">Account</h2>
