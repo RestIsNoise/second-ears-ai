@@ -64,7 +64,7 @@ const Pricing = () => {
           </div>
           <h2 className="text-[1.4rem] md:text-[1.6rem] font-semibold tracking-[-0.035em]">Pick your plan</h2>
           <p className="text-[12.5px] text-muted-foreground/50 mt-2 max-w-xs mx-auto leading-relaxed">
-            Start with three free tracks. Upgrade when you need more.
+            Start free. Upgrade when you need more.
           </p>
         </div>
 
