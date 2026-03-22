@@ -41,6 +41,32 @@ const plans = [
 
 const Pricing = () => {
   const { ref, isVisible } = useScrollReveal();
+  const navigate = useNavigate();
+
+  const handleStartPro = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate('/auth');
+        return;
+      }
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stripe/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+          'x-api-key': import.meta.env.VITE_API_SECRET_KEY || 'secondears-secret-2024',
+        },
+        body: JSON.stringify({ email: session.user?.email }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+    }
+  };
 
   return (
     <section
