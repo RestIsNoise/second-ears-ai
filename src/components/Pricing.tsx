@@ -7,7 +7,7 @@ const plans = [
   {
     name: "Free",
     price: "$0",
-    period: "forever",
+    period: "/ month",
     description: "First tracks free.",
     features: [
       { text: "3 tracks / month", included: true },
@@ -23,7 +23,7 @@ const plans = [
   {
     name: "Pro",
     price: "$9",
-    period: "/ mo",
+    period: "/ month",
     description: "Unlimited tracks, all modes.",
     features: [
       { text: "Unlimited tracks", included: true },
@@ -31,24 +31,9 @@ const plans = [
       { text: "Full detailed reports", included: true },
       { text: "Priority processing", included: true },
       { text: "PDF export", included: true },
-      { text: "Human review", included: false },
     ],
     cta: "Start Pro",
     featured: true,
-  },
-  {
-    name: "Human Review",
-    price: "$19",
-    period: "/ mo",
-    description: "Pro plus engineer feedback.",
-    features: [
-      { text: "Everything in Pro", included: true },
-      { text: "3 human reviews / month", included: true },
-      { text: "Human engineer review notes", included: true },
-      { text: "Revision guidance", included: true },
-    ],
-    cta: "Start Human Review",
-    featured: false,
   },
 ];
 
