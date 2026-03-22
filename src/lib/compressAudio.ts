@@ -47,7 +47,7 @@ export async function compressAudio(file: File): Promise<File> {
   const flushed = encoder.flush();
   if (flushed.length > 0) chunks.push(flushed);
 
-  const blob = new Blob(chunks, { type: 'audio/mpeg' });
+  const blob = new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
   const mp3Name = file.name.replace(/\.[^/.]+$/, '') + '.mp3';
   return new File([blob], mp3Name, { type: 'audio/mpeg' });
 }
