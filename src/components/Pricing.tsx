@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabaseClient";
-import { BACKEND } from "@/lib/backendFetch";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
+import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
@@ -43,29 +44,26 @@ const plans = [
 const Pricing = () => {
   const { ref, isVisible } = useScrollReveal();
   const navigate = useNavigate();
+  const [proLoading, setProLoading] = useState(false);
 
   const handleStartPro = async () => {
+    setProLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/auth');
+      const headers = await getAuthHeaders();
+      if (!headers["Authorization"]) {
+        navigate("/auth");
         return;
       }
-      const response = await fetch(`${BACKEND}/api/stripe/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-          'x-api-key': 'secondears-secret-2024',
-        },
-        body: JSON.stringify({ email: session.user?.email }),
+      const res = await fetch(`${BACKEND}/api/stripe/checkout`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
       });
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
+      if (!res.ok) throw new Error("Failed to create checkout session");
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err: any) {
+      toast({ title: "Error starting checkout", description: err.message, variant: "destructive" });
+      setProLoading(false);
     }
   };
 
@@ -236,6 +234,7 @@ const Pricing = () => {
                 <div className="px-5 pb-5 mt-auto">
                   <Button
                     variant={plan.featured ? "default" : "outline"}
+                    disabled={plan.featured && proLoading}
                     onClick={plan.featured ? handleStartPro : undefined}
                     className={cn(
                       "w-full h-10 text-[12px] font-medium tracking-[-0.01em] rounded-md",
@@ -245,7 +244,7 @@ const Pricing = () => {
                         "border-border-subtle/50 text-foreground/60 hover:text-foreground/80 hover:border-border-subtle"
                     )}
                   >
-                    {plan.cta}
+                    {plan.featured && proLoading ? "Redirecting…" : plan.cta}
                   </Button>
                 </div>
               </div>
