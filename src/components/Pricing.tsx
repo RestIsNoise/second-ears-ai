@@ -235,6 +235,7 @@ const Pricing = () => {
                 <div className="px-5 pb-5 mt-auto">
                   <Button
                     variant={plan.featured ? "default" : "outline"}
+                    onClick={plan.featured ? handleStartPro : undefined}
                     className={cn(
                       "w-full h-10 text-[12px] font-medium tracking-[-0.01em] rounded-md",
                       plan.featured &&
