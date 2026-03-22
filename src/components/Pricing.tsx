@@ -68,7 +68,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 items-stretch">
+        <div className="grid md:grid-cols-2 gap-4 items-stretch max-w-[480px] mx-auto">
           {plans.map((plan, i) => {
             const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
             return (
