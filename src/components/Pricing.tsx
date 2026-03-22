@@ -3,7 +3,8 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
+import { BACKEND } from "@/lib/backendFetch";
 
 const plans = [
   {
