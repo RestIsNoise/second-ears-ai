@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import { toast } from "@/hooks/use-toast";
 
-const plans = [
+const plans: {
+  name: string; price: string; period: string; description: string;
+  features: { text: string; included: boolean }[];
+  cta: string; featured: boolean; comingSoon?: boolean;
+}[] = [
   {
     name: "Free",
     price: "$0",
@@ -38,6 +42,21 @@ const plans = [
     ],
     cta: "Start Pro",
     featured: true,
+  },
+  {
+    name: "Human Review",
+    price: "—",
+    period: "",
+    description: "Expert feedback from real engineers.",
+    features: [
+      { text: "Everything in Pro", included: true },
+      { text: "Feedback from a mixing engineer", included: true },
+      { text: "Personalized notes & suggestions", included: true },
+      { text: "48h turnaround", included: true },
+    ],
+    cta: "",
+    featured: false,
+    comingSoon: true,
   },
 ];
 
