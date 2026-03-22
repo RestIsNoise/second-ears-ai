@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
@@ -490,6 +490,7 @@ const DeleteConfirmModal = ({
 const Dashboard = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [fetching, setFetching] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<ProjectRow | null>(null);
@@ -502,6 +503,17 @@ const Dashboard = () => {
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (searchParams.get("upgraded") === "true") {
+      toast({
+        title: "¡Bienvenido a Pro!",
+        description: "Tu suscripción está activa. Ahora tenés análisis ilimitados y los 3 modos.",
+        duration: 6000,
+      });
+      window.history.replaceState({}, "", "/dashboard");
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!user) return;
