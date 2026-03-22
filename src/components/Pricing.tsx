@@ -58,7 +58,10 @@ const Pricing = () => {
         method: "POST",
         headers: { ...headers, "Content-Type": "application/json" },
       });
-      if (!res.ok) throw new Error("Failed to create checkout session");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Checkout failed (${res.status})`);
+      }
       const { url } = await res.json();
       window.location.href = url;
     } catch (err: any) {
