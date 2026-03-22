@@ -321,12 +321,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           ))}
         </div>
       </div>
+      {cooldownMessage && (
+        <div
+          className="w-full px-4 py-3 border border-foreground/10 bg-muted/50 text-center"
+          style={{ borderRadius: 3 }}
+        >
+          <p className="text-[11px] text-foreground/60 font-medium" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+            ⏳ {cooldownMessage}
+          </p>
+        </div>
+      )}
       <Button
         variant="default"
         size="lg"
         className="w-full h-11 text-[11px] font-bold tracking-[0.06em] uppercase"
         style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
-        disabled={!file || isAnalyzing}
+        disabled={!file || isAnalyzing || !!cooldownMessage}
         onClick={analyze}
       >
         {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
