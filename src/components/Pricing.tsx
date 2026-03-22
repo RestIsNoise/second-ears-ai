@@ -117,9 +117,9 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 items-stretch max-w-[480px] mx-auto">
+        <div className="grid md:grid-cols-3 gap-4 items-stretch max-w-[720px] mx-auto">
           {plans.map((plan, i) => {
-            const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
+            const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : i;
             return (
               <div
                 key={plan.name}
@@ -131,33 +131,42 @@ const Pricing = () => {
                   "--stagger": `${100 + staggerOrder * 130}ms`,
                   background: plan.featured ? "hsl(0 0% 6%)" : "hsl(var(--card))",
                   color: plan.featured ? "hsl(0 0% 92%)" : undefined,
-                  border: plan.featured
-                    ? "1px solid hsl(0 0% 14%)"
-                    : "1px solid hsl(var(--border-subtle) / 0.45)",
+                  border: plan.comingSoon
+                    ? "1px solid hsl(var(--border-subtle) / 0.3)"
+                    : plan.featured
+                      ? "1px solid hsl(0 0% 14%)"
+                      : "1px solid hsl(var(--border-subtle) / 0.45)",
                   boxShadow: plan.featured
                     ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
                     : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
+                  opacity: plan.comingSoon ? 0.55 : 1,
                 } as React.CSSProperties}
               >
                 {/* Badge */}
-                {plan.featured && (
+                {(plan.featured || plan.comingSoon) && (
                   <div
                     className="text-center py-1.5"
                     style={{
-                      background: "hsl(0 0% 100% / 0.06)",
-                      borderBottom: "1px solid hsl(0 0% 100% / 0.06)",
+                      background: plan.comingSoon
+                        ? "hsl(var(--foreground) / 0.04)"
+                        : "hsl(0 0% 100% / 0.06)",
+                      borderBottom: plan.comingSoon
+                        ? "1px solid hsl(var(--border-subtle) / 0.15)"
+                        : "1px solid hsl(0 0% 100% / 0.06)",
                     }}
                   >
                     <span
                       className="text-[9px] tracking-[0.14em] uppercase font-medium"
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
-                        color: "hsl(0 0% 100% / 0.5)",
+                        color: plan.comingSoon
+                          ? "hsl(var(--muted-foreground) / 0.5)"
+                          : "hsl(0 0% 100% / 0.5)",
                       }}
                     >
-                      Most popular
+                      {plan.comingSoon ? "Coming soon" : "Most popular"}
                     </span>
                   </div>
                 )}
@@ -177,14 +186,16 @@ const Pricing = () => {
                     <span className="text-[2rem] font-semibold tracking-[-0.04em] leading-none">
                       {plan.price}
                     </span>
-                    <span
-                      className={cn(
-                        "text-[11px]",
-                        plan.featured ? "opacity-25" : "text-muted-foreground/30"
-                      )}
-                    >
-                      {plan.period}
-                    </span>
+                    {plan.period && (
+                      <span
+                        className={cn(
+                          "text-[11px]",
+                          plan.featured ? "opacity-25" : "text-muted-foreground/30"
+                        )}
+                      >
+                        {plan.period}
+                      </span>
+                    )}
                   </div>
                   <p
                     className={cn(
@@ -253,22 +264,24 @@ const Pricing = () => {
                 </div>
 
                 {/* CTA */}
-                <div className="px-5 pb-5 mt-auto">
-                  <Button
-                    variant={plan.featured ? "default" : "outline"}
-                    disabled={plan.featured && proLoading}
-                    onClick={plan.featured ? handleStartPro : undefined}
-                    className={cn(
-                      "w-full h-10 text-[12px] font-medium tracking-[-0.01em] rounded-md",
-                      plan.featured &&
-                        "bg-white text-black hover:bg-white/90 border-0",
-                      !plan.featured &&
-                        "border-border-subtle/50 text-foreground/60 hover:text-foreground/80 hover:border-border-subtle"
-                    )}
-                  >
-                    {plan.featured && proLoading ? "Redirecting…" : plan.cta}
-                  </Button>
-                </div>
+                {!plan.comingSoon && (
+                  <div className="px-5 pb-5 mt-auto">
+                    <Button
+                      variant={plan.featured ? "default" : "outline"}
+                      disabled={plan.featured && proLoading}
+                      onClick={plan.featured ? handleStartPro : undefined}
+                      className={cn(
+                        "w-full h-10 text-[12px] font-medium tracking-[-0.01em] rounded-md",
+                        plan.featured &&
+                          "bg-white text-black hover:bg-white/90 border-0",
+                        !plan.featured &&
+                          "border-border-subtle/50 text-foreground/60 hover:text-foreground/80 hover:border-border-subtle"
+                      )}
+                    >
+                      {plan.featured && proLoading ? "Redirecting…" : plan.cta}
+                    </Button>
+                  </div>
+                )}
               </div>
             );
           })}
