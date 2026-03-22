@@ -17,7 +17,7 @@ const plans = [
       { text: "3 tracks / month", included: true },
       { text: "Technical mode only", included: true },
       { text: "Basic frequency analysis", included: true },
-      { text: "48h cooldown between uploads", included: true },
+      { text: "24h cooldown between uploads", included: true },
       { text: "All listening modes", included: false },
       { text: "PDF export", included: false },
     ],
