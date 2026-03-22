@@ -7,7 +7,7 @@ const plans = [
   {
     name: "Free",
     price: "$0",
-    period: "forever",
+    period: "/ month",
     description: "First tracks free.",
     features: [
       { text: "3 tracks / month", included: true },
@@ -23,7 +23,7 @@ const plans = [
   {
     name: "Pro",
     price: "$9",
-    period: "/ mo",
+    period: "/ month",
     description: "Unlimited tracks, all modes.",
     features: [
       { text: "Unlimited tracks", included: true },
@@ -31,24 +31,9 @@ const plans = [
       { text: "Full detailed reports", included: true },
       { text: "Priority processing", included: true },
       { text: "PDF export", included: true },
-      { text: "Human review", included: false },
     ],
     cta: "Start Pro",
     featured: true,
-  },
-  {
-    name: "Human Review",
-    price: "$19",
-    period: "/ mo",
-    description: "Pro plus engineer feedback.",
-    features: [
-      { text: "Everything in Pro", included: true },
-      { text: "3 human reviews / month", included: true },
-      { text: "Human engineer review notes", included: true },
-      { text: "Revision guidance", included: true },
-    ],
-    cta: "Start Human Review",
-    featured: false,
   },
 ];
 
@@ -79,11 +64,11 @@ const Pricing = () => {
           </div>
           <h2 className="text-[1.4rem] md:text-[1.6rem] font-semibold tracking-[-0.035em]">Pick your plan</h2>
           <p className="text-[12.5px] text-muted-foreground/50 mt-2 max-w-xs mx-auto leading-relaxed">
-            Start with three free tracks. Upgrade when you need more.
+            Start free. Upgrade when you need more.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 items-stretch">
+        <div className="grid md:grid-cols-2 gap-4 items-stretch max-w-[480px] mx-auto">
           {plans.map((plan, i) => {
             const staggerOrder = plan.featured ? 2 : i === 0 ? 0 : 1;
             return (
@@ -139,7 +124,7 @@ const Pricing = () => {
                   >
                     {plan.name}
                   </p>
-                  <div className="flex items-baseline gap-1.5 select-none" style={{ filter: "blur(8px)" }} title="Pricing coming soon">
+                  <div className="flex items-baseline gap-1.5 select-none">
                     <span className="text-[2rem] font-semibold tracking-[-0.04em] leading-none">
                       {plan.price}
                     </span>
