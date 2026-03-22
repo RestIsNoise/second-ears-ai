@@ -3,7 +3,8 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
+import { BACKEND } from "@/lib/backendFetch";
 
 const plans = [
   {
@@ -50,12 +51,12 @@ const Pricing = () => {
         navigate('/auth');
         return;
       }
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stripe/checkout`, {
+      const response = await fetch(`${BACKEND}/api/stripe/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
-          'x-api-key': import.meta.env.VITE_API_SECRET_KEY || 'secondears-secret-2024',
+          'x-api-key': 'secondears-secret-2024',
         },
         body: JSON.stringify({ email: session.user?.email }),
       });
