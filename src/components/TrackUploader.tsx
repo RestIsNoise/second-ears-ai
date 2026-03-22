@@ -40,6 +40,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
+  const [userPlan, setUserPlan] = useState<string>("free");
+  const [lockedModeTooltip, setLockedModeTooltip] = useState<string | null>(null);
 
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
