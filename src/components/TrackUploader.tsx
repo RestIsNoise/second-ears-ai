@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Upload, Music, SlidersHorizontal, Ear, Target, Disc3, CheckCircle2 } from "lucide-react";
+import { Upload, Music, SlidersHorizontal, Ear, Target, Disc3, CheckCircle2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
