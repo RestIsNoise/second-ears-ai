@@ -39,6 +39,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [goal, setGoal] = useState<Goal>("mixing");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
 
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
