@@ -144,6 +144,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           setIsAnalyzing(false);
           return;
         }
+        if (feedbackRes.status === 429 && errData.error === "cooldown_active") {
+          const nextAvailable = errData.nextAvailableAt;
+          if (nextAvailable) {
+            const hoursLeft = Math.ceil((new Date(nextAvailable).getTime() - Date.now()) / (1000 * 60 * 60));
+            const msg = hoursLeft > 1
+              ? `Tu próximo análisis estará disponible en ${hoursLeft} horas`
+              : "Tu próximo análisis estará disponible en menos de 1 hora";
+            setCooldownMessage(msg);
+          } else {
+            setCooldownMessage("Cooldown activo. Intentá de nuevo más tarde.");
+          }
+          setIsAnalyzing(false);
+          return;
+        }
         throw new Error(`Backend error: ${feedbackRes.status}`);
       }
       const initialRes = await feedbackRes.json();
