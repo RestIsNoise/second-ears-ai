@@ -39,6 +39,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [goal, setGoal] = useState<Goal>("mixing");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
 
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
@@ -140,6 +141,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         const errData = await feedbackRes.json().catch(() => ({}));
         if (feedbackRes.status === 403 && errData.error === "limit_reached") {
           setShowUpgradeModal(true);
+          setIsAnalyzing(false);
+          return;
+        }
+        if (feedbackRes.status === 429 && errData.error === "cooldown_active") {
+          const nextAvailable = errData.nextAvailableAt;
+          if (nextAvailable) {
+            const hoursLeft = Math.ceil((new Date(nextAvailable).getTime() - Date.now()) / (1000 * 60 * 60));
+            const msg = hoursLeft > 1
+              ? `Tu próximo análisis estará disponible en ${hoursLeft} horas`
+              : "Tu próximo análisis estará disponible en menos de 1 hora";
+            setCooldownMessage(msg);
+          } else {
+            setCooldownMessage("Cooldown activo. Intentá de nuevo más tarde.");
+          }
           setIsAnalyzing(false);
           return;
         }
@@ -306,12 +321,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           ))}
         </div>
       </div>
+      {cooldownMessage && (
+        <div
+          className="w-full px-4 py-3 border border-foreground/10 bg-muted/50 text-center"
+          style={{ borderRadius: 3 }}
+        >
+          <p className="text-[11px] text-foreground/60 font-medium" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+            ⏳ {cooldownMessage}
+          </p>
+        </div>
+      )}
       <Button
         variant="default"
         size="lg"
         className="w-full h-11 text-[11px] font-bold tracking-[0.06em] uppercase"
         style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
-        disabled={!file || isAnalyzing}
+        disabled={!file || isAnalyzing || !!cooldownMessage}
         onClick={analyze}
       >
         {isAnalyzing ? "Analyzing…" : "Analyze my mix"}
