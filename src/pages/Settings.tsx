@@ -38,6 +38,21 @@ const Settings = () => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
 
+  // Fetch user plan
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, [user]);
+
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name || "");
