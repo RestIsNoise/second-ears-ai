@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 
 const modes = [
   { id: "technical", label: "Technical", tag: "The engineer", icon: SlidersHorizontal },
