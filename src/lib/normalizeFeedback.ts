@@ -250,11 +250,11 @@ export function normalizeFeedbackResponse(
     });
   } else if (mode === "musical") {
     actionLabel = "ARRANGE";
-    const src = fb.arrangementNotes || fb.arrangement_notes || fb.top_priorities || fb.priorities || [];
+    const src = fb.top_priorities || fb.priorities || [];
     rawPriorities = (Array.isArray(src) ? src : []).map((p: any) => ({
       title: str(p.section) || str(p.title),
       description: str(p.observation) || str(p.why) || str(p.description),
-      actionText: str(p.arrangement_move) || str(p.suggestion) || str(p.fix),
+      actionText: str(p.suggestion) || str(p.fix),
       time: p.timestamp ?? p.timestampSec ?? p.time,
     }));
   } else if (mode === "perception") {

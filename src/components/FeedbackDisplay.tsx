@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, LayoutGrid, Disc, Link2 } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Disc, Link2 } from "lucide-react";
 import CompactFooter from "@/components/CompactFooter";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -14,8 +14,6 @@ import ShareBlock from "@/components/ShareBlock";
 import CollaboratorAvatars from "@/components/CollaboratorAvatars";
 import TechnicalMetrics from "@/components/TechnicalMetrics";
 import ToDoPanel from "@/components/ToDoPanel";
-import SessionPanel from "@/components/SessionPanel";
-import AlsAnalyzer from "@/components/AlsAnalyzer";
 import HumanFeedbackPanel from "@/components/HumanFeedbackPanel";
 import PanelSidebar from "@/components/PanelSidebar";
 import type { PanelConfig } from "@/components/PanelSidebar";
@@ -170,8 +168,6 @@ const FeedbackDisplay = ({
   const [shareOpen, setShareOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const [pendingComment, setPendingComment] = useState<{ text: string; timestampSec: number } | null>(null);
-  const [showArrangement, setShowArrangement] = useState(false);
-  const arrangementRef = useRef<HTMLDivElement>(null);
   const [refModalOpen, setRefModalOpen] = useState(false);
   const [refLoading, setRefLoading] = useState(false);
   const [refResult, setRefResult] = useState<ReferenceResult | null>(null);
@@ -921,26 +917,6 @@ const FeedbackDisplay = ({
             {/* Action controls row — compact utilities */}
             <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
               <button
-                onClick={() => setShowArrangement((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  padding: "5px 12px",
-                  backgroundColor: "hsl(var(--panel-bg))",
-                  border: "1px solid hsl(var(--foreground) / 0.08)",
-                  borderRadius: 2,
-                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                }}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">{showArrangement ? "Hide Arr." : "Arrangement"}</span>
-                <span className="sm:hidden">{showArrangement ? "Hide" : "Arr."}</span>
-              </button>
-              <button
                 onClick={() => setRefModalOpen(true)}
                 className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
                 style={{
@@ -1420,20 +1396,6 @@ const FeedbackDisplay = ({
         </div>
       )}
 
-      {/* ═══ ARRANGEMENT — bottom of page, compact ═══ */}
-      <div
-        ref={arrangementRef}
-        className={cn(
-          "mt-4 sm:mt-6 overflow-hidden transition-all duration-200",
-          !showArrangement && "hidden"
-        )}
-      >
-        <AlsAnalyzer
-          onLoaded={() => {
-            arrangementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-        />
-      </div>
 
       {/* ═══ WORKSTATION CLOSING FRAME ═══ */}
       <div
