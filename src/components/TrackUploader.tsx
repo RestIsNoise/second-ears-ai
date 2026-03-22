@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Upload, Music, SlidersHorizontal, Ear, Target, Disc3, CheckCircle2 } from "lucide-react";
+import { Upload, Music, SlidersHorizontal, Ear, Target, Disc3, CheckCircle2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
@@ -40,6 +40,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
+  const [userPlan, setUserPlan] = useState<string>("free");
+  const [lockedModeTooltip, setLockedModeTooltip] = useState<string | null>(null);
+
+  // Fetch user plan on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, []);
 
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
@@ -289,22 +305,63 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           Listening mode
         </p>
         <div className="grid grid-cols-3 gap-1.5">
-          {modes.map((m) => (
-            <button key={m.id} onClick={() => setMode(m.id)}
-              className="text-left transition-all duration-100"
-              style={{
-                padding: "10px 12px",
-                backgroundColor: mode === m.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
-                border: mode === m.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
-                borderRadius: 3,
-                boxShadow: mode === m.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
-              }}
-            >
-              <m.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
-              <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
-              <p className="text-[9px] text-foreground/35 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.tag}</p>
-            </button>
-          ))}
+          {modes.map((m) => {
+            const isLocked = userPlan === "free" && m.id !== "technical";
+            return (
+              <button key={m.id}
+                onClick={() => {
+                  if (isLocked) {
+                    setLockedModeTooltip(m.id);
+                    setTimeout(() => setLockedModeTooltip(null), 2500);
+                    return;
+                  }
+                  setMode(m.id);
+                }}
+                className="relative text-left transition-all duration-100"
+                style={{
+                  padding: "10px 12px",
+                  backgroundColor: !isLocked && mode === m.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
+                  border: !isLocked && mode === m.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
+                  borderRadius: 3,
+                  boxShadow: !isLocked && mode === m.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+                  opacity: isLocked ? 0.4 : 1,
+                  cursor: isLocked ? "default" : "pointer",
+                }}
+              >
+                {isLocked && (
+                  <span
+                    className="absolute top-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-sm"
+                    style={{
+                      backgroundColor: "hsl(var(--foreground) / 0.08)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 8,
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      color: "hsl(var(--foreground) / 0.5)",
+                    }}
+                  >
+                    <Lock className="w-2.5 h-2.5" /> PRO
+                  </span>
+                )}
+                <m.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+                <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
+                <p className="text-[9px] text-foreground/35 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.tag}</p>
+                {isLocked && lockedModeTooltip === m.id && (
+                  <span
+                    className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-sm z-10 animate-fade-in"
+                    style={{
+                      backgroundColor: "hsl(var(--foreground))",
+                      color: "hsl(var(--background))",
+                      fontSize: 10,
+                      fontFamily: "'IBM Plex Mono', monospace",
+                    }}
+                  >
+                    Disponible en el plan <a href="/#pricing" className="underline font-bold">Pro</a>
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
       <div>
