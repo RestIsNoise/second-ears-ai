@@ -43,6 +43,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [userPlan, setUserPlan] = useState<string>("free");
   const [lockedModeTooltip, setLockedModeTooltip] = useState<string | null>(null);
 
+  // Fetch user plan on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, []);
+
   // Reset state on mount so returning to this page is always fresh
   useEffect(() => {
     setFile(null);
