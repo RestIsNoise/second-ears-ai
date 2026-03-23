@@ -37,7 +37,7 @@ const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subti
     {subtitle && (
       <p style={{ fontSize: 13, color: "#999", marginBottom: 12 }}>{subtitle}</p>
     )}
-    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)" }} />
+    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)", borderColor: undefined }} />
   </div>
 );
 
