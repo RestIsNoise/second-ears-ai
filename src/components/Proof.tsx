@@ -78,7 +78,8 @@ const Proof = () => {
               style={{
                 "--stagger": `${150 + i * 120}ms`,
                 background: "hsl(var(--surface-a))",
-                border: "1px solid hsl(var(--border-subtle) / 0.35)",
+                border: "1px solid hsl(var(--border-subtle))",
+                minHeight: 220,
                 boxShadow:
                   "0 1px 3px hsl(0 0% 0% / 0.04), 0 4px 12px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
               } as React.CSSProperties}
