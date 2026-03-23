@@ -183,9 +183,9 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[10px] tracking-[0.12em] uppercase mb-3",
-                      plan.featured ? "opacity-35" : "text-muted-foreground/60"
+                      plan.featured ? "opacity-35" : ""
                     )}
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", color: !plan.featured ? (isDark ? "#777" : undefined) : undefined }}
                   >
                     {plan.name}
                   </p>
