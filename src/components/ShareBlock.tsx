@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
-const btnStyle = {
+const getBtnStyle = (isDark: boolean) => ({
   fontFamily: MONO,
   fontSize: 12,
   fontWeight: 700,
@@ -17,10 +17,11 @@ const btnStyle = {
   padding: "8px 12px",
   height: 34,
   backgroundColor: "hsl(var(--panel-bg))",
-  border: "1px solid hsl(var(--foreground) / 0.06)",
+  border: isDark ? "1px solid #333" : "1px solid hsl(var(--foreground) / 0.06)",
   borderRadius: 2,
   boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-};
+  color: isDark ? "#888" : undefined,
+});
 
 interface ShareBlockProps {
   onExportPdf?: () => void;
@@ -29,6 +30,7 @@ interface ShareBlockProps {
 
 const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
   const { user } = useAuth();
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
   const [isPublic, setIsPublic] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
@@ -138,7 +140,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
           <button
             onClick={() => { setPopoverOpen(!popoverOpen); setShowInvite(false); }}
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
-            style={btnStyle}
+            style={getBtnStyle(isDark)}
           >
             <Share2 className="w-3.5 h-3.5" strokeWidth={2} />
             Share
@@ -227,7 +229,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
           <button
             onClick={onExportPdf}
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
-            style={btnStyle}
+            style={getBtnStyle(isDark)}
           >
             <Download className="w-3.5 h-3.5" strokeWidth={2} />
             Export PDF
