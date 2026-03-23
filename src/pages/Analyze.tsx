@@ -54,6 +54,7 @@ const Analyze = () => {
   const [progressStep, setProgressStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
+  const [analyzeTrackName, setAnalyzeTrackName] = useState<string | null>(null);
 
   // New-version params from URL
   const isNewVersion = searchParams.get("newVersion") === "true";
