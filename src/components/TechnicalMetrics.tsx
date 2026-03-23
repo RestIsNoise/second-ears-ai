@@ -110,12 +110,25 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
-          <span
-            className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate"
-            style={{ fontFamily: MONO, fontSize: 12 }}
-          >
-            {label}
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span
+                className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate cursor-help"
+                style={{ fontFamily: MONO, fontSize: 12 }}
+              >
+                {label}
+              </span>
+            </TooltipTrigger>
+            {metricTooltips[label] && (
+              <TooltipContent
+                side="top"
+                className="max-w-[200px] text-xs"
+                style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}
+              >
+                {metricTooltips[label]}
+              </TooltipContent>
+            )}
+          </Tooltip>
         </div>
 
         {/* Center: meter + thresholds */}
