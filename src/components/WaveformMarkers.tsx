@@ -318,11 +318,11 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
                 onClick={() => onMarkerClick?.(m)}
                 className="flex items-center justify-center rounded-full transition-all duration-150"
                 style={{
-                  width: 18,
-                  height: 18,
-                  backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.15)",
-                  border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.3)"}`,
-                  boxShadow: highlighted ? "0 0 8px rgba(255,255,255,0.15)" : "0 1px 3px rgba(0,0,0,0.4)",
+                  width: 16,
+                  height: 16,
+                  backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)",
+                  border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"}`,
+                  boxShadow: highlighted ? "0 0 6px rgba(255,255,255,0.12)" : "0 1px 2px rgba(0,0,0,0.3)",
                   backdropFilter: "blur(4px)",
                 }}
                 aria-label={`${formatTime(m.time)} — ${m.label}`}
