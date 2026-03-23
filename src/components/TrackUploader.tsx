@@ -76,7 +76,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       return;
     }
     if (f.size > MAX_FILE_SIZE) {
-      toast({ title: "File too large", description: "Maximum file size is 200MB", variant: "destructive", duration: 2500 });
+      const sizeMB = (f.size / (1024 * 1024)).toFixed(1);
+      toast({ title: "Archivo muy grande", description: `El archivo pesa ${sizeMB} MB. El límite es 200 MB.`, variant: "destructive", duration: 3500 });
       return;
     }
     setFile(f);
