@@ -77,6 +77,8 @@ const Header = () => {
     .toUpperCase()
     .slice(0, 2);
 
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
   return (
     <header
       className={cn(
@@ -86,9 +88,13 @@ const Header = () => {
           : "h-12"
       )}
       style={{
-        background: scrolled ? "rgba(255,255,255,0.92)" : "hsl(var(--background) / 0.95)",
+        background: isDark
+          ? "rgba(14, 14, 14, 0.95)"
+          : (scrolled ? "rgba(255,255,255,0.92)" : "hsl(var(--background) / 0.95)"),
         backdropFilter: "blur(8px)",
-        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "2px solid hsl(var(--foreground) / 0.08)",
+        borderBottom: isDark
+          ? "1px solid #222"
+          : (scrolled ? "1px solid rgba(0,0,0,0.06)" : "2px solid hsl(var(--foreground) / 0.08)"),
         transition: "background 0.2s ease, height 0.3s ease, border-bottom 0.2s ease, box-shadow 0.2s ease",
       }}
     >
