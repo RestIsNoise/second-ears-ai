@@ -349,9 +349,16 @@ const SubKickChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 100, padding: "12px 0 12px 14px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
-            Sub/Kick
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
+                Sub/Kick
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+              {metricTooltips["Sub/Kick"]}
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Bipolar meter with needle */}
