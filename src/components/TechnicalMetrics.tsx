@@ -94,27 +94,15 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
   const led = isMissing ? null : ledColors[status.color];
 
   return (
-    <div
-      style={{
-        padding: "0",
-        borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
-      }}
-    >
-      <div className="flex items-stretch">
-        {/* Left: label column */}
-        <div
-          className="flex items-center shrink-0"
-          style={{
-            width: 100,
-            padding: "14px 0 14px 14px",
-            borderRight: "1px solid hsl(var(--foreground) / 0.05)",
-          }}
-        >
+    <div style={{ padding: "10px 14px", borderBottom: "1px solid hsl(0 0% 94%)" }}>
+      <div className="flex items-center gap-3">
+        {/* Label */}
+        <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
               <span
-                className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate cursor-help"
-                style={{ fontFamily: MONO, fontSize: 12 }}
+                className="uppercase cursor-help"
+                style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}
               >
                 {label}
               </span>
@@ -131,111 +119,60 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           </Tooltip>
         </div>
 
-        {/* Center: meter + thresholds */}
-        <div className="flex-1 flex flex-col justify-center px-2" style={{ padding: "14px 16px" }}>
-          {/* Segmented bar */}
-          <div className="relative">
-            <div className="flex gap-px" style={{ height: 8 }}>
-              {Array.from({ length: SEGMENTS }).map((_, i) => {
-                const segPct = ((i + 1) / SEGMENTS) * 100;
-                const filled = pct >= segPct;
-                // Color ramp: last 20% of bar shifts to warm/red for "hot" zones
-                const isHotZone = i >= SEGMENTS * 0.8;
-                const fillColor = filled && led
-                  ? (isHotZone && (status?.color === "red" || status?.color === "orange") ? led.bg : led.bg)
-                  : "hsl(var(--foreground) / 0.035)";
-                return (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      backgroundColor: fillColor,
-                      opacity: filled ? (0.4 + (i / SEGMENTS) * 0.6) : 1,
-                      borderRadius: 0,
-                    }}
-                  />
-                );
-              })}
-            </div>
-            {/* Threshold tick marks */}
-            {thresholds?.map((t, i) => (
-              <div
-                key={i}
-                className="absolute"
-                style={{
-                  left: `${t.pct}%`,
-                  top: -1,
-                  bottom: -2,
-                  width: 1,
-                  backgroundColor: "hsl(var(--foreground) / 0.12)",
-                }}
-              >
-                <span
-                  className="absolute text-foreground/18 font-medium"
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 8,
-                    top: -9,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {t.label}
-                </span>
-              </div>
-            ))}
+        {/* Gauge bar */}
+        <div className="flex-1 relative">
+          <div className="relative" style={{ height: 4, borderRadius: 2, backgroundColor: "hsl(0 0% 94%)", overflow: "hidden" }}>
+            <div
+              style={{
+                position: "absolute",
+                inset: "0",
+                width: `${pct}%`,
+                backgroundColor: led ? led.bg : "hsl(0 0% 80%)",
+                borderRadius: 2,
+                transition: "width 0.3s",
+              }}
+            />
           </div>
+          {/* Threshold ticks */}
+          {thresholds?.map((t, i) => (
+            <div
+              key={i}
+              className="absolute"
+              style={{ left: `${t.pct}%`, top: -1, bottom: -1, width: 1, backgroundColor: "hsl(var(--foreground) / 0.12)" }}
+            >
+              <span
+                className="absolute"
+                style={{ fontFamily: MONO, fontSize: 8, color: "hsl(var(--foreground) / 0.18)", top: -10, left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", fontWeight: 500 }}
+              >
+                {t.label}
+              </span>
+            </div>
+          ))}
         </div>
 
-        {/* Right: value + unit + LED */}
-        <div
-          className="flex items-center gap-2.5 shrink-0"
-          style={{
-            padding: "14px 14px 14px 0",
-            borderLeft: "1px solid hsl(var(--foreground) / 0.05)",
-            minWidth: 115,
-            justifyContent: "flex-end",
-          }}
-        >
-          {/* Status tag */}
-          {!isMissing && led && (
-            <span
-              className="font-medium uppercase tracking-[0.05em]"
-              style={{
-                fontFamily: MONO,
-                fontSize: 10,
-                color: led.bg,
-                padding: "4px 7px",
-                backgroundColor: led.muted,
-                borderRadius: 2,
-                lineHeight: 1,
-              }}
-            >
-              {status.label}
-            </span>
-          )}
+        {/* Status badge */}
+        {!isMissing && led && (
           <span
-            className="text-foreground/90 tabular-nums font-medium"
-            style={{ fontFamily: MONO, fontSize: 18, letterSpacing: "-0.03em" }}
-          >
-            {isMissing ? "—" : value.toFixed(decimals)}
-          </span>
-          <span
-            className="text-foreground/35 font-normal uppercase"
-            style={{ fontFamily: MONO, fontSize: 11 }}
-          >
-            {unit}
-          </span>
-          {/* LED */}
-          <div
-            className="w-[8px] h-[8px] rounded-full shrink-0"
+            className="uppercase shrink-0"
             style={{
-              backgroundColor: led ? led.bg : "hsl(var(--foreground) / 0.08)",
-              boxShadow: led ? led.glow : "none",
+              fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em",
+              color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1,
             }}
-          />
-        </div>
+          >
+            {status.label}
+          </span>
+        )}
+
+        {/* Value */}
+        <span
+          className="tabular-nums shrink-0"
+          style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
+        >
+          {isMissing ? "—" : value.toFixed(decimals)}
+        </span>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(var(--foreground) / 0.35)" }}>
+          {unit}
+        </span>
       </div>
     </div>
   );
