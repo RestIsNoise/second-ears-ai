@@ -141,7 +141,7 @@ const Header = () => {
                 <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Avatar
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
-                    style={{ border: "1px solid #e0e0e0" }}
+                    style={{ border: isDark ? "1px solid #444" : "1px solid #e0e0e0" }}
                   >
                     <AvatarImage
                       src={avatarError ? undefined : (avatarUrl || undefined)}
