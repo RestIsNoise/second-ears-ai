@@ -580,7 +580,7 @@ const Settings = () => {
               {/* ── ACCOUNT ── */}
               {activeSection === "account" && (
                 <section>
-                  <SectionTitle>Account</SectionTitle>
+                  <SectionTitle subtitle="Danger zone — these actions are permanent.">Account</SectionTitle>
                   <div>
                     <button
                       onClick={() => setDeleteOpen(true)}
