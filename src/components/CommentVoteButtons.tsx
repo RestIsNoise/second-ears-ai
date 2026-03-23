@@ -83,19 +83,24 @@ const CommentVoteButtons = ({
   );
 
   return (
-    <div className="flex items-center gap-0.5 shrink-0">
+    <div className="flex items-center gap-1 shrink-0">
       <Tooltip>
         <TooltipTrigger asChild>
           <button
             onClick={(e) => { e.stopPropagation(); handleVote(1); }}
             disabled={!userId || busy}
             aria-label="Mark comment as helpful"
-            className={cn(
-              "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-              userVote === 1
-                ? "text-primary bg-primary/10"
-                : "text-muted-foreground/40 hover:text-primary/70 hover:bg-primary/5"
-            )}
+            className="flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 4,
+              border: userVote === 1 ? "1px solid #111" : "1px solid #e8e8e8",
+              backgroundColor: userVote === 1 ? "#111" : "#ffffff",
+              color: userVote === 1 ? "#ffffff" : "#999",
+            }}
+            onMouseEnter={(e) => { if (userVote !== 1) { e.currentTarget.style.backgroundColor = "#f5f5f3"; e.currentTarget.style.borderColor = "#ccc"; } }}
+            onMouseLeave={(e) => { if (userVote !== 1) { e.currentTarget.style.backgroundColor = "#ffffff"; e.currentTarget.style.borderColor = "#e8e8e8"; } }}
           >
             <ChevronUp className="w-3.5 h-3.5" />
           </button>
@@ -104,15 +109,11 @@ const CommentVoteButtons = ({
       </Tooltip>
 
       <span
-        className={cn(
-          "text-[10px] tabular-nums min-w-[14px] text-center",
-          upvotes - downvotes > 0
-            ? "text-primary/70"
-            : upvotes - downvotes < 0
-            ? "text-destructive/70"
-            : "text-muted-foreground/40"
-        )}
-        style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+        className="text-[10px] tabular-nums min-w-[14px] text-center"
+        style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          color: upvotes - downvotes > 0 ? "#111" : upvotes - downvotes < 0 ? "#c44" : "#bbb",
+        }}
       >
         {upvotes - downvotes !== 0 ? (upvotes - downvotes > 0 ? `+${upvotes - downvotes}` : upvotes - downvotes) : "0"}
       </span>
@@ -123,12 +124,17 @@ const CommentVoteButtons = ({
             onClick={(e) => { e.stopPropagation(); handleVote(-1); }}
             disabled={!userId || busy}
             aria-label="Mark comment as not helpful"
-            className={cn(
-              "p-0.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-              userVote === -1
-                ? "text-destructive bg-destructive/10"
-                : "text-muted-foreground/40 hover:text-destructive/70 hover:bg-destructive/5"
-            )}
+            className="flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 4,
+              border: userVote === -1 ? "1px solid #111" : "1px solid #e8e8e8",
+              backgroundColor: userVote === -1 ? "#111" : "#ffffff",
+              color: userVote === -1 ? "#ffffff" : "#999",
+            }}
+            onMouseEnter={(e) => { if (userVote !== -1) { e.currentTarget.style.backgroundColor = "#f5f5f3"; e.currentTarget.style.borderColor = "#ccc"; } }}
+            onMouseLeave={(e) => { if (userVote !== -1) { e.currentTarget.style.backgroundColor = "#ffffff"; e.currentTarget.style.borderColor = "#e8e8e8"; } }}
           >
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
