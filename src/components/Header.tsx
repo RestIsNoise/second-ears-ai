@@ -26,6 +26,8 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -45,6 +47,28 @@ const Header = () => {
       setAvatarError(false);
     }
   }, [user, profile]);
+
+  // Handle hash-based nav links: smooth scroll if on landing, navigate otherwise
+  const handleHashLink = useCallback((href: string) => {
+    const hash = href.replace("/#", "");
+    if (location.pathname === "/") {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/" + "#" + hash);
+    }
+    setMobileOpen(false);
+  }, [location.pathname, navigate]);
+
+  // On landing page load with hash, scroll to section
+  useEffect(() => {
+    if (location.pathname === "/" && location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [location]);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
