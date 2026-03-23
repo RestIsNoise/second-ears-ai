@@ -74,6 +74,32 @@ const ledColors: Record<string, { bg: string; glow: string; muted: string }> = {
   blue: { bg: "hsl(210 65% 50%)", glow: "0 0 5px hsl(210 65% 50% / 0.5)", muted: "hsl(210 65% 50% / 0.12)" },
 };
 
+/* ── Animated number hook ── */
+function useAnimatedNumber(target: number | null, animate: boolean, duration = 400, delay = 0) {
+  const [display, setDisplay] = useState(0);
+  const rafRef = useRef<number>();
+
+  useEffect(() => {
+    if (target === null || !animate) {
+      if (target !== null) setDisplay(target);
+      return;
+    }
+    const startTime = performance.now() + delay;
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      if (elapsed < 0) { rafRef.current = requestAnimationFrame(tick); return; }
+      const t = Math.min(elapsed / duration, 1);
+      setDisplay(t * target);
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    setDisplay(0);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [target, animate, duration, delay]);
+
+  return target === null ? null : display;
+}
+
 /* ── Meter Channel ── */
 interface MeterChannelProps {
   label: string;
@@ -84,9 +110,11 @@ interface MeterChannelProps {
   status: Status | null;
   decimals?: number;
   thresholds?: { pct: number; label: string }[];
+  rowIndex?: number;
+  animated?: boolean;
 }
 
-const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds }: MeterChannelProps) => {
+const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false }: MeterChannelProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const led = isMissing ? null : ledColors[status.color];
