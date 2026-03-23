@@ -353,12 +353,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 style={{
                   padding: "12px 14px",
                   backgroundColor: !isLocked && mode === m.id ? "#111" : "#ffffff",
-                  color: !isLocked && mode === m.id ? "#ffffff" : undefined,
+                  color: !isLocked && mode === m.id ? "#ffffff" : "#333",
                   border: !isLocked && mode === m.id ? "1px solid #111" : "1px solid #e0e0e0",
                   borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
                 }}
+                onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = "#999"; e.currentTarget.style.backgroundColor = "#fafafa"; } }}
+                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = "#e0e0e0"; e.currentTarget.style.backgroundColor = "#ffffff"; } }}
               >
                 {isLocked && (
                   <span
