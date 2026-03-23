@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
+import DemoSection from "@/components/DemoSection";
 import SampleFeedback from "@/components/SampleFeedback";
 import Proof from "@/components/Proof";
 import ListeningModes from "@/components/ListeningModes";
@@ -14,6 +15,7 @@ const Index = () => (
     <main>
       <Hero />
       <HowItWorks />
+      <DemoSection />
       <SampleFeedback />
       <ListeningModes />
       <Proof />
