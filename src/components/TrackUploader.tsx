@@ -318,8 +318,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       </div>
       <div>
         <p
-          className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase mb-2 font-bold"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.12em", color: "#999", textTransform: "uppercase" as const, marginBottom: 10, fontWeight: 700 }}
         >
           Listening mode
         </p>
