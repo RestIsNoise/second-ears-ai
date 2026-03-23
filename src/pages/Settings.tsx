@@ -458,9 +458,9 @@ const Settings = () => {
                           fontFamily: MONO,
                           justifyContent: "center",
                           transition: "all 0.15s",
-                          backgroundColor: !isDark ? "#111" : "transparent",
+                          backgroundColor: !isDark ? "#111" : "#1a1a1a",
                           color: !isDark ? "#fff" : "#666",
-                          border: !isDark ? "none" : "1px solid #ddd",
+                          border: !isDark ? "none" : "1px solid #333",
                         }}
                       >
                         <Sun className="w-4 h-4" />
