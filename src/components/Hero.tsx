@@ -148,7 +148,7 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:-mr-10"
+            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:-mr-4"
             style={{ animationDelay: "0.2s" }}
           >
             {/* Glow behind frame */}
