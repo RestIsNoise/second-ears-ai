@@ -730,7 +730,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               <button
                 onClick={togglePlay}
                 disabled={!!error || loading}
-                className="flex items-center justify-center transition-all duration-100 disabled:opacity-30"
+                className="flex items-center justify-center disabled:opacity-30"
                 style={{
                   width: 28,
                   height: 28,
@@ -738,16 +738,18 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   backgroundColor: "transparent",
                   border: "1px solid #444",
                   color: "rgba(255,255,255,0.85)",
+                  opacity: 0.7,
+                  transition: "opacity 0.15s, border-color 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#888"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#444"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#888"; e.currentTarget.style.opacity = "1"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#444"; e.currentTarget.style.opacity = "0.7"; }}
               >
                 {playing ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
               </button>
               <button
                 onClick={restart}
                 disabled={!!error || loading}
-                className="flex items-center justify-center transition-all duration-100 disabled:opacity-30"
+                className="flex items-center justify-center disabled:opacity-30"
                 style={{
                   width: 28,
                   height: 28,
@@ -755,9 +757,11 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                   backgroundColor: "transparent",
                   border: "1px solid #333",
                   color: "rgba(255,255,255,0.40)",
+                  opacity: 0.7,
+                  transition: "opacity 0.15s, border-color 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#888"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#888"; e.currentTarget.style.opacity = "1"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333"; e.currentTarget.style.opacity = "0.7"; }}
               >
                 <RotateCcw className="w-3 h-3" />
               </button>
@@ -769,13 +773,13 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               style={{
                 fontFamily: MONO,
                 fontSize: 12,
-                color: "#888",
+                color: "#aaa",
                 fontWeight: 500,
               }}
             >
               {formatTime(currentTime)}
               <span style={{ color: "rgba(255,255,255,0.20)" }}> / </span>
-              <span style={{ color: "rgba(255,255,255,0.35)" }}>{formatTime(duration)}</span>
+              <span style={{ color: "rgba(255,255,255,0.45)" }}>{formatTime(duration)}</span>
             </span>
           </div>
         )}
