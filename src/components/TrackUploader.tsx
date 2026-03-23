@@ -420,12 +420,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
               style={{
                 padding: "12px 14px",
                 backgroundColor: goal === g.id ? "#111" : "#ffffff",
-                color: goal === g.id ? "#ffffff" : undefined,
+                color: goal === g.id ? "#ffffff" : "#333",
                 border: goal === g.id ? "1px solid #111" : "1px solid #e0e0e0",
                 borderRadius: 6,
               }}
+              onMouseEnter={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = "#999"; e.currentTarget.style.backgroundColor = "#fafafa"; } }}
+              onMouseLeave={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = "#e0e0e0"; e.currentTarget.style.backgroundColor = "#ffffff"; } }}
             >
-              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? "rgba(255,255,255,0.7)" : "hsl(var(--foreground) / 0.5)" }} />
+              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? "rgba(255,255,255,0.7)" : "#999" }} />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
               </TooltipTrigger>
