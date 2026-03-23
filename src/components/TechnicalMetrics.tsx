@@ -208,7 +208,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 };
 
 /* ── Correlation Channel (bipolar) ── */
-const CorrelationChannel = ({ value }: { value: number }) => {
+const CorrelationChannel = ({ value, isDark = false }: { value: number; isDark?: boolean }) => {
   const status = correlationStatus(value);
   const led = ledColors[status.color];
   const pct = ((value + 1) / 2) * 100;
