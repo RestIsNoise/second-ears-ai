@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SlidersHorizontal, Music, Ear, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid, Plus } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -585,49 +585,50 @@ const Dashboard = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header row */}
           <div
-            className="flex items-center justify-between mb-4 px-4"
+            className="flex items-center justify-between mb-6"
             style={{
-              paddingTop: 12,
-              paddingBottom: 12,
-              backgroundColor: "hsl(var(--analysis-header))",
-              border: "2px solid hsl(var(--foreground) / 0.08)",
-              borderRadius: 3,
-              boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+              padding: "16px 24px",
+              background: "white",
+              borderBottom: "1px solid hsl(0 0% 91%)",
+              borderRadius: 0,
             }}
           >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-[7px] h-[7px] rounded-full shrink-0"
-                style={{
-                  background: "radial-gradient(circle at 35% 35%, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.06))",
-                  boxShadow: "inset 0 0.5px 1px hsl(0 0% 100% / 0.15), 0 0 0 0.5px hsl(var(--foreground) / 0.06)",
-                }}
-              />
+            <div>
               <h1
-                className="text-[13px] font-bold tracking-tight"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                className="text-foreground"
+                style={{ fontSize: 20, fontWeight: 700, color: "hsl(0 0% 7%)", letterSpacing: "-0.01em" }}
               >
                 My Projects
               </h1>
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "hsl(0 0% 60%)",
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  marginTop: 2,
+                }}
+              >
+                {grouped.reduce((sum, g) => sum + g.versionCount, 0)} analyses · {grouped.length} projects
+              </p>
             </div>
             <Link
               to="/analyze"
-              className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground transition-all"
+              className="inline-flex items-center gap-1.5 transition-colors"
               style={{
+                background: "hsl(0 0% 7%)",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: 6,
+                fontSize: 13,
+                fontWeight: 500,
+                letterSpacing: "0.02em",
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9,
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                padding: "5px 12px",
-                backgroundColor: "hsl(var(--panel-bg))",
-                border: "1px solid hsl(var(--foreground) / 0.1)",
-                borderRadius: 2,
-                boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
               }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 20%)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 7%)"; }}
             >
+              <Plus className="w-4 h-4" />
               New analysis
-              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
@@ -636,7 +637,7 @@ const Dashboard = () => {
             <TabsList
               className="mb-4 h-auto p-0 gap-0 rounded-none bg-transparent"
               style={{
-                borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+                borderBottom: "1px solid hsl(0 0% 91%)",
               }}
             >
               {[
@@ -647,8 +648,14 @@ const Dashboard = () => {
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="gap-1.5 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}
+                  className="gap-1.5 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground px-4 py-2"
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                  }}
                 >
                   <tab.icon className="w-3 h-3" />
                   {tab.label}
