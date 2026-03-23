@@ -516,8 +516,8 @@ const Settings = () => {
                             letterSpacing: "0.06em",
                             padding: "4px 10px",
                             borderRadius: 4,
-                            backgroundColor: "#111",
-                            color: "#fff",
+                            backgroundColor: isDark ? "#4ade80" : "#111",
+                            color: isDark ? "#111" : "#fff",
                           }}
                         >
                           PRO
