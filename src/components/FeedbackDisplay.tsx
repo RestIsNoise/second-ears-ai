@@ -972,51 +972,48 @@ const FeedbackDisplay = ({
                   <span
                     className="inline-flex items-center gap-2.5"
                     style={{
-                      padding: "5px 12px",
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.07)",
-                      borderRadius: 2,
+                      padding: "5px 10px",
+                      backgroundColor: "#fff0f0",
+                      borderRadius: 4,
                     }}
                   >
                      <span
-                      className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                      className="uppercase"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#cc0000" }}
                     >Issue</span>
-                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.topIssue}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#cc0000" }}>{n.topIssue}</span>
                   </span>
                 )}
                 {n.biggestWin && (
                   <span
                     className="inline-flex items-center gap-2.5"
                     style={{
-                      padding: "5px 12px",
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.07)",
-                      borderRadius: 2,
+                      padding: "5px 10px",
+                      backgroundColor: "#f0fff4",
+                      borderRadius: 4,
                     }}
                   >
                     <span
-                       className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                       className="uppercase"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#006622" }}
                     >Win</span>
-                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{n.biggestWin}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#006622" }}>{n.biggestWin}</span>
                   </span>
                 )}
                 {releaseReadiness && (
                   <span
                     className="inline-flex items-center gap-2.5"
                     style={{
-                      padding: "5px 12px",
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.07)",
-                      borderRadius: 2,
+                      padding: "5px 10px",
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: 4,
                     }}
                   >
                      <span
-                       className="text-foreground/50 uppercase tracking-[0.08em] font-medium"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
+                       className="uppercase"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#555" }}
                     >Release</span>
-                    <span className="text-[12.5px] font-normal text-foreground/75" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{releaseReadiness}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#555" }}>{releaseReadiness}</span>
                   </span>
                 )}
               </div>
