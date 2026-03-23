@@ -803,7 +803,8 @@ const FeedbackDisplay = ({
             variant="ghost"
             size="icon"
             onClick={onReset}
-            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-7 h-7 sm:w-8 sm:h-8"
+            className="shrink-0 w-7 h-7 sm:w-8 sm:h-8"
+            style={{ color: isDark ? "#666" : undefined }}
           >
             <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
