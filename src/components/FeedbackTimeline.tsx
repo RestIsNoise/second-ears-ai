@@ -141,70 +141,78 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              className="group relative w-full text-left cursor-pointer transition-all duration-100"
+              className="group cursor-pointer"
               style={{
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
+                background: isActive ? accent.bg : "hsl(0 0% 100%)",
+                border: `1px solid ${isActive ? accent.border : "hsl(0 0% 91%)"}`,
+                borderRadius: 8,
+                padding: 20,
+                marginBottom: 12,
+                transition: "box-shadow 0.2s, border-color 0.15s",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             >
-              {/* ═══ EVENT HEADER STRIP ═══ */}
-                <div
+              {/* ═══ CARD HEADER ROW ═══ */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Index */}
+                <span
+                  style={{ fontFamily: MONO, fontSize: 12, color: "hsl(0 0% 60%)", letterSpacing: "0.02em" }}
+                >
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+
+                {/* Timestamp */}
+                <span
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 16px",
-                    backgroundColor: isActive ? accent.bg : "hsl(var(--panel-header))",
-                    borderLeft: `3px solid ${accent.border}`,
-                    borderBottom: "1px solid hsl(var(--foreground) / 0.04)",
-                    borderTop: idx === 0 ? "none" : "1px solid hsl(var(--foreground) / 0.06)",
+                    fontFamily: MONO,
+                    fontSize: 12,
+                    color: "hsl(0 0% 60%)",
+                    backgroundColor: "hsl(0 0% 96%)",
+                    padding: "2px 6px",
+                    borderRadius: 3,
                   }}
                 >
-                  {/* Index */}
-                  <span
-                    className="text-foreground/22 font-medium shrink-0"
-                    style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.02em" }}
-                  >
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
+                  {formatTime(item.timestampSec)}
+                </span>
 
-                  {/* Timestamp */}
-                  <span
-                    className="text-foreground/55 tabular-nums font-medium shrink-0"
-                    style={{
-                      fontFamily: MONO,
-                      fontSize: 11,
-                      backgroundColor: "hsl(var(--foreground) / 0.04)",
-                      padding: "2px 5px",
-                      borderRadius: 2,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {formatTime(item.timestampSec)}
-                  </span>
+                {/* Severity badge */}
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.04em",
+                    padding: "3px 8px",
+                    borderRadius: 4,
+                    backgroundColor: item.severity === "high" ? "#fff0f0" : item.severity === "med" ? "#fff8e6" : "#f5f5f5",
+                    color: item.severity === "high" ? "#cc0000" : item.severity === "med" ? "#996600" : "#666",
+                    textTransform: "uppercase" as const,
+                  }}
+                >
+                  {sev.label}
+                </span>
 
-                {/* Severity LED + label */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <div
-                    className="w-[7px] h-[7px] rounded-full"
-                    style={{
-                      backgroundColor: sev.color,
-                      boxShadow: sev.glow,
-                    }}
-                  />
-                  <span
-                    className="font-medium uppercase tracking-[0.04em]"
-                    style={{
-                      fontFamily: MONO,
-                      fontSize: 10,
-                      color: sev.color,
-                    }}
-                  >
-                    {sev.label}
-                  </span>
-                </div>
+                {/* Mode tag */}
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 10,
+                    fontWeight: 500,
+                    letterSpacing: "0.06em",
+                    padding: "3px 8px",
+                    borderRadius: 3,
+                    backgroundColor: "#f0f0f0",
+                    color: "#333",
+                    textTransform: "uppercase" as const,
+                  }}
+                >
+                  {accent.tag}
+                </span>
 
-                {/* Vote buttons — always visible in header */}
+                {/* Vote buttons */}
                 {analysisId && (
                   <div className="shrink-0 ml-auto">
                     <FeedbackVoteButtons
@@ -216,24 +224,15 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   </div>
                 )}
 
-                {/* Mode tag */}
-                <span
-                  className={cn("text-foreground/25 font-medium uppercase tracking-[0.06em] shrink-0", !analysisId && "ml-auto")}
-                  style={{ fontFamily: MONO, fontSize: 11 }}
-                >
-                  {accent.tag}
-                </span>
-
                 {/* Hover actions */}
-                <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                <div className={cn("flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0", !analysisId && "ml-auto")}>
                   {onAddToDo && (
                     <button
                       onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
                       disabled={alreadyAdded}
-                      className={`inline-flex items-center text-[10px] uppercase tracking-wider font-medium transition-colors shrink-0 p-0.5 ${
+                      className={`inline-flex items-center p-0.5 transition-colors ${
                         alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
                       }`}
-                      style={{ fontFamily: MONO }}
                     >
                       {alreadyAdded ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                     </button>
@@ -242,75 +241,69 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 </div>
               </div>
 
-              {/* ═══ ISSUE BODY ═══ */}
-              <div
+              {/* ═══ TITLE ═══ */}
+              <h3
                 style={{
-                  padding: "16px 20px 20px 24px",
-                  borderLeft: `3px solid ${isActive ? accent.border : "hsl(var(--foreground) / 0.04)"}`,
-                  backgroundColor: isActive ? accent.bg : "transparent",
-                  transition: "background-color 0.1s, border-color 0.15s",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "hsl(0 0% 7%)",
+                  margin: "8px 0",
+                  lineHeight: 1.4,
                 }}
               >
-                {/* Title */}
-                <h3
-                  className="text-[17px] font-medium tracking-tight text-foreground/85 leading-snug"
-                  title={item.title}
+                {item.title}
+              </h3>
+
+              {/* ═══ DESCRIPTION ═══ */}
+              {item.observation && (
+                <p
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.7,
+                    color: "hsl(0 0% 33%)",
+                    fontFamily: MONO,
+                  }}
                 >
-                  {item.title}
-                </h3>
+                  {item.observation}
+                </p>
+              )}
 
-                {/* Observation */}
-                {item.observation && <ClampedObservation text={item.observation} />}
-
-                {/* ── FIX / ACTION BLOCK ── */}
-                {item.fix && (
+              {/* ═══ FIX BLOCK ═══ */}
+              {item.fix && (
+                <div
+                  style={{
+                    marginTop: 12,
+                    backgroundColor: "#f8f8f6",
+                    borderLeft: `3px solid ${accent.border}`,
+                    borderRadius: "0 6px 6px 0",
+                    padding: "12px 16px",
+                  }}
+                >
                   <div
-                    className="mt-4"
                     style={{
-                      backgroundColor: "hsl(var(--panel-bg))",
-                      border: "1px solid hsl(var(--foreground) / 0.05)",
-                      borderLeft: `2px solid ${accent.border}`,
-                      borderRadius: "0 2px 2px 0",
-                      padding: "12px 14px",
-                      boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
+                      fontFamily: MONO,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: "0.1em",
+                      color: "hsl(0 0% 7%)",
+                      marginBottom: 6,
+                      textTransform: "uppercase" as const,
                     }}
                   >
-                    <div className="flex items-start gap-3">
-                      <span
-                        className="shrink-0 mt-[2px] inline-flex items-center"
-                        style={{
-                          fontFamily: MONO,
-                          fontSize: 11,
-                          fontWeight: 600,
-                          letterSpacing: "0.06em",
-                          lineHeight: 1,
-                          padding: "3px 7px",
-                          backgroundColor: accent.border,
-                          color: "hsl(0 0% 100%)",
-                          borderRadius: 1,
-                        }}
-                      >
-                        {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
-                      </span>
-                      <p
-                        className="text-[15px] text-foreground/65"
-                        style={{ lineHeight: 1.75, fontFamily: MONO }}
-                      >
-                        {item.fix}
-                      </p>
-                    </div>
+                    {item.mode === "musical" ? "ARR" : item.mode === "perception" ? "SYS" : "FIX"}
                   </div>
-                )}
-
-              </div>
-
-              {/* Bottom separator — heavier groove between events */}
-              <div
-                style={{
-                  height: 2,
-                  background: "linear-gradient(to bottom, hsl(var(--foreground) / 0.06), hsl(0 0% 100% / 0.02))",
-                }}
-              />
+                  <p
+                    style={{
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      color: "hsl(0 0% 27%)",
+                      fontFamily: MONO,
+                    }}
+                  >
+                    {item.fix}
+                  </p>
+                </div>
+              )}
             </div>
           );
         })}
