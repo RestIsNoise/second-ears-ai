@@ -91,19 +91,35 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                  <Avatar className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}>
+                  <Avatar
+                    className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
+                    style={{ border: "1px solid #e0e0e0" }}
+                  >
                     {(profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture) && (
                       <AvatarImage src={profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture} alt="Avatar" />
                     )}
-                    <AvatarFallback className="text-xs font-medium">{initials}</AvatarFallback>
+                    <AvatarFallback
+                      style={{ background: "#111", color: "#fff", fontSize: 13, fontWeight: 600 }}
+                    >
+                      {initials}
+                    </AvatarFallback>
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent
+                align="end"
+                style={{
+                  background: "#ffffff",
+                  border: "1px solid #e8e8e8",
+                  borderRadius: 6,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  minWidth: 160,
+                }}
+              >
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
                     <LayoutDashboard className="w-4 h-4" />
-                    My Projects
+                    Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -112,6 +128,7 @@ const Header = () => {
                     Settings
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer">
                   <LogOut className="w-4 h-4" />
                   Sign out
