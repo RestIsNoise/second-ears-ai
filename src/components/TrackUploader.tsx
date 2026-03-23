@@ -321,17 +321,17 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           className="w-full focus:outline-none"
           style={{
             height: 48,
-            border: "1px solid #ddd",
+            border: isDark ? "1px solid #333" : "1px solid #ddd",
             borderRadius: 6,
             fontSize: 14,
             padding: "0 16px",
-            backgroundColor: "#ffffff",
-            color: "#333",
+            backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+            color: isDark ? "#e8e8e0" : "#333",
             fontFamily: "'IBM Plex Mono', monospace",
             transition: "border-color 0.15s, box-shadow 0.15s",
           }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.04)"; }}
-          onBlur={(e) => { e.currentTarget.style.borderColor = "#ddd"; e.currentTarget.style.boxShadow = "none"; }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.boxShadow = isDark ? "0 0 0 2px rgba(255,255,255,0.06)" : "0 0 0 2px rgba(0,0,0,0.04)"; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.boxShadow = "none"; }}
         />
         <p className="text-[9px] text-foreground/30 mt-1 ml-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Optional: references, goals, or specific concerns.</p>
       </div>
