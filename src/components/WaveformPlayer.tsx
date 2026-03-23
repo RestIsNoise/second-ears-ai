@@ -423,8 +423,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
                 style={{
                   fontFamily: MONO,
                   fontSize: 10,
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.40)",
+                  letterSpacing: "0.1em",
+                  color: "#888",
                   fontWeight: 500,
                 }}
               >
