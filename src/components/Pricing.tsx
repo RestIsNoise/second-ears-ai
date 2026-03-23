@@ -180,7 +180,7 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[10px] tracking-[0.12em] uppercase mb-3",
-                      plan.featured ? "opacity-35" : "text-muted-foreground/40"
+                      plan.featured ? "opacity-35" : "text-muted-foreground/60"
                     )}
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
@@ -194,7 +194,7 @@ const Pricing = () => {
                       <span
                         className={cn(
                           "text-[11px]",
-                          plan.featured ? "opacity-25" : "text-muted-foreground/30"
+                          plan.featured ? "opacity-25" : "text-muted-foreground/45"
                         )}
                       >
                         {plan.period}
@@ -204,7 +204,7 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[11.5px] mt-2 leading-relaxed",
-                      plan.featured ? "opacity-40" : "text-muted-foreground/45"
+                      plan.featured ? "opacity-40" : "text-muted-foreground/60"
                     )}
                   >
                     {plan.description}
