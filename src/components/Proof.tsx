@@ -57,7 +57,7 @@ const Proof = () => {
               className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase shrink-0"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
-              Specifics
+              What's included
             </p>
             <div className="h-px w-12" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
           </div>
