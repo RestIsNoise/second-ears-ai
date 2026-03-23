@@ -234,17 +234,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                 )}
 
                 {/* Hover actions */}
-                <div className={cn("flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0", !analysisId && "ml-auto")}>
+                <div className={cn("flex items-center gap-1.5 shrink-0", !analysisId && "ml-auto", !alreadyAdded && "opacity-0 group-hover:opacity-100 transition-opacity")}>
                   {onAddToDo && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
-                      disabled={alreadyAdded}
-                      className={`inline-flex items-center p-0.5 transition-colors ${
-                        alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
-                      }`}
-                    >
-                      {alreadyAdded ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                    </button>
+                    <ToDoToggleButton
+                      item={item}
+                      alreadyAdded={!!alreadyAdded}
+                      onAdd={onAddToDo}
+                      onRemove={onRemoveToDo}
+                    />
                   )}
                   <CopyFixInline item={item} />
                 </div>
