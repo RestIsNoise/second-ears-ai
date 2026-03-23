@@ -72,7 +72,29 @@ const modeFixOneLabel: Record<string, string> = {
   perception: "Urgent fix",
 };
 
-// ... keep existing code
+/** Keyboard shortcut hint badge */
+const KbdHint = ({ children }: { children: React.ReactNode }) => {
+  const dk = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+  return (
+    <span
+      style={{
+        fontFamily: "monospace",
+        fontSize: 9,
+        color: dk ? "#555" : "#666",
+        background: dk ? "#222" : "#f0f0ee",
+        border: dk ? "1px solid #333" : "1px solid #e0e0e0",
+        padding: "1px 4px",
+        borderRadius: 2,
+        lineHeight: 1,
+        userSelect: "none",
+      }}
+    >
+      {children}
+    </span>
+  );
+};
+
+/** Small copy button component */
 const CopyFixButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
 
