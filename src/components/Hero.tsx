@@ -160,11 +160,12 @@ const Hero = () => {
 
             {/* Screenshot frame with scroll-linked scale */}
             <div
-              className="relative w-full max-w-[1200px] rounded-xl border overflow-hidden shadow-2xl"
+              className="relative w-full rounded-xl border shadow-2xl"
               style={{
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
                 transition: "transform 50ms linear",
+                maxWidth: "700px",
               }}
             >
               {/* Window dots bar */}
@@ -181,11 +182,11 @@ const Hero = () => {
               </div>
 
               {/* Screenshot */}
-              <div className="w-full overflow-hidden" style={{ height: "520px" }}>
+              <div className="w-full">
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="w-full h-full block object-cover object-top"
+                  className="w-full h-auto block object-contain"
                   loading="eager"
                 />
               </div>
