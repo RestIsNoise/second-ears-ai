@@ -274,6 +274,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ FIX BLOCK ═══ */}
               {item.fix && (
                 <div
+                  className="dark:bg-[#1a1a1a]"
                   style={{
                     marginTop: 12,
                     backgroundColor: "#f8f8f6",
