@@ -118,6 +118,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                       fontSize: 11,
                       letterSpacing: "0.06em",
                       color: isActive ? "hsl(0 0% 100%)" : "hsl(0 0% 40%)",
+                      fontWeight: isActive ? 600 : 500,
                       lineHeight: 1.1,
                     }}
                   >
