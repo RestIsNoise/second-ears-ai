@@ -130,7 +130,7 @@ const ListeningModes = () => {
                 >
                   {mode.name}
                 </h3>
-                <p className="text-[11.5px] text-muted-foreground/45 leading-[1.65] mt-2">
+                <p className="text-[11.5px] leading-[1.65] mt-2" style={{ color: isDark ? "#aaa" : undefined }}>
                   {mode.description}
                 </p>
               </div>

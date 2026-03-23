@@ -9,7 +9,9 @@ const trustItems = [
   { icon: FileAudio, label: "WAV · MP3 · FLAC supported" },
 ];
 
-const PricingPage = () => (
+const PricingPage = () => {
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-14">
@@ -19,9 +21,9 @@ const PricingPage = () => (
           <div
             key={item.label}
             className="flex items-center gap-2 text-[11px] tracking-wide"
-            style={{ color: "#999" }}
+            style={{ color: isDark ? "#555" : "#999" }}
           >
-            <item.icon className="w-3.5 h-3.5 shrink-0" style={{ color: "#bbb" }} strokeWidth={1.5} />
+            <item.icon className="w-3.5 h-3.5 shrink-0" style={{ color: isDark ? "#555" : "#bbb" }} strokeWidth={1.5} />
             {item.label}
           </div>
         ))}
@@ -29,6 +31,7 @@ const PricingPage = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default PricingPage;

@@ -105,8 +105,8 @@ const Pricing = () => {
           <div className="flex items-center justify-center gap-3 mb-4">
             <span className="w-1 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.12)" }} />
             <p
-              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              className="text-[10px] tracking-[0.2em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
             >
               Simple pricing
             </p>

@@ -120,8 +120,8 @@ const Proof = () => {
                     key={item}
                     className="flex items-start gap-3 text-[13px] leading-[1.6] py-2"
                     style={{
-                      color: "hsl(0 0% 40%)",
-                      borderTop: j > 0 ? "1px solid hsl(0 0% 94%)" : "none",
+                      color: isDark ? "#888" : "hsl(0 0% 40%)",
+                      borderTop: j > 0 ? `1px solid ${isDark ? "#2a2a2a" : "hsl(0 0% 94%)"}` : "none",
                     }}
                   >
                     <span
