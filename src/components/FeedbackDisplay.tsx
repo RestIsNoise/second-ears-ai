@@ -153,6 +153,7 @@ const FeedbackDisplay = ({
   projectId?: string | null;
 }) => {
   const { user } = useAuth();
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   const navigate = useNavigate();
   const n = result.normalized;
   const { mode } = n;
