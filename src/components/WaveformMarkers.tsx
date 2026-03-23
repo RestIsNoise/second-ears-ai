@@ -288,12 +288,11 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
       style={{ height: MARKER_ZONE_HEIGHT, overflow: "visible" }}
     >
       {/* AI markers */}
-      {aiMarkers.slice(0, 6).map((m) => {
+      {aiMarkers.slice(0, 6).map((m, idx) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
         const leftPct = (m.time / duration) * 100;
-        const type = m.type || "technical";
-        const colors = markerTypeColor[type];
+        const highlighted = isActive || isSnapped;
 
         return (
           <div
@@ -319,17 +318,26 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
                 onClick={() => onMarkerClick?.(m)}
                 className="flex items-center justify-center rounded-full transition-all duration-150"
                 style={{
-                  width: isActive || isSnapped ? 30 : 26,
-                  height: isActive || isSnapped ? 30 : 26,
-                  backgroundColor: isActive ? colors.border : colors.bg,
-                  border: `1.5px solid ${isActive ? colors.text : isSnapped ? colors.border : colors.border}`,
-                  color: isActive || isSnapped ? colors.text : colors.icon,
-                  boxShadow: isActive ? `0 0 10px ${colors.bg}` : `0 1px 4px rgba(0,0,0,0.4)`,
+                  width: 18,
+                  height: 18,
+                  backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.15)",
+                  border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.3)"}`,
+                  boxShadow: highlighted ? "0 0 8px rgba(255,255,255,0.15)" : "0 1px 3px rgba(0,0,0,0.4)",
                   backdropFilter: "blur(4px)",
                 }}
                 aria-label={`${formatTime(m.time)} — ${m.label}`}
               >
-                {markerTypeIcon[type]}
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 9,
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    lineHeight: 1,
+                  }}
+                >
+                  {idx + 1}
+                </span>
               </button>
             </MarkerTooltip>
           </div>
