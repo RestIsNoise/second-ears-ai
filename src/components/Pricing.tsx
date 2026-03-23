@@ -211,8 +211,9 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[11.5px] mt-2 leading-relaxed",
-                      plan.featured ? "opacity-40" : "text-muted-foreground/60"
+                      plan.featured ? "opacity-40" : ""
                     )}
+                    style={{ color: !plan.featured ? (isDark ? "#999" : undefined) : undefined }}
                   >
                     {plan.description}
                   </p>
