@@ -46,6 +46,7 @@ interface Props {
   onProgressStep?: (step: number) => void;
   onError?: (msg: string) => void;
   defaultMode?: ListeningMode;
+  onTrackName?: (name: string) => void;
 }
 
 const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode }: Props) => {
