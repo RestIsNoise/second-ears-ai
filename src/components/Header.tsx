@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -26,6 +26,8 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -45,6 +47,28 @@ const Header = () => {
       setAvatarError(false);
     }
   }, [user, profile]);
+
+  // Handle hash-based nav links: smooth scroll if on landing, navigate otherwise
+  const handleHashLink = useCallback((href: string) => {
+    const hash = href.replace("/#", "");
+    if (location.pathname === "/") {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/" + "#" + hash);
+    }
+    setMobileOpen(false);
+  }, [location.pathname, navigate]);
+
+  // On landing page load with hash, scroll to section
+  useEffect(() => {
+    if (location.pathname === "/" && location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [location]);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
@@ -97,9 +121,9 @@ const Header = () => {
                 {item.label}
               </Link>
             ) : (
-              <a key={item.label} href={item.href} className="text-foreground/40 hover:text-foreground transition-colors">
+              <button key={item.label} onClick={() => handleHashLink(item.href)} className="text-foreground/40 hover:text-foreground transition-colors">
                 {item.label}
-              </a>
+              </button>
             )
           )}
         </nav>
@@ -198,14 +222,13 @@ const Header = () => {
                 {item.label}
               </Link>
             ) : (
-              <a
+              <button
                 key={item.label}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1"
+                onClick={() => handleHashLink(item.href)}
+                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1 text-left w-full"
               >
                 {item.label}
-              </a>
+              </button>
             )
           )}
         </div>
