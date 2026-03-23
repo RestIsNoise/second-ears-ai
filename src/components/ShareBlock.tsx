@@ -29,6 +29,7 @@ interface ShareBlockProps {
 
 const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
   const { user } = useAuth();
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
   const [isPublic, setIsPublic] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
