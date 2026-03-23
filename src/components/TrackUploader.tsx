@@ -273,29 +273,29 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className="cursor-pointer flex flex-col items-center justify-center gap-3 select-none transition-all duration-100"
+        className="cursor-pointer flex flex-col items-center justify-center gap-3 select-none transition-all duration-150"
         style={{
+          minHeight: 160,
           padding: "40px 24px",
-          backgroundColor: dragOver ? "hsl(var(--panel-content))" : file ? "hsl(var(--card))" : "hsl(var(--card))",
-          border: dragOver ? "2px dashed hsl(var(--foreground) / 0.25)" : file ? "2px solid hsl(var(--foreground) / 0.15)" : "2px dashed hsl(var(--foreground) / 0.1)",
-          borderRadius: 3,
-          boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+          backgroundColor: file ? "hsl(var(--card))" : "hsl(var(--card))",
+          border: dragOver ? "2px dashed #111" : file ? "2px solid hsl(var(--foreground) / 0.15)" : "2px dashed #d0d0d0",
+          borderRadius: 6,
         }}
       >
         {file ? (
           <>
-            <Music className="w-6 h-6 text-foreground/50" />
+            <Music className="w-10 h-10 text-foreground/50" />
             <div className="text-center">
-              <p className="text-[12px] font-semibold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
-              <p className="text-[10px] text-muted-foreground mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p className="font-medium" style={{ fontSize: 16, fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
+              <p style={{ fontSize: 13, color: "#999", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
-            <Upload className="w-6 h-6 text-foreground/30" />
+            <Upload className="w-10 h-10 text-foreground/30" />
             <div className="text-center">
-              <p className="text-[12px] text-foreground/60 font-medium" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
-              <p className="text-[10px] text-foreground/30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
+              <p className="font-medium" style={{ fontSize: 16, fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
+              <p style={{ fontSize: 13, color: "#999", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
