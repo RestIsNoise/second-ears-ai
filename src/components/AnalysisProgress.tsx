@@ -7,10 +7,9 @@ const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 const statusMessages = [
   "Uploading track...",
   "Running spectral analysis...",
-  "Measuring loudness...",
+  "Measuring loudness and dynamics...",
   "Analyzing frequency balance...",
-  "Generating feedback...",
-  "Almost there...",
+  "Generating your feedback...",
 ];
 
 interface AnalysisProgressProps {
@@ -19,9 +18,10 @@ interface AnalysisProgressProps {
   onRetry: () => void;
   onCancel?: () => void;
   trackName?: string;
+  complete?: boolean;
 }
 
-const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: AnalysisProgressProps) => {
+const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, complete }: AnalysisProgressProps) => {
   const [msgIdx, setMsgIdx] = useState(0);
   const [msgVisible, setMsgVisible] = useState(true);
   const [started, setStarted] = useState(false);
@@ -80,6 +80,11 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
     );
   }
 
+  const barWidth = complete ? "100%" : started ? "85%" : "5%";
+  const barTransition = complete
+    ? "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
+    : "width 90s cubic-bezier(0.1, 0, 0.3, 1)";
+
   return (
     <div
       className="fixed inset-0 z-40 flex flex-col items-center justify-center"
@@ -89,11 +94,11 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
       {trackName && (
         <p
           style={{
-            fontFamily: "monospace",
+            fontFamily: MONO,
             fontSize: 12,
             color: "hsl(0 0% 40%)",
             letterSpacing: "0.1em",
-            textTransform: "uppercase" as const,
+            textTransform: "uppercase",
             marginBottom: 40,
           }}
         >
@@ -101,29 +106,41 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
         </p>
       )}
 
-      {/* Pulsing bars */}
+      {/* Pulsing bars — 7 bars, 4px wide, 12–48px height range */}
       <div className="flex items-center gap-[6px]" style={{ height: 48 }}>
-        {[0, 150, 300, 450, 600].map((delay, i) => (
+        {[0, 120, 240, 360, 480, 600, 720].map((delay, i) => (
           <div
             key={i}
             style={{
-              width: 3,
+              width: 4,
               borderRadius: 2,
-              background: "hsl(48 10% 90%)",
+              background: "#e8e8e0",
               animation: `analysis-pulse 1.2s ease-in-out ${delay}ms infinite alternate`,
             }}
           />
         ))}
       </div>
 
+      {/* Step counter */}
+      <p
+        style={{
+          fontFamily: MONO,
+          fontSize: 10,
+          color: "#444",
+          marginTop: 32,
+          marginBottom: 8,
+        }}
+      >
+        {msgIdx + 1} / {statusMessages.length}
+      </p>
+
       {/* Status message */}
       <p
         style={{
-          fontFamily: "monospace",
+          fontFamily: MONO,
           fontSize: 14,
           color: "hsl(0 0% 53%)",
-          textAlign: "center" as const,
-          marginTop: 32,
+          textAlign: "center",
           opacity: msgVisible ? 1 : 0,
           transition: "opacity 0.4s ease",
           minHeight: 20,
@@ -136,16 +153,20 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
       {onCancel && (
         <button
           onClick={onCancel}
-          className="mt-10"
           style={{
-            fontFamily: "monospace",
+            fontFamily: MONO,
             fontSize: 11,
-            color: "hsl(0 0% 30%)",
-            letterSpacing: "0.04em",
+            color: "#444",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            marginTop: 24,
             transition: "color 0.15s",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "hsl(0 0% 55%)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "hsl(0 0% 30%)"; }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "#888"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "#444"; }}
         >
           Cancel
         </button>
@@ -159,9 +180,9 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
         <div
           style={{
             height: "100%",
-            background: "hsl(48 10% 90%)",
-            width: started ? "85%" : "0%",
-            transition: "width 90s linear",
+            background: "#e8e8e0",
+            width: barWidth,
+            transition: barTransition,
           }}
         />
       </div>
@@ -169,8 +190,8 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName }: 
       {/* Keyframes */}
       <style>{`
         @keyframes analysis-pulse {
-          0% { height: 8px; }
-          100% { height: 40px; }
+          0% { height: 12px; }
+          100% { height: 48px; }
         }
       `}</style>
     </div>
