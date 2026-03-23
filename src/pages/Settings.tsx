@@ -142,6 +142,7 @@ const Settings = () => {
         .eq("id", user.id);
       if (updateErr) throw updateErr;
       setAvatarUrl(publicUrl);
+      setAvatarError(false);
       await refreshProfile();
       toast({ title: "Avatar updated", duration: 1500 });
     } catch (err) {
