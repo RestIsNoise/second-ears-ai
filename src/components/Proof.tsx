@@ -118,7 +118,7 @@ const Proof = () => {
               </div>
 
               {/* Items */}
-              <div className="px-5 py-4">
+              <div className="px-7 py-5">
                 <ul className="space-y-0">
                   {block.items.map((item, j) => (
                     <li
