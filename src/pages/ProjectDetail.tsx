@@ -9,9 +9,17 @@ import NewVersionModal from "@/components/NewVersionModal";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
 import type { FeedbackResult } from "@/pages/Analyze";
 import type { VersionInfo } from "@/components/VersionPills";
-import { ArrowLeft, Plus, CheckCircle2, Circle, Eye, Activity } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, Circle, Eye, Activity, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
+
+const modeColors: Record<string, { bg: string; text: string }> = {
+  technical: { bg: "hsl(35 50% 52% / 0.12)", text: "hsl(35 50% 45%)" },
+  musical: { bg: "hsl(215 40% 52% / 0.12)", text: "hsl(215 40% 45%)" },
+  perception: { bg: "hsl(280 35% 52% / 0.12)", text: "hsl(280 35% 45%)" },
+};
 
 interface AnalysisRow {
   id: string;
