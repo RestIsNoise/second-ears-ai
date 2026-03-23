@@ -144,6 +144,21 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
           >
             <Share2 className="w-3.5 h-3.5" strokeWidth={2} />
             Share
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 9,
+                color: isDark ? "#555" : "#666",
+                background: isDark ? "#222" : "#f0f0ee",
+                border: isDark ? "1px solid #333" : "1px solid #e0e0e0",
+                padding: "1px 4px",
+                borderRadius: 2,
+                lineHeight: 1,
+                marginLeft: 4,
+              }}
+            >
+              S
+            </span>
           </button>
 
           {popoverOpen && (
