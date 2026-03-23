@@ -103,13 +103,14 @@ const ListeningModes = () => {
               >
                 <div className="flex items-center justify-between mb-3.5">
                   <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center reveal-pop"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center reveal-pop group-hover:scale-110"
                     style={{
                       "--stagger": `${220 + i * 120}ms`,
                       background: "hsl(var(--surface-b))",
                       border: "1px solid hsl(var(--border-subtle) / 0.5)",
                       boxShadow:
                         "inset 0 1px 0 hsl(0 0% 100% / 0.6), inset 0 -1px 0 hsl(0 0% 0% / 0.03), 0 1px 3px hsl(0 0% 0% / 0.06)",
+                      transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                     } as React.CSSProperties}
                   >
                     <mode.icon className="w-4 h-4 text-foreground/50" strokeWidth={1.5} />
