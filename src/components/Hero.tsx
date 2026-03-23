@@ -132,7 +132,7 @@ const Hero = () => {
                 }}
                 onClick={() =>
                   document
-                    .getElementById("demo")
+                    .getElementById("demo-section")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
               >
