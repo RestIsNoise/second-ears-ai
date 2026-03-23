@@ -64,6 +64,7 @@ const Pricing = () => {
   const { ref, isVisible } = useScrollReveal();
   const navigate = useNavigate();
   const [proLoading, setProLoading] = useState(false);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   const handleStartPro = async () => {
     setProLoading(true);
@@ -104,8 +105,8 @@ const Pricing = () => {
           <div className="flex items-center justify-center gap-3 mb-4">
             <span className="w-1 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.12)" }} />
             <p
-              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              className="text-[10px] tracking-[0.2em] uppercase"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
             >
               Simple pricing
             </p>
@@ -132,17 +133,19 @@ const Pricing = () => {
                   background: plan.featured
                     ? "hsl(0 0% 6%)"
                     : plan.comingSoon
-                      ? "hsl(var(--card))"
-                      : "#f5f5f3",
-                  color: plan.featured ? "hsl(0 0% 92%)" : undefined,
+                      ? (isDark ? "#111" : "hsl(var(--card))")
+                      : (isDark ? "#1a1a1a" : "#f5f5f3"),
+                  color: plan.featured ? "hsl(0 0% 92%)" : (isDark ? "#ccc" : undefined),
                   border: plan.comingSoon
-                    ? "1px solid #ddd"
+                    ? (isDark ? "1px solid #2a2a2a" : "1px solid #ddd")
                     : plan.featured
                       ? "1px solid hsl(0 0% 14%)"
-                      : "1px solid #ddd",
+                      : (isDark ? "1px solid #333" : "1px solid #ddd"),
                   boxShadow: plan.featured
                     ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
-                    : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+                    : isDark
+                      ? "none"
+                      : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
                   opacity: plan.comingSoon ? 0.75 : 1,
@@ -180,9 +183,9 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[10px] tracking-[0.12em] uppercase mb-3",
-                      plan.featured ? "opacity-35" : "text-muted-foreground/60"
+                      plan.featured ? "opacity-35" : ""
                     )}
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", color: !plan.featured ? (isDark ? "#777" : undefined) : undefined }}
                   >
                     {plan.name}
                   </p>
@@ -197,8 +200,9 @@ const Pricing = () => {
                       <span
                         className={cn(
                           "text-[11px]",
-                          plan.featured ? "opacity-25" : "text-muted-foreground/45"
+                          plan.featured ? "opacity-25" : ""
                         )}
+                        style={{ color: !plan.featured ? (isDark ? "#777" : undefined) : undefined }}
                       >
                         {plan.period}
                       </span>
@@ -207,8 +211,9 @@ const Pricing = () => {
                   <p
                     className={cn(
                       "text-[11.5px] mt-2 leading-relaxed",
-                      plan.featured ? "opacity-40" : "text-muted-foreground/60"
+                      plan.featured ? "opacity-40" : ""
                     )}
+                    style={{ color: !plan.featured ? (isDark ? "#999" : undefined) : undefined }}
                   >
                     {plan.description}
                   </p>

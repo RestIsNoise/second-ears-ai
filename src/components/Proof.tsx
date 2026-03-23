@@ -38,7 +38,7 @@ const blocks = [
 
 const Proof = () => {
   const { ref, isVisible } = useScrollReveal();
-
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
   return (
     <section
       ref={ref}
@@ -54,8 +54,8 @@ const Proof = () => {
           <div className="flex items-center gap-4 justify-center mb-5">
             <div className="h-px w-12" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
             <p
-              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase shrink-0"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              className="text-[10px] tracking-[0.2em] uppercase shrink-0"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
             >
               What's included
             </p>
@@ -77,8 +77,8 @@ const Proof = () => {
               className="relative reveal-child"
               style={{
                 "--stagger": `${150 + i * 120}ms`,
-                background: "hsl(0 0% 100%)",
-                border: "1px solid hsl(0 0% 91%)",
+                background: isDark ? "#1a1a1a" : "hsl(0 0% 100%)",
+                border: isDark ? "1px solid #2a2a2a" : "1px solid hsl(0 0% 91%)",
                 borderRadius: 8,
                 padding: 28,
               } as React.CSSProperties}
@@ -108,7 +108,7 @@ const Proof = () => {
                 >
                   <block.icon className="w-3 h-3 text-foreground/50" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-foreground/85">
+                <h3 className="text-[16px] font-semibold tracking-[-0.01em]" style={{ color: isDark ? "#e8e8e0" : "hsl(var(--foreground) / 0.85)" }}>
                   {block.title}
                 </h3>
               </div>
@@ -120,8 +120,8 @@ const Proof = () => {
                     key={item}
                     className="flex items-start gap-3 text-[13px] leading-[1.6] py-2"
                     style={{
-                      color: "hsl(0 0% 40%)",
-                      borderTop: j > 0 ? "1px solid hsl(0 0% 94%)" : "none",
+                      color: isDark ? "#888" : "hsl(0 0% 40%)",
+                      borderTop: j > 0 ? `1px solid ${isDark ? "#2a2a2a" : "hsl(0 0% 94%)"}` : "none",
                     }}
                   >
                     <span

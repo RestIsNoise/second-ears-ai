@@ -30,6 +30,7 @@ const modes = [
 
 const ListeningModes = () => {
   const { ref, isVisible } = useScrollReveal();
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <section
@@ -56,8 +57,8 @@ const ListeningModes = () => {
         {/* Right-aligned heading */}
         <div className="md:text-right mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
-            className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase mb-3"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            className="text-[10px] tracking-[0.2em] uppercase mb-3"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
           >
             Three perspectives
           </p>
@@ -76,24 +77,25 @@ const ListeningModes = () => {
               className="relative rounded-lg overflow-hidden flex flex-col reveal-child group cursor-pointer"
               style={{
                 "--stagger": `${100 + i * 120}ms`,
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle))",
+                background: isDark ? "#1a1a1a" : "hsl(var(--card))",
+                border: isDark ? "1px solid #2a2a2a" : "1px solid hsl(var(--border-subtle))",
                 minHeight: 280,
-                boxShadow:
-                  "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
+                boxShadow: isDark
+                  ? "none"
+                  : "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
                 transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
               } as React.CSSProperties}
               onMouseEnter={(e) => {
                 const el = e.currentTarget;
                 el.style.transform = "translateY(-4px)";
-                el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.08)";
-                el.style.borderColor = "hsl(0 0% 60%)";
+                el.style.boxShadow = isDark ? "0 8px 24px rgba(0,0,0,0.3)" : "0 8px 24px rgba(0,0,0,0.08)";
+                el.style.borderColor = isDark ? "#555" : "hsl(0 0% 60%)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget;
                 el.style.transform = "translateY(0)";
-                el.style.boxShadow = "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)";
-                el.style.borderColor = "";
+                el.style.boxShadow = isDark ? "none" : "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)";
+                el.style.borderColor = isDark ? "#2a2a2a" : "";
               }}
             >
               {/* Panel header */}
@@ -123,12 +125,12 @@ const ListeningModes = () => {
                   </span>
                 </div>
                 <h3
-                  className="text-[18px] text-foreground/85 uppercase"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 600 }}
+                  className="text-[18px] uppercase"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 600, color: isDark ? "#e8e8e0" : "hsl(var(--foreground) / 0.85)" }}
                 >
                   {mode.name}
                 </h3>
-                <p className="text-[11.5px] text-muted-foreground/45 leading-[1.65] mt-2">
+                <p className="text-[11.5px] leading-[1.65] mt-2" style={{ color: isDark ? "#aaa" : undefined }}>
                   {mode.description}
                 </p>
               </div>

@@ -9,6 +9,7 @@ const items = [
 
 const TrustStrip = () => {
   const { ref, isVisible } = useScrollReveal();
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <section
@@ -22,10 +23,10 @@ const TrustStrip = () => {
         {items.map((item, i) => (
           <div
             key={item.label}
-            className="flex items-center gap-2 text-[11px] text-muted-foreground/50 tracking-wide reveal-child"
-            style={{ "--stagger": `${i * 90}ms` } as React.CSSProperties}
+            className="flex items-center gap-2 text-[11px] tracking-wide reveal-child"
+            style={{ "--stagger": `${i * 90}ms`, color: isDark ? "#555" : undefined } as React.CSSProperties}
           >
-            <item.icon className="w-3.5 h-3.5 shrink-0 text-muted-foreground/35" strokeWidth={1.5} />
+            <item.icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} style={{ color: isDark ? "#555" : undefined }} />
             {item.label}
           </div>
         ))}
