@@ -133,19 +133,19 @@ const Pricing = () => {
                     ? "hsl(0 0% 6%)"
                     : plan.comingSoon
                       ? "hsl(var(--card))"
-                      : "hsl(40 10% 96%)",
+                      : "#f5f5f3",
                   color: plan.featured ? "hsl(0 0% 92%)" : undefined,
                   border: plan.comingSoon
-                    ? "1px solid hsl(var(--border-subtle) / 0.5)"
+                    ? "1px solid #ddd"
                     : plan.featured
                       ? "1px solid hsl(0 0% 14%)"
-                      : "1px solid hsl(30 5% 82%)",
+                      : "1px solid #ddd",
                   boxShadow: plan.featured
                     ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
                     : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
-                  opacity: plan.comingSoon ? 0.65 : 1,
+                  opacity: plan.comingSoon ? 0.75 : 1,
                 } as React.CSSProperties}
               >
                 {/* Badge */}
@@ -154,10 +154,10 @@ const Pricing = () => {
                     className="text-center py-1.5"
                     style={{
                       background: plan.comingSoon
-                        ? "hsl(var(--foreground) / 0.04)"
+                        ? "hsl(0 0% 10%)"
                         : "hsl(0 0% 100% / 0.06)",
                       borderBottom: plan.comingSoon
-                        ? "1px solid hsl(var(--border-subtle) / 0.15)"
+                        ? "1px solid hsl(0 0% 20%)"
                         : "1px solid hsl(0 0% 100% / 0.06)",
                     }}
                   >
@@ -166,7 +166,7 @@ const Pricing = () => {
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
                         color: plan.comingSoon
-                          ? "hsl(var(--muted-foreground) / 0.5)"
+                          ? "hsl(0 0% 100%)"
                           : "hsl(0 0% 100% / 0.5)",
                       }}
                     >
