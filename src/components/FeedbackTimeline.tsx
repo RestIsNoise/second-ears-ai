@@ -143,6 +143,9 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               onClick={() => onItemClick(item)}
               className="group cursor-pointer"
               style={{
+                opacity: 0,
+                transform: "translateY(12px)",
+                animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
                 background: isActive ? accent.bg : "hsl(0 0% 100%)",

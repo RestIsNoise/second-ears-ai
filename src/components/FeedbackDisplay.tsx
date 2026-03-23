@@ -565,7 +565,7 @@ const FeedbackDisplay = ({
                   {n.timelineItems.map((item, i) => {
                     const copyText = `${item.title}\nWhy: ${item.description}\n${item.actionLabel}: ${item.actionText}`;
                     return (
-                      <div key={i} className="group relative rounded-lg border-l-2 border-l-amber-400 border border-border-subtle p-4 bg-background">
+                      <div key={i} className="group relative rounded-lg border-l-2 border-l-amber-400 border border-border-subtle p-4 bg-background" style={{ opacity: 0, transform: "translateY(12px)", animation: `fixFadeUp 0.35s ease forwards ${i * 80}ms` }}>
                         <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <CopyFixButton text={copyText} />
                         </div>
