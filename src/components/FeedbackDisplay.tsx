@@ -144,6 +144,7 @@ const FeedbackDisplay = ({
   analysisId,
   versions,
   projectId,
+  audioUnavailableMessage,
 }: {
   result: FeedbackResult;
   onReset: () => void;
@@ -151,6 +152,7 @@ const FeedbackDisplay = ({
   analysisId?: string | null;
   versions?: VersionInfo[];
   projectId?: string | null;
+  audioUnavailableMessage?: string;
 }) => {
   const { user } = useAuth();
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
