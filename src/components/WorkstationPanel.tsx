@@ -21,7 +21,7 @@ interface Props {
   headerExtra?: React.ReactNode;
 }
 
-const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
+const WorkstationPanel = ({ id, title, onClose, children, headerExtra }: Props) => {
   const panelSizing = PANEL_SIZING[id] ?? { flex: 1, minWidth: 220 };
 
   return (
