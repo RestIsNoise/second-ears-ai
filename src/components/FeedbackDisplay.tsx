@@ -507,7 +507,52 @@ const FeedbackDisplay = ({
     [timelineItems, activeItemId]
   );
 
-  // Release readiness from metrics
+  // ── Keyboard shortcuts ──
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (waveformRef.current?.isPlaying()) {
+          waveformRef.current.pause();
+        } else {
+          waveformRef.current?.play();
+        }
+      }
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        if (timelineItems.length === 0) return;
+        const sorted = [...timelineItems].sort((a, b) => a.timestampSec - b.timestampSec);
+        const currentIdx = sorted.findIndex((item) => item.id === activeItemId);
+        let nextIdx: number;
+        if (e.key === "ArrowLeft") {
+          nextIdx = currentIdx <= 0 ? sorted.length - 1 : currentIdx - 1;
+        } else {
+          nextIdx = currentIdx >= sorted.length - 1 ? 0 : currentIdx + 1;
+        }
+        const nextItem = sorted[nextIdx];
+        setActiveItemId(nextItem.id);
+        waveformRef.current?.seekTo(nextItem.timestampSec);
+      }
+
+      if (e.key === "s" || e.key === "S") {
+        if (e.metaKey || e.ctrlKey) return; // don't intercept Cmd+S
+        e.preventDefault();
+        // Copy current page link
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          toast({ title: "Link copied!", duration: 1500 });
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [timelineItems, activeItemId]);
+
+
   const releaseReadiness = useMemo(() => {
     if (n.releaseStatus) return n.releaseStatus;
     const lufs = n.metrics.integratedLufs;
