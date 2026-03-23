@@ -243,7 +243,7 @@ const Pricing = () => {
                           style={{
                             color: plan.featured
                               ? "hsl(0 0% 100% / 0.3)"
-                              : "hsl(var(--foreground) / 0.2)",
+                              : "hsl(var(--foreground) / 0.35)",
                           }}
                           strokeWidth={2}
                         />
