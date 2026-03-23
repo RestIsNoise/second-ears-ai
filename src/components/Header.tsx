@@ -24,12 +24,27 @@ const Header = () => {
   const { user, profile, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Derive avatar URL from profile or user metadata, re-run when either changes
+  useEffect(() => {
+    const url =
+      profile?.avatar_url ||
+      user?.user_metadata?.avatar_url ||
+      user?.user_metadata?.picture ||
+      null;
+    if (url) {
+      setAvatarUrl(url);
+      setAvatarError(false);
+    }
+  }, [user, profile]);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
