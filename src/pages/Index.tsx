@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SocialProofBar from "@/components/SocialProofBar";
 import HowItWorks from "@/components/HowItWorks";
 import DemoSection from "@/components/DemoSection";
 import SampleFeedback from "@/components/SampleFeedback";
@@ -14,6 +15,7 @@ const Index = () => (
     <Header />
     <main>
       <Hero />
+      <SocialProofBar />
       <HowItWorks />
       <SampleFeedback />
       <ListeningModes />
