@@ -769,7 +769,7 @@ const Dashboard = () => {
                   </div>
 
                   {viewMode === "list" ? (
-                    <div className="grid gap-1.5">
+                    <div>
                       {grouped.map((g) => (
                         <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
