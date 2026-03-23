@@ -54,8 +54,8 @@ const Proof = () => {
           <div className="flex items-center gap-4 justify-center mb-5">
             <div className="h-px w-12" style={{ background: "hsl(var(--border-subtle) / 0.3)" }} />
             <p
-              className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase shrink-0"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              className="text-[10px] tracking-[0.2em] uppercase shrink-0"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
             >
               What's included
             </p>
