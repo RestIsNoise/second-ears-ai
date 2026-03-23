@@ -77,7 +77,8 @@ const ListeningModes = () => {
               style={{
                 "--stagger": `${100 + i * 120}ms`,
                 background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle) / 0.45)",
+                border: "1px solid hsl(var(--border-subtle))",
+                minHeight: 280,
                 boxShadow:
                   "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
               } as React.CSSProperties}
