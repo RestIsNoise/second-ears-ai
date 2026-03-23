@@ -222,14 +222,13 @@ const Header = () => {
                 {item.label}
               </Link>
             ) : (
-              <a
+              <button
                 key={item.label}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1"
+                onClick={() => handleHashLink(item.href)}
+                className="block text-[13px] text-muted-foreground/70 hover:text-foreground transition-colors py-1 text-left w-full"
               >
                 {item.label}
-              </a>
+              </button>
             )
           )}
         </div>
