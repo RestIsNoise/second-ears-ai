@@ -83,6 +83,48 @@ const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   );
 };
 
+/* ── Toggle button for adding/removing from Next Moves ── */
+const ToDoToggleButton = ({
+  item,
+  alreadyAdded,
+  onAdd,
+  onRemove,
+}: {
+  item: FeedbackItem;
+  alreadyAdded: boolean;
+  onAdd: (item: FeedbackItem) => void;
+  onRemove?: (item: FeedbackItem) => void;
+}) => {
+  const [flashGreen, setFlashGreen] = useState(false);
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (alreadyAdded) {
+      onRemove?.(item);
+    } else {
+      onAdd(item);
+      setFlashGreen(true);
+      setTimeout(() => setFlashGreen(false), 1500);
+    }
+  }, [item, alreadyAdded, onAdd, onRemove]);
+
+  const isGreen = alreadyAdded || flashGreen;
+
+  return (
+    <button
+      onClick={handleClick}
+      className="inline-flex items-center p-0.5 transition-colors"
+      style={{ color: isGreen ? "#22c55e" : undefined }}
+      title={alreadyAdded ? "Remove from Next Moves" : "Add to Next Moves"}
+    >
+      {isGreen
+        ? <Check className="w-3.5 h-3.5" />
+        : <Plus className="w-3.5 h-3.5" style={{ color: "hsl(0 0% 70%)" }} />
+      }
+    </button>
+  );
+};
+
 interface Props {
   items: FeedbackItem[];
   activeItemId: string | null;
