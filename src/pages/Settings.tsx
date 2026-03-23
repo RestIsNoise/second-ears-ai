@@ -528,9 +528,7 @@ const Settings = () => {
 
                     {userPlan === "pro" && (
                       <div>
-                        <Button
-                          variant="outline"
-                          size="sm"
+                        <button
                           disabled={portalLoading}
                           onClick={async () => {
                             setPortalLoading(true);
@@ -548,11 +546,22 @@ const Settings = () => {
                               setPortalLoading(false);
                             }
                           }}
-                          className="h-9 text-xs gap-1.5"
+                          className="flex items-center gap-2 transition-colors"
+                          style={{
+                            fontFamily: MONO,
+                            fontSize: 13,
+                            padding: "10px 20px",
+                            borderRadius: 6,
+                            border: isDark ? "1px solid #333" : "1px solid #ddd",
+                            backgroundColor: isDark ? "transparent" : "#fff",
+                            color: isDark ? "#aaa" : "#333",
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.color = isDark ? "#aaa" : "#333"; }}
                         >
                           <CreditCard className="w-3.5 h-3.5" />
                           {portalLoading ? "Redirecting…" : "Manage subscription"}
-                        </Button>
+                        </button>
                         <p className="text-[10px] text-muted-foreground/50 mt-2">
                           Cancel, change payment method, or view billing history
                         </p>
