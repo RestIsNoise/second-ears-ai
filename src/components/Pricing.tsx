@@ -133,17 +133,19 @@ const Pricing = () => {
                   background: plan.featured
                     ? "hsl(0 0% 6%)"
                     : plan.comingSoon
-                      ? "hsl(var(--card))"
-                      : "#f5f5f3",
-                  color: plan.featured ? "hsl(0 0% 92%)" : undefined,
+                      ? (isDark ? "#111" : "hsl(var(--card))")
+                      : (isDark ? "#1a1a1a" : "#f5f5f3"),
+                  color: plan.featured ? "hsl(0 0% 92%)" : (isDark ? "#ccc" : undefined),
                   border: plan.comingSoon
-                    ? "1px solid #ddd"
+                    ? (isDark ? "1px solid #2a2a2a" : "1px solid #ddd")
                     : plan.featured
                       ? "1px solid hsl(0 0% 14%)"
-                      : "1px solid #ddd",
+                      : (isDark ? "1px solid #333" : "1px solid #ddd"),
                   boxShadow: plan.featured
                     ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
-                    : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+                    : isDark
+                      ? "none"
+                      : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
                   opacity: plan.comingSoon ? 0.75 : 1,
