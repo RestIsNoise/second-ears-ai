@@ -153,6 +153,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     } catch (_) { /* don't block analysis on usage check failure */ }
 
     setIsAnalyzing(true);
+    onTrackName?.(file.name);
     onProgressStep?.(0);
     try {
       const fileToUpload = await compressAudio(file);
