@@ -255,8 +255,8 @@ const Settings = () => {
                         backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
                         color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
                       }}
-                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
-                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = isDark ? "#555" : "#666"; } }}
                     >
                       <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
                       {item.label}
