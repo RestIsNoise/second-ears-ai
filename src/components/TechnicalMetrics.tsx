@@ -149,10 +149,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         {/* Status badge */}
         {!isMissing && led && (
           <span
-            className="uppercase shrink-0"
+            className="uppercase shrink-0 text-center"
             style={{
-              fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em",
+              fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em",
               color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1,
+              minWidth: 52,
             }}
           >
             {status.label}
