@@ -18,6 +18,7 @@ interface Props {
   title: string;
   onClose: () => void;
   children: React.ReactNode;
+  headerExtra?: React.ReactNode;
 }
 
 const WorkstationPanel = ({ id, title, onClose, children }: Props) => {
