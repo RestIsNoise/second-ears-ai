@@ -359,17 +359,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             {/* A source select */}
             <button
               onClick={() => handleSourceSelect("a")}
-              className="shrink-0 uppercase tabular-nums transition-all duration-150"
+              className="shrink-0 uppercase tabular-nums transition-all duration-150 flex items-center justify-center"
               style={{
                 fontFamily: MONO,
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
-                color: soloMode === "a" ? "#000" : (soloMode === "off" && cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.25)"),
-                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "transparent",
-                padding: "3px 8px",
-                borderRadius: 3,
-                border: `1px solid ${soloMode === "a" ? DECK_A_COLOR : "rgba(255,255,255,0.10)"}`,
+                width: 24,
+                height: 24,
+                borderRadius: 4,
+                color: soloMode === "a" ? "#000" : "#fff",
+                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "#111",
+                border: `1px solid ${soloMode === "a" ? DECK_A_COLOR : "rgba(255,255,255,0.15)"}`,
                 boxShadow: soloMode === "a" ? `0 0 8px ${DECK_A_COLOR}44` : "none",
               }}
               title={soloMode === "a" ? "Return to blend" : "Monitor A only"}
