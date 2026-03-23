@@ -568,8 +568,8 @@ const Settings = () => {
                             padding: "10px 20px",
                             borderRadius: 6,
                             border: isDark ? "1px solid #333" : "1px solid #ddd",
-                            backgroundColor: isDark ? "transparent" : "#fff",
-                            color: isDark ? "#aaa" : "#333",
+                            backgroundColor: isDark ? "#1a1a1a" : "#fff",
+                            color: isDark ? "#888" : "#333",
                           }}
                           onMouseEnter={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; }}
                           onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.color = isDark ? "#aaa" : "#333"; }}
