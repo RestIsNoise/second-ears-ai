@@ -13,9 +13,8 @@ const MONO = "'IBM Plex Mono', monospace";
 const SharedHeader = () => (
   <header
     style={{
-      background: "hsl(0 0% 100%)",
-      borderBottom: "1px solid hsl(0 0% 91%)",
-      padding: "12px 24px",
+      background: "hsl(0 0% 7%)",
+      padding: "16px 32px",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
@@ -23,25 +22,38 @@ const SharedHeader = () => (
   >
     <span
       style={{
-        fontFamily: MONO,
-        fontSize: 14,
-        fontWeight: 700,
-        letterSpacing: "0.04em",
-        color: "hsl(0 0% 7%)",
+        fontFamily: "monospace",
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: "0.15em",
+        color: "white",
+        textTransform: "uppercase" as const,
       }}
     >
       SecondEar
     </span>
-    <a
-      href="https://secondear.app"
+    <span
       style={{
-        background: "hsl(0 0% 7%)",
-        color: "hsl(0 0% 100%)",
-        padding: "8px 16px",
-        borderRadius: 6,
         fontSize: 13,
+        color: "white",
+        opacity: 0.6,
+        position: "absolute" as const,
+        left: "50%",
+        transform: "translateX(-50%)",
+      }}
+    >
+      Shared Analysis
+    </span>
+    <a
+      href="https://secondear.app/analyze"
+      style={{
+        background: "white",
+        color: "hsl(0 0% 7%)",
+        padding: "8px 16px",
+        borderRadius: 5,
+        fontSize: 12,
+        fontWeight: 600,
         textDecoration: "none",
-        fontWeight: 500,
       }}
     >
       Analyze your mix →
