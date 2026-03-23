@@ -163,11 +163,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         {/* Value */}
         <span
           className="tabular-nums shrink-0"
-          style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
+          style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
         >
           {isMissing ? "—" : value.toFixed(decimals)}
         </span>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(var(--foreground) / 0.35)" }}>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(0 0% 60%)" }}>
           {unit}
         </span>
       </div>
