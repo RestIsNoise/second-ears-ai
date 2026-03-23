@@ -31,10 +31,13 @@ const sidebarItems: { id: Section; label: string; icon: React.ElementType }[] = 
 
 const MONO = "'IBM Plex Mono', monospace";
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) => (
   <div className="mb-6">
-    <h2 className="text-[14px] font-semibold tracking-tight mb-3">{children}</h2>
-    <div className="h-px" style={{ background: "hsl(0 0% 0% / 0.08)" }} />
+    <h2 style={{ fontSize: 18, fontWeight: 600, color: "hsl(var(--foreground))", marginBottom: subtitle ? 4 : 12 }}>{children}</h2>
+    {subtitle && (
+      <p style={{ fontSize: 13, color: "#999", marginBottom: 12 }}>{subtitle}</p>
+    )}
+    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)" }} />
   </div>
 );
 
