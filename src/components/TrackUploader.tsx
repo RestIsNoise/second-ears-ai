@@ -62,6 +62,10 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const [userPlan, setUserPlan] = useState<string>("free");
   const [lockedModeTooltip, setLockedModeTooltip] = useState<string | null>(null);
 
+  const isDark = useMemo(() => {
+    return typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+  }, []);
+
   // Fetch user plan on mount
   useEffect(() => {
     (async () => {
