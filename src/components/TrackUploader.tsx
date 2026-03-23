@@ -364,9 +364,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                     <Lock className="w-2.5 h-2.5" /> PRO
                   </span>
                 )}
-                <m.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+                <m.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: !isLocked && mode === m.id ? "rgba(255,255,255,0.7)" : "hsl(var(--foreground) / 0.5)" }} />
                 <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
-                <p className="text-[9px] text-foreground/35 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.tag}</p>
+                <p className="text-[9px] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", color: !isLocked && mode === m.id ? "rgba(255,255,255,0.5)" : "hsl(var(--foreground) / 0.35)" }}>{m.tag}</p>
                 {isLocked && lockedModeTooltip === m.id && (
                   <span
                     className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-sm z-10 animate-fade-in"
