@@ -57,8 +57,8 @@ const ListeningModes = () => {
         {/* Right-aligned heading */}
         <div className="md:text-right mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
-            className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase mb-3"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            className="text-[10px] tracking-[0.2em] uppercase mb-3"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#555" : undefined }}
           >
             Three perspectives
           </p>
