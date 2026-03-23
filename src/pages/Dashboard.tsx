@@ -176,10 +176,11 @@ const TrackGridCard = ({
   const mode = latestAnalysis.mode || "technical";
   const ModeIcon = modeIcons[mode] || SlidersHorizontal;
   const modeColor = modeColors[mode] || modeColors.technical;
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   const bars = generateWaveform(proj.id, 56);
   const markers = generateMarkers(proj.id);
-  const playheadPos = seededRandom(proj.id + "-ph")() * 0.6 + 0.15; // 15–75%
+  const playheadPos = seededRandom(proj.id + "-ph")() * 0.6 + 0.15;
   const duration = `${Math.floor(seededRandom(proj.id + "-dur")() * 4 + 1)}:${String(Math.floor(seededRandom(proj.id + "-ds")() * 60)).padStart(2, "0")}`;
 
   return (
@@ -187,20 +188,22 @@ const TrackGridCard = ({
       onClick={() => onNavigate(`/project/${proj.id}`)}
       className="group relative flex flex-col overflow-hidden cursor-pointer"
       style={{
-        background: "#ffffff",
-        border: "1px solid #e8e8e8",
+        background: isDark ? "#161616" : "#ffffff",
+        border: isDark ? "1px solid #2a2a2a" : "1px solid #e8e8e8",
         borderRadius: 8,
         minHeight: 280,
         transition: "all 0.2s ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
-        el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.08)";
+        el.style.boxShadow = isDark ? "0 4px 20px rgba(0,0,0,0.4)" : "0 4px 16px rgba(0,0,0,0.08)";
+        el.style.borderColor = isDark ? "#444" : "#e8e8e8";
         el.style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.boxShadow = "none";
+        el.style.borderColor = isDark ? "#2a2a2a" : "#e8e8e8";
         el.style.transform = "translateY(0)";
       }}
     >
