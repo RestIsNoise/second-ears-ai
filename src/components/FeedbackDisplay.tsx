@@ -1259,10 +1259,9 @@ const FeedbackDisplay = ({
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
-            backgroundColor: "hsl(var(--workspace-bg))",
-            border: "2px solid hsl(var(--foreground) / 0.1)",
-            borderRadius: 3,
-            boxShadow: "inset 0 2px 6px hsl(var(--panel-inset)), 0 4px 16px hsl(0 0% 0% / 0.08)",
+            backgroundColor: "hsl(48 20% 97%)",
+            border: "1px solid hsl(0 0% 91%)",
+            borderRadius: 6,
             overflow: "hidden",
           }}
         >
@@ -1270,55 +1269,53 @@ const FeedbackDisplay = ({
             <div
               className="flex flex-col"
               style={{
-                borderRight: n.yourFocus.question ? "2px solid hsl(var(--foreground) / 0.08)" : "none",
+                borderRight: n.yourFocus.question ? "1px solid hsl(0 0% 91%)" : "none",
               }}
             >
-              {/* Section header strip */}
-              <div
-                className="flex items-center px-5"
-                style={{
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  backgroundColor: "hsl(var(--panel-header))",
-                  borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
-                }}
-              >
+              {/* Section label */}
+              <div className="px-5 pt-5 pb-1">
                 <h3
-                  className="text-[11px] text-foreground/45 tracking-[0.14em] uppercase font-extrabold"
-                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+                  style={{
+                    fontSize: 10,
+                    fontFamily: "monospace",
+                    letterSpacing: "0.15em",
+                    color: "hsl(0 0% 60%)",
+                    textTransform: "uppercase" as const,
+                    fontWeight: 700,
+                    marginBottom: 16,
+                  }}
                 >
                   {modeWhatWorksLabel[mode] || "What Works"}
                 </h3>
               </div>
-              <div className="p-5 space-y-3 flex-1 flex flex-col" style={{ backgroundColor: "hsl(var(--panel-content))" }}>
+              <div className="px-5 pb-5 space-y-2 flex-1 flex flex-col">
                 {n.whatWorks.map((item, i) => {
                   const tags = detectTags(`${item.title} ${item.description || ""}`);
                   return (
                     <div
                       key={i}
-                      className="flex-1 p-4"
                       style={{
-                        backgroundColor: "hsl(var(--panel-bg))",
-                        border: "1px solid hsl(var(--foreground) / 0.07)",
-                        borderRadius: 2,
-                        boxShadow: "inset 0 1px 3px hsl(var(--panel-inset))",
+                        background: "white",
+                        border: "1px solid hsl(0 0% 91%)",
+                        borderLeft: "3px solid hsl(142 71% 45%)",
+                        borderRadius: 6,
+                        padding: "16px 20px",
                       }}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="text-[15px] font-semibold tracking-tight text-foreground/85">{item.title}</h4>
+                        <h4 style={{ fontSize: 14, fontWeight: 600, color: "hsl(0 0% 7%)" }}>{item.title}</h4>
                         {tags.length > 0 && (
-                          <div className="flex items-center gap-1 shrink-0">
+                          <div className="flex items-center gap-1 shrink-0 flex-wrap">
                             {tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="inline-block border px-2 py-0.5 text-foreground/45"
                                 style={{
-                                  fontFamily: "'IBM Plex Mono', monospace",
-                                  fontSize: 9,
-                                  letterSpacing: "0.06em",
-                                  borderColor: "hsl(var(--foreground) / 0.08)",
-                                  borderRadius: 2,
-                                  textTransform: "uppercase",
+                                  background: "hsl(138 76% 97%)",
+                                  color: "hsl(142 76% 36%)",
+                                  fontSize: 10,
+                                  padding: "2px 8px",
+                                  borderRadius: 10,
+                                  fontWeight: 500,
                                 }}
                               >
                                 {tag}
@@ -1328,7 +1325,7 @@ const FeedbackDisplay = ({
                         )}
                       </div>
                       {item.description && (
-                        <p className="text-[14px] text-foreground/60 mt-2" style={{ lineHeight: 1.7, fontFamily: "'IBM Plex Mono', monospace" }}>{item.description}</p>
+                        <p style={{ fontSize: 13, color: "hsl(0 0% 33%)", lineHeight: 1.6, marginTop: 4 }}>{item.description}</p>
                       )}
                     </div>
                   );
