@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { supabase } from "@/lib/supabaseClient";
-import { cn } from "@/lib/utils";
+
 
 type VoteDir = 1 | -1 | null;
 
