@@ -261,7 +261,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
         <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Sub/Kick</span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.08em", color: isDark ? "#aaa" : "#333", fontWeight: 500 }}>Sub/Kick</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Sub/Kick"]}
