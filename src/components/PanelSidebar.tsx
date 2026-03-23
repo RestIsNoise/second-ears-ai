@@ -53,6 +53,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
   const panelMap = new Map(panels.map(p => [p.id, p]));
 
   return (
+    <TooltipProvider>
     <div
       className="flex flex-col h-full w-[184px] min-w-[184px] shrink-0 overflow-visible select-none"
       style={{
