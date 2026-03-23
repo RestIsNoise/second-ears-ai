@@ -129,19 +129,23 @@ const Pricing = () => {
                 )}
                 style={{
                   "--stagger": `${100 + staggerOrder * 130}ms`,
-                  background: plan.featured ? "hsl(0 0% 6%)" : "hsl(var(--card))",
+                  background: plan.featured
+                    ? "hsl(0 0% 6%)"
+                    : plan.comingSoon
+                      ? "hsl(var(--card))"
+                      : "hsl(40 10% 96%)",
                   color: plan.featured ? "hsl(0 0% 92%)" : undefined,
                   border: plan.comingSoon
-                    ? "1px solid hsl(var(--border-subtle) / 0.3)"
+                    ? "1px solid hsl(var(--border-subtle) / 0.5)"
                     : plan.featured
                       ? "1px solid hsl(0 0% 14%)"
-                      : "1px solid hsl(var(--border-subtle) / 0.45)",
+                      : "1px solid hsl(30 5% 82%)",
                   boxShadow: plan.featured
                     ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
                     : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
-                  opacity: plan.comingSoon ? 0.55 : 1,
+                  opacity: plan.comingSoon ? 0.65 : 1,
                 } as React.CSSProperties}
               >
                 {/* Badge */}
