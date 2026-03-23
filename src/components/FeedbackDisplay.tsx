@@ -1120,7 +1120,7 @@ const FeedbackDisplay = ({
 
         {/* ── WAVEFORM PLAYER ── */}
         {audioFile ? (
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-hidden relative">
             <ABCompare
               ref={waveformRef}
               audioFileA={audioFile}
@@ -1135,6 +1135,11 @@ const FeedbackDisplay = ({
               onAddToDo={handleAddToDoWithTimestamp}
               onEditNote={handleEditAnnotation}
             />
+            {/* Keyboard hint */}
+            <div className="absolute bottom-2 right-3 hidden md:flex items-center gap-1 opacity-40">
+              <KbdHint>SPACE</KbdHint>
+              <span style={{ fontFamily: "monospace", fontSize: 9, color: isDark ? "#555" : "#999" }}>play/pause</span>
+            </div>
           </div>
         ) : audioUnavailableMessage ? (
           <div className="w-full py-6 text-center">
