@@ -121,9 +121,9 @@ const Header = () => {
                 {item.label}
               </Link>
             ) : (
-              <a key={item.label} href={item.href} className="text-foreground/40 hover:text-foreground transition-colors">
+              <button key={item.label} onClick={() => handleHashLink(item.href)} className="text-foreground/40 hover:text-foreground transition-colors">
                 {item.label}
-              </a>
+              </button>
             )
           )}
         </nav>
