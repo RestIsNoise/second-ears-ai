@@ -177,6 +177,7 @@ const ProjectDetail = () => {
               analysisId={analysisId}
               versions={versions}
               projectId={id || null}
+              audioUnavailableMessage={audioUnavailable ? "Audio not available — track may have been deleted." : undefined}
             />
           </div>
         </main>
