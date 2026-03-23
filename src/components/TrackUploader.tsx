@@ -283,26 +283,30 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         style={{
           minHeight: 160,
           padding: "40px 24px",
-          backgroundColor: "#ffffff",
-          border: dragOver ? "2px dashed #111" : file ? "2px solid hsl(0 0% 0% / 0.15)" : "2px dashed #c8c8c4",
+          backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+          border: dragOver
+            ? (isDark ? "2px dashed #e8e8e0" : "2px dashed #111")
+            : file
+              ? (isDark ? "2px solid #333" : "2px solid hsl(0 0% 0% / 0.15)")
+              : (isDark ? "2px dashed #333" : "2px dashed #c8c8c4"),
           borderRadius: 6,
-          boxShadow: "inset 0 1px 3px rgba(0,0,0,0.04)",
+          boxShadow: isDark ? "none" : "inset 0 1px 3px rgba(0,0,0,0.04)",
         }}
       >
         {file ? (
           <>
             <Music className="w-8 h-8" style={{ color: "#999" }} />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: "#333", fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
-              <p style={{ fontSize: 12, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
+              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
             <Upload className="w-8 h-8" style={{ color: "#999" }} />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: "#333", fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
-              <p style={{ fontSize: 12, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
+              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
+              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
