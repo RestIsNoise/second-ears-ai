@@ -118,6 +118,8 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const led = isMissing ? null : ledColors[status.color];
+  const delay = rowIndex * 80;
+  const animatedValue = useAnimatedNumber(value, animated, 400, delay);
 
   return (
     <div style={{ padding: "10px 14px", borderBottom: "1px solid hsl(0 0% 94%)" }}>
@@ -152,10 +154,10 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
               style={{
                 position: "absolute",
                 inset: "0",
-                width: `${pct}%`,
+                width: animated ? `${pct}%` : `${pct}%`,
                 backgroundColor: led ? led.bg : "hsl(0 0% 80%)",
                 borderRadius: 2,
-                transition: "width 0.3s",
+                transition: `width 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${delay}ms`,
               }}
             />
           </div>
@@ -194,7 +196,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
           className="tabular-nums shrink-0"
           style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
         >
-          {isMissing ? "—" : value.toFixed(decimals)}
+          {isMissing ? "—" : (animatedValue ?? value).toFixed(decimals)}
         </span>
         <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(0 0% 60%)" }}>
           {unit}
