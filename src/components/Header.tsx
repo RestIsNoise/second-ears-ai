@@ -155,7 +155,7 @@ const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <button className="relative rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Avatar
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
                     style={{ border: isDark ? "1px solid #444" : "1px solid #e0e0e0" }}
@@ -179,6 +179,26 @@ const Header = () => {
                       {initials}
                     </AvatarFallback>
                   </Avatar>
+                  {userPlan === "pro" && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        bottom: -2,
+                        right: -4,
+                        fontFamily: "monospace",
+                        fontSize: 8,
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        padding: "1px 4px",
+                        borderRadius: 2,
+                        background: isDark ? "#e8e8e0" : "#111",
+                        color: isDark ? "#111" : "white",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      PRO
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
