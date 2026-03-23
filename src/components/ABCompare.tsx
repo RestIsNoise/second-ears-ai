@@ -359,17 +359,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             {/* A source select */}
             <button
               onClick={() => handleSourceSelect("a")}
-              className="shrink-0 uppercase tabular-nums transition-all duration-150"
+              className="shrink-0 uppercase tabular-nums transition-all duration-150 flex items-center justify-center"
               style={{
                 fontFamily: MONO,
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
-                color: soloMode === "a" ? "#000" : (soloMode === "off" && cfPct <= 50 ? DECK_A_COLOR : "rgba(255,255,255,0.25)"),
-                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "transparent",
-                padding: "3px 8px",
-                borderRadius: 3,
-                border: `1px solid ${soloMode === "a" ? DECK_A_COLOR : "rgba(255,255,255,0.10)"}`,
+                width: 24,
+                height: 24,
+                borderRadius: 4,
+                color: soloMode === "a" ? "#000" : "#fff",
+                backgroundColor: soloMode === "a" ? DECK_A_COLOR : "#111",
+                border: `1px solid ${soloMode === "a" ? DECK_A_COLOR : "rgba(255,255,255,0.15)"}`,
                 boxShadow: soloMode === "a" ? `0 0 8px ${DECK_A_COLOR}44` : "none",
               }}
               title={soloMode === "a" ? "Return to blend" : "Monitor A only"}
@@ -384,8 +384,7 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
                 style={{
                   height: 4,
                   borderRadius: 2,
-                  backgroundColor: "rgba(255,255,255,0.06)",
-                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                  backgroundColor: "#e0e0e0",
                 }}
               />
               <div
@@ -430,17 +429,17 @@ const ABCompare = forwardRef<WaveformPlayerHandle, Props>(({
             {/* B source select */}
             <button
               onClick={() => handleSourceSelect("b")}
-              className="shrink-0 uppercase tabular-nums transition-all duration-150"
+              className="shrink-0 uppercase tabular-nums transition-all duration-150 flex items-center justify-center"
               style={{
                 fontFamily: MONO,
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
-                color: soloMode === "b" ? "#000" : (soloMode === "off" && cfPct >= 50 ? DECK_B_COLOR : "rgba(255,255,255,0.25)"),
-                backgroundColor: soloMode === "b" ? DECK_B_COLOR : "transparent",
-                padding: "3px 8px",
-                borderRadius: 3,
-                border: `1px solid ${soloMode === "b" ? DECK_B_COLOR : "rgba(255,255,255,0.10)"}`,
+                width: 24,
+                height: 24,
+                borderRadius: 4,
+                color: soloMode === "b" ? "#000" : "#fff",
+                backgroundColor: soloMode === "b" ? DECK_B_COLOR : "#111",
+                border: `1px solid ${soloMode === "b" ? DECK_B_COLOR : "rgba(255,255,255,0.15)"}`,
                 boxShadow: soloMode === "b" ? `0 0 8px ${DECK_B_COLOR}44` : "none",
               }}
               title={soloMode === "b" ? "Return to blend" : "Monitor B only"}

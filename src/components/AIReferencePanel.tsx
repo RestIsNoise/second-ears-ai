@@ -155,22 +155,40 @@ const AIReferencePanel = ({ loading, result, refTrackName, onUploadClick }: Prop
             const led = deltaLed(d);
             const sign = d > 0 ? "+" : "";
 
+            // Parse numeric values for comparison bars
+            const userVal = parseFloat(String(diff.user)) || 0;
+            const refVal = parseFloat(String(diff.reference)) || 0;
+            const barMax = Math.max(Math.abs(userVal), Math.abs(refVal), 1);
+
             return (
               <div
                 key={key}
-                className="grid grid-cols-[1fr_auto_auto_auto] gap-x-5 items-center px-5 py-3"
                 style={{
                   borderBottom: idx < metricEntries.length - 1 ? "1px solid hsl(var(--foreground) / 0.03)" : "none",
+                  padding: "10px 20px",
                 }}
               >
-                <span className="text-[13px] font-medium text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
-                <span className="text-[13px] text-foreground/50 text-right tabular-nums w-[60px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
-                <span className="text-[13px] text-foreground/50 text-right tabular-nums w-[60px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
-                <div className="flex items-center justify-end gap-1.5 w-[56px]">
-                  <span className="text-[14px] font-medium tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
-                    {sign}{d.toFixed(1)}
-                  </span>
-                  <div className="w-[7px] h-[7px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+                <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-5 items-center">
+                  <span className="text-[13px] font-medium text-foreground/55 uppercase truncate" style={{ fontFamily: MONO }}>{label}</span>
+                  <span className="text-[13px] text-foreground/50 text-right tabular-nums w-[60px] font-medium" style={{ fontFamily: MONO }}>{diff.user}</span>
+                  <span className="text-[13px] text-foreground/50 text-right tabular-nums w-[60px] font-medium" style={{ fontFamily: MONO }}>{diff.reference}</span>
+                  <div className="flex items-center justify-end gap-1.5 w-[56px]">
+                    <span className="text-[14px] font-medium tabular-nums" style={{ fontFamily: MONO, color: led.bg }}>
+                      {sign}{d.toFixed(1)}
+                    </span>
+                    <div className="w-[7px] h-[7px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
+                  </div>
+                </div>
+                {/* Comparison bars */}
+                <div className="flex items-center gap-1.5 mt-2">
+                  <span className="text-[8px] font-bold uppercase shrink-0 w-[14px]" style={{ fontFamily: MONO, color: "rgba(255,255,255,0.3)" }}>A</span>
+                  <div className="flex-1 h-[4px] rounded-sm overflow-hidden" style={{ backgroundColor: "hsl(var(--foreground) / 0.06)" }}>
+                    <div className="h-full rounded-sm" style={{ width: `${(Math.abs(userVal) / barMax) * 100}%`, backgroundColor: "#111", transition: "width 0.3s ease" }} />
+                  </div>
+                  <span className="text-[8px] font-bold uppercase shrink-0 w-[14px]" style={{ fontFamily: MONO, color: "rgba(255,255,255,0.3)" }}>B</span>
+                  <div className="flex-1 h-[4px] rounded-sm overflow-hidden" style={{ backgroundColor: "hsl(var(--foreground) / 0.06)" }}>
+                    <div className="h-full rounded-sm" style={{ width: `${(Math.abs(refVal) / barMax) * 100}%`, backgroundColor: "#888", transition: "width 0.3s ease" }} />
+                  </div>
                 </div>
               </div>
             );
