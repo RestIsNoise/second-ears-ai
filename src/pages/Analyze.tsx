@@ -167,18 +167,23 @@ const Analyze = () => {
             />
           ) : (
             <>
-              <div className="text-center mb-8">
+              <div className="text-center mb-10">
                 <p
-                  className="text-[10px] text-muted-foreground/60 tracking-[0.18em] uppercase mb-3"
-                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace" }}
+                  className="text-[10px] tracking-[0.18em] uppercase mb-3"
+                  style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace", color: "#999" }}
                 >
                   {isNewVersion ? "New version" : "Upload & analyze"}
                 </p>
-                <h1 className="text-2xl md:text-[1.75rem] font-semibold tracking-tight">
+                <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em" }}>
                   {isNewVersion && prefillTrackName
                     ? `${prefillTrackName} — v${nextVersion}`
                     : "Get your mix feedback"}
                 </h1>
+                {!isNewVersion && (
+                  <p style={{ fontSize: 15, color: "#666", marginTop: 8, lineHeight: 1.5 }}>
+                    Upload a track and get a prioritized fix plan in minutes.
+                  </p>
+                )}
               </div>
 
               <TrackUploader

@@ -437,8 +437,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       <Button
         variant="default"
         size="lg"
-        className="w-full h-11 text-[11px] font-bold tracking-[0.06em] uppercase"
-        style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
+        className="w-full font-bold uppercase"
+        style={{ height: 52, fontSize: 14, letterSpacing: "0.06em", borderRadius: 6, fontFamily: "'IBM Plex Mono', monospace" }}
         disabled={!file || isAnalyzing || !!cooldownMessage}
         onClick={analyze}
       >
