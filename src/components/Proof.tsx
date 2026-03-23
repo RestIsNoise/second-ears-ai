@@ -108,7 +108,7 @@ const Proof = () => {
                 >
                   <block.icon className="w-3 h-3 text-foreground/50" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-foreground/85">
+                <h3 className="text-[16px] font-semibold tracking-[-0.01em]" style={{ color: isDark ? "#e8e8e0" : "hsl(var(--foreground) / 0.85)" }}>
                   {block.title}
                 </h3>
               </div>
