@@ -1,9 +1,5 @@
-// lamejs is a CommonJS library; use a wildcard import so Vite's CJS interop
-// exposes the full module (Mp3Encoder, etc.) without "MPEGMode is not defined" errors.
 // @ts-ignore — lamejs has no TypeScript declarations
-import * as lamejsModule from 'lamejs';
-// Handle both default-export and namespace shapes produced by bundlers
-const lamejs: any = (lamejsModule as any).default || lamejsModule;
+import lamejs from '@breezystack/lamejs';
 
 const COMPRESS_THRESHOLD = 40 * 1024 * 1024; // 40 MB
 const MP3_KBPS = 320;
