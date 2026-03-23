@@ -579,7 +579,19 @@ const FeedbackDisplay = ({
                               <p className="text-[13px] text-foreground/55 mt-1.5" style={{ lineHeight: 1.6 }}>{item.description}</p>
                             )}
                             {item.actionText && (
-                              <div className="mt-2.5 flex items-start gap-2">
+                              <div
+                                className="mt-2.5 flex items-start gap-2"
+                                style={{
+                                  opacity: 0,
+                                  transform: "translateY(6px)",
+                                  animation: "fixFadeUp 0.3s ease forwards 0.2s",
+                                  borderLeft: "3px solid hsl(0 0% 7%)",
+                                  paddingLeft: 10,
+                                  transition: "border-color 0.15s ease",
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "hsl(0 0% 33%)"; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "hsl(0 0% 7%)"; }}
+                              >
                                 <span
                                   className="shrink-0 mt-0.5 inline-flex items-center rounded-full bg-foreground text-background px-2 py-0.5"
                                   style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, letterSpacing: "0.06em", lineHeight: 1 }}
