@@ -52,7 +52,7 @@ const ListeningModes = () => {
         }}
       />
 
-      <div className="max-w-3xl mx-auto relative">
+      <div className="mx-auto relative" style={{ maxWidth: 900 }}>
         {/* Right-aligned heading */}
         <div className="md:text-right mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
