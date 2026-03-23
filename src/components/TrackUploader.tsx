@@ -141,7 +141,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
   const analyze = async () => {
     if (!file) return;
 
-    // Check usage limit before uploading
+    // Show loading screen IMMEDIATELY — no waiting for any API call
+    setIsAnalyzing(true);
+    onTrackName?.(file.name);
+    onProgressStep?.(0);
+
+    // Check usage limit (runs while loading screen is already visible)
     try {
       const headers = await getAuthHeaders();
       if (headers["Authorization"]) {
@@ -149,16 +154,13 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         if (usageRes.ok) {
           const usage = await usageRes.json();
           if (usage.plan === "free" && usage.remaining === 0) {
+            setIsAnalyzing(false);
             setShowUpgradeModal(true);
             return;
           }
         }
       }
     } catch (_) { /* don't block analysis on usage check failure */ }
-
-    setIsAnalyzing(true);
-    onTrackName?.(file.name);
-    onProgressStep?.(0);
     try {
       const fileToUpload = await compressAudio(file);
       const storagePath = `${Date.now()}-${fileToUpload.name}`;
