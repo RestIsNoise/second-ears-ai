@@ -204,14 +204,7 @@ const Settings = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="pt-24 pb-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <p
-            className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase mb-1"
-            style={{ fontFamily: MONO }}
-          >
-            Settings
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight mb-8">Account settings</h1>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "0" }}>
 
           <div className="flex flex-col md:flex-row gap-8">
             {/* ═══ SIDEBAR (desktop) / TABS (mobile) ═══ */}
