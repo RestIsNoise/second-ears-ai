@@ -360,15 +360,21 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 className="relative text-left transition-all duration-150"
                 style={{
                   padding: "12px 14px",
-                  backgroundColor: !isLocked && mode === m.id ? "#111" : "#ffffff",
-                  color: !isLocked && mode === m.id ? "#ffffff" : "#333",
-                  border: !isLocked && mode === m.id ? "1px solid #111" : "1px solid #e0e0e0",
+                  backgroundColor: !isLocked && mode === m.id
+                    ? (isDark ? "#e8e8e0" : "#111")
+                    : (isDark ? "#1a1a1a" : "#ffffff"),
+                  color: !isLocked && mode === m.id
+                    ? (isDark ? "#111" : "#ffffff")
+                    : (isDark ? "#888" : "#333"),
+                  border: !isLocked && mode === m.id
+                    ? (isDark ? "1px solid #e8e8e0" : "1px solid #111")
+                    : (isDark ? "1px solid #2a2a2a" : "1px solid #e0e0e0"),
                   borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
                 }}
-                onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = "#999"; e.currentTarget.style.backgroundColor = "#fafafa"; } }}
-                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = "#e0e0e0"; e.currentTarget.style.backgroundColor = "#ffffff"; } }}
+                onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#555" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
+                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
               >
                 {isLocked && (
                   <span
