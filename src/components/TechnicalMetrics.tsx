@@ -184,7 +184,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             style={{
               fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em",
               color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1,
-              minWidth: 52,
+              minWidth: 56, textAlign: "center" as const,
             }}
           >
             {status.label}
