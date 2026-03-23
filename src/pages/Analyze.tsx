@@ -165,6 +165,7 @@ const Analyze = () => {
               error={analysisError}
               onRetry={handleRetry}
               onCancel={handleRetry}
+              trackName={analyzeTrackName || undefined}
             />
           ) : (
             <>
