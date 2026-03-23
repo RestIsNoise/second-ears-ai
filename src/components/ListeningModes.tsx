@@ -30,6 +30,7 @@ const modes = [
 
 const ListeningModes = () => {
   const { ref, isVisible } = useScrollReveal();
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <section
