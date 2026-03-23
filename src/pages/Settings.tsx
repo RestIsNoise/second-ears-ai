@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { SlidersHorizontal, Music, Ear, Trash2, Camera, CreditCard, User, Settings2, Layers, AlertTriangle } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, Camera, CreditCard, User, Settings2, Layers, AlertTriangle, Sun, Moon, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
