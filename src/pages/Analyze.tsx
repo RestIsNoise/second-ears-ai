@@ -187,7 +187,7 @@ const Analyze = () => {
                 >
                   {isNewVersion ? "New version" : "Upload & analyze"}
                 </p>
-                <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em" }}>
+                <h1 className="text-foreground" style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em" }}>
                   {isNewVersion && prefillTrackName
                     ? `${prefillTrackName} — v${nextVersion}`
                     : "Get your mix feedback"}

@@ -432,3 +432,8 @@ body::after {
 [data-theme="dark"] .dark\:\!text-\[\#e8e8e0\] {
   color: #e8e8e0 !important;
 }
+
+/* Dark mode placeholder for inputs */
+[data-theme="dark"] input::placeholder {
+  color: #555 !important;
+}
