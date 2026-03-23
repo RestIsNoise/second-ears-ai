@@ -26,7 +26,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -41,13 +41,16 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
+        "fixed top-0 left-0 right-0 z-50",
         scrolled
-          ? "h-10 bg-background/98 backdrop-blur-[16px] shadow-[0_2px_8px_-2px_hsl(0_0%_0%/0.15)]"
-          : "h-12 bg-background/95 backdrop-blur-[6px]"
+          ? "h-10 shadow-[0_2px_8px_-2px_hsl(0_0%_0%/0.15)]"
+          : "h-12"
       )}
       style={{
-        borderBottom: "2px solid hsl(var(--foreground) / 0.08)",
+        background: scrolled ? "rgba(255,255,255,0.92)" : "hsl(var(--background) / 0.95)",
+        backdropFilter: "blur(8px)",
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "2px solid hsl(var(--foreground) / 0.08)",
+        transition: "background 0.2s ease, height 0.3s ease, border-bottom 0.2s ease, box-shadow 0.2s ease",
       }}
     >
       <div className={cn(
