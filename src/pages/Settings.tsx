@@ -428,30 +428,50 @@ const Settings = () => {
                     >
                       Theme
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => { if (isDark) toggleTheme(); }}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
-                          !isDark
-                            ? "border-foreground/20 bg-secondary text-foreground"
-                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
-                        )}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          height: 44,
+                          minWidth: 140,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 500,
+                          fontFamily: MONO,
+                          justifyContent: "center",
+                          transition: "all 0.15s",
+                          backgroundColor: !isDark ? "#111" : "transparent",
+                          color: !isDark ? "#fff" : "#666",
+                          border: !isDark ? "none" : "1px solid #ddd",
+                        }}
                       >
                         <Sun className="w-4 h-4" />
-                        Light mode
+                        Light
                       </button>
                       <button
                         onClick={() => { if (!isDark) toggleTheme(); }}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
-                          isDark
-                            ? "border-foreground/20 bg-secondary text-foreground"
-                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
-                        )}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          height: 44,
+                          minWidth: 140,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 500,
+                          fontFamily: MONO,
+                          justifyContent: "center",
+                          transition: "all 0.15s",
+                          backgroundColor: isDark ? "#e8e8e0" : "transparent",
+                          color: isDark ? "#111" : "#666",
+                          border: isDark ? "none" : "1px solid #ddd",
+                        }}
                       >
                         <Moon className="w-4 h-4" />
-                        Dark mode
+                        Dark
                       </button>
                     </div>
                     <p className="text-[10px] text-muted-foreground/50 mt-2">
