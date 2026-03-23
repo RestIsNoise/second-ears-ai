@@ -196,6 +196,7 @@ const Analyze = () => {
                 onProgressStep={setProgressStep}
                 onError={(msg) => setAnalysisError(msg)}
                 defaultMode={prefillMode || undefined}
+                onTrackName={(name) => setAnalyzeTrackName(name)}
               />
             </>
           )}
