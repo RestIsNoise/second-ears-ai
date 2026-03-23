@@ -421,3 +421,14 @@ body::after {
     animation: none !important;
   }
 }
+
+/* Dark mode overrides for FIX blocks */
+[data-theme="dark"] .dark\:bg-\[#1a1a1a\] {
+  background-color: #1a1a1a !important;
+}
+[data-theme="dark"] .dark\:border-\[#333\] {
+  border-color: #333 !important;
+}
+[data-theme="dark"] .dark\:\!text-\[\#e8e8e0\] {
+  color: #e8e8e0 !important;
+}
