@@ -206,52 +206,68 @@ const Settings = () => {
       <main className="pt-24 pb-16 px-6">
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "0" }}>
 
-          <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex flex-col md:flex-row">
             {/* ═══ SIDEBAR (desktop) / TABS (mobile) ═══ */}
-            <nav className="md:w-[200px] md:shrink-0">
+            <nav style={{ width: 200, flexShrink: 0 }}>
               {/* Mobile: horizontal tabs */}
               <div className="flex md:hidden gap-1 overflow-x-auto pb-2 -mx-1 px-1">
-                {sidebarItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-colors",
-                      activeSection === item.id
-                        ? "bg-secondary text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                    style={{ fontFamily: MONO }}
-                  >
-                    <item.icon className="w-3.5 h-3.5" />
-                    {item.label}
-                  </button>
-                ))}
+                {sidebarItems.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className="flex items-center gap-2 whitespace-nowrap transition-colors"
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 12,
+                        fontWeight: isActive ? 500 : 400,
+                        padding: "10px 14px",
+                        borderRadius: 6,
+                        backgroundColor: isActive ? "#111" : "transparent",
+                        color: isActive ? "#fff" : "#666",
+                      }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                    >
+                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
+                      {item.label}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Desktop: vertical sidebar */}
               <div className="hidden md:flex flex-col gap-0.5">
-                {sidebarItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "flex items-center gap-2.5 px-3.5 py-2.5 rounded-md text-[12px] font-medium transition-colors text-left w-full",
-                      activeSection === item.id
-                        ? "bg-secondary text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                    style={{ fontFamily: MONO }}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </button>
-                ))}
+                {sidebarItems.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className="flex items-center gap-2.5 text-left w-full transition-colors"
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 12,
+                        fontWeight: isActive ? 500 : 400,
+                        padding: "10px 14px",
+                        borderRadius: 6,
+                        backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
+                        color: isActive ? (isDark ? "#111" : "#fff") : "#666",
+                      }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                    >
+                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
+                      {item.label}
+                    </button>
+                  );
+                })}
               </div>
             </nav>
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0" style={{ paddingLeft: 48 }}>
               {/* ── PROFILE ── */}
               {activeSection === "profile" && (
                 <section>
