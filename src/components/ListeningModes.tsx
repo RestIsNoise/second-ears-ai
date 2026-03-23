@@ -120,7 +120,7 @@ const ListeningModes = () => {
               </div>
 
               {/* Feature list */}
-              <div className="px-5 py-4 flex-1 flex flex-col justify-end">
+              <div className="px-7 py-5 flex-1 flex flex-col justify-end">
                 <ul className="space-y-0">
                   {mode.points.map((point, j) => (
                     <li

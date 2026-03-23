@@ -86,7 +86,7 @@ const Proof = () => {
             >
               {/* Panel header bar */}
               <div
-                className="px-5 py-3 flex items-center justify-between"
+                className="px-7 py-4 flex items-center justify-between"
                 style={{
                   background: "hsl(var(--surface-c))",
                   borderBottom: "1px solid hsl(var(--border-subtle) / 0.3)",
