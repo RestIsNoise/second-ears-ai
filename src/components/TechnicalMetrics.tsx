@@ -112,9 +112,10 @@ interface MeterChannelProps {
   thresholds?: { pct: number; label: string }[];
   rowIndex?: number;
   animated?: boolean;
+  isDark?: boolean;
 }
 
-const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false }: MeterChannelProps) => {
+const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false, isDark = false }: MeterChannelProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const led = isMissing ? null : ledColors[status.color];
@@ -130,7 +131,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             <TooltipTrigger asChild>
               <span
                 className="uppercase cursor-help"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}
+                style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.08em", color: isDark ? "#aaa" : "#333", fontWeight: 500 }}
               >
                 {label}
               </span>
@@ -184,7 +185,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             style={{
               fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em",
               color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1,
-              minWidth: 52,
+              minWidth: 56, textAlign: "center" as const,
             }}
           >
             {status.label}
@@ -198,7 +199,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         >
           {isMissing ? "—" : (animatedValue ?? value).toFixed(decimals)}
         </span>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(0 0% 60%)" }}>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 10, color: "#bbb" }}>
           {unit}
         </span>
       </div>
@@ -207,7 +208,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
 };
 
 /* ── Correlation Channel (bipolar) ── */
-const CorrelationChannel = ({ value }: { value: number }) => {
+const CorrelationChannel = ({ value, isDark = false }: { value: number; isDark?: boolean }) => {
   const status = correlationStatus(value);
   const led = ledColors[status.color];
   const pct = ((value + 1) / 2) * 100;
@@ -219,7 +220,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Stereo</span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.08em", color: isDark ? "#aaa" : "#333", fontWeight: 500 }}>Stereo</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Stereo"]}
@@ -242,7 +243,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>+1</span>
           </div>
         </div>
-        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 56 }}>{status.label}</span>
         <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
       </div>
     </div>
@@ -250,7 +251,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
 };
 
 /* ── Sub/Kick Channel ── */
-const SubKickChannel = ({ value }: { value: number }) => {
+const SubKickChannel = ({ value, isDark = false }: { value: number; isDark?: boolean }) => {
   const status = subKickStatus(value);
   const led = ledColors[status.color];
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
@@ -261,7 +262,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
         <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Sub/Kick</span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.08em", color: isDark ? "#aaa" : "#333", fontWeight: 500 }}>Sub/Kick</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Sub/Kick"]}
@@ -278,7 +279,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: "hsl(var(--foreground) / 0.18)" }}>S</span>
           </div>
         </div>
-        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 56 }}>{status.label}</span>
         <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)" }}>{value.toFixed(2)}</span>
       </div>
     </div>
@@ -311,6 +312,7 @@ interface Props {
 
 const TechnicalMetrics = ({ metrics }: Props) => {
   const [animated, setAnimated] = useState(false);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setAnimated(true));
@@ -357,34 +359,27 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         overflow: "hidden",
       }}
     >
-      {/* Panel header */}
-      <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid hsl(0 0% 91%)" }}>
-        <span className="uppercase" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", color: "hsl(0 0% 60%)" }}>
-          Technical Metrics
-        </span>
-      </div>
-
       {/* Loudness section */}
       <SectionDivider label="Loudness" />
-      <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} rowIndex={0} animated={animated} />
-      <MeterChannel label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} thresholds={lufsThresholds} rowIndex={1} animated={animated} />
-      <MeterChannel label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} thresholds={[{ pct: 40, label: "8" }, { pct: 70, label: "14" }]} rowIndex={2} animated={animated} />
+      <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} rowIndex={0} animated={animated} isDark={isDark} />
+      <MeterChannel label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} thresholds={lufsThresholds} rowIndex={1} animated={animated} isDark={isDark} />
+      <MeterChannel label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} thresholds={[{ pct: 40, label: "8" }, { pct: 70, label: "14" }]} rowIndex={2} animated={animated} isDark={isDark} />
 
       {/* Dynamics section */}
       <SectionDivider label="Dynamics" />
-      <MeterChannel label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 40, label: "8" }]} rowIndex={3} animated={animated} />
-      <MeterChannel label="Peak" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} decimals={1} thresholds={peakThresholds} rowIndex={4} animated={animated} />
-      <MeterChannel label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 50, label: "10" }]} rowIndex={5} animated={animated} />
+      <MeterChannel label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 40, label: "8" }]} rowIndex={3} animated={animated} isDark={isDark} />
+      <MeterChannel label="Peak" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} decimals={1} thresholds={peakThresholds} rowIndex={4} animated={animated} isDark={isDark} />
+      <MeterChannel label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 50, label: "10" }]} rowIndex={5} animated={animated} isDark={isDark} />
 
       {/* Stereo section */}
       <SectionDivider label="Stereo / Balance" />
       {sc !== null ? (
-        <CorrelationChannel value={sc} />
+        <CorrelationChannel value={sc} isDark={isDark} />
       ) : (
-        <MeterChannel label="Stereo" value={null} unit="" min={-1} max={1} status={null} rowIndex={6} animated={animated} />
+        <MeterChannel label="Stereo" value={null} unit="" min={-1} max={1} status={null} rowIndex={6} animated={animated} isDark={isDark} />
       )}
       {metrics.sub_kick_ratio !== undefined && (
-        <SubKickChannel value={metrics.sub_kick_ratio} />
+        <SubKickChannel value={metrics.sub_kick_ratio} isDark={isDark} />
       )}
     </section>
     </TooltipProvider>
