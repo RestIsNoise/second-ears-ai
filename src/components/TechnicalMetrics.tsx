@@ -211,8 +211,8 @@ const CorrelationChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>+1</span>
           </div>
         </div>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1 }}>{status.label}</span>
-        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
       </div>
     </div>
   );
