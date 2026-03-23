@@ -176,10 +176,11 @@ const TrackGridCard = ({
   const mode = latestAnalysis.mode || "technical";
   const ModeIcon = modeIcons[mode] || SlidersHorizontal;
   const modeColor = modeColors[mode] || modeColors.technical;
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   const bars = generateWaveform(proj.id, 56);
   const markers = generateMarkers(proj.id);
-  const playheadPos = seededRandom(proj.id + "-ph")() * 0.6 + 0.15; // 15–75%
+  const playheadPos = seededRandom(proj.id + "-ph")() * 0.6 + 0.15;
   const duration = `${Math.floor(seededRandom(proj.id + "-dur")() * 4 + 1)}:${String(Math.floor(seededRandom(proj.id + "-ds")() * 60)).padStart(2, "0")}`;
 
   return (
@@ -187,20 +188,22 @@ const TrackGridCard = ({
       onClick={() => onNavigate(`/project/${proj.id}`)}
       className="group relative flex flex-col overflow-hidden cursor-pointer"
       style={{
-        background: "#ffffff",
-        border: "1px solid #e8e8e8",
+        background: isDark ? "#161616" : "#ffffff",
+        border: isDark ? "1px solid #2a2a2a" : "1px solid #e8e8e8",
         borderRadius: 8,
         minHeight: 280,
         transition: "all 0.2s ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
-        el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.08)";
+        el.style.boxShadow = isDark ? "0 4px 20px rgba(0,0,0,0.4)" : "0 4px 16px rgba(0,0,0,0.08)";
+        el.style.borderColor = isDark ? "#444" : "#e8e8e8";
         el.style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.boxShadow = "none";
+        el.style.borderColor = isDark ? "#2a2a2a" : "#e8e8e8";
         el.style.transform = "translateY(0)";
       }}
     >
@@ -339,10 +342,17 @@ const TrackGridCard = ({
       </div>
 
       {/* ══════ INFO BOTTOM HALF ══════ */}
-      <div className="px-4 py-4 flex-1 flex flex-col">
+      <div
+        className="px-4 py-4 flex-1 flex flex-col"
+        style={{
+          background: isDark ? "#161616" : undefined,
+          borderRadius: "0 0 8px 8px",
+        }}
+      >
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <h3
-            className="text-[14px] font-semibold tracking-[-0.01em] truncate text-foreground/90 group-hover:text-foreground transition-colors leading-tight"
+            className="text-[14px] font-medium tracking-[-0.01em] truncate group-hover:text-foreground transition-colors leading-tight"
+            style={{ color: isDark ? "#e8e8e0" : undefined }}
           >
             {proj.name}
           </h3>
@@ -361,9 +371,9 @@ const TrackGridCard = ({
             className="inline-flex items-center gap-1 px-2 py-0.5 uppercase tracking-[0.06em] font-semibold"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9,
-              backgroundColor: modeColor.bg,
-              color: modeColor.text,
+              fontSize: 10,
+              backgroundColor: isDark ? "#222" : modeColor.bg,
+              color: isDark ? "#888" : modeColor.text,
               borderRadius: 3,
             }}
           >
@@ -379,7 +389,7 @@ const TrackGridCard = ({
           )}
         </div>
 
-        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "#999" }}>
+        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#444" : "#999" }}>
           {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
         </p>
       </div>
@@ -584,53 +594,59 @@ const Dashboard = () => {
       <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header row */}
-          <div
-            className="flex items-center justify-between mb-6"
-            style={{
-              padding: "16px 24px",
-              background: "white",
-              borderBottom: "1px solid hsl(0 0% 91%)",
-              borderRadius: 0,
-            }}
-          >
-            <div>
-              <h1
-                className="text-foreground"
-                style={{ fontSize: 20, fontWeight: 700, color: "hsl(0 0% 7%)", letterSpacing: "-0.01em" }}
-              >
-                My Projects
-              </h1>
-              <p
+          {(() => {
+            const isDarkHeader = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+            return (
+              <div
+                className="flex items-center justify-between mb-6"
                 style={{
-                  fontSize: 12,
-                  color: "hsl(0 0% 60%)",
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  marginTop: 2,
+                  padding: "16px 24px",
+                  background: isDarkHeader ? "#111" : "white",
+                  border: isDarkHeader ? "1px solid #222" : undefined,
+                  borderBottom: isDarkHeader ? undefined : "1px solid hsl(0 0% 91%)",
+                  borderRadius: 0,
                 }}
               >
-                {grouped.reduce((sum, g) => sum + g.versionCount, 0)} analyses · {grouped.length} projects
-              </p>
-            </div>
-            <Link
-              to="/analyze"
-              className="inline-flex items-center gap-1.5 transition-colors"
-              style={{
-                background: "hsl(0 0% 7%)",
-                color: "white",
-                padding: "10px 20px",
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 500,
-                letterSpacing: "0.02em",
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 20%)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 7%)"; }}
-            >
-              <Plus className="w-4 h-4" />
-              New analysis
-            </Link>
-          </div>
+                <div>
+                  <h1
+                    className="text-foreground"
+                    style={{ fontSize: 20, fontWeight: 700, color: isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)", letterSpacing: "-0.01em" }}
+                  >
+                    My Projects
+                  </h1>
+                  <p
+                    style={{
+                      fontSize: 12,
+                      color: isDarkHeader ? "#555" : "hsl(0 0% 60%)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      marginTop: 2,
+                    }}
+                  >
+                    {grouped.reduce((sum, g) => sum + g.versionCount, 0)} analyses · {grouped.length} projects
+                  </p>
+                </div>
+                <Link
+                  to="/analyze"
+                  className="inline-flex items-center gap-1.5 transition-colors"
+                  style={{
+                    background: isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)",
+                    color: isDarkHeader ? "#111" : "white",
+                    padding: "10px 20px",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: "0.02em",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#d4d0c8" : "hsl(0 0% 20%)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)"; }}
+                >
+                  <Plus className="w-4 h-4" />
+                  New analysis
+                </Link>
+              </div>
+            );
+          })()}
 
           {/* Tabs */}
           <Tabs defaultValue="tracks" className="w-full">
