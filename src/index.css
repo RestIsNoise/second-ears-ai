@@ -130,25 +130,26 @@
     --analysis-header: 25 4% 80%;
   }
 
-  .dark {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 96%;
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 96%;
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 0 0% 96%;
+  .dark,
+  [data-theme="dark"] {
+    --background: 0 0% 5%;
+    --foreground: 50 5% 91%;
+    --card: 0 0% 9%;
+    --card-foreground: 50 5% 91%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 50 5% 91%;
+    --primary: 50 5% 91%;
     --primary-foreground: 0 0% 5%;
     --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 96%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 56%;
+    --secondary-foreground: 50 5% 91%;
+    --muted: 0 0% 33%;
+    --muted-foreground: 0 0% 53%;
     --accent: 0 0% 14%;
-    --accent-foreground: 0 0% 96%;
+    --accent-foreground: 50 5% 91%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 96%;
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
+    --destructive-foreground: 50 5% 91%;
+    --border: 0 0% 17%;
+    --input: 0 0% 17%;
     --ring: 0 0% 83%;
     --surface-elevated: 0 0% 8%;
     --text-tertiary: 0 0% 50%;
@@ -161,6 +162,20 @@
     --panel-inset: 0 0% 100% / 0.04;
     --rack-screw: 0 0% 18%;
     --channel-divider: 0 0% 100% / 0.06;
+    --surface-a: 0 0% 5%;
+    --surface-b: 0 0% 7%;
+    --surface-c: 0 0% 9%;
+    --surface-alt: 0 0% 8%;
+    --surface-inset: 0 0% 6%;
+    --analysis-header: 0 0% 8%;
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 0% 90%;
+    --sidebar-primary-foreground: 0 0% 5%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 0 0% 50%;
   }
 
   /* Section surface variants for contrast rhythm */
