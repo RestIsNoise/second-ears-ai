@@ -50,6 +50,21 @@ const Header = () => {
     }
   }, [user, profile]);
 
+  // Fetch user plan
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, [user]);
+
   // Handle hash-based nav links: smooth scroll if on landing, navigate otherwise
   const handleHashLink = useCallback((href: string) => {
     const hash = href.replace("/#", "");
