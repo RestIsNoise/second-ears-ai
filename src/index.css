@@ -390,6 +390,11 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes markerPulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
