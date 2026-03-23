@@ -254,11 +254,11 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   fontSize: 16,
                   fontWeight: 600,
-                  color: undefined,
+                  color: isDark ? "#1a1510" : undefined,
                   margin: "8px 0",
                   lineHeight: 1.4,
                 }}
-                className="text-foreground"
+                className={isDark ? "" : "text-foreground"}
               >
                 {item.title}
               </h3>
