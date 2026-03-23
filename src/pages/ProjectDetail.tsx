@@ -99,20 +99,35 @@ const ProjectDetail = () => {
             proj?.name || "",
           );
           setResult({ normalized });
+          setAudioFile(null);
+          setAudioUnavailable(false);
 
           // Fetch audio file from storage if available
           if (target.storage_path) {
             try {
-              const { data: blob } = await supabase.storage
+              const { data: signedData, error: signedError } = await supabase.storage
                 .from("tracks")
-                .download(target.storage_path);
-              if (blob) {
-                const fileName = target.storage_path.replace(/^\d+-/, "");
-                const file = new File([blob], fileName, { type: blob.type || "audio/mpeg" });
-                setAudioFile(file);
+                .createSignedUrl(target.storage_path, 3600);
+
+              if (signedError || !signedData?.signedUrl) {
+                console.warn("[ProjectDetail] Signed URL failed:", signedError?.message || "No URL returned");
+                setAudioUnavailable(true);
+              } else {
+                // Download the file via the signed URL
+                const response = await fetch(signedData.signedUrl);
+                if (!response.ok) {
+                  console.warn("[ProjectDetail] Audio download failed:", response.status);
+                  setAudioUnavailable(true);
+                } else {
+                  const blob = await response.blob();
+                  const fileName = target.storage_path.replace(/^\d+-/, "");
+                  const file = new File([blob], fileName, { type: blob.type || "audio/mpeg" });
+                  setAudioFile(file);
+                }
               }
             } catch (err) {
               console.warn("[ProjectDetail] Failed to load audio:", err);
+              setAudioUnavailable(true);
             }
           }
         }
