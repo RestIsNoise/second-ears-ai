@@ -278,7 +278,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: "hsl(var(--foreground) / 0.18)" }}>S</span>
           </div>
         </div>
-        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 56 }}>{status.label}</span>
         <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)" }}>{value.toFixed(2)}</span>
       </div>
     </div>
