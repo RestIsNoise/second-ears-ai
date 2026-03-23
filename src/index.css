@@ -305,6 +305,16 @@ body::after {
   50% { transform: translateY(-6px); }
 }
 
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* ── Cinematic Scroll Reveal System ── */
 .reveal {
   opacity: 0;

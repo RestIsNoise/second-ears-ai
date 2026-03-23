@@ -81,10 +81,10 @@ const Hero = () => {
       <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-36 sm:pt-48 sm:pb-48 md:pt-56 md:pb-56 lg:pt-60 lg:pb-56">
         <div className="grid lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-end">
           {/* Left column — Copy with parallax */}
-          <div
+           <div
             className="max-w-xl"
-            style={{ transform: `translateY(${headlineY}px)` }}
-          >
+            style={{ opacity: 0, transform: `translateY(${headlineY}px)`, animation: "slideInLeft 0.7s ease forwards" }}
+           >
             <p
               className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up"
               style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
@@ -168,8 +168,8 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
-            style={{ animationDelay: "0.2s", overflow: "visible" }}
+            className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
+            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards" }}
           >
             {/* Glow behind frame */}
             <div
