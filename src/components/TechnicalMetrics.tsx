@@ -1,8 +1,25 @@
 import type { TechnicalMetrics as TechnicalMetricsType } from "@/pages/Analyze";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Status = { label: string; color: "green" | "orange" | "red" | "blue" };
 
 const MONO = "'IBM Plex Mono', monospace";
+
+const metricTooltips: Record<string, string> = {
+  "Int. LUFS": "Integrated loudness. Measures the average volume of the entire track. Streaming targets -14 LUFS. Club music: -9 to -11 LUFS.",
+  "ST LUFS": "Short-term loudness. Average volume in 3-second windows. Shows energy peaks across the track.",
+  "LRA": "Loudness Range. How dynamic the mix is. Below 4 LU is over-compressed. 6–12 LU is ideal.",
+  "DR": "Dynamic Range. Difference between the softest and loudest moments. Below 5 is heavily squashed.",
+  "Peak": "True Peak. The maximum peak level. Should not exceed -1 dBTP to avoid distortion on streaming platforms.",
+  "Crest": "Crest Factor. Ratio between peak and RMS. Low values indicate over-compression and loss of punch.",
+  "Stereo": "Stereo Width. How wide the stereo image is. Values near 0 sound mono and flat.",
+  "Sub/Kick": "Sub-frequency vs kick balance. Values above 1.5 indicate excessive sub masking the kick fundamental.",
+};
 
 function lufsStatus(v: number): Status {
   if (v >= -14 && v <= -9) return { label: "OK", color: "green" };

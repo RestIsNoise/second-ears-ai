@@ -3,6 +3,21 @@ import {
   FileText, Layers, Radio, LayoutPanelTop,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const moduleTooltips: Record<string, string> = {
+  "ai-feedback": "AI diagnostics anchored to your track. Each note identifies a specific problem and how to fix it.",
+  "tech-metrics": "Objective measurements of your mix: loudness, dynamics, stereo image and frequency balance.",
+  "ai-reference": "Compare your track against a reference. Upload a professional track and analyze the differences.",
+  "human-feedback": "Leave timestamped comments. Click anywhere on the waveform to anchor a note to that moment.",
+  "todo": "Task list generated from the analysis. Check items off as you work through the mix.",
+  "full-analysis": "Extended analysis: mix balance, arrangement, tonal read and full context of the track.",
+};
 
 export interface PanelConfig {
   id: string;
