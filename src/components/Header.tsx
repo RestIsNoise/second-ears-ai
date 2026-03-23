@@ -24,12 +24,27 @@ const Header = () => {
   const { user, profile, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Derive avatar URL from profile or user metadata, re-run when either changes
+  useEffect(() => {
+    const url =
+      profile?.avatar_url ||
+      user?.user_metadata?.avatar_url ||
+      user?.user_metadata?.picture ||
+      null;
+    if (url) {
+      setAvatarUrl(url);
+      setAvatarError(false);
+    }
+  }, [user, profile]);
 
   const initials = (profile?.display_name || user?.email || "U")
     .split(" ")
@@ -98,11 +113,21 @@ const Header = () => {
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
                     style={{ border: "1px solid #e0e0e0" }}
                   >
-                    {(profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture) && (
-                      <AvatarImage src={profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture} alt="Avatar" />
-                    )}
+                    <AvatarImage
+                      src={avatarError ? undefined : (avatarUrl || undefined)}
+                      alt="Avatar"
+                      loading="eager"
+                      onError={() => setAvatarError(true)}
+                      style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
+                    />
                     <AvatarFallback
-                      style={{ background: "#111", color: "#fff", fontSize: 13, fontWeight: 600 }}
+                      style={{
+                        background: "#111",
+                        color: "#fff",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        display: avatarUrl && !avatarError ? "none" : undefined,
+                      }}
                     >
                       {initials}
                     </AvatarFallback>

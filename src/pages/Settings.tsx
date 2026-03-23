@@ -49,6 +49,7 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -141,6 +142,7 @@ const Settings = () => {
         .eq("id", user.id);
       if (updateErr) throw updateErr;
       setAvatarUrl(publicUrl);
+      setAvatarError(false);
       await refreshProfile();
       toast({ title: "Avatar updated", duration: 1500 });
     } catch (err) {
@@ -273,8 +275,17 @@ const Settings = () => {
                             className="h-[72px] w-[72px]"
                             style={{ border: "1px solid hsl(0 0% 87%)" }}
                           >
-                            {avatarUrl && <AvatarImage src={avatarUrl} alt="Avatar" />}
-                            <AvatarFallback className="text-lg font-medium bg-secondary text-foreground/60">
+                            <AvatarImage
+                              src={avatarError ? undefined : (avatarUrl || undefined)}
+                              alt="Avatar"
+                              loading="eager"
+                              onError={() => setAvatarError(true)}
+                              style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
+                            />
+                            <AvatarFallback
+                              className="text-lg font-medium bg-secondary text-foreground/60"
+                              style={{ display: avatarUrl && !avatarError ? "none" : undefined }}
+                            >
                               {initials}
                             </AvatarFallback>
                           </Avatar>
