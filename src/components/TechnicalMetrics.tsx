@@ -112,6 +112,7 @@ interface MeterChannelProps {
   thresholds?: { pct: number; label: string }[];
   rowIndex?: number;
   animated?: boolean;
+  isDark?: boolean;
 }
 
 const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false }: MeterChannelProps) => {
