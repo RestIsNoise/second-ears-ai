@@ -345,7 +345,13 @@ const Settings = () => {
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Your name"
                         className="h-10 text-sm"
-                        style={{ border: "1px solid hsl(0 0% 82%)", borderRadius: 4, padding: "0 12px" }}
+                        style={{
+                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
+                          borderRadius: 4,
+                          padding: "0 12px",
+                          backgroundColor: isDark ? "#1a1a1a" : undefined,
+                          color: isDark ? "#e8e8e0" : undefined,
+                        }}
                       />
                     </div>
 
