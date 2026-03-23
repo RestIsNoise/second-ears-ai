@@ -44,6 +44,39 @@ interface GroupedProject {
   lastUpdated: string;
 }
 
+/* ─── Mini waveform thumbnail ─── */
+const MiniWaveform = ({ id }: { id: string }) => {
+  const bars = generateWaveform(id, 28);
+  return (
+    <div
+      className="flex-shrink-0 flex items-center justify-center overflow-hidden"
+      style={{
+        width: 60,
+        height: 36,
+        background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
+        borderRadius: 4,
+      }}
+    >
+      <div className="flex items-center gap-[1px]" style={{ height: 24 }}>
+        {bars.map((v, i) => {
+          const h = Math.max(2, v * 18);
+          return (
+            <div
+              key={i}
+              style={{
+                width: 1.5,
+                height: h,
+                background: "hsl(0 0% 50%)",
+                borderRadius: 0,
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 /* ─── Track Row (list view) ─── */
 const TrackRow = ({
   grouped,
@@ -57,46 +90,38 @@ const TrackRow = ({
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
   const ModeIcon = modeIcons[mode] || SlidersHorizontal;
-  const colorClass = modeColors[mode] || modeColors.technical;
+  const modeColor = modeColors[mode] || modeColors.technical;
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex items-center gap-3 cursor-pointer transition-all duration-100"
+      className="group relative flex items-center gap-3 cursor-pointer transition-colors duration-100"
       style={{
-        padding: "10px 14px",
-        backgroundColor: "hsl(var(--card))",
-        border: "2px solid hsl(var(--foreground) / 0.08)",
-        borderRadius: 3,
-        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
+        height: 56,
+        padding: "0 16px",
+        borderBottom: isDark ? "1px solid #1a1a1a" : "1px solid #f0f0f0",
       }}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#fafaf8"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
     >
-      <div
-        className="flex-shrink-0 flex items-center justify-center w-8 h-8"
-        style={{
-          backgroundColor: "hsl(var(--panel-bg))",
-          border: "1px solid hsl(var(--foreground) / 0.06)",
-          borderRadius: 2,
-          boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-        }}
-      >
-        <AudioLines className="w-4 h-4 text-foreground/50" />
-      </div>
-      <div className="flex-1 min-w-0 flex items-center gap-2.5">
+      <MiniWaveform id={proj.id} />
+
+      <div className="flex-1 min-w-0 flex items-center gap-3">
         <h3
-          className="text-[12px] font-semibold truncate text-foreground/85 group-hover:text-foreground transition-colors"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          className="text-foreground/90 group-hover:text-foreground transition-colors"
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 14, fontWeight: 500 }}
         >
           {proj.name}
         </h3>
         <span
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold shrink-0"
+          className="inline-flex items-center gap-1 px-2 py-0.5 uppercase tracking-[0.06em] font-semibold shrink-0"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 8,
-            backgroundColor: "hsl(var(--foreground) / 0.04)",
-            border: "1px solid hsl(var(--foreground) / 0.06)",
-            borderRadius: 2,
+            fontSize: 10,
+            backgroundColor: isDark ? "#222" : modeColor.bg,
+            color: isDark ? "#888" : modeColor.text,
+            borderRadius: 3,
           }}
         >
           <ModeIcon className="w-2.5 h-2.5" />{mode}
@@ -110,9 +135,10 @@ const TrackRow = ({
           </span>
         )}
       </div>
+
       <span
-        className="text-foreground/25 shrink-0 tabular-nums"
-        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+        className="shrink-0 tabular-nums"
+        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "#999" }}
       >
         {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
       </span>
