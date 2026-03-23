@@ -66,15 +66,12 @@ function lraStatus(v: number): Status {
   return { label: "Wide", color: "blue" };
 }
 
-/* Status LED colors */
 const ledColors: Record<string, { bg: string; glow: string; muted: string }> = {
   green: { bg: "hsl(145 60% 42%)", glow: "0 0 5px hsl(145 60% 42% / 0.5)", muted: "hsl(145 60% 42% / 0.12)" },
   orange: { bg: "hsl(35 85% 50%)", glow: "0 0 5px hsl(35 85% 50% / 0.5)", muted: "hsl(35 85% 50% / 0.12)" },
   red: { bg: "hsl(0 65% 48%)", glow: "0 0 5px hsl(0 65% 48% / 0.5)", muted: "hsl(0 65% 48% / 0.12)" },
   blue: { bg: "hsl(210 65% 50%)", glow: "0 0 5px hsl(210 65% 50% / 0.5)", muted: "hsl(210 65% 50% / 0.12)" },
 };
-
-const SEGMENTS = 32;
 
 /* ── Meter Channel ── */
 interface MeterChannelProps {
@@ -133,7 +130,6 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
               }}
             />
           </div>
-          {/* Threshold ticks */}
           {thresholds?.map((t, i) => (
             <div
               key={i}
@@ -186,87 +182,36 @@ const CorrelationChannel = ({ value }: { value: number }) => {
   const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
-    <div style={{ borderBottom: "1px solid hsl(var(--foreground) / 0.04)" }}>
-      <div className="flex items-stretch">
-        {/* Label */}
-        <div
-          className="flex items-center shrink-0"
-          style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
-        >
+    <div style={{ padding: "10px 14px", borderBottom: "1px solid hsl(0 0% 94%)" }}>
+      <div className="flex items-center gap-3">
+        <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
-                Stereo
-              </span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Stereo</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Stereo"]}
             </TooltipContent>
           </Tooltip>
         </div>
-
-        {/* Bipolar meter */}
-        <div className="flex-1 flex flex-col justify-center" style={{ padding: "9px 10px" }}>
-          <div className="relative" style={{ height: 6 }}>
-            {/* Background segments */}
-            <div className="absolute inset-0 flex gap-px">
-              {Array.from({ length: SEGMENTS }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{ flex: 1, backgroundColor: "hsl(var(--foreground) / 0.035)" }}
-                />
-              ))}
-            </div>
-            {/* Center line */}
+        <div className="flex-1 relative">
+          <div className="relative" style={{ height: 4, borderRadius: 2, backgroundColor: "hsl(0 0% 94%)", overflow: "hidden" }}>
             <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: "hsl(var(--foreground) / 0.15)" }} />
-            {/* L / R scale labels */}
-            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, left: 0 }}>−1</span>
-            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, left: "50%", transform: "translateX(-50%)" }}>0</span>
-            <span className="absolute text-foreground/15 font-bold" style={{ fontFamily: MONO, fontSize: 7, top: -10, right: 0 }}>+1</span>
-            {/* Fill */}
             {clampedPct >= 50 ? (
-              <div
-                className="absolute inset-y-0"
-                style={{ left: "50%", width: `${clampedPct - 50}%`, backgroundColor: led.bg, opacity: 0.7 }}
-              />
+              <div className="absolute inset-y-0" style={{ left: "50%", width: `${clampedPct - 50}%`, backgroundColor: led.bg, opacity: 0.7, borderRadius: 2 }} />
             ) : (
-              <div
-                className="absolute inset-y-0"
-                style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, backgroundColor: led.bg, opacity: 0.7 }}
-              />
+              <div className="absolute inset-y-0" style={{ left: `${clampedPct}%`, width: `${50 - clampedPct}%`, backgroundColor: led.bg, opacity: 0.7, borderRadius: 2 }} />
             )}
-            {/* Needle */}
-            <div
-              className="absolute"
-              style={{
-                left: `${clampedPct}%`,
-                top: -1,
-                bottom: -1,
-                width: 2,
-                backgroundColor: led.bg,
-                boxShadow: led.glow,
-                transform: "translateX(-50%)",
-              }}
-            />
+            <div className="absolute" style={{ left: `${clampedPct}%`, top: -1, bottom: -1, width: 2, backgroundColor: led.bg, boxShadow: led.glow, transform: "translateX(-50%)" }} />
+          </div>
+          <div className="flex justify-between mt-0.5">
+            <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>−1</span>
+            <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>0</span>
+            <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>+1</span>
           </div>
         </div>
-
-        {/* Value */}
-        <div
-          className="flex items-center gap-1.5 shrink-0"
-          style={{ padding: "12px 14px 12px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 110, justifyContent: "flex-end" }}
-        >
-          <span
-            className="font-medium uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 10, color: led.bg, padding: "4px 7px", backgroundColor: led.muted, borderRadius: 2, lineHeight: 1 }}
-          >
-            {status.label}
-          </span>
-          <span className="text-foreground/90 tabular-nums font-medium" style={{ fontFamily: MONO, fontSize: 16, letterSpacing: "-0.03em" }}>
-            {value > 0 ? "+" : ""}{value.toFixed(2)}
-          </span>
-          <div className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
-        </div>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1 }}>{status.label}</span>
+        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
       </div>
     </div>
   );
@@ -279,70 +224,30 @@ const SubKickChannel = ({ value }: { value: number }) => {
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
 
   return (
-    <div>
-      <div className="flex items-stretch">
-        {/* Label */}
-        <div
-          className="flex items-center shrink-0"
-          style={{ width: 100, padding: "12px 0 12px 14px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
-        >
+    <div style={{ padding: "10px 14px" }}>
+      <div className="flex items-center gap-3">
+        <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
-                Sub/Kick
-              </span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Sub/Kick</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Sub/Kick"]}
             </TooltipContent>
           </Tooltip>
         </div>
-
-        {/* Bipolar meter with needle */}
-        <div className="flex-1 flex flex-col justify-center" style={{ padding: "9px 10px" }}>
+        <div className="flex-1 relative">
           <div className="flex items-center gap-1.5">
-            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700 }}>K</span>
-            <div className="relative flex-1" style={{ height: 6 }}>
-              <div className="absolute inset-0 flex gap-px">
-                {Array.from({ length: SEGMENTS }).map((_, i) => (
-                  <div key={i} style={{ flex: 1, backgroundColor: "hsl(var(--foreground) / 0.035)" }} />
-                ))}
-              </div>
+            <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: "hsl(var(--foreground) / 0.18)" }}>K</span>
+            <div className="relative flex-1" style={{ height: 4, borderRadius: 2, backgroundColor: "hsl(0 0% 94%)", overflow: "hidden" }}>
               <div className="absolute inset-y-0" style={{ left: "50%", width: 1, backgroundColor: "hsl(var(--foreground) / 0.12)" }} />
-              {/* Needle */}
-              <div
-                className="absolute"
-                style={{
-                  left: `${pct}%`,
-                  top: -2,
-                  bottom: -2,
-                  width: 2,
-                  backgroundColor: led.bg,
-                  boxShadow: led.glow,
-                  transform: "translateX(-50%)",
-                }}
-              />
+              <div className="absolute" style={{ left: `${pct}%`, top: -1, bottom: -1, width: 2, backgroundColor: led.bg, boxShadow: led.glow, transform: "translateX(-50%)" }} />
             </div>
-            <span className="text-foreground/18 shrink-0" style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700 }}>S</span>
+            <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: "hsl(var(--foreground) / 0.18)" }}>S</span>
           </div>
         </div>
-
-        {/* Value */}
-        <div
-          className="flex items-center gap-1.5 shrink-0"
-          style={{ padding: "12px 14px 12px 0", borderLeft: "1px solid hsl(var(--foreground) / 0.05)", minWidth: 110, justifyContent: "flex-end" }}
-        >
-          <span
-            className="font-medium uppercase tracking-[0.06em]"
-            style={{ fontFamily: MONO, fontSize: 10, color: led.bg, padding: "4px 7px", backgroundColor: led.muted, borderRadius: 2, lineHeight: 1 }}
-          >
-            {status.label}
-          </span>
-          <span className="text-foreground/90 tabular-nums font-medium" style={{ fontFamily: MONO, fontSize: 16 }}>
-            {value.toFixed(2)}
-          </span>
-          <div className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: led.bg, boxShadow: led.glow }} />
-        </div>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1 }}>{status.label}</span>
+        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)" }}>{value.toFixed(2)}</span>
       </div>
     </div>
   );
@@ -393,12 +298,10 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   const cf = metrics.crest_factor ?? null;
   const lra = metrics.lra ?? null;
 
-  // LUFS thresholds: -14 and -9
   const lufsThresholds = [
     { pct: ((-14 - (-24)) / ((-6) - (-24))) * 100, label: "-14" },
     { pct: ((-9 - (-24)) / ((-6) - (-24))) * 100, label: "-9" },
   ];
-  // Peak threshold: -1 dBTP
   const peakThresholds = [
     { pct: ((-3 - (-6)) / (0 - (-6))) * 100, label: "-3" },
     { pct: ((-1 - (-6)) / (0 - (-6))) * 100, label: "-1" },
