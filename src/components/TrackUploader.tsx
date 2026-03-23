@@ -323,11 +323,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         >
           Listening mode
         </p>
+        <TooltipProvider>
         <div className="grid grid-cols-3 gap-1.5">
           {modes.map((m) => {
             const isLocked = userPlan === "free" && m.id !== "technical";
             return (
-              <button key={m.id}
+              <Tooltip key={m.id} delayDuration={300}>
+                <TooltipTrigger asChild>
+              <button
                 onClick={() => {
                   if (isLocked) {
                     setLockedModeTooltip(m.id);
@@ -379,9 +382,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   </span>
                 )}
               </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+                  {modeTooltips[m.id]}
+                </TooltipContent>
+              </Tooltip>
             );
           })}
         </div>
+        </TooltipProvider>
       </div>
       <div>
         <p
@@ -390,9 +399,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         >
           Goal
         </p>
+        <TooltipProvider>
         <div className="grid grid-cols-3 gap-1.5">
           {goals.map((g) => (
-            <button key={g.id} onClick={() => setGoal(g.id)}
+            <Tooltip key={g.id} delayDuration={300}>
+              <TooltipTrigger asChild>
+            <button onClick={() => setGoal(g.id)}
               className="text-left transition-all duration-100"
               style={{
                 padding: "10px 12px",
@@ -405,8 +417,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
               <g.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+                {goalTooltips[g.id]}
+              </TooltipContent>
+            </Tooltip>
           ))}
         </div>
+        </TooltipProvider>
       </div>
       {cooldownMessage && (
         <div
