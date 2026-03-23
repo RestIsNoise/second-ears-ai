@@ -64,6 +64,7 @@ const Pricing = () => {
   const { ref, isVisible } = useScrollReveal();
   const navigate = useNavigate();
   const [proLoading, setProLoading] = useState(false);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   const handleStartPro = async () => {
     setProLoading(true);
