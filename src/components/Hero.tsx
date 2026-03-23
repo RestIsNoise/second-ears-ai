@@ -15,6 +15,22 @@ const trustItems = [
 
 const Hero = () => {
   const { ref: parallaxRef, progress } = useScrollProgress<HTMLElement>();
+  const { user } = useAuth();
+  const [isPro, setIsPro] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsPro(false); return; }
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setIsPro(data.plan === "pro");
+        }
+      } catch { /* default free */ }
+    })();
+  }, [user]);
 
   // Subtle parallax: headline moves up slightly, screenshot scales in
   const headlineY = progress * -18; // px
