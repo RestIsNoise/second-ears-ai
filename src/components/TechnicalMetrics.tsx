@@ -115,7 +115,7 @@ interface MeterChannelProps {
   isDark?: boolean;
 }
 
-const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false }: MeterChannelProps) => {
+const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thresholds, rowIndex = 0, animated = false, isDark = false }: MeterChannelProps) => {
   const isMissing = value === null || status === null;
   const pct = isMissing ? 0 : Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const led = isMissing ? null : ledColors[status.color];
