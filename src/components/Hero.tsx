@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Upload, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollReveal";
+import { useAuth } from "@/hooks/useAuth";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import heroScreenshot from "@/assets/hero-screenshot.png";
 
 const trustItems = [
