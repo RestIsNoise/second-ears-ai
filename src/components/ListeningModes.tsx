@@ -88,14 +88,14 @@ const ListeningModes = () => {
               onMouseEnter={(e) => {
                 const el = e.currentTarget;
                 el.style.transform = "translateY(-4px)";
-                el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.08)";
-                el.style.borderColor = "hsl(0 0% 60%)";
+                el.style.boxShadow = isDark ? "0 8px 24px rgba(0,0,0,0.3)" : "0 8px 24px rgba(0,0,0,0.08)";
+                el.style.borderColor = isDark ? "#555" : "hsl(0 0% 60%)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget;
                 el.style.transform = "translateY(0)";
-                el.style.boxShadow = "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)";
-                el.style.borderColor = "";
+                el.style.boxShadow = isDark ? "none" : "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)";
+                el.style.borderColor = isDark ? "#2a2a2a" : "";
               }}
             >
               {/* Panel header */}
