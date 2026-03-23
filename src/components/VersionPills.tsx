@@ -53,15 +53,25 @@ const VersionPills = ({ versions, currentAnalysisId, projectId, trackName, mode 
             v{v.version}
           </button>
         ))}
-      <Button
-        variant="ghost"
-        size="sm"
+      <button
         onClick={handleNewVersion}
-        className="h-7 px-2.5 text-[11px] gap-1 text-muted-foreground hover:text-foreground"
+        className="inline-flex items-center gap-1.5 transition-colors duration-150"
+        style={{
+          padding: "8px 16px",
+          borderRadius: 6,
+          fontSize: 13,
+          fontWeight: 500,
+          border: "1px solid #d0d0d0",
+          background: "transparent",
+          color: "#333",
+          cursor: "pointer",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.color = "#111"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#d0d0d0"; e.currentTarget.style.color = "#333"; }}
       >
-        <Plus className="w-3 h-3" />
+        <Plus className="w-3.5 h-3.5" />
         New version
-      </Button>
+      </button>
     </div>
   );
 };
