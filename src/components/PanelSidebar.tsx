@@ -216,6 +216,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
         </div>
       )}
     </div>
+    </TooltipProvider>
   );
 };
 
