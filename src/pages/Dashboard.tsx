@@ -175,7 +175,7 @@ const TrackGridCard = ({
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
   const ModeIcon = modeIcons[mode] || SlidersHorizontal;
-  const colorClass = modeColors[mode] || modeColors.technical;
+  const modeColor = modeColors[mode] || modeColors.technical;
 
   const bars = generateWaveform(proj.id, 56);
   const markers = generateMarkers(proj.id);
