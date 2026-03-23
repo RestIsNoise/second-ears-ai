@@ -168,8 +168,8 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
-            style={{ animationDelay: "0.2s", overflow: "visible" }}
+            className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
+            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards" }}
           >
             {/* Glow behind frame */}
             <div
