@@ -46,9 +46,10 @@ interface Props {
   onProgressStep?: (step: number) => void;
   onError?: (msg: string) => void;
   defaultMode?: ListeningMode;
+  onTrackName?: (name: string) => void;
 }
 
-const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode }: Props) => {
+const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode, onTrackName }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<ListeningMode>(defaultMode || "technical");
   const [dragOver, setDragOver] = useState(false);
@@ -152,6 +153,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
     } catch (_) { /* don't block analysis on usage check failure */ }
 
     setIsAnalyzing(true);
+    onTrackName?.(file.name);
     onProgressStep?.(0);
     try {
       const fileToUpload = await compressAudio(file);
