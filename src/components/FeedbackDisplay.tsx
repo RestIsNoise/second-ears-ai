@@ -153,6 +153,7 @@ const FeedbackDisplay = ({
   projectId?: string | null;
 }) => {
   const { user } = useAuth();
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   const navigate = useNavigate();
   const n = result.normalized;
   const { mode } = n;
@@ -802,7 +803,8 @@ const FeedbackDisplay = ({
             variant="ghost"
             size="icon"
             onClick={onReset}
-            className="shrink-0 text-foreground/40 hover:text-foreground/70 w-7 h-7 sm:w-8 sm:h-8"
+            className="shrink-0 w-7 h-7 sm:w-8 sm:h-8"
+            style={{ color: isDark ? "#666" : undefined }}
           >
             <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
@@ -930,7 +932,7 @@ const FeedbackDisplay = ({
           >
             {/* Summary text — full width for comfortable reading */}
             {n.overallImpression && (
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#555", maxWidth: 860, borderLeft: "3px solid #e0e0e0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: isDark ? "#aaa" : "#555", maxWidth: 860, borderLeft: isDark ? "3px solid #444" : "3px solid #e0e0e0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
                 {n.overallImpression}
               </p>
             )}
@@ -990,15 +992,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#fff0f0",
+                      backgroundColor: isDark ? "rgba(204,0,0,0.15)" : "#fff0f0",
                       borderRadius: 4,
                     }}
                   >
                      <span
                       className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#cc0000" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#ff6666" : "#cc0000" }}
                     >Issue</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#cc0000" }}>{n.topIssue}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#ff6666" : "#cc0000" }}>{n.topIssue}</span>
                   </span>
                 )}
                 {n.biggestWin && (
@@ -1006,15 +1008,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#f0fff4",
+                      backgroundColor: isDark ? "rgba(34,197,94,0.15)" : "#f0fff4",
                       borderRadius: 4,
                     }}
                   >
                     <span
                        className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#006622" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#4ade80" : "#006622" }}
                     >Win</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#006622" }}>{n.biggestWin}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#4ade80" : "#006622" }}>{n.biggestWin}</span>
                   </span>
                 )}
                 {releaseReadiness && (
@@ -1022,15 +1024,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#f5f5f5",
+                      backgroundColor: isDark ? "#222" : "#f5f5f5",
                       borderRadius: 4,
                     }}
                   >
                      <span
                        className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#555" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#888" : "#555" }}
                     >Release</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#555" }}>{releaseReadiness}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#888" : "#555" }}>{releaseReadiness}</span>
                   </span>
                 )}
               </div>

@@ -141,14 +141,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              className="group cursor-pointer"
+              className={cn("group cursor-pointer", !isActive && "bg-white dark:bg-[#1a1a1a] dark:border-[#333]")}
               style={{
                 opacity: 0,
                 transform: "translateY(12px)",
                 animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
-                background: isActive ? accent.bg : "hsl(0 0% 100%)",
+                background: isActive ? accent.bg : undefined,
                 border: `1px solid ${isActive ? accent.border : "hsl(0 0% 91%)"}`,
                 borderRadius: 8,
                 padding: 20,
@@ -249,10 +249,11 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   fontSize: 16,
                   fontWeight: 600,
-                  color: "hsl(0 0% 7%)",
+                  color: undefined,
                   margin: "8px 0",
                   lineHeight: 1.4,
                 }}
+                className="text-foreground"
               >
                 {item.title}
               </h3>
@@ -274,6 +275,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ FIX BLOCK ═══ */}
               {item.fix && (
                 <div
+                  className="dark:bg-[#1a1a1a]"
                   style={{
                     marginTop: 12,
                     backgroundColor: "#f8f8f6",

@@ -77,6 +77,8 @@ const Header = () => {
     .toUpperCase()
     .slice(0, 2);
 
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
   return (
     <header
       className={cn(
@@ -86,9 +88,13 @@ const Header = () => {
           : "h-12"
       )}
       style={{
-        background: scrolled ? "rgba(255,255,255,0.92)" : "hsl(var(--background) / 0.95)",
+        background: isDark
+          ? "rgba(14, 14, 14, 0.95)"
+          : (scrolled ? "rgba(255,255,255,0.92)" : "hsl(var(--background) / 0.95)"),
         backdropFilter: "blur(8px)",
-        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "2px solid hsl(var(--foreground) / 0.08)",
+        borderBottom: isDark
+          ? "1px solid #222"
+          : (scrolled ? "1px solid rgba(0,0,0,0.06)" : "2px solid hsl(var(--foreground) / 0.08)"),
         transition: "background 0.2s ease, height 0.3s ease, border-bottom 0.2s ease, box-shadow 0.2s ease",
       }}
     >
@@ -102,7 +108,7 @@ const Header = () => {
               "font-bold tracking-tight transition-all duration-300 uppercase",
               scrolled ? "text-[13px]" : "text-[14px]"
             )}
-            style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em" }}
+            style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em", color: isDark ? "#e8e8e0" : undefined }}
           >
             SecondEar
           </span>
@@ -117,11 +123,11 @@ const Header = () => {
         >
           {navItems.map((item) =>
             item.href.startsWith("/") && !item.href.startsWith("/#") ? (
-              <Link key={item.label} to={item.href} className="text-foreground/40 hover:text-foreground transition-colors">
+              <Link key={item.label} to={item.href} className="transition-colors" style={{ color: isDark ? "#666" : undefined }} onMouseEnter={(e) => { if (isDark) e.currentTarget.style.color = "#e8e8e0"; }} onMouseLeave={(e) => { if (isDark) e.currentTarget.style.color = "#666"; }}>
                 {item.label}
               </Link>
             ) : (
-              <button key={item.label} onClick={() => handleHashLink(item.href)} className="text-foreground/40 hover:text-foreground transition-colors">
+              <button key={item.label} onClick={() => handleHashLink(item.href)} className="transition-colors" style={{ color: isDark ? "#666" : undefined }} onMouseEnter={(e) => { if (isDark) e.currentTarget.style.color = "#e8e8e0"; }} onMouseLeave={(e) => { if (isDark) e.currentTarget.style.color = "#666"; }}>
                 {item.label}
               </button>
             )
@@ -135,7 +141,7 @@ const Header = () => {
                 <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Avatar
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
-                    style={{ border: "1px solid #e0e0e0" }}
+                    style={{ border: isDark ? "1px solid #444" : "1px solid #e0e0e0" }}
                   >
                     <AvatarImage
                       src={avatarError ? undefined : (avatarUrl || undefined)}
@@ -146,8 +152,8 @@ const Header = () => {
                     />
                     <AvatarFallback
                       style={{
-                        background: "#111",
-                        color: "#fff",
+                        background: isDark ? "#333" : "#111",
+                        color: isDark ? "#e8e8e0" : "#fff",
                         fontSize: 13,
                         fontWeight: 600,
                         display: avatarUrl && !avatarError ? "none" : undefined,
