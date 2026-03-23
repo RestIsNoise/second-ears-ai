@@ -154,39 +154,8 @@ const TrackRow = ({
   );
 };
 
-/* ─── Seeded waveform generator (deterministic per project id) ─── */
-const seededRandom = (seed: string) => {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) {
-    h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
-  }
-  return () => {
-    h = Math.imul(h ^ (h >>> 15), h | 1);
-    h ^= h + Math.imul(h ^ (h >>> 7), h | 61);
-    return ((h ^ (h >>> 14)) >>> 0) / 4294967296;
-  };
-};
 
-const generateWaveform = (id: string, count: number) => {
-  const rng = seededRandom(id);
-  const bars: number[] = [];
-  for (let i = 0; i < count; i++) {
-    const envelope = Math.sin((i / (count - 1)) * Math.PI);
-    const noise = 0.3 + rng() * 0.7;
-    bars.push(envelope * noise);
-  }
-  return bars;
-};
 
-const generateMarkers = (id: string) => {
-  const rng = seededRandom(id + "-markers");
-  const count = 2 + Math.floor(rng() * 3);
-  const markers: number[] = [];
-  for (let i = 0; i < count; i++) {
-    markers.push(0.08 + rng() * 0.84);
-  }
-  return markers.sort();
-};
 
 /* ─── Track Grid Card ─── */
 const TrackGridCard = ({
