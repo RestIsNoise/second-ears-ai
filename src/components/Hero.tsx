@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Upload, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollReveal";
+import { useAuth } from "@/hooks/useAuth";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import heroScreenshot from "@/assets/hero-screenshot.png";
 
 const trustItems = [
@@ -13,6 +15,22 @@ const trustItems = [
 
 const Hero = () => {
   const { ref: parallaxRef, progress } = useScrollProgress<HTMLElement>();
+  const { user } = useAuth();
+  const [isPro, setIsPro] = useState(false);
+
+  useEffect(() => {
+    if (!user) { setIsPro(false); return; }
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setIsPro(data.plan === "pro");
+        }
+      } catch { /* default free */ }
+    })();
+  }, [user]);
 
   // Subtle parallax: headline moves up slightly, screenshot scales in
   const headlineY = progress * -18; // px
@@ -102,7 +120,7 @@ const Hero = () => {
               >
                 <Link to="/analyze">
                   <Upload className="w-4 h-4" />
-                  Start free analysis
+                  {isPro ? "Analyze a track" : "Start free analysis"}
                 </Link>
               </Button>
               <Button
@@ -123,7 +141,8 @@ const Hero = () => {
               </Button>
             </div>
 
-            {/* Trust row */}
+            {/* Trust row — hidden for Pro users */}
+            {!isPro && (
             <div
               className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 animate-fade-up"
               style={{ animationDelay: "0.32s" }}
@@ -144,6 +163,7 @@ const Hero = () => {
                 </span>
               ))}
             </div>
+            )}
           </div>
 
           {/* Right column — Screenshot with scroll-linked scale */}
