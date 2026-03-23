@@ -120,7 +120,7 @@ const Hero = () => {
               >
                 <Link to="/analyze">
                   <Upload className="w-4 h-4" />
-                  Start free analysis
+                  {isPro ? "Analyze a track" : "Start free analysis"}
                 </Link>
               </Button>
               <Button
