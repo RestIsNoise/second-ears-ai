@@ -802,20 +802,22 @@ const FeedbackDisplay = ({
                     {n.trackName}
                   </h1>
                 ) : (
-                  <h1 className="text-[14px] sm:text-xl md:text-2xl font-bold tracking-tight truncate text-foreground">
+                  <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }} className="truncate text-foreground">
                     {n.trackName}
                   </h1>
                 )
               )}
               <span
-                className="shrink-0 text-foreground/35 uppercase tracking-[0.1em] font-extrabold hidden sm:inline-block"
+                className="shrink-0 uppercase hidden sm:inline-block"
                 style={{
                   fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
-                  fontSize: 8,
-                  padding: "2px 6px",
-                  backgroundColor: "hsl(var(--foreground) / 0.04)",
-                  border: "1px solid hsl(var(--foreground) / 0.06)",
-                  borderRadius: 2,
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                  padding: "3px 8px",
+                  backgroundColor: "#f0f0f0",
+                  color: "#333",
+                  borderRadius: 3,
+                  fontWeight: 600,
                 }}
               >
                 {modeLabels[mode]}
