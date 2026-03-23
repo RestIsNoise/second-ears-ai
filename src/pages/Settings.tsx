@@ -37,7 +37,7 @@ const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subti
     {subtitle && (
       <p style={{ fontSize: 13, color: "#999", marginBottom: 12 }}>{subtitle}</p>
     )}
-    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)" }} />
+    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)", borderColor: undefined }} />
   </div>
 );
 
@@ -224,11 +224,11 @@ const Settings = () => {
                         fontWeight: isActive ? 500 : 400,
                         padding: "10px 14px",
                         borderRadius: 6,
-                        backgroundColor: isActive ? "#111" : "transparent",
-                        color: isActive ? "#fff" : "#666",
+                        backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
+                        color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
                       }}
-                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
-                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = isDark ? "#555" : "#666"; } }}
                     >
                       <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
                       {item.label}
@@ -253,10 +253,10 @@ const Settings = () => {
                         padding: "10px 14px",
                         borderRadius: 6,
                         backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
-                        color: isActive ? (isDark ? "#111" : "#fff") : "#666",
+                        color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
                       }}
-                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
-                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = isDark ? "#555" : "#666"; } }}
                     >
                       <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
                       {item.label}
@@ -345,7 +345,13 @@ const Settings = () => {
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Your name"
                         className="h-10 text-sm"
-                        style={{ border: "1px solid hsl(0 0% 82%)", borderRadius: 4, padding: "0 12px" }}
+                        style={{
+                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
+                          borderRadius: 4,
+                          padding: "0 12px",
+                          backgroundColor: isDark ? "#1a1a1a" : undefined,
+                          color: isDark ? "#e8e8e0" : undefined,
+                        }}
                       />
                     </div>
 
@@ -360,8 +366,14 @@ const Settings = () => {
                       <Input
                         value={user?.email || ""}
                         readOnly
-                        className="h-10 text-sm bg-secondary/30 text-muted-foreground"
-                        style={{ border: "1px solid hsl(0 0% 82%)", borderRadius: 4, padding: "0 12px" }}
+                        className={cn("h-10 text-sm", !isDark && "bg-secondary/30 text-muted-foreground")}
+                        style={{
+                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
+                          borderRadius: 4,
+                          padding: "0 12px",
+                          backgroundColor: isDark ? "#1a1a1a" : undefined,
+                          color: isDark ? "#e8e8e0" : undefined,
+                        }}
                       />
                     </div>
 
@@ -370,7 +382,10 @@ const Settings = () => {
                       onClick={handleSaveProfile}
                       disabled={saving}
                       className="h-9 text-xs px-6 w-full"
-                      style={{ maxWidth: 200 }}
+                      style={{
+                        maxWidth: 200,
+                        ...(isDark ? { backgroundColor: "#e8e8e0", color: "#111", borderColor: "#e8e8e0" } : {}),
+                      }}
                     >
                       {saving ? "Saving…" : "Save changes"}
                     </Button>
@@ -443,9 +458,9 @@ const Settings = () => {
                           fontFamily: MONO,
                           justifyContent: "center",
                           transition: "all 0.15s",
-                          backgroundColor: !isDark ? "#111" : "transparent",
+                          backgroundColor: !isDark ? "#111" : "#1a1a1a",
                           color: !isDark ? "#fff" : "#666",
-                          border: !isDark ? "none" : "1px solid #ddd",
+                          border: !isDark ? "none" : "1px solid #333",
                         }}
                       >
                         <Sun className="w-4 h-4" />
@@ -501,8 +516,8 @@ const Settings = () => {
                             letterSpacing: "0.06em",
                             padding: "4px 10px",
                             borderRadius: 4,
-                            backgroundColor: "#111",
-                            color: "#fff",
+                            backgroundColor: isDark ? "#4ade80" : "#111",
+                            color: isDark ? "#111" : "#fff",
                           }}
                         >
                           PRO
@@ -553,8 +568,8 @@ const Settings = () => {
                             padding: "10px 20px",
                             borderRadius: 6,
                             border: isDark ? "1px solid #333" : "1px solid #ddd",
-                            backgroundColor: isDark ? "transparent" : "#fff",
-                            color: isDark ? "#aaa" : "#333",
+                            backgroundColor: isDark ? "#1a1a1a" : "#fff",
+                            color: isDark ? "#888" : "#333",
                           }}
                           onMouseEnter={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; }}
                           onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.color = isDark ? "#aaa" : "#333"; }}
