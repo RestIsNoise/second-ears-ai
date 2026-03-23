@@ -19,11 +19,12 @@ const modes = [
   { id: "perception", label: "Perception", tag: "The listener", icon: Ear },
 ] as const;
 
-type Section = "profile" | "preferences" | "subscription" | "account";
+type Section = "profile" | "preferences" | "appearance" | "subscription" | "account";
 
 const sidebarItems: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: "profile", label: "Profile", icon: User },
   { id: "preferences", label: "Preferences", icon: Settings2 },
+  { id: "appearance", label: "Appearance", icon: Palette },
   { id: "subscription", label: "Subscription", icon: Layers },
   { id: "account", label: "Account", icon: AlertTriangle },
 ];
