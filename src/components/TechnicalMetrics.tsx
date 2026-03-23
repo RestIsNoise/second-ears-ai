@@ -358,13 +358,6 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         overflow: "hidden",
       }}
     >
-      {/* Panel header */}
-      <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid hsl(0 0% 91%)" }}>
-        <span className="uppercase" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", color: "hsl(0 0% 60%)" }}>
-          Technical Metrics
-        </span>
-      </div>
-
       {/* Loudness section */}
       <SectionDivider label="Loudness" />
       <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} rowIndex={0} animated={animated} />
