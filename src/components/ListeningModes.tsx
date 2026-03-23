@@ -77,11 +77,12 @@ const ListeningModes = () => {
               className="relative rounded-lg overflow-hidden flex flex-col reveal-child group cursor-pointer"
               style={{
                 "--stagger": `${100 + i * 120}ms`,
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle))",
+                background: isDark ? "#1a1a1a" : "hsl(var(--card))",
+                border: isDark ? "1px solid #2a2a2a" : "1px solid hsl(var(--border-subtle))",
                 minHeight: 280,
-                boxShadow:
-                  "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
+                boxShadow: isDark
+                  ? "none"
+                  : "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
                 transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
               } as React.CSSProperties}
               onMouseEnter={(e) => {
