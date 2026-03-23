@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, User, MessageSquare, X } from "lucide-react";
+import { Plus, MessageSquare, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -220,46 +220,54 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
           </div>
         )}
         {!loadingComments && comments.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-4">
-            <MessageSquare className="w-10 h-10 text-muted-foreground/25" strokeWidth={1.5} />
-            <div className="space-y-1.5">
-              <p className="text-[15px] font-medium text-foreground/50 tracking-tight">No notes yet</p>
-              <p className="text-[12px] text-muted-foreground/40 leading-relaxed max-w-[220px]">
-                Click on the waveform at any point to add a timestamped comment
-              </p>
-            </div>
+          <div className="flex flex-col items-center justify-center text-center gap-3" style={{ padding: "32px 16px" }}>
+            <MessageSquare className="w-6 h-6" style={{ color: "#ccc" }} strokeWidth={1.5} />
+            <p style={{ fontSize: 13, color: "#bbb", lineHeight: 1.6, maxWidth: 240 }}>
+              Click anywhere on the waveform to leave a note.
+            </p>
           </div>
         )}
         {comments.map((c) => (
           <div
             key={c.id}
-            className="rounded-lg p-2.5 hover:bg-secondary/30 transition-colors group"
+            className="group"
+            style={{
+              background: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: 6,
+              padding: "14px 16px",
+              marginBottom: 8,
+            }}
           >
             <div className="flex items-start gap-2">
-              <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center shrink-0 mt-0.5">
-                <User className="w-3 h-3 text-muted-foreground" />
-              </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-muted-foreground tabular-nums"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-                  >
-                    @{formatTime(c.timestamp)}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground/40">
-                    {formatDate(c.created_at)}
-                  </span>
-                </div>
-                <p className="text-xs text-foreground/80 leading-relaxed mt-0.5">
+                <span
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    background: "#f0f0f0",
+                    color: "#666",
+                    padding: "2px 8px",
+                    borderRadius: 3,
+                    marginBottom: 8,
+                  }}
+                >
+                  @{formatTime(c.timestamp)}
+                </span>
+                <p style={{ fontSize: 14, color: "#333", lineHeight: 1.6 }}>
                   {c.content}
+                </p>
+                <p style={{ fontSize: 11, color: "#bbb", marginTop: 6 }}>
+                  {formatDate(c.created_at)}
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0 mt-0.5">
                 {onAddToDo && (
                   <button
                     onClick={() => onAddToDo(c.content, c.timestamp)}
-                    className="opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground/60 transition-all"
+                    className="opacity-0 group-hover:opacity-100 transition-all"
+                    style={{ color: "#bbb" }}
                     title="Add to To-Do"
                   >
                     <Plus className="w-3 h-3" />
@@ -268,7 +276,8 @@ const HumanFeedbackPanel = ({ analysisId, currentTime = 0, onAddToDo, pendingCom
                 {user && user.id === c.user_id && (
                   <button
                     onClick={() => handleDelete(c.id)}
-                    className="opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-destructive/70 transition-all"
+                    className="opacity-0 group-hover:opacity-100 transition-all"
+                    style={{ color: "#bbb" }}
                     title="Delete comment"
                   >
                     <X className="w-3 h-3" />
