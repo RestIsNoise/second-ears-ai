@@ -648,30 +648,35 @@ const FeedbackDisplay = ({
 
       case "full-analysis":
         return (
-          <div className="space-y-0">
+          <div style={{ padding: "16px 16px 4px" }}>
             {hasFullAnalysis ? (
               fullAnalysisCards.map(({ key, label, text }) =>
                 text ? (
                    <div
                     key={key}
                     style={{
-                      padding: "18px 22px",
-                      borderBottom: "1px solid hsl(var(--foreground) / 0.05)",
+                      padding: 20,
+                      marginBottom: 12,
+                      border: "1px solid #ebebeb",
+                      borderRadius: 6,
+                      background: "linear-gradient(135deg, #fafaf8 0%, #f5f5f0 100%)",
                     }}
                   >
                     <h3
-                      className="text-foreground/55 uppercase tracking-[0.08em] font-medium mb-3"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12 }}
+                      className="uppercase font-medium"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: "0.12em", color: "#999", marginBottom: 10 }}
                     >
                       {label}
                     </h3>
-                    <AnalysisCardText text={text} />
+                    <div style={{ fontSize: 14, lineHeight: 1.8, color: "#444" }}>
+                      <AnalysisCardText text={text} />
+                    </div>
                   </div>
                 ) : null
               )
             ) : (
               <div className="flex flex-col items-center justify-center py-14 gap-1.5">
-                <span className="text-[9px] text-foreground/20 uppercase tracking-wider font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>No data</span>
+                <span className="text-[9px] uppercase tracking-wider font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "hsl(0 0% 80%)" }}>No data</span>
               </div>
             )}
 
