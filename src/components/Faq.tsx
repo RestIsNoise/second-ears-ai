@@ -1,9 +1,5 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 const items = [
   {
@@ -56,35 +52,104 @@ const items = [
   },
 ];
 
-const Faq = () => (
-  <section id="faq" className="py-12 md:py-14 px-6 border-t border-border-subtle scroll-mt-20">
-    <div className="max-w-5xl mx-auto">
-      <div className="max-w-2xl">
-        <p className="font-mono-brand text-xs text-muted-foreground tracking-widest uppercase mb-3">
-          Support
-        </p>
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-6">
-          Frequently asked
-        </h2>
-        <Accordion type="single" collapsible className="space-y-0">
-          {items.map((item, i) => (
-            <AccordionItem
-              key={i}
-              value={`faq-${i}`}
-              className="border-b border-border-subtle py-0"
-            >
-              <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">
-                {item.q}
-              </AccordionTrigger>
-              <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
-                {item.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+const FaqItem = ({ item, isOpen, onToggle, isFirst }: { item: typeof items[0]; isOpen: boolean; onToggle: () => void; isFirst: boolean }) => (
+  <div
+    style={{
+      borderBottom: "1px solid #e8e8e8",
+      borderTop: isFirst ? "none" : undefined,
+    }}
+  >
+    <button
+      onClick={onToggle}
+      className="w-full flex items-center justify-between text-left cursor-pointer group"
+      style={{ padding: "20px 0" }}
+    >
+      <span
+        style={{
+          fontSize: 15,
+          fontWeight: 500,
+          color: "#111",
+          transition: "color 0.15s ease",
+        }}
+        className="group-hover:!text-black"
+      >
+        {item.q}
+      </span>
+      <ChevronDown
+        className="w-4 h-4 shrink-0 ml-4"
+        style={{
+          color: "#999",
+          transition: "transform 0.2s ease",
+          transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+        }}
+      />
+    </button>
+    <div
+      style={{
+        overflow: "hidden",
+        transition: "max-height 0.25s ease, opacity 0.2s ease",
+        maxHeight: isOpen ? 500 : 0,
+        opacity: isOpen ? 1 : 0,
+      }}
+    >
+      <p
+        style={{
+          fontSize: 14,
+          lineHeight: 1.7,
+          color: "#555",
+          paddingBottom: 16,
+        }}
+      >
+        {item.a}
+      </p>
     </div>
-  </section>
+  </div>
 );
+
+const Faq = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <section id="faq" className="scroll-mt-20">
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "60px 24px" }}>
+        {/* Header */}
+        <div className="mb-12">
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.15em",
+              color: "#999",
+              textTransform: "uppercase",
+              marginBottom: 12,
+              fontWeight: 600,
+            }}
+          >
+            FAQ
+          </p>
+          <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
+            Got questions?
+          </h1>
+          <p style={{ fontSize: 16, color: "#666", marginTop: 10, lineHeight: 1.5 }}>
+            Everything you need to know about SecondEar.
+          </p>
+        </div>
+
+        {/* Accordion */}
+        <div>
+          {items.map((item, i) => (
+            <FaqItem
+              key={i}
+              item={item}
+              isOpen={openIndex === i}
+              onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              isFirst={i === 0}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default Faq;
