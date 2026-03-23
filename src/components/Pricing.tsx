@@ -187,7 +187,10 @@ const Pricing = () => {
                     {plan.name}
                   </p>
                   <div className="flex items-baseline gap-1.5 select-none">
-                    <span className="text-[2rem] font-semibold tracking-[-0.04em] leading-none">
+                    <span
+                      className="font-semibold tracking-[-0.04em] leading-none"
+                      style={{ fontSize: plan.comingSoon ? 24 : "2rem" }}
+                    >
                       {plan.price}
                     </span>
                     {plan.period && (
