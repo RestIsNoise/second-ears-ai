@@ -72,6 +72,28 @@ const modeFixOneLabel: Record<string, string> = {
   perception: "Urgent fix",
 };
 
+/** Keyboard shortcut hint badge */
+const KbdHint = ({ children }: { children: React.ReactNode }) => {
+  const dk = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+  return (
+    <span
+      style={{
+        fontFamily: "monospace",
+        fontSize: 9,
+        color: dk ? "#555" : "#666",
+        background: dk ? "#222" : "#f0f0ee",
+        border: dk ? "1px solid #333" : "1px solid #e0e0e0",
+        padding: "1px 4px",
+        borderRadius: 2,
+        lineHeight: 1,
+        userSelect: "none",
+      }}
+    >
+      {children}
+    </span>
+  );
+};
+
 /** Small copy button component */
 const CopyFixButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
@@ -485,7 +507,52 @@ const FeedbackDisplay = ({
     [timelineItems, activeItemId]
   );
 
-  // Release readiness from metrics
+  // ── Keyboard shortcuts ──
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (waveformRef.current?.isPlaying()) {
+          waveformRef.current.pause();
+        } else {
+          waveformRef.current?.play();
+        }
+      }
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        if (timelineItems.length === 0) return;
+        const sorted = [...timelineItems].sort((a, b) => a.timestampSec - b.timestampSec);
+        const currentIdx = sorted.findIndex((item) => item.id === activeItemId);
+        let nextIdx: number;
+        if (e.key === "ArrowLeft") {
+          nextIdx = currentIdx <= 0 ? sorted.length - 1 : currentIdx - 1;
+        } else {
+          nextIdx = currentIdx >= sorted.length - 1 ? 0 : currentIdx + 1;
+        }
+        const nextItem = sorted[nextIdx];
+        setActiveItemId(nextItem.id);
+        waveformRef.current?.seekTo(nextItem.timestampSec);
+      }
+
+      if (e.key === "s" || e.key === "S") {
+        if (e.metaKey || e.ctrlKey) return; // don't intercept Cmd+S
+        e.preventDefault();
+        // Copy current page link
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          toast({ title: "Link copied!", duration: 1500 });
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [timelineItems, activeItemId]);
+
+
   const releaseReadiness = useMemo(() => {
     if (n.releaseStatus) return n.releaseStatus;
     const lufs = n.metrics.integratedLufs;
@@ -1053,7 +1120,7 @@ const FeedbackDisplay = ({
 
         {/* ── WAVEFORM PLAYER ── */}
         {audioFile ? (
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-hidden relative">
             <ABCompare
               ref={waveformRef}
               audioFileA={audioFile}
@@ -1068,6 +1135,11 @@ const FeedbackDisplay = ({
               onAddToDo={handleAddToDoWithTimestamp}
               onEditNote={handleEditAnnotation}
             />
+            {/* Keyboard hint */}
+            <div className="absolute bottom-2 right-3 hidden md:flex items-center gap-1 opacity-40">
+              <KbdHint>SPACE</KbdHint>
+              <span style={{ fontFamily: "monospace", fontSize: 9, color: isDark ? "#555" : "#999" }}>play/pause</span>
+            </div>
           </div>
         ) : audioUnavailableMessage ? (
           <div className="w-full py-6 text-center">
@@ -1118,6 +1190,12 @@ const FeedbackDisplay = ({
                 id={panel.id}
                 title={panelTitles[panel.id] || panel.label}
                 onClose={() => handleTogglePanel(panel.id)}
+                headerExtra={panel.id === "ai-feedback" ? (
+                  <span className="flex items-center gap-1 ml-2">
+                    <KbdHint>←</KbdHint>
+                    <KbdHint>→</KbdHint>
+                  </span>
+                ) : undefined}
               >
                 {renderPanelContent(panel.id)}
               </WorkstationPanel>
