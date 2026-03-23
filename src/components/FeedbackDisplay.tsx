@@ -840,14 +840,16 @@ const FeedbackDisplay = ({
         {/* Right: mode badge (mobile) + collaborators */}
         <div className="flex items-center gap-2 shrink-0 sm:justify-end">
           <span
-            className="sm:hidden text-foreground/35 uppercase tracking-[0.1em] font-extrabold"
+            className="sm:hidden uppercase"
             style={{
               fontFamily: "'IBM Plex Mono', 'DM Mono', monospace",
-              fontSize: 7.5,
-              padding: "2px 5px",
-              backgroundColor: "hsl(var(--foreground) / 0.04)",
-              border: "1px solid hsl(var(--foreground) / 0.06)",
-              borderRadius: 2,
+              fontSize: 9,
+              letterSpacing: "0.08em",
+              padding: "3px 8px",
+              backgroundColor: "#f0f0f0",
+              color: "#333",
+              borderRadius: 3,
+              fontWeight: 600,
             }}
           >
             {modeLabels[mode]}
