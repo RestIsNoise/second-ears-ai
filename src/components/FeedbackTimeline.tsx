@@ -88,12 +88,13 @@ interface Props {
   activeItemId: string | null;
   onItemClick: (item: FeedbackItem) => void;
   onAddToDo?: (item: FeedbackItem) => void;
+  onRemoveToDo?: (item: FeedbackItem) => void;
   todoItemIds?: Set<string>;
   scrollContainerRef?: React.RefObject<HTMLDivElement>;
   analysisId?: string | null;
 }
 
-const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoItemIds, scrollContainerRef, analysisId }: Props) => {
+const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemoveToDo, todoItemIds, scrollContainerRef, analysisId }: Props) => {
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const isDark = useMemo(() => typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark", []);
