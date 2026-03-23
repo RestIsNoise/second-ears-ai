@@ -387,7 +387,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
           ...containerStyle,
         }}
       >
-        {/* Label bar — premium track header with metadata */}
+        {/* Label bar */}
         {label && (
           <div
             className="flex items-center gap-2.5 px-3"
@@ -399,7 +399,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
               boxShadow: `inset 0 -1px 0 ${BEVEL_DARK}, inset 0 1px 0 ${BEVEL_LIGHT}`,
             }}
           >
-            {/* Deck badge — machined */}
+            {/* Deck badge */}
             <span
               className="shrink-0 flex items-center justify-center"
               style={{
@@ -419,13 +419,13 @@ const WaveformPlayer = forwardRef<WaveformPlayerHandle, Props>(
             </span>
             <div className="min-w-0 flex-1">
               <span
-                className="uppercase tracking-[0.05em] truncate block"
+                className="uppercase truncate block"
                 style={{
                   fontFamily: MONO,
                   fontSize: 10,
-                  fontWeight: 700,
-                  color: "rgba(255,255,255,0.80)",
-                  letterSpacing: "0.04em",
+                  letterSpacing: "0.08em",
+                  color: "rgba(255,255,255,0.40)",
+                  fontWeight: 500,
                 }}
               >
                 {label}
