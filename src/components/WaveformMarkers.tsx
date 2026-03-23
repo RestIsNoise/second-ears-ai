@@ -314,31 +314,42 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
               onHover={handleMarkerHover}
               onLeave={handleMarkerLeave}
             >
-              <button
-                onClick={() => onMarkerClick?.(m)}
-                className="flex items-center justify-center rounded-full transition-all duration-150"
-                style={{
-                  width: 16,
-                  height: 16,
-                  backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)",
-                  border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"}`,
-                  boxShadow: highlighted ? "0 0 6px rgba(255,255,255,0.12)" : "0 1px 2px rgba(0,0,0,0.3)",
-                  backdropFilter: "blur(4px)",
-                }}
-                aria-label={`${formatTime(m.time)} — ${m.label}`}
-              >
-                <span
+              <div className="relative flex items-center justify-center" style={{ width: 16, height: 16 }}>
+                {/* Pulse ring */}
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
                   style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 9,
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    lineHeight: 1,
+                    border: "1px solid rgba(255,255,255,0.4)",
+                    animation: `markerPulse 2s ease-out infinite`,
+                    animationDelay: `${idx * 0.3}s`,
                   }}
+                />
+                <button
+                  onClick={() => onMarkerClick?.(m)}
+                  className="flex items-center justify-center rounded-full transition-all duration-150 relative z-10"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)",
+                    border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"}`,
+                    boxShadow: highlighted ? "0 0 6px rgba(255,255,255,0.12)" : "0 1px 2px rgba(0,0,0,0.3)",
+                    backdropFilter: "blur(4px)",
+                  }}
+                  aria-label={`${formatTime(m.time)} — ${m.label}`}
                 >
-                  {idx + 1}
-                </span>
-              </button>
+                  <span
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      color: "#ffffff",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {idx + 1}
+                  </span>
+                </button>
+              </div>
             </MarkerTooltip>
           </div>
         );
