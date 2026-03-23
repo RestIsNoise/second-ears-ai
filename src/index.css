@@ -385,6 +385,11 @@ body::after {
   animation-delay: 600ms;
 }
 
+@keyframes fixFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
