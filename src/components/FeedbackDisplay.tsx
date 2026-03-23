@@ -631,6 +631,7 @@ const FeedbackDisplay = ({
                   activeItemId={activeItemId}
                   onItemClick={handleItemClick}
                   onAddToDo={handleAddToDoFromFeedback}
+                  onRemoveToDo={handleRemoveToDoFromFeedback}
                   todoItemIds={todoSourceIds}
                   scrollContainerRef={timelineScrollRef}
                   analysisId={analysisId}
