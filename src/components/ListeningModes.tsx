@@ -125,8 +125,8 @@ const ListeningModes = () => {
                   </span>
                 </div>
                 <h3
-                  className="text-[18px] text-foreground/85 uppercase"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 600 }}
+                  className="text-[18px] uppercase"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 600, color: isDark ? "#e8e8e0" : "hsl(var(--foreground) / 0.85)" }}
                 >
                   {mode.name}
                 </h3>
