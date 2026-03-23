@@ -1,5 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Upload, Music, SlidersHorizontal, Ear, Target, Disc3, CheckCircle2, Lock } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
@@ -20,6 +26,18 @@ const goals: { id: Goal; label: string; icon: typeof Target }[] = [
   { id: "mastering", label: "Mastering", icon: Target },
   { id: "release_check", label: "Release check", icon: CheckCircle2 },
 ];
+
+const modeTooltips: Record<ListeningMode, string> = {
+  technical: "Analyzes loudness, dynamics, frequency balance, stereo image and mix translation. Best for engineers and producers focused on technical fixes.",
+  musical: "Analyzes arrangement, section contrast, hook clarity, groove and emotional momentum. Best for producers evaluating the song itself.",
+  perception: "Analyzes how the mix translates on real speakers, listener fatigue, psychoacoustics and playback compatibility. Best for pre-release checks.",
+};
+
+const goalTooltips: Record<Goal, string> = {
+  mixing: "Focuses on element balance, separation and relative levels. No mastering advice — purely about the mix.",
+  mastering: "Focuses on loudness targets, limiting, dynamics and streaming compliance (-14 LUFS / -9 to -11 LUFS for club).",
+  release_check: "Focuses on streaming compliance, true peak (below -1 dBTP), translation across systems and release readiness.",
+};
 
 interface Props {
   onResult: (result: FeedbackResult) => void;
@@ -305,11 +323,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         >
           Listening mode
         </p>
+        <TooltipProvider>
         <div className="grid grid-cols-3 gap-1.5">
           {modes.map((m) => {
             const isLocked = userPlan === "free" && m.id !== "technical";
             return (
-              <button key={m.id}
+              <Tooltip key={m.id} delayDuration={300}>
+                <TooltipTrigger asChild>
+              <button
                 onClick={() => {
                   if (isLocked) {
                     setLockedModeTooltip(m.id);
@@ -361,9 +382,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   </span>
                 )}
               </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+                  {modeTooltips[m.id]}
+                </TooltipContent>
+              </Tooltip>
             );
           })}
         </div>
+        </TooltipProvider>
       </div>
       <div>
         <p
@@ -372,9 +399,12 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         >
           Goal
         </p>
+        <TooltipProvider>
         <div className="grid grid-cols-3 gap-1.5">
           {goals.map((g) => (
-            <button key={g.id} onClick={() => setGoal(g.id)}
+            <Tooltip key={g.id} delayDuration={300}>
+              <TooltipTrigger asChild>
+            <button onClick={() => setGoal(g.id)}
               className="text-left transition-all duration-100"
               style={{
                 padding: "10px 12px",
@@ -387,8 +417,14 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
               <g.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+                {goalTooltips[g.id]}
+              </TooltipContent>
+            </Tooltip>
           ))}
         </div>
+        </TooltipProvider>
       </div>
       {cooldownMessage && (
         <div
