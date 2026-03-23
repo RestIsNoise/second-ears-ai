@@ -469,6 +469,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   ];
 
   return (
+    <TooltipProvider>
     <section
       style={{
         backgroundColor: "hsl(var(--panel-bg))",
