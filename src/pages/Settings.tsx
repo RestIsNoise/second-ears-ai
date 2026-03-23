@@ -31,10 +31,13 @@ const sidebarItems: { id: Section; label: string; icon: React.ElementType }[] = 
 
 const MONO = "'IBM Plex Mono', monospace";
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) => (
   <div className="mb-6">
-    <h2 className="text-[14px] font-semibold tracking-tight mb-3">{children}</h2>
-    <div className="h-px" style={{ background: "hsl(0 0% 0% / 0.08)" }} />
+    <h2 style={{ fontSize: 18, fontWeight: 600, color: "hsl(var(--foreground))", marginBottom: subtitle ? 4 : 12 }}>{children}</h2>
+    {subtitle && (
+      <p style={{ fontSize: 13, color: "#999", marginBottom: 12 }}>{subtitle}</p>
+    )}
+    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)" }} />
   </div>
 );
 
@@ -201,61 +204,70 @@ const Settings = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="pt-24 pb-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <p
-            className="text-[10px] text-muted-foreground/40 tracking-[0.2em] uppercase mb-1"
-            style={{ fontFamily: MONO }}
-          >
-            Settings
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight mb-8">Account settings</h1>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "0" }}>
 
-          <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex flex-col md:flex-row">
             {/* ═══ SIDEBAR (desktop) / TABS (mobile) ═══ */}
-            <nav className="md:w-[200px] md:shrink-0">
+            <nav style={{ width: 200, flexShrink: 0 }}>
               {/* Mobile: horizontal tabs */}
               <div className="flex md:hidden gap-1 overflow-x-auto pb-2 -mx-1 px-1">
-                {sidebarItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-colors",
-                      activeSection === item.id
-                        ? "bg-secondary text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                    style={{ fontFamily: MONO }}
-                  >
-                    <item.icon className="w-3.5 h-3.5" />
-                    {item.label}
-                  </button>
-                ))}
+                {sidebarItems.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className="flex items-center gap-2 whitespace-nowrap transition-colors"
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 12,
+                        fontWeight: isActive ? 500 : 400,
+                        padding: "10px 14px",
+                        borderRadius: 6,
+                        backgroundColor: isActive ? "#111" : "transparent",
+                        color: isActive ? "#fff" : "#666",
+                      }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                    >
+                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
+                      {item.label}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Desktop: vertical sidebar */}
               <div className="hidden md:flex flex-col gap-0.5">
-                {sidebarItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "flex items-center gap-2.5 px-3.5 py-2.5 rounded-md text-[12px] font-medium transition-colors text-left w-full",
-                      activeSection === item.id
-                        ? "bg-secondary text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                    style={{ fontFamily: MONO }}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </button>
-                ))}
+                {sidebarItems.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className="flex items-center gap-2.5 text-left w-full transition-colors"
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 12,
+                        fontWeight: isActive ? 500 : 400,
+                        padding: "10px 14px",
+                        borderRadius: 6,
+                        backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
+                        color: isActive ? (isDark ? "#111" : "#fff") : "#666",
+                      }}
+                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
+                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
+                    >
+                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
+                      {item.label}
+                    </button>
+                  );
+                })}
               </div>
             </nav>
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0" style={{ paddingLeft: 48 }}>
               {/* ── PROFILE ── */}
               {activeSection === "profile" && (
                 <section>
@@ -416,30 +428,50 @@ const Settings = () => {
                     >
                       Theme
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => { if (isDark) toggleTheme(); }}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
-                          !isDark
-                            ? "border-foreground/20 bg-secondary text-foreground"
-                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
-                        )}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          height: 44,
+                          minWidth: 140,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 500,
+                          fontFamily: MONO,
+                          justifyContent: "center",
+                          transition: "all 0.15s",
+                          backgroundColor: !isDark ? "#111" : "transparent",
+                          color: !isDark ? "#fff" : "#666",
+                          border: !isDark ? "none" : "1px solid #ddd",
+                        }}
                       >
                         <Sun className="w-4 h-4" />
-                        Light mode
+                        Light
                       </button>
                       <button
                         onClick={() => { if (!isDark) toggleTheme(); }}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
-                          isDark
-                            ? "border-foreground/20 bg-secondary text-foreground"
-                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
-                        )}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          height: 44,
+                          minWidth: 140,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 500,
+                          fontFamily: MONO,
+                          justifyContent: "center",
+                          transition: "all 0.15s",
+                          backgroundColor: isDark ? "#e8e8e0" : "transparent",
+                          color: isDark ? "#111" : "#666",
+                          border: isDark ? "none" : "1px solid #ddd",
+                        }}
                       >
                         <Moon className="w-4 h-4" />
-                        Dark mode
+                        Dark
                       </button>
                     </div>
                     <p className="text-[10px] text-muted-foreground/50 mt-2">
@@ -456,31 +488,37 @@ const Settings = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <span
-                        className="text-[12px] font-medium text-muted-foreground"
-                        style={{ fontFamily: MONO }}
+                        style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "#999" }}
                       >
                         Current plan
                       </span>
                       {userPlan === "pro" ? (
                         <span
-                          className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm"
                           style={{
                             fontFamily: MONO,
-                            backgroundColor: "hsl(145 55% 45% / 0.12)",
-                            color: "hsl(145 55% 45%)",
-                            border: "1px solid hsl(145 55% 45% / 0.25)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.06em",
+                            padding: "4px 10px",
+                            borderRadius: 4,
+                            backgroundColor: "#111",
+                            color: "#fff",
                           }}
                         >
                           PRO
                         </span>
                       ) : (
                         <span
-                          className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm"
                           style={{
                             fontFamily: MONO,
-                            backgroundColor: "hsl(var(--foreground) / 0.05)",
-                            color: "hsl(var(--foreground) / 0.4)",
-                            border: "1px solid hsl(var(--foreground) / 0.08)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.06em",
+                            padding: "4px 10px",
+                            borderRadius: 4,
+                            backgroundColor: isDark ? "#222" : "hsl(var(--foreground) / 0.05)",
+                            color: isDark ? "#888" : "hsl(var(--foreground) / 0.4)",
+                            border: isDark ? "1px solid #333" : "1px solid hsl(var(--foreground) / 0.08)",
                           }}
                         >
                           FREE
@@ -490,9 +528,7 @@ const Settings = () => {
 
                     {userPlan === "pro" && (
                       <div>
-                        <Button
-                          variant="outline"
-                          size="sm"
+                        <button
                           disabled={portalLoading}
                           onClick={async () => {
                             setPortalLoading(true);
@@ -510,11 +546,22 @@ const Settings = () => {
                               setPortalLoading(false);
                             }
                           }}
-                          className="h-9 text-xs gap-1.5"
+                          className="flex items-center gap-2 transition-colors"
+                          style={{
+                            fontFamily: MONO,
+                            fontSize: 13,
+                            padding: "10px 20px",
+                            borderRadius: 6,
+                            border: isDark ? "1px solid #333" : "1px solid #ddd",
+                            backgroundColor: isDark ? "transparent" : "#fff",
+                            color: isDark ? "#aaa" : "#333",
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.color = isDark ? "#aaa" : "#333"; }}
                         >
                           <CreditCard className="w-3.5 h-3.5" />
                           {portalLoading ? "Redirecting…" : "Manage subscription"}
-                        </Button>
+                        </button>
                         <p className="text-[10px] text-muted-foreground/50 mt-2">
                           Cancel, change payment method, or view billing history
                         </p>
@@ -533,7 +580,7 @@ const Settings = () => {
               {/* ── ACCOUNT ── */}
               {activeSection === "account" && (
                 <section>
-                  <SectionTitle>Account</SectionTitle>
+                  <SectionTitle subtitle="Danger zone — these actions are permanent.">Account</SectionTitle>
                   <div>
                     <button
                       onClick={() => setDeleteOpen(true)}
