@@ -594,53 +594,59 @@ const Dashboard = () => {
       <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header row */}
-          <div
-            className="flex items-center justify-between mb-6"
-            style={{
-              padding: "16px 24px",
-              background: "white",
-              borderBottom: "1px solid hsl(0 0% 91%)",
-              borderRadius: 0,
-            }}
-          >
-            <div>
-              <h1
-                className="text-foreground"
-                style={{ fontSize: 20, fontWeight: 700, color: "hsl(0 0% 7%)", letterSpacing: "-0.01em" }}
-              >
-                My Projects
-              </h1>
-              <p
+          {(() => {
+            const isDarkHeader = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+            return (
+              <div
+                className="flex items-center justify-between mb-6"
                 style={{
-                  fontSize: 12,
-                  color: "hsl(0 0% 60%)",
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  marginTop: 2,
+                  padding: "16px 24px",
+                  background: isDarkHeader ? "#111" : "white",
+                  border: isDarkHeader ? "1px solid #222" : undefined,
+                  borderBottom: isDarkHeader ? undefined : "1px solid hsl(0 0% 91%)",
+                  borderRadius: 0,
                 }}
               >
-                {grouped.reduce((sum, g) => sum + g.versionCount, 0)} analyses · {grouped.length} projects
-              </p>
-            </div>
-            <Link
-              to="/analyze"
-              className="inline-flex items-center gap-1.5 transition-colors"
-              style={{
-                background: "hsl(0 0% 7%)",
-                color: "white",
-                padding: "10px 20px",
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 500,
-                letterSpacing: "0.02em",
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 20%)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 7%)"; }}
-            >
-              <Plus className="w-4 h-4" />
-              New analysis
-            </Link>
-          </div>
+                <div>
+                  <h1
+                    className="text-foreground"
+                    style={{ fontSize: 20, fontWeight: 700, color: isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)", letterSpacing: "-0.01em" }}
+                  >
+                    My Projects
+                  </h1>
+                  <p
+                    style={{
+                      fontSize: 12,
+                      color: isDarkHeader ? "#555" : "hsl(0 0% 60%)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      marginTop: 2,
+                    }}
+                  >
+                    {grouped.reduce((sum, g) => sum + g.versionCount, 0)} analyses · {grouped.length} projects
+                  </p>
+                </div>
+                <Link
+                  to="/analyze"
+                  className="inline-flex items-center gap-1.5 transition-colors"
+                  style={{
+                    background: isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)",
+                    color: isDarkHeader ? "#111" : "white",
+                    padding: "10px 20px",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: "0.02em",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#d4d0c8" : "hsl(0 0% 20%)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)"; }}
+                >
+                  <Plus className="w-4 h-4" />
+                  New analysis
+                </Link>
+              </div>
+            );
+          })()}
 
           {/* Tabs */}
           <Tabs defaultValue="tracks" className="w-full">
