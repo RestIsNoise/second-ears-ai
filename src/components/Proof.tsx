@@ -48,7 +48,7 @@ const Proof = () => {
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto" style={{ maxWidth: 900 }}>
         {/* Heading */}
         <div className="text-center mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div className="flex items-center gap-4 justify-center mb-5">
