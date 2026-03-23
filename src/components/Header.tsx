@@ -152,8 +152,8 @@ const Header = () => {
                     />
                     <AvatarFallback
                       style={{
-                        background: "#111",
-                        color: "#fff",
+                        background: isDark ? "#333" : "#111",
+                        color: isDark ? "#e8e8e0" : "#fff",
                         fontSize: 13,
                         fontWeight: 600,
                         display: avatarUrl && !avatarError ? "none" : undefined,
