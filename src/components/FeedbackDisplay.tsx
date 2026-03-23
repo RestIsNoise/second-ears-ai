@@ -1185,6 +1185,12 @@ const FeedbackDisplay = ({
                 id={panel.id}
                 title={panelTitles[panel.id] || panel.label}
                 onClose={() => handleTogglePanel(panel.id)}
+                headerExtra={panel.id === "ai-feedback" ? (
+                  <span className="flex items-center gap-1 ml-2">
+                    <KbdHint>←</KbdHint>
+                    <KbdHint>→</KbdHint>
+                  </span>
+                ) : undefined}
               >
                 {renderPanelContent(panel.id)}
               </WorkstationPanel>
