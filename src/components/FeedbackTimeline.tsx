@@ -142,21 +142,25 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              className={cn("group cursor-pointer", !isActive && "bg-white dark:bg-[#1a1a1a] dark:border-[#333]")}
+              className={cn("group cursor-pointer")}
               style={{
                 opacity: 0,
                 transform: "translateY(12px)",
                 animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
-                background: isActive ? accent.bg : undefined,
-                border: `1px solid ${isActive ? accent.border : "hsl(0 0% 91%)"}`,
+                background: isActive
+                  ? accent.bg
+                  : isDark
+                    ? "#f5f2eb"
+                    : "white",
+                border: `1px solid ${isActive ? accent.border : isDark ? "#e8e2d4" : "hsl(0 0% 91%)"}`,
                 borderRadius: 8,
                 padding: 20,
                 marginBottom: 12,
                 transition: "box-shadow 0.2s, border-color 0.15s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = isDark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.06)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             >
               {/* ═══ CARD HEADER ROW ═══ */}
@@ -250,11 +254,11 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 style={{
                   fontSize: 16,
                   fontWeight: 600,
-                  color: undefined,
+                  color: isDark ? "#1a1510" : undefined,
                   margin: "8px 0",
                   lineHeight: 1.4,
                 }}
-                className="text-foreground"
+                className={isDark ? "" : "text-foreground"}
               >
                 {item.title}
               </h3>
@@ -265,7 +269,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                   style={{
                     fontSize: 14,
                     lineHeight: 1.7,
-                    color: "hsl(0 0% 33%)",
+                    color: isDark ? "#2a2520" : "hsl(0 0% 33%)",
                     fontFamily: MONO,
                   }}
                 >
@@ -278,8 +282,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 <div
                   style={{
                     marginTop: 12,
-                    backgroundColor: isDark ? "#1a1a1a" : "#f8f8f6",
-                    borderLeft: isDark ? "3px solid #e8e8e0" : `3px solid ${accent.border}`,
+                    backgroundColor: isDark ? "#ede9e0" : "#f8f8f6",
+                    borderLeft: isDark ? "3px solid #2a2520" : `3px solid ${accent.border}`,
                     borderRadius: "0 6px 6px 0",
                     padding: "12px 16px",
                   }}
@@ -290,7 +294,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       fontSize: 10,
                       fontWeight: 700,
                       letterSpacing: "0.1em",
-                      color: isDark ? "#e8e8e0" : "hsl(0 0% 7%)",
+                      color: isDark ? "#2a2520" : "hsl(0 0% 7%)",
                       marginBottom: 6,
                       textTransform: "uppercase" as const,
                     }}
@@ -301,7 +305,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     style={{
                       fontSize: 13,
                       lineHeight: 1.6,
-                      color: isDark ? "#aaa" : "hsl(0 0% 27%)",
+                      color: isDark ? "#3a3530" : "hsl(0 0% 27%)",
                       fontFamily: MONO,
                     }}
                   >
