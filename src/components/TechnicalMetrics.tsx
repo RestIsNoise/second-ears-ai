@@ -251,7 +251,7 @@ const CorrelationChannel = ({ value, isDark = false }: { value: number; isDark?:
 };
 
 /* ── Sub/Kick Channel ── */
-const SubKickChannel = ({ value }: { value: number }) => {
+const SubKickChannel = ({ value, isDark = false }: { value: number; isDark?: boolean }) => {
   const status = subKickStatus(value);
   const led = ledColors[status.color];
   const pct = Math.max(0, Math.min(100, (value / 2) * 100));
