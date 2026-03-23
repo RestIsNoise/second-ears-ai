@@ -44,90 +44,6 @@ interface GroupedProject {
   lastUpdated: string;
 }
 
-/* ─── Track Row (list view) ─── */
-const TrackRow = ({
-  grouped,
-  onDelete,
-  onNavigate,
-}: {
-  grouped: GroupedProject;
-  onDelete: (project: ProjectRow) => void;
-  onNavigate: (path: string) => void;
-}) => {
-  const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
-  const mode = latestAnalysis.mode || "technical";
-  const ModeIcon = modeIcons[mode] || SlidersHorizontal;
-  const colorClass = modeColors[mode] || modeColors.technical;
-
-  return (
-    <div
-      onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex items-center gap-3 cursor-pointer transition-all duration-100"
-      style={{
-        padding: "10px 14px",
-        backgroundColor: "hsl(var(--card))",
-        border: "2px solid hsl(var(--foreground) / 0.08)",
-        borderRadius: 3,
-        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.06), inset 0 -1px 0 hsl(0 0% 0% / 0.04)",
-      }}
-    >
-      <div
-        className="flex-shrink-0 flex items-center justify-center w-8 h-8"
-        style={{
-          backgroundColor: "hsl(var(--panel-bg))",
-          border: "1px solid hsl(var(--foreground) / 0.06)",
-          borderRadius: 2,
-          boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-        }}
-      >
-        <AudioLines className="w-4 h-4 text-foreground/50" />
-      </div>
-      <div className="flex-1 min-w-0 flex items-center gap-2.5">
-        <h3
-          className="text-[12px] font-semibold truncate text-foreground/85 group-hover:text-foreground transition-colors"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-        >
-          {proj.name}
-        </h3>
-        <span
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold shrink-0"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 8,
-            backgroundColor: "hsl(var(--foreground) / 0.04)",
-            border: "1px solid hsl(var(--foreground) / 0.06)",
-            borderRadius: 2,
-          }}
-        >
-          <ModeIcon className="w-2.5 h-2.5" />{mode}
-        </span>
-        {versionCount > 1 && (
-          <span
-            className="text-foreground/30 font-bold shrink-0"
-            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-          >
-            v{latestAnalysis.version}
-          </span>
-        )}
-      </div>
-      <span
-        className="text-foreground/25 shrink-0 tabular-nums"
-        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
-      >
-        {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
-      </span>
-      <button
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
-        className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
-        style={{ borderRadius: 2 }}
-        title="Delete project"
-      >
-        <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
-      </button>
-    </div>
-  );
-};
-
 /* ─── Seeded waveform generator (deterministic per project id) ─── */
 const seededRandom = (seed: string) => {
   let h = 0;
@@ -161,6 +77,119 @@ const generateMarkers = (id: string) => {
   }
   return markers.sort();
 };
+
+/* ─── Mini waveform thumbnail ─── */
+const MiniWaveform = ({ id }: { id: string }) => {
+  const bars = generateWaveform(id, 28);
+  return (
+    <div
+      className="flex-shrink-0 flex items-center justify-center overflow-hidden"
+      style={{
+        width: 60,
+        height: 36,
+        background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
+        borderRadius: 4,
+      }}
+    >
+      <div className="flex items-center gap-[1px]" style={{ height: 24 }}>
+        {bars.map((v, i) => {
+          const h = Math.max(2, v * 18);
+          return (
+            <div
+              key={i}
+              style={{
+                width: 1.5,
+                height: h,
+                background: "hsl(0 0% 50%)",
+                borderRadius: 0,
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+/* ─── Track Row (list view) ─── */
+const TrackRow = ({
+  grouped,
+  onDelete,
+  onNavigate,
+}: {
+  grouped: GroupedProject;
+  onDelete: (project: ProjectRow) => void;
+  onNavigate: (path: string) => void;
+}) => {
+  const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
+  const mode = latestAnalysis.mode || "technical";
+  const ModeIcon = modeIcons[mode] || SlidersHorizontal;
+  const modeColor = modeColors[mode] || modeColors.technical;
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+
+  return (
+    <div
+      onClick={() => onNavigate(`/project/${proj.id}`)}
+      className="group relative flex items-center gap-3 cursor-pointer transition-colors duration-100"
+      style={{
+        height: 56,
+        padding: "0 16px",
+        borderBottom: isDark ? "1px solid #1a1a1a" : "1px solid #f0f0f0",
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#fafaf8"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+    >
+      <MiniWaveform id={proj.id} />
+
+      <div className="flex-1 min-w-0 flex items-center gap-3">
+        <h3
+          className="text-foreground/90 group-hover:text-foreground transition-colors"
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 14, fontWeight: 500 }}
+        >
+          {proj.name}
+        </h3>
+        <span
+          className="inline-flex items-center gap-1 px-2 py-0.5 uppercase tracking-[0.06em] font-semibold shrink-0"
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 10,
+            backgroundColor: isDark ? "#222" : modeColor.bg,
+            color: isDark ? "#888" : modeColor.text,
+            borderRadius: 3,
+          }}
+        >
+          <ModeIcon className="w-2.5 h-2.5" />{mode}
+        </span>
+        {versionCount > 1 && (
+          <span
+            className="text-foreground/30 font-bold shrink-0"
+            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
+          >
+            v{latestAnalysis.version}
+          </span>
+        )}
+      </div>
+
+      <span
+        className="shrink-0 tabular-nums"
+        style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "#999" }}
+      >
+        {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+      </span>
+      <button
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
+        className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0"
+        style={{ borderRadius: 2 }}
+        title="Delete project"
+      >
+        <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
+      </button>
+    </div>
+  );
+};
+
+
+
 
 /* ─── Track Grid Card ─── */
 const TrackGridCard = ({
@@ -740,7 +769,7 @@ const Dashboard = () => {
                   </div>
 
                   {viewMode === "list" ? (
-                    <div className="grid gap-1.5">
+                    <div>
                       {grouped.map((g) => (
                         <TrackRow key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
