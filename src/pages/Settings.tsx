@@ -382,7 +382,10 @@ const Settings = () => {
                       onClick={handleSaveProfile}
                       disabled={saving}
                       className="h-9 text-xs px-6 w-full"
-                      style={{ maxWidth: 200 }}
+                      style={{
+                        maxWidth: 200,
+                        ...(isDark ? { backgroundColor: "#e8e8e0", color: "#111", borderColor: "#e8e8e0" } : {}),
+                      }}
                     >
                       {saving ? "Saving…" : "Save changes"}
                     </Button>
