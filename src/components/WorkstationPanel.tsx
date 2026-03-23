@@ -56,6 +56,7 @@ const WorkstationPanel = ({ id, title, onClose, children, headerExtra }: Props) 
             >
               {title}
             </h3>
+            {headerExtra}
           </div>
 
           <button
