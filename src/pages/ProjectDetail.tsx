@@ -57,6 +57,7 @@ const ProjectDetail = () => {
   const loadProject = useCallback(async () => {
     if (!user || !id) return;
     setFetching(true);
+    setAudioFile(null);
 
     const { data: proj } = await supabase
       .from("projects")
