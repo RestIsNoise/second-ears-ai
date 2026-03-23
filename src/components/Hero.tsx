@@ -141,7 +141,8 @@ const Hero = () => {
               </Button>
             </div>
 
-            {/* Trust row */}
+            {/* Trust row — hidden for Pro users */}
+            {!isPro && (
             <div
               className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 animate-fade-up"
               style={{ animationDelay: "0.32s" }}
@@ -162,6 +163,7 @@ const Hero = () => {
                 </span>
               ))}
             </div>
+            )}
           </div>
 
           {/* Right column — Screenshot with scroll-linked scale */}
