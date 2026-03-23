@@ -84,7 +84,7 @@ const ListeningModes = () => {
             >
               {/* Panel header */}
               <div
-                className="px-5 pt-5 pb-4"
+                className="px-7 pt-7 pb-5"
                 style={{ borderBottom: "1px solid hsl(var(--border-subtle) / 0.2)" }}
               >
                 <div className="flex items-center justify-between mb-3.5">
