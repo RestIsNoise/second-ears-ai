@@ -310,6 +310,13 @@ interface Props {
 }
 
 const TechnicalMetrics = ({ metrics }: Props) => {
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setAnimated(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
   const hasAny =
     metrics.integrated_lufs !== undefined ||
     metrics.short_term_lufs !== undefined ||
@@ -359,22 +366,22 @@ const TechnicalMetrics = ({ metrics }: Props) => {
 
       {/* Loudness section */}
       <SectionDivider label="Loudness" />
-      <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} />
-      <MeterChannel label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} thresholds={lufsThresholds} />
-      <MeterChannel label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} thresholds={[{ pct: 40, label: "8" }, { pct: 70, label: "14" }]} />
+      <MeterChannel label="Int. LUFS" value={il} unit="LUFS" min={-24} max={-6} status={il !== null ? lufsStatus(il) : null} thresholds={lufsThresholds} rowIndex={0} animated={animated} />
+      <MeterChannel label="ST LUFS" value={stl} unit="LUFS" min={-24} max={-6} status={stl !== null ? lufsStatus(stl) : null} thresholds={lufsThresholds} rowIndex={1} animated={animated} />
+      <MeterChannel label="LRA" value={lra} unit="LU" min={0} max={20} status={lra !== null ? lraStatus(lra) : null} thresholds={[{ pct: 40, label: "8" }, { pct: 70, label: "14" }]} rowIndex={2} animated={animated} />
 
       {/* Dynamics section */}
       <SectionDivider label="Dynamics" />
-      <MeterChannel label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 40, label: "8" }]} />
-      <MeterChannel label="Peak" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} decimals={1} thresholds={peakThresholds} />
-      <MeterChannel label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 50, label: "10" }]} />
+      <MeterChannel label="DR" value={dr} unit="DR" min={0} max={20} status={dr !== null ? drStatus(dr) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 40, label: "8" }]} rowIndex={3} animated={animated} />
+      <MeterChannel label="Peak" value={peak} unit="dBTP" min={-6} max={0} status={peak !== null ? peakStatus(peak) : null} decimals={1} thresholds={peakThresholds} rowIndex={4} animated={animated} />
+      <MeterChannel label="Crest" value={cf} unit="dB" min={0} max={20} status={cf !== null ? crestStatus(cf) : null} thresholds={[{ pct: 30, label: "6" }, { pct: 50, label: "10" }]} rowIndex={5} animated={animated} />
 
       {/* Stereo section */}
       <SectionDivider label="Stereo / Balance" />
       {sc !== null ? (
         <CorrelationChannel value={sc} />
       ) : (
-        <MeterChannel label="Stereo" value={null} unit="" min={-1} max={1} status={null} />
+        <MeterChannel label="Stereo" value={null} unit="" min={-1} max={1} status={null} rowIndex={6} animated={animated} />
       )}
       {metrics.sub_kick_ratio !== undefined && (
         <SubKickChannel value={metrics.sub_kick_ratio} />
