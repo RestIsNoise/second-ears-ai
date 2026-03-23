@@ -139,17 +139,30 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               </div>
 
               {/* Label */}
-              <span
-                className={cn(
-                  "text-[12px] tracking-[0.03em] truncate uppercase",
-                  isActive
-                    ? "text-foreground/80 font-medium"
-                    : "text-foreground/38 font-normal",
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <span
+                    className={cn(
+                      "text-[12px] tracking-[0.03em] truncate uppercase cursor-help",
+                      isActive
+                        ? "text-foreground/80 font-medium"
+                        : "text-foreground/38 font-normal",
+                    )}
+                    style={{ fontFamily: MONO, lineHeight: 1.1 }}
+                  >
+                    {panel.label}
+                  </span>
+                </TooltipTrigger>
+                {moduleTooltips[panel.id] && (
+                  <TooltipContent
+                    side="right"
+                    className="max-w-[200px] text-xs"
+                    style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}
+                  >
+                    {moduleTooltips[panel.id]}
+                  </TooltipContent>
                 )}
-                style={{ fontFamily: MONO, lineHeight: 1.1 }}
-              >
-                {panel.label}
-              </span>
+              </Tooltip>
 
               {/* Status LED */}
               {isActive && (
