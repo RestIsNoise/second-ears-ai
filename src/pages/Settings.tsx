@@ -253,7 +253,7 @@ const Settings = () => {
                         padding: "10px 14px",
                         borderRadius: 6,
                         backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
-                        color: isActive ? (isDark ? "#111" : "#fff") : "#666",
+                        color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
                       }}
                       onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#222" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
                       onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#666"; } }}
