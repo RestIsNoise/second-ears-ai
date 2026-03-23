@@ -256,10 +256,10 @@ const Pricing = () => {
                             !feature.included &&
                               (plan.featured
                                 ? "opacity-15 line-through"
-                                : "text-muted-foreground/35 line-through"),
+                                : "text-muted-foreground line-through"),
                             feature.included &&
                               !plan.featured &&
-                              "text-foreground/75",
+                              "text-foreground/80",
                             feature.included && plan.featured && "opacity-65"
                           )}
                         >
