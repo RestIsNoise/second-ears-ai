@@ -22,7 +22,7 @@ const Hero = () => {
   return (
     <section
       ref={parallaxRef}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden lg:min-h-[600px]"
       style={{ background: "hsl(0 0% 4%)", color: "hsl(0 0% 94%)" }}
     >
       {/* Noise grain overlay */}
