@@ -148,13 +148,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
-                background: isActive ? accent.bg : "hsl(0 0% 100%)",
+                background: isActive ? accent.bg : undefined,
                 border: `1px solid ${isActive ? accent.border : "hsl(0 0% 91%)"}`,
                 borderRadius: 8,
                 padding: 20,
                 marginBottom: 12,
                 transition: "box-shadow 0.2s, border-color 0.15s",
               }}
+              className={cn("group cursor-pointer", !isActive && "bg-white dark:bg-[#1a1a1a] dark:border-[#333]")}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             >
