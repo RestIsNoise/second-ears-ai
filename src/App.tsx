@@ -16,6 +16,7 @@ import Terms from "./pages/Terms";
 import FaqPage from "./pages/Faq";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import PricingPage from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
