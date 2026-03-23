@@ -505,6 +505,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         <SubKickChannel value={metrics.sub_kick_ratio} />
       )}
     </section>
+    </TooltipProvider>
   );
 };
 
