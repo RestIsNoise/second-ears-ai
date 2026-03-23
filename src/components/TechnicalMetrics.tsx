@@ -198,7 +198,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         >
           {isMissing ? "—" : (animatedValue ?? value).toFixed(decimals)}
         </span>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(0 0% 60%)" }}>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 10, color: "#bbb" }}>
           {unit}
         </span>
       </div>
