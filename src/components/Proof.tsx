@@ -77,8 +77,8 @@ const Proof = () => {
               className="relative reveal-child"
               style={{
                 "--stagger": `${150 + i * 120}ms`,
-                background: "hsl(0 0% 100%)",
-                border: "1px solid hsl(0 0% 91%)",
+                background: isDark ? "#1a1a1a" : "hsl(0 0% 100%)",
+                border: isDark ? "1px solid #2a2a2a" : "1px solid hsl(0 0% 91%)",
                 borderRadius: 8,
                 padding: 28,
               } as React.CSSProperties}
