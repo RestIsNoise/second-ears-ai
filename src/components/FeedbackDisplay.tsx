@@ -72,7 +72,7 @@ const modeFixOneLabel: Record<string, string> = {
   perception: "Urgent fix",
 };
 
-/** Small copy button component */
+// ... keep existing code
 const CopyFixButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
 
