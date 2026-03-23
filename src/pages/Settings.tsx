@@ -275,8 +275,17 @@ const Settings = () => {
                             className="h-[72px] w-[72px]"
                             style={{ border: "1px solid hsl(0 0% 87%)" }}
                           >
-                            {avatarUrl && <AvatarImage src={avatarUrl} alt="Avatar" />}
-                            <AvatarFallback className="text-lg font-medium bg-secondary text-foreground/60">
+                            <AvatarImage
+                              src={avatarError ? undefined : (avatarUrl || undefined)}
+                              alt="Avatar"
+                              loading="eager"
+                              onError={() => setAvatarError(true)}
+                              style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
+                            />
+                            <AvatarFallback
+                              className="text-lg font-medium bg-secondary text-foreground/60"
+                              style={{ display: avatarUrl && !avatarError ? "none" : undefined }}
+                            >
                               {initials}
                             </AvatarFallback>
                           </Avatar>
