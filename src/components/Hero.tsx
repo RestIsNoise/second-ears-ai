@@ -87,7 +87,7 @@ const Hero = () => {
               className="text-[13px] sm:text-[14px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
               style={{ color: "hsl(0 0% 60%)", animationDelay: "0.16s" }}
             >
-              From upload to a prioritized fix plan in minutes.
+              From upload to a prioritized fix plan, instantly.
             </p>
 
             <div
