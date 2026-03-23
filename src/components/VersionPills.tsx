@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export interface VersionInfo {
   analysisId: string;
