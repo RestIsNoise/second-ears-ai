@@ -1,8 +1,25 @@
 import type { TechnicalMetrics as TechnicalMetricsType } from "@/pages/Analyze";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Status = { label: string; color: "green" | "orange" | "red" | "blue" };
 
 const MONO = "'IBM Plex Mono', monospace";
+
+const metricTooltips: Record<string, string> = {
+  "Int. LUFS": "Integrated loudness. Measures the average volume of the entire track. Streaming targets -14 LUFS. Club music: -9 to -11 LUFS.",
+  "ST LUFS": "Short-term loudness. Average volume in 3-second windows. Shows energy peaks across the track.",
+  "LRA": "Loudness Range. How dynamic the mix is. Below 4 LU is over-compressed. 6–12 LU is ideal.",
+  "DR": "Dynamic Range. Difference between the softest and loudest moments. Below 5 is heavily squashed.",
+  "Peak": "True Peak. The maximum peak level. Should not exceed -1 dBTP to avoid distortion on streaming platforms.",
+  "Crest": "Crest Factor. Ratio between peak and RMS. Low values indicate over-compression and loss of punch.",
+  "Stereo": "Stereo Width. How wide the stereo image is. Values near 0 sound mono and flat.",
+  "Sub/Kick": "Sub-frequency vs kick balance. Values above 1.5 indicate excessive sub masking the kick fundamental.",
+};
 
 function lufsStatus(v: number): Status {
   if (v >= -14 && v <= -9) return { label: "OK", color: "green" };
@@ -93,12 +110,25 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             borderRight: "1px solid hsl(var(--foreground) / 0.05)",
           }}
         >
-          <span
-            className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate"
-            style={{ fontFamily: MONO, fontSize: 12 }}
-          >
-            {label}
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span
+                className="text-foreground/55 uppercase tracking-[0.05em] font-medium truncate cursor-help"
+                style={{ fontFamily: MONO, fontSize: 12 }}
+              >
+                {label}
+              </span>
+            </TooltipTrigger>
+            {metricTooltips[label] && (
+              <TooltipContent
+                side="top"
+                className="max-w-[200px] text-xs"
+                style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}
+              >
+                {metricTooltips[label]}
+              </TooltipContent>
+            )}
+          </Tooltip>
         </div>
 
         {/* Center: meter + thresholds */}
@@ -226,9 +256,16 @@ const CorrelationChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
-            Stereo
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
+                Stereo
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+              {metricTooltips["Stereo"]}
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Bipolar meter */}
@@ -312,9 +349,16 @@ const SubKickChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 100, padding: "12px 0 12px 14px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
-            Sub/Kick
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
+                Sub/Kick
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+              {metricTooltips["Sub/Kick"]}
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Bipolar meter with needle */}
@@ -425,6 +469,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
   ];
 
   return (
+    <TooltipProvider>
     <section
       style={{
         backgroundColor: "hsl(var(--panel-bg))",
@@ -460,6 +505,7 @@ const TechnicalMetrics = ({ metrics }: Props) => {
         <SubKickChannel value={metrics.sub_kick_ratio} />
       )}
     </section>
+    </TooltipProvider>
   );
 };
 

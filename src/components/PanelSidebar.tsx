@@ -3,6 +3,21 @@ import {
   FileText, Layers, Radio, LayoutPanelTop,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const moduleTooltips: Record<string, string> = {
+  "ai-feedback": "AI diagnostics anchored to your track. Each note identifies a specific problem and how to fix it.",
+  "tech-metrics": "Objective measurements of your mix: loudness, dynamics, stereo image and frequency balance.",
+  "ai-reference": "Compare your track against a reference. Upload a professional track and analyze the differences.",
+  "human-feedback": "Leave timestamped comments. Click anywhere on the waveform to anchor a note to that moment.",
+  "todo": "Task list generated from the analysis. Check items off as you work through the mix.",
+  "full-analysis": "Extended analysis: mix balance, arrangement, tonal read and full context of the track.",
+};
 
 export interface PanelConfig {
   id: string;
@@ -38,6 +53,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
   const panelMap = new Map(panels.map(p => [p.id, p]));
 
   return (
+    <TooltipProvider>
     <div
       className="flex flex-col h-full w-[184px] min-w-[184px] shrink-0 overflow-visible select-none"
       style={{
@@ -123,17 +139,30 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
               </div>
 
               {/* Label */}
-              <span
-                className={cn(
-                  "text-[12px] tracking-[0.03em] truncate uppercase",
-                  isActive
-                    ? "text-foreground/80 font-medium"
-                    : "text-foreground/38 font-normal",
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <span
+                    className={cn(
+                      "text-[12px] tracking-[0.03em] truncate uppercase cursor-help",
+                      isActive
+                        ? "text-foreground/80 font-medium"
+                        : "text-foreground/38 font-normal",
+                    )}
+                    style={{ fontFamily: MONO, lineHeight: 1.1 }}
+                  >
+                    {panel.label}
+                  </span>
+                </TooltipTrigger>
+                {moduleTooltips[panel.id] && (
+                  <TooltipContent
+                    side="right"
+                    className="max-w-[200px] text-xs"
+                    style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}
+                  >
+                    {moduleTooltips[panel.id]}
+                  </TooltipContent>
                 )}
-                style={{ fontFamily: MONO, lineHeight: 1.1 }}
-              >
-                {panel.label}
-              </span>
+              </Tooltip>
 
               {/* Status LED */}
               {isActive && (
@@ -187,6 +216,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
         </div>
       )}
     </div>
+    </TooltipProvider>
   );
 };
 
