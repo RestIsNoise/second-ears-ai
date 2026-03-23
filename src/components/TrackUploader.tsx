@@ -49,7 +49,7 @@ interface Props {
   onTrackName?: (name: string) => void;
 }
 
-const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode }: Props) => {
+const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, onError, defaultMode, onTrackName }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<ListeningMode>(defaultMode || "technical");
   const [dragOver, setDragOver] = useState(false);
