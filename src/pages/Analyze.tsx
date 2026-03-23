@@ -148,7 +148,18 @@ const Analyze = () => {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Noise grain overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          opacity: 0.03,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "512px 512px",
+        }}
+        aria-hidden="true"
+      />
       <Header />
       <main className={`pt-18 sm:pt-24 pb-6 md:pb-12 ${result ? "px-2 sm:px-4 md:px-5" : "px-4 sm:px-6"}`}>
         <div className={result ? "w-full" : "max-w-2xl mx-auto"}>
