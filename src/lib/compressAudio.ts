@@ -33,7 +33,7 @@ export async function compressAudio(file: File): Promise<File> {
   const left = floatToInt16(audioBuffer.getChannelData(0));
   const right = numChannels > 1 ? floatToInt16(audioBuffer.getChannelData(1)) : null;
 
-  const chunks: Int8Array[] = [];
+  const chunks: Uint8Array[] = [];
   const totalSamples = left.length;
 
   for (let offset = 0; offset < totalSamples; offset += CHUNK_SIZE) {
