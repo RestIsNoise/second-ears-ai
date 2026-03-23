@@ -141,7 +141,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 else itemRefs.current.delete(item.id);
               }}
               onClick={() => onItemClick(item)}
-              className="group cursor-pointer"
+              className={cn("group cursor-pointer", !isActive && "bg-white dark:bg-[#1a1a1a] dark:border-[#333]")}
               style={{
                 opacity: 0,
                 transform: "translateY(12px)",
@@ -155,7 +155,6 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 marginBottom: 12,
                 transition: "box-shadow 0.2s, border-color 0.15s",
               }}
-              className={cn("group cursor-pointer", !isActive && "bg-white dark:bg-[#1a1a1a] dark:border-[#333]")}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             >
