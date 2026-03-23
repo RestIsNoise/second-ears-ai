@@ -200,8 +200,9 @@ const Pricing = () => {
                       <span
                         className={cn(
                           "text-[11px]",
-                          plan.featured ? "opacity-25" : "text-muted-foreground/45"
+                          plan.featured ? "opacity-25" : ""
                         )}
+                        style={{ color: !plan.featured ? (isDark ? "#777" : undefined) : undefined }}
                       >
                         {plan.period}
                       </span>
