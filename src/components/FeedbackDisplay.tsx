@@ -144,6 +144,7 @@ const FeedbackDisplay = ({
   analysisId,
   versions,
   projectId,
+  audioUnavailableMessage,
 }: {
   result: FeedbackResult;
   onReset: () => void;
@@ -151,6 +152,7 @@ const FeedbackDisplay = ({
   analysisId?: string | null;
   versions?: VersionInfo[];
   projectId?: string | null;
+  audioUnavailableMessage?: string;
 }) => {
   const { user } = useAuth();
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
@@ -1050,7 +1052,7 @@ const FeedbackDisplay = ({
         )}
 
         {/* ── WAVEFORM PLAYER ── */}
-        {audioFile && (
+        {audioFile ? (
           <div className="w-full overflow-hidden">
             <ABCompare
               ref={waveformRef}
@@ -1067,7 +1069,13 @@ const FeedbackDisplay = ({
               onEditNote={handleEditAnnotation}
             />
           </div>
-        )}
+        ) : audioUnavailableMessage ? (
+          <div className="w-full py-6 text-center">
+            <p style={{ fontSize: 12, color: "#666", fontFamily: "'IBM Plex Mono', monospace" }}>
+              {audioUnavailableMessage}
+            </p>
+          </div>
+        ) : null}
 
         {/* ── PANELS WORKSTATION ── */}
         <div style={{ height: 2, background: "hsl(var(--foreground) / 0.12)" }} />
