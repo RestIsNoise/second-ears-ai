@@ -175,7 +175,7 @@ const SampleFeedback = () => {
           className="text-[12px] leading-relaxed mb-12 md:hidden reveal-child"
           style={{ color: "hsl(0 0% 40%)", fontFamily: "'IBM Plex Mono', monospace", "--stagger": "60ms" } as React.CSSProperties}
         >
-          Timestamped diagnostics with actionable next steps.
+          Every note has a timestamp, a severity, and a fix. Nothing vague.
         </p>
 
         {/* Panel container with enhanced framing */}

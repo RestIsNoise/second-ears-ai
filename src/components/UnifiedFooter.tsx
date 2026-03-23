@@ -126,6 +126,17 @@ const UnifiedFooter = () => {
               <p className="text-[10px] mt-3 reveal-child" style={{ color: "hsl(0 0% 38%)", "--stagger": "320ms" } as React.CSSProperties}>
                 Response within 24–48h
               </p>
+              <p className="text-[12px] mt-2 reveal-child" style={{ color: "hsl(0 0% 41%)", "--stagger": "380ms" } as React.CSSProperties}>
+                Or find us on Instagram:{" "}
+                <a
+                  href="https://instagram.com/secondear.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-white/60 transition-colors"
+                >
+                  @secondear.app
+                </a>
+              </p>
             </div>
           </div>
 

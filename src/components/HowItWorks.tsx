@@ -52,7 +52,7 @@ const HowItWorks = () => {
             Upload, analyze, fix
           </h2>
           <p className="text-[15px] text-foreground/70 mt-3 leading-relaxed max-w-md">
-            Three steps from raw file to a ranked list of improvements.
+            No setup. No plugins. Upload and get to work.
           </p>
         </div>
 
