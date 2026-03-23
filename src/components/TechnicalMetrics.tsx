@@ -99,7 +99,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             <TooltipTrigger asChild>
               <span
                 className="uppercase cursor-help"
-                style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}
               >
                 {label}
               </span>
@@ -149,10 +149,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         {/* Status badge */}
         {!isMissing && led && (
           <span
-            className="uppercase shrink-0"
+            className="uppercase shrink-0 text-center"
             style={{
-              fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em",
+              fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em",
               color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1,
+              minWidth: 52,
             }}
           >
             {status.label}
@@ -162,11 +163,11 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
         {/* Value */}
         <span
           className="tabular-nums shrink-0"
-          style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
+          style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}
         >
           {isMissing ? "—" : value.toFixed(decimals)}
         </span>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(var(--foreground) / 0.35)" }}>
+        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, color: "hsl(0 0% 60%)" }}>
           {unit}
         </span>
       </div>
@@ -187,7 +188,7 @@ const CorrelationChannel = ({ value }: { value: number }) => {
         <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Stereo</span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Stereo</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Stereo"]}
@@ -210,8 +211,8 @@ const CorrelationChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 7, color: "hsl(var(--foreground) / 0.18)", fontWeight: 700 }}>+1</span>
           </div>
         </div>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1 }}>{status.label}</span>
-        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)", letterSpacing: "-0.03em" }}>{value > 0 ? "+" : ""}{value.toFixed(2)}</span>
       </div>
     </div>
   );
@@ -229,7 +230,7 @@ const SubKickChannel = ({ value }: { value: number }) => {
         <div className="shrink-0" style={{ minWidth: 70 }}>
           <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
-              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Sub/Kick</span>
+              <span className="uppercase cursor-help" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}>Sub/Kick</span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
               {metricTooltips["Sub/Kick"]}
@@ -246,8 +247,8 @@ const SubKickChannel = ({ value }: { value: number }) => {
             <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, color: "hsl(var(--foreground) / 0.18)" }}>S</span>
           </div>
         </div>
-        <span className="uppercase shrink-0" style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1 }}>{status.label}</span>
-        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 16, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)" }}>{value.toFixed(2)}</span>
+        <span className="uppercase shrink-0 text-center" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", color: led.bg, backgroundColor: led.muted, padding: "2px 6px", borderRadius: 2, lineHeight: 1, minWidth: 52 }}>{status.label}</span>
+        <span className="tabular-nums shrink-0" style={{ fontFamily: MONO, fontSize: 18, fontWeight: 700, color: "hsl(var(--foreground) / 0.9)" }}>{value.toFixed(2)}</span>
       </div>
     </div>
   );
