@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { SlidersHorizontal, Music, Ear, Trash2, Camera, CreditCard, User, Settings2, Layers, AlertTriangle } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, Camera, CreditCard, User, Settings2, Layers, AlertTriangle, Sun, Moon, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -19,11 +19,12 @@ const modes = [
   { id: "perception", label: "Perception", tag: "The listener", icon: Ear },
 ] as const;
 
-type Section = "profile" | "preferences" | "subscription" | "account";
+type Section = "profile" | "preferences" | "appearance" | "subscription" | "account";
 
 const sidebarItems: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: "profile", label: "Profile", icon: User },
   { id: "preferences", label: "Preferences", icon: Settings2 },
+  { id: "appearance", label: "Appearance", icon: Palette },
   { id: "subscription", label: "Subscription", icon: Layers },
   { id: "account", label: "Account", icon: AlertTriangle },
 ];
@@ -53,6 +54,19 @@ const Settings = () => {
   const [deleting, setDeleting] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
   const [portalLoading, setPortalLoading] = useState(false);
+  const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute("data-theme") === "dark");
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -370,6 +384,50 @@ const Settings = () => {
                     </div>
                     <p className="text-[10px] text-muted-foreground/50 mt-2">
                       Pre-selects this mode when starting a new analysis
+                    </p>
+                  </div>
+                </section>
+              )}
+
+              {/* ── APPEARANCE ── */}
+              {activeSection === "appearance" && (
+                <section>
+                  <SectionTitle>Appearance</SectionTitle>
+                  <div>
+                    <label
+                      className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-3"
+                      style={{ fontFamily: MONO }}
+                    >
+                      Theme
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => { if (isDark) toggleTheme(); }}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
+                          !isDark
+                            ? "border-foreground/20 bg-secondary text-foreground"
+                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
+                        )}
+                      >
+                        <Sun className="w-4 h-4" />
+                        Light mode
+                      </button>
+                      <button
+                        onClick={() => { if (!isDark) toggleTheme(); }}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-medium transition-all",
+                          isDark
+                            ? "border-foreground/20 bg-secondary text-foreground"
+                            : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
+                        )}
+                      >
+                        <Moon className="w-4 h-4" />
+                        Dark mode
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground/50 mt-2">
+                      Changes apply instantly across the app
                     </p>
                   </div>
                 </section>
