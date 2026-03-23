@@ -27,6 +27,18 @@ const goals: { id: Goal; label: string; icon: typeof Target }[] = [
   { id: "release_check", label: "Release check", icon: CheckCircle2 },
 ];
 
+const modeTooltips: Record<ListeningMode, string> = {
+  technical: "Analyzes loudness, dynamics, frequency balance, stereo image and mix translation. Best for engineers and producers focused on technical fixes.",
+  musical: "Analyzes arrangement, section contrast, hook clarity, groove and emotional momentum. Best for producers evaluating the song itself.",
+  perception: "Analyzes how the mix translates on real speakers, listener fatigue, psychoacoustics and playback compatibility. Best for pre-release checks.",
+};
+
+const goalTooltips: Record<Goal, string> = {
+  mixing: "Focuses on element balance, separation and relative levels. No mastering advice — purely about the mix.",
+  mastering: "Focuses on loudness targets, limiting, dynamics and streaming compliance (-14 LUFS / -9 to -11 LUFS for club).",
+  release_check: "Focuses on streaming compliance, true peak (below -1 dBTP), translation across systems and release readiness.",
+};
+
 interface Props {
   onResult: (result: FeedbackResult) => void;
   isAnalyzing: boolean;
