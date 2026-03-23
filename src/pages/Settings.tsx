@@ -366,8 +366,14 @@ const Settings = () => {
                       <Input
                         value={user?.email || ""}
                         readOnly
-                        className="h-10 text-sm bg-secondary/30 text-muted-foreground"
-                        style={{ border: "1px solid hsl(0 0% 82%)", borderRadius: 4, padding: "0 12px" }}
+                        className={cn("h-10 text-sm", !isDark && "bg-secondary/30 text-muted-foreground")}
+                        style={{
+                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
+                          borderRadius: 4,
+                          padding: "0 12px",
+                          backgroundColor: isDark ? "#1a1a1a" : undefined,
+                          color: isDark ? "#e8e8e0" : undefined,
+                        }}
                       />
                     </div>
 
