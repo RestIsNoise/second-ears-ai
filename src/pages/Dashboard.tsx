@@ -342,10 +342,17 @@ const TrackGridCard = ({
       </div>
 
       {/* ══════ INFO BOTTOM HALF ══════ */}
-      <div className="px-4 py-4 flex-1 flex flex-col">
+      <div
+        className="px-4 py-4 flex-1 flex flex-col"
+        style={{
+          background: isDark ? "#161616" : undefined,
+          borderRadius: "0 0 8px 8px",
+        }}
+      >
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <h3
-            className="text-[14px] font-semibold tracking-[-0.01em] truncate text-foreground/90 group-hover:text-foreground transition-colors leading-tight"
+            className="text-[14px] font-medium tracking-[-0.01em] truncate group-hover:text-foreground transition-colors leading-tight"
+            style={{ color: isDark ? "#e8e8e0" : undefined }}
           >
             {proj.name}
           </h3>
@@ -364,9 +371,9 @@ const TrackGridCard = ({
             className="inline-flex items-center gap-1 px-2 py-0.5 uppercase tracking-[0.06em] font-semibold"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9,
-              backgroundColor: modeColor.bg,
-              color: modeColor.text,
+              fontSize: 10,
+              backgroundColor: isDark ? "#222" : modeColor.bg,
+              color: isDark ? "#888" : modeColor.text,
               borderRadius: 3,
             }}
           >
@@ -382,7 +389,7 @@ const TrackGridCard = ({
           )}
         </div>
 
-        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "#999" }}>
+        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#444" : "#999" }}>
           {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
         </p>
       </div>
