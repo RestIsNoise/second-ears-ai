@@ -2,13 +2,73 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { normalizeFeedbackResponse } from "@/lib/normalizeFeedback";
 import type { FeedbackResult } from "@/pages/Analyze";
 import FeedbackDisplay from "@/components/FeedbackDisplay";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
+
+const MONO = "'IBM Plex Mono', monospace";
+
+const SharedHeader = () => (
+  <header
+    style={{
+      background: "hsl(0 0% 100%)",
+      borderBottom: "1px solid hsl(0 0% 91%)",
+      padding: "12px 24px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    <span
+      style={{
+        fontFamily: MONO,
+        fontSize: 14,
+        fontWeight: 700,
+        letterSpacing: "0.04em",
+        color: "hsl(0 0% 7%)",
+      }}
+    >
+      SecondEar
+    </span>
+    <a
+      href="https://secondear.app"
+      style={{
+        background: "hsl(0 0% 7%)",
+        color: "hsl(0 0% 100%)",
+        padding: "8px 16px",
+        borderRadius: 6,
+        fontSize: 13,
+        textDecoration: "none",
+        fontWeight: 500,
+      }}
+    >
+      Analyze your mix →
+    </a>
+  </header>
+);
+
+const SharedFooter = () => (
+  <footer
+    style={{
+      textAlign: "center" as const,
+      padding: 24,
+      fontSize: 12,
+      color: "hsl(0 0% 60%)",
+      fontFamily: MONO,
+    }}
+  >
+    Analysis powered by{" "}
+    <a
+      href="https://secondear.app"
+      style={{ color: "hsl(0 0% 40%)", textDecoration: "underline" }}
+    >
+      SecondEar
+    </a>{" "}
+    · secondear.app
+  </footer>
+);
 
 const SharedView = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,23 +83,17 @@ const SharedView = () => {
     if (!id) { setFetching(false); return; }
 
     const load = async () => {
-      // Try to load the analysis
       const { data: analysis } = await supabase
         .from("analyses")
         .select("id, mode, feedback, metrics, is_public, project_id")
         .eq("id", id)
         .single();
 
-      if (!analysis) {
-        setFetching(false);
-        return;
-      }
+      if (!analysis) { setFetching(false); return; }
 
-      // Determine access level
       let access: typeof accessLevel = "none";
 
       if (user) {
-        // Check if owner
         const { data: proj } = await supabase
           .from("projects")
           .select("name, user_id")
@@ -49,7 +103,6 @@ const SharedView = () => {
         if (proj?.user_id === user.id) {
           access = "owner";
         } else {
-          // Check collaborator status
           const { data: collab } = await supabase
             .from("collaborators")
             .select("role")
@@ -66,7 +119,7 @@ const SharedView = () => {
         }
 
         if (access !== "none") {
-          const { data: proj } = await supabase
+          const { data: proj2 } = await supabase
             .from("projects")
             .select("name")
             .eq("id", analysis.project_id)
@@ -77,10 +130,7 @@ const SharedView = () => {
             technical_metrics: typeof analysis.metrics === "object" ? analysis.metrics : {},
           };
           const normalized = normalizeFeedbackResponse(
-            feedbackData,
-            analysis.mode as any,
-            undefined,
-            proj?.name || "Shared Track",
+            feedbackData, analysis.mode as any, undefined, proj2?.name || "Shared Track",
           );
           setResult({ normalized });
           setAnalysisId(analysis.id);
@@ -98,10 +148,7 @@ const SharedView = () => {
           technical_metrics: typeof analysis.metrics === "object" ? analysis.metrics : {},
         };
         const normalized = normalizeFeedbackResponse(
-          feedbackData,
-          analysis.mode as any,
-          undefined,
-          proj?.name || "Shared Track",
+          feedbackData, analysis.mode as any, undefined, proj?.name || "Shared Track",
         );
         setResult({ normalized });
         setAnalysisId(analysis.id);
@@ -116,7 +163,7 @@ const SharedView = () => {
   if (authLoading || fetching) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <SharedHeader />
         <main className="pt-24 pb-16 px-6 text-center text-muted-foreground text-sm">Loading…</main>
       </div>
     );
@@ -125,7 +172,7 @@ const SharedView = () => {
   if (accessLevel === "none" || !result) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <SharedHeader />
         <main className="pt-24 pb-16 px-6 text-center">
           <p className="text-muted-foreground text-sm mb-4">
             {user ? "You don't have access to this analysis." : "This analysis is private."}
@@ -139,16 +186,16 @@ const SharedView = () => {
             </Link>
           )}
         </main>
+        <SharedFooter />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-24 pb-6 md:pb-10 px-3 md:px-4">
+    <div className="min-h-screen bg-background flex flex-col">
+      <SharedHeader />
+      <main className="flex-1 pt-6 pb-6 md:pb-10 px-3 md:px-4">
         <div className="w-full">
-          {/* Sign-up banner for unauthenticated public viewers */}
           {!user && accessLevel === "public" && (
             <div className="mb-6 rounded-xl border border-border-subtle bg-secondary/30 p-4 flex items-center justify-between">
               <p className="text-sm text-foreground/70">
@@ -162,7 +209,6 @@ const SharedView = () => {
               </Link>
             </div>
           )}
-
           <FeedbackDisplay
             result={result}
             onReset={() => window.history.back()}
@@ -170,7 +216,7 @@ const SharedView = () => {
           />
         </div>
       </main>
-      <Footer />
+      <SharedFooter />
     </div>
   );
 };
