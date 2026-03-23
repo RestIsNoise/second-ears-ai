@@ -488,31 +488,37 @@ const Settings = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <span
-                        className="text-[12px] font-medium text-muted-foreground"
-                        style={{ fontFamily: MONO }}
+                        style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "#999" }}
                       >
                         Current plan
                       </span>
                       {userPlan === "pro" ? (
                         <span
-                          className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm"
                           style={{
                             fontFamily: MONO,
-                            backgroundColor: "hsl(145 55% 45% / 0.12)",
-                            color: "hsl(145 55% 45%)",
-                            border: "1px solid hsl(145 55% 45% / 0.25)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.06em",
+                            padding: "4px 10px",
+                            borderRadius: 4,
+                            backgroundColor: "#111",
+                            color: "#fff",
                           }}
                         >
                           PRO
                         </span>
                       ) : (
                         <span
-                          className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm"
                           style={{
                             fontFamily: MONO,
-                            backgroundColor: "hsl(var(--foreground) / 0.05)",
-                            color: "hsl(var(--foreground) / 0.4)",
-                            border: "1px solid hsl(var(--foreground) / 0.08)",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: "0.06em",
+                            padding: "4px 10px",
+                            borderRadius: 4,
+                            backgroundColor: isDark ? "#222" : "hsl(var(--foreground) / 0.05)",
+                            color: isDark ? "#888" : "hsl(var(--foreground) / 0.4)",
+                            border: isDark ? "1px solid #333" : "1px solid hsl(var(--foreground) / 0.08)",
                           }}
                         >
                           FREE
