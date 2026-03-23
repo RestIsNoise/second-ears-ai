@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
-const btnStyle = {
+const getBtnStyle = (isDark: boolean) => ({
   fontFamily: MONO,
   fontSize: 12,
   fontWeight: 700,
@@ -17,10 +17,11 @@ const btnStyle = {
   padding: "8px 12px",
   height: 34,
   backgroundColor: "hsl(var(--panel-bg))",
-  border: "1px solid hsl(var(--foreground) / 0.06)",
+  border: isDark ? "1px solid #333" : "1px solid hsl(var(--foreground) / 0.06)",
   borderRadius: 2,
   boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-};
+  color: isDark ? "#888" : undefined,
+});
 
 interface ShareBlockProps {
   onExportPdf?: () => void;

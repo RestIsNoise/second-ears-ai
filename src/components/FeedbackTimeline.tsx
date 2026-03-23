@@ -276,11 +276,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
               {/* ═══ FIX BLOCK ═══ */}
               {item.fix && (
                 <div
-                  className="dark:bg-[#1a1a1a]"
                   style={{
                     marginTop: 12,
-                    backgroundColor: "#f8f8f6",
-                    borderLeft: `3px solid ${accent.border}`,
+                    backgroundColor: isDark ? "#1a1a1a" : "#f8f8f6",
+                    borderLeft: isDark ? "3px solid #e8e8e0" : `3px solid ${accent.border}`,
                     borderRadius: "0 6px 6px 0",
                     padding: "12px 16px",
                   }}
@@ -291,7 +290,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                       fontSize: 10,
                       fontWeight: 700,
                       letterSpacing: "0.1em",
-                      color: "hsl(0 0% 7%)",
+                      color: isDark ? "#e8e8e0" : "hsl(0 0% 7%)",
                       marginBottom: 6,
                       textTransform: "uppercase" as const,
                     }}
@@ -302,7 +301,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                     style={{
                       fontSize: 13,
                       lineHeight: 1.6,
-                      color: "hsl(0 0% 27%)",
+                      color: isDark ? "#aaa" : "hsl(0 0% 27%)",
                       fontFamily: MONO,
                     }}
                   >
