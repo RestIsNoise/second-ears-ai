@@ -256,9 +256,16 @@ const CorrelationChannel = ({ value }: { value: number }) => {
           className="flex items-center shrink-0"
           style={{ width: 90, padding: "8px 0 8px 12px", borderRight: "1px solid hsl(var(--foreground) / 0.05)" }}
         >
-          <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium" style={{ fontFamily: MONO, fontSize: 12 }}>
-            Stereo
-          </span>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span className="text-foreground/50 uppercase tracking-[0.06em] font-medium cursor-help" style={{ fontFamily: MONO, fontSize: 12 }}>
+                Stereo
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] text-xs" style={{ backgroundColor: "hsl(0 0% 10%)", color: "hsl(0 0% 96%)", border: "1px solid hsl(0 0% 20%)" }}>
+              {metricTooltips["Stereo"]}
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Bipolar meter */}
