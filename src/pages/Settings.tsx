@@ -54,6 +54,19 @@ const Settings = () => {
   const [deleting, setDeleting] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
   const [portalLoading, setPortalLoading] = useState(false);
+  const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute("data-theme") === "dark");
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
