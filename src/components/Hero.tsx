@@ -181,11 +181,11 @@ const Hero = () => {
               </div>
 
               {/* Screenshot */}
-              <div className="w-full overflow-hidden">
+              <div className="w-full overflow-hidden" style={{ height: "520px" }}>
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="w-full h-auto block"
+                  className="w-full h-full block object-cover object-top"
                   loading="eager"
                 />
               </div>
