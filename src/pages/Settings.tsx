@@ -89,7 +89,12 @@ const Settings = () => {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name || "");
-      setAvatarUrl(profile.avatar_url || null);
+      setAvatarUrl(
+        profile.avatar_url ||
+        user?.user_metadata?.avatar_url ||
+        user?.user_metadata?.picture ||
+        null
+      );
     }
     if (user) {
       supabase
