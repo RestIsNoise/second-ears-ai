@@ -27,6 +27,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("free");
   const location = useLocation();
   const navigate = useNavigate();
 
