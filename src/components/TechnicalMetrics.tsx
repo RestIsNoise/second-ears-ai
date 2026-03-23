@@ -311,6 +311,7 @@ interface Props {
 
 const TechnicalMetrics = ({ metrics }: Props) => {
   const [animated, setAnimated] = useState(false);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setAnimated(true));
