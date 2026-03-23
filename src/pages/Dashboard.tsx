@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SlidersHorizontal, Music, Ear, ArrowRight, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid, Plus } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
