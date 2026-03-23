@@ -403,16 +403,16 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             <Tooltip key={g.id} delayDuration={300}>
               <TooltipTrigger asChild>
             <button onClick={() => setGoal(g.id)}
-              className="text-left transition-all duration-100"
+              className="text-left transition-all duration-150"
               style={{
-                padding: "10px 12px",
-                backgroundColor: goal === g.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
-                border: goal === g.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
-                borderRadius: 3,
-                boxShadow: goal === g.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+                padding: "12px 14px",
+                backgroundColor: goal === g.id ? "#111" : "#ffffff",
+                color: goal === g.id ? "#ffffff" : undefined,
+                border: goal === g.id ? "1px solid #111" : "1px solid #e0e0e0",
+                borderRadius: 6,
               }}
             >
-              <g.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? "rgba(255,255,255,0.7)" : "hsl(var(--foreground) / 0.5)" }} />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
               </TooltipTrigger>
