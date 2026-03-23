@@ -148,8 +148,8 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:-mr-4"
-            style={{ animationDelay: "0.2s" }}
+            className="relative animate-fade-up lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
+            style={{ animationDelay: "0.2s", overflow: "visible" }}
           >
             {/* Glow behind frame */}
             <div
@@ -165,7 +165,7 @@ const Hero = () => {
                 borderColor: "hsl(0 0% 100% / 0.08)",
                 transform: `scale(${screenshotScale})`,
                 transition: "transform 50ms linear",
-                maxWidth: "700px",
+                overflow: "visible",
               }}
             >
               {/* Window dots bar */}
@@ -182,11 +182,12 @@ const Hero = () => {
               </div>
 
               {/* Screenshot */}
-              <div className="w-full">
+              <div className="w-full" style={{ minHeight: 480 }}>
                 <img
                   src={heroScreenshot}
                   alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="w-full h-auto block object-contain"
+                  className="w-full h-auto block"
+                  style={{ minHeight: 480, objectFit: "contain" }}
                   loading="eager"
                 />
               </div>
