@@ -130,7 +130,7 @@ const MeterChannel = ({ label, value, unit, min, max, status, decimals = 1, thre
             <TooltipTrigger asChild>
               <span
                 className="uppercase cursor-help"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "hsl(0 0% 40%)", fontWeight: 500 }}
+                style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.08em", color: isDark ? "#aaa" : "#333", fontWeight: 500 }}
               >
                 {label}
               </span>
