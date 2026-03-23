@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import type { TechnicalMetrics as TechnicalMetricsType } from "@/pages/Analyze";
 import {
   Tooltip,
