@@ -113,11 +113,21 @@ const Header = () => {
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
                     style={{ border: "1px solid #e0e0e0" }}
                   >
-                    {(profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture) && (
-                      <AvatarImage src={profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture} alt="Avatar" />
-                    )}
+                    <AvatarImage
+                      src={avatarError ? undefined : (avatarUrl || undefined)}
+                      alt="Avatar"
+                      loading="eager"
+                      onError={() => setAvatarError(true)}
+                      style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
+                    />
                     <AvatarFallback
-                      style={{ background: "#111", color: "#fff", fontSize: 13, fontWeight: 600 }}
+                      style={{
+                        background: "#111",
+                        color: "#fff",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        display: avatarUrl && !avatarError ? "none" : undefined,
+                      }}
                     >
                       {initials}
                     </AvatarFallback>
