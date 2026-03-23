@@ -108,7 +108,7 @@ const Header = () => {
               "font-bold tracking-tight transition-all duration-300 uppercase",
               scrolled ? "text-[13px]" : "text-[14px]"
             )}
-            style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em" }}
+            style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em", color: isDark ? "#e8e8e0" : undefined }}
           >
             SecondEar
           </span>
