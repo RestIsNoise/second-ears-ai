@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid, Plus } from "lucide-react";
+import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List, LayoutGrid, Plus, Upload } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -665,7 +665,32 @@ const Dashboard = () => {
 
             <TabsContent value="tracks">
               {grouped.length === 0 ? (
-                <EmptyState icon={AudioLines} message="No analyses yet. Upload a track to get started." />
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <Upload size={48} color="hsl(0 0% 80%)" className="mb-5" />
+                  <h2 style={{ fontSize: 20, fontWeight: 600, color: "hsl(0 0% 20%)" }}>
+                    Your mixes live here
+                  </h2>
+                  <p style={{ fontSize: 14, color: "hsl(0 0% 60%)", marginTop: 8, marginBottom: 24 }}>
+                    Upload a track to get your first analysis.
+                  </p>
+                  <Link
+                    to="/analyze"
+                    className="inline-flex items-center gap-2 transition-colors"
+                    style={{
+                      background: "hsl(0 0% 7%)",
+                      color: "white",
+                      padding: "10px 24px",
+                      borderRadius: 6,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      fontFamily: "'IBM Plex Mono', monospace",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 20%)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 7%)"; }}
+                  >
+                    Analyze your first track
+                  </Link>
+                </div>
               ) : (
                 <>
                   {/* View toggle */}
