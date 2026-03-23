@@ -91,7 +91,9 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Avatar className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}>
-                    {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Avatar" />}
+                    {(profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture) && (
+                      <AvatarImage src={profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture} alt="Avatar" />
+                    )}
                     <AvatarFallback className="text-xs font-medium">{initials}</AvatarFallback>
                   </Avatar>
                 </button>
