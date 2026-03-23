@@ -16,10 +16,10 @@ const modeIcons: Record<string, typeof SlidersHorizontal> = {
   perception: Ear,
 };
 
-const modeColors: Record<string, string> = {
-  technical: "bg-accent text-accent-foreground",
-  musical: "bg-blue-500/15 text-blue-400",
-  perception: "bg-purple-500/15 text-purple-400",
+const modeColors: Record<string, { bg: string; text: string; class: string }> = {
+  technical: { bg: "#f0f0f0", text: "hsl(0 0% 25%)", class: "bg-accent text-accent-foreground" },
+  musical: { bg: "#f0f4ff", text: "hsl(215 60% 45%)", class: "bg-blue-500/15 text-blue-400" },
+  perception: { bg: "#f5f0ff", text: "hsl(270 50% 45%)", class: "bg-purple-500/15 text-purple-400" },
 };
 
 interface AnalysisRow {
@@ -175,7 +175,7 @@ const TrackGridCard = ({
   const { project: proj, latestAnalysis, versionCount, lastUpdated } = grouped;
   const mode = latestAnalysis.mode || "technical";
   const ModeIcon = modeIcons[mode] || SlidersHorizontal;
-  const colorClass = modeColors[mode] || modeColors.technical;
+  const modeColor = modeColors[mode] || modeColors.technical;
 
   const bars = generateWaveform(proj.id, 56);
   const markers = generateMarkers(proj.id);
@@ -185,12 +185,23 @@ const TrackGridCard = ({
   return (
     <div
       onClick={() => onNavigate(`/project/${proj.id}`)}
-      className="group relative flex flex-col overflow-hidden cursor-pointer transition-all duration-150 hover:-translate-y-[1px]"
+      className="group relative flex flex-col overflow-hidden cursor-pointer"
       style={{
-        background: "hsl(var(--card))",
-        border: "2px solid hsl(var(--foreground) / 0.1)",
-        borderRadius: 3,
-        boxShadow: "0 2px 8px hsl(0 0% 0% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
+        background: "#ffffff",
+        border: "1px solid #e8e8e8",
+        borderRadius: 8,
+        minHeight: 280,
+        transition: "all 0.2s ease",
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget;
+        el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.08)";
+        el.style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget;
+        el.style.boxShadow = "none";
+        el.style.transform = "translateY(0)";
       }}
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
@@ -198,7 +209,8 @@ const TrackGridCard = ({
         className="relative overflow-hidden"
         style={{
           background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
-          minHeight: 110,
+          height: 160,
+          borderRadius: "6px 6px 0 0",
         }}
       >
         {/* Faint grid lines */}
@@ -236,11 +248,11 @@ const TrackGridCard = ({
           </span>
         </div>
 
-        {/* Waveform lane */}
-        <div className="relative px-3 py-3">
-          <div className="relative flex items-center justify-center h-[36px]">
+        {/* Waveform lane — centered vertically in remaining space */}
+        <div className="relative px-3 flex flex-col justify-center" style={{ height: "calc(100% - 28px)" }}>
+          <div className="relative flex items-center justify-center h-[44px]">
             {bars.map((v, i) => {
-              const halfH = Math.max(1.5, v * 16);
+              const halfH = Math.max(2, v * 20);
               const pos = i / bars.length;
               const played = pos < playheadPos;
               return (
@@ -282,7 +294,7 @@ const TrackGridCard = ({
           </div>
 
           {/* Issue markers row */}
-          <div className="relative h-[12px] mt-1">
+          <div className="relative h-[12px] mt-1.5">
             <div
               className="absolute left-0 right-0 top-1/2 h-px"
               style={{ background: "hsl(0 0% 100% / 0.06)" }}
@@ -327,83 +339,50 @@ const TrackGridCard = ({
       </div>
 
       {/* ══════ INFO BOTTOM HALF ══════ */}
-      <div
-        className="px-3 py-3 flex-1 flex flex-col"
-        style={{
-          borderTop: "2px solid hsl(var(--foreground) / 0.08)",
-        }}
-      >
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="px-4 py-4 flex-1 flex flex-col">
+        <div className="flex items-start justify-between gap-2 mb-2.5">
           <h3
-            className="text-[12px] font-bold tracking-[-0.01em] truncate text-foreground/85 group-hover:text-foreground transition-colors leading-tight"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            className="text-[14px] font-semibold tracking-[-0.01em] truncate text-foreground/90 group-hover:text-foreground transition-colors leading-tight"
           >
             {proj.name}
           </h3>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(proj); }}
             className="p-1 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all shrink-0 -mt-0.5"
-            style={{ borderRadius: 2 }}
+            style={{ borderRadius: 3 }}
             title="Delete project"
           >
-            <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive transition-colors" />
+            <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap mb-auto">
+        <div className="flex items-center gap-2 flex-wrap mb-auto">
           <span
-            className="inline-flex items-center gap-1 px-1.5 py-0.5 text-foreground/45 uppercase tracking-[0.08em] font-bold"
+            className="inline-flex items-center gap-1 px-2 py-0.5 uppercase tracking-[0.06em] font-semibold"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 8,
-              backgroundColor: "hsl(var(--foreground) / 0.04)",
-              border: "1px solid hsl(var(--foreground) / 0.06)",
-              borderRadius: 2,
+              fontSize: 9,
+              backgroundColor: modeColor.bg,
+              color: modeColor.text,
+              borderRadius: 3,
             }}
           >
             <ModeIcon className="w-2.5 h-2.5" />{mode}
           </span>
           {versionCount > 1 && (
             <span
-              className="text-foreground/30 font-bold"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
+              className="text-foreground/40 font-semibold"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}
             >
               v{latestAnalysis.version}
             </span>
           )}
-          <span
-            className="text-foreground/20 tabular-nums"
-            style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8 }}
-          >
-            {markers.length} issues
-          </span>
         </div>
 
-        <div
-          className="flex items-center justify-between pt-2 mt-1.5"
-          style={{ borderTop: "1px solid hsl(var(--foreground) / 0.06)" }}
-        >
-          <p className="text-foreground/25 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9 }}>
-            {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
-          </p>
-          <span
-            className="text-foreground/15 opacity-0 group-hover:opacity-100 transition-opacity tracking-[0.1em] uppercase font-bold"
-            style={{ fontFamily: "'IBM Plex Mono', 'DM Mono', monospace", fontSize: 8 }}
-          >
-            Open →
-          </span>
-        </div>
+        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "#999" }}>
+          {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+        </p>
       </div>
-
-      {/* Hover border */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200"
-        style={{
-          border: "2px solid hsl(var(--foreground) / 0.18)",
-          borderRadius: 3,
-          boxShadow: "0 6px 20px -6px hsl(0 0% 0% / 0.15)",
-        }}
-      />
     </div>
   );
 };
@@ -719,7 +698,7 @@ const Dashboard = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                       {grouped.map((g) => (
                         <TrackGridCard key={g.project.id} grouped={g} onDelete={handleDeleteClick} onNavigate={navigate} />
                       ))}
