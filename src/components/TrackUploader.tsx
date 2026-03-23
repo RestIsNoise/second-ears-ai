@@ -310,12 +310,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           onChange={(e) => setContext(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && file && !isAnalyzing) { e.preventDefault(); analyze(); } }}
           placeholder="What are you going for?"
-          className="w-full border bg-card px-4 py-2.5 text-[12px] text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full focus:outline-none"
           style={{
-            borderColor: "hsl(var(--foreground) / 0.1)",
-            borderRadius: 3,
+            height: 48,
+            border: "1px solid #ddd",
+            borderRadius: 6,
+            fontSize: 14,
+            padding: "0 16px",
+            backgroundColor: "#ffffff",
+            color: "#333",
             fontFamily: "'IBM Plex Mono', monospace",
+            transition: "border-color 0.15s, box-shadow 0.15s",
           }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = "#111"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.04)"; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = "#ddd"; e.currentTarget.style.boxShadow = "none"; }}
         />
         <p className="text-[9px] text-foreground/30 mt-1 ml-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Optional: references, goals, or specific concerns.</p>
       </div>
