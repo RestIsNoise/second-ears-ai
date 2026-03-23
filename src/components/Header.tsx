@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,6 +27,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("free");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -47,6 +49,21 @@ const Header = () => {
       setAvatarError(false);
     }
   }, [user, profile]);
+
+  // Fetch user plan
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${BACKEND}/api/usage`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUserPlan(data.plan || "free");
+        }
+      } catch { /* default to free */ }
+    })();
+  }, [user]);
 
   // Handle hash-based nav links: smooth scroll if on landing, navigate otherwise
   const handleHashLink = useCallback((href: string) => {
@@ -138,7 +155,7 @@ const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <button className="relative rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <Avatar
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
                     style={{ border: isDark ? "1px solid #444" : "1px solid #e0e0e0" }}
@@ -162,6 +179,26 @@ const Header = () => {
                       {initials}
                     </AvatarFallback>
                   </Avatar>
+                  {userPlan === "pro" && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        bottom: -2,
+                        right: -4,
+                        fontFamily: "monospace",
+                        fontSize: 8,
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        padding: "1px 4px",
+                        borderRadius: 2,
+                        background: isDark ? "#e8e8e0" : "#111",
+                        color: isDark ? "#111" : "white",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      PRO
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
