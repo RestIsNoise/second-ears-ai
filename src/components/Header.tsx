@@ -127,7 +127,7 @@ const Header = () => {
                 {item.label}
               </Link>
             ) : (
-              <button key={item.label} onClick={() => handleHashLink(item.href)} className="text-foreground/40 hover:text-foreground transition-colors">
+              <button key={item.label} onClick={() => handleHashLink(item.href)} className="transition-colors" style={{ color: isDark ? "#666" : undefined }} onMouseEnter={(e) => { if (isDark) e.currentTarget.style.color = "#e8e8e0"; }} onMouseLeave={(e) => { if (isDark) e.currentTarget.style.color = "#666"; }}>
                 {item.label}
               </button>
             )
