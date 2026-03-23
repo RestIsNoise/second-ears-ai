@@ -991,15 +991,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#fff0f0",
+                      backgroundColor: isDark ? "rgba(204,0,0,0.15)" : "#fff0f0",
                       borderRadius: 4,
                     }}
                   >
                      <span
                       className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#cc0000" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#ff6666" : "#cc0000" }}
                     >Issue</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#cc0000" }}>{n.topIssue}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#ff6666" : "#cc0000" }}>{n.topIssue}</span>
                   </span>
                 )}
                 {n.biggestWin && (
@@ -1007,15 +1007,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#f0fff4",
+                      backgroundColor: isDark ? "rgba(34,197,94,0.15)" : "#f0fff4",
                       borderRadius: 4,
                     }}
                   >
                     <span
                        className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#006622" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#4ade80" : "#006622" }}
                     >Win</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#006622" }}>{n.biggestWin}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#4ade80" : "#006622" }}>{n.biggestWin}</span>
                   </span>
                 )}
                 {releaseReadiness && (
@@ -1023,15 +1023,15 @@ const FeedbackDisplay = ({
                     className="inline-flex items-center gap-2.5"
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: "#f5f5f5",
+                      backgroundColor: isDark ? "#222" : "#f5f5f5",
                       borderRadius: 4,
                     }}
                   >
                      <span
                        className="uppercase"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: "#555" }}
+                      style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: isDark ? "#888" : "#555" }}
                     >Release</span>
-                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: "#555" }}>{releaseReadiness}</span>
+                    <span className="text-[12.5px] font-normal" style={{ fontFamily: "'IBM Plex Mono', monospace", color: isDark ? "#888" : "#555" }}>{releaseReadiness}</span>
                   </span>
                 )}
               </div>
