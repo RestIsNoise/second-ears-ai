@@ -43,6 +43,7 @@ const ProjectDetail = () => {
   const [result, setResult] = useState<FeedbackResult | null>(null);
   const [analysisId, setAnalysisId] = useState<string | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
   const [versions, setVersions] = useState<VersionInfo[]>([]);
   const [fetching, setFetching] = useState(true);
   const [showVersionModal, setShowVersionModal] = useState(false);
