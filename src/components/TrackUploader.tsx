@@ -273,29 +273,29 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className="cursor-pointer flex flex-col items-center justify-center gap-3 select-none transition-all duration-100"
+        className="cursor-pointer flex flex-col items-center justify-center gap-3 select-none transition-all duration-150"
         style={{
+          minHeight: 160,
           padding: "40px 24px",
-          backgroundColor: dragOver ? "hsl(var(--panel-content))" : file ? "hsl(var(--card))" : "hsl(var(--card))",
-          border: dragOver ? "2px dashed hsl(var(--foreground) / 0.25)" : file ? "2px solid hsl(var(--foreground) / 0.15)" : "2px dashed hsl(var(--foreground) / 0.1)",
-          borderRadius: 3,
-          boxShadow: "inset 0 2px 6px hsl(var(--panel-inset))",
+          backgroundColor: file ? "hsl(var(--card))" : "hsl(var(--card))",
+          border: dragOver ? "2px dashed #111" : file ? "2px solid hsl(var(--foreground) / 0.15)" : "2px dashed #d0d0d0",
+          borderRadius: 6,
         }}
       >
         {file ? (
           <>
-            <Music className="w-6 h-6 text-foreground/50" />
+            <Music className="w-10 h-10 text-foreground/50" />
             <div className="text-center">
-              <p className="text-[12px] font-semibold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
-              <p className="text-[10px] text-muted-foreground mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p className="font-medium" style={{ fontSize: 16, fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
+              <p style={{ fontSize: 13, color: "#999", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
-            <Upload className="w-6 h-6 text-foreground/30" />
+            <Upload className="w-10 h-10 text-foreground/30" />
             <div className="text-center">
-              <p className="text-[12px] text-foreground/60 font-medium" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
-              <p className="text-[10px] text-foreground/30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
+              <p className="font-medium" style={{ fontSize: 16, fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
+              <p style={{ fontSize: 13, color: "#999", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
@@ -318,8 +318,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       </div>
       <div>
         <p
-          className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase mb-2 font-bold"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.12em", color: "#999", textTransform: "uppercase" as const, marginBottom: 10, fontWeight: 700 }}
         >
           Listening mode
         </p>
@@ -339,13 +338,13 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   }
                   setMode(m.id);
                 }}
-                className="relative text-left transition-all duration-100"
+                className="relative text-left transition-all duration-150"
                 style={{
-                  padding: "10px 12px",
-                  backgroundColor: !isLocked && mode === m.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
-                  border: !isLocked && mode === m.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
-                  borderRadius: 3,
-                  boxShadow: !isLocked && mode === m.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+                  padding: "12px 14px",
+                  backgroundColor: !isLocked && mode === m.id ? "#111" : "#ffffff",
+                  color: !isLocked && mode === m.id ? "#ffffff" : undefined,
+                  border: !isLocked && mode === m.id ? "1px solid #111" : "1px solid #e0e0e0",
+                  borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
                 }}
@@ -365,9 +364,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                     <Lock className="w-2.5 h-2.5" /> PRO
                   </span>
                 )}
-                <m.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+                <m.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: !isLocked && mode === m.id ? "rgba(255,255,255,0.7)" : "hsl(var(--foreground) / 0.5)" }} />
                 <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
-                <p className="text-[9px] text-foreground/35 mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.tag}</p>
+                <p className="text-[9px] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", color: !isLocked && mode === m.id ? "rgba(255,255,255,0.5)" : "hsl(var(--foreground) / 0.35)" }}>{m.tag}</p>
                 {isLocked && lockedModeTooltip === m.id && (
                   <span
                     className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-sm z-10 animate-fade-in"
@@ -394,8 +393,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       </div>
       <div>
         <p
-          className="text-[8px] text-foreground/40 tracking-[0.14em] uppercase mb-2 font-bold"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.12em", color: "#999", textTransform: "uppercase" as const, marginBottom: 10, fontWeight: 700 }}
         >
           Goal
         </p>
@@ -405,16 +403,16 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             <Tooltip key={g.id} delayDuration={300}>
               <TooltipTrigger asChild>
             <button onClick={() => setGoal(g.id)}
-              className="text-left transition-all duration-100"
+              className="text-left transition-all duration-150"
               style={{
-                padding: "10px 12px",
-                backgroundColor: goal === g.id ? "hsl(var(--panel-bg))" : "hsl(var(--card))",
-                border: goal === g.id ? "2px solid hsl(var(--foreground) / 0.2)" : "2px solid hsl(var(--foreground) / 0.06)",
-                borderRadius: 3,
-                boxShadow: goal === g.id ? "inset 0 2px 4px hsl(var(--panel-inset))" : "none",
+                padding: "12px 14px",
+                backgroundColor: goal === g.id ? "#111" : "#ffffff",
+                color: goal === g.id ? "#ffffff" : undefined,
+                border: goal === g.id ? "1px solid #111" : "1px solid #e0e0e0",
+                borderRadius: 6,
               }}
             >
-              <g.icon className="w-3.5 h-3.5 mb-1.5 text-foreground/50" />
+              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? "rgba(255,255,255,0.7)" : "hsl(var(--foreground) / 0.5)" }} />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
               </TooltipTrigger>
@@ -439,8 +437,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       <Button
         variant="default"
         size="lg"
-        className="w-full h-11 text-[11px] font-bold tracking-[0.06em] uppercase"
-        style={{ borderRadius: 3, fontFamily: "'IBM Plex Mono', monospace" }}
+        className="w-full font-bold uppercase"
+        style={{ height: 52, fontSize: 14, letterSpacing: "0.06em", borderRadius: 6, fontFamily: "'IBM Plex Mono', monospace" }}
         disabled={!file || isAnalyzing || !!cooldownMessage}
         onClick={analyze}
       >
