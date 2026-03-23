@@ -52,7 +52,7 @@ const ListeningModes = () => {
         }}
       />
 
-      <div className="max-w-3xl mx-auto relative">
+      <div className="mx-auto relative" style={{ maxWidth: 900 }}>
         {/* Right-aligned heading */}
         <div className="md:text-right mb-12 md:mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <p
@@ -77,14 +77,15 @@ const ListeningModes = () => {
               style={{
                 "--stagger": `${100 + i * 120}ms`,
                 background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border-subtle) / 0.45)",
+                border: "1px solid hsl(var(--border-subtle))",
+                minHeight: 280,
                 boxShadow:
                   "0 2px 8px hsl(0 0% 0% / 0.04), 0 8px 24px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.55)",
               } as React.CSSProperties}
             >
               {/* Panel header */}
               <div
-                className="px-5 pt-5 pb-4"
+                className="px-7 pt-7 pb-5"
                 style={{ borderBottom: "1px solid hsl(var(--border-subtle) / 0.2)" }}
               >
                 <div className="flex items-center justify-between mb-3.5">
@@ -108,8 +109,8 @@ const ListeningModes = () => {
                   </span>
                 </div>
                 <h3
-                  className="text-[14px] text-foreground/85 uppercase"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 700 }}
+                  className="text-[18px] text-foreground/85 uppercase"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em", fontWeight: 600 }}
                 >
                   {mode.name}
                 </h3>
@@ -119,7 +120,7 @@ const ListeningModes = () => {
               </div>
 
               {/* Feature list */}
-              <div className="px-5 py-4 flex-1 flex flex-col justify-end">
+              <div className="px-7 py-5 flex-1 flex flex-col justify-end">
                 <ul className="space-y-0">
                   {mode.points.map((point, j) => (
                     <li

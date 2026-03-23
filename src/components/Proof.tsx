@@ -48,7 +48,7 @@ const Proof = () => {
     >
       <div className="channel-strip-line absolute top-0 left-0 right-0" />
 
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto" style={{ maxWidth: 900 }}>
         {/* Heading */}
         <div className="text-center mb-14 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div className="flex items-center gap-4 justify-center mb-5">
@@ -78,14 +78,15 @@ const Proof = () => {
               style={{
                 "--stagger": `${150 + i * 120}ms`,
                 background: "hsl(var(--surface-a))",
-                border: "1px solid hsl(var(--border-subtle) / 0.35)",
+                border: "1px solid hsl(var(--border-subtle))",
+                minHeight: 220,
                 boxShadow:
                   "0 1px 3px hsl(0 0% 0% / 0.04), 0 4px 12px hsl(0 0% 0% / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
               } as React.CSSProperties}
             >
               {/* Panel header bar */}
               <div
-                className="px-5 py-3 flex items-center justify-between"
+                className="px-7 py-4 flex items-center justify-between"
                 style={{
                   background: "hsl(var(--surface-c))",
                   borderBottom: "1px solid hsl(var(--border-subtle) / 0.3)",
@@ -104,7 +105,7 @@ const Proof = () => {
                   >
                     <block.icon className="w-3 h-3 text-foreground/50" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-[12px] font-semibold tracking-[-0.01em] text-foreground/85">
+                  <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-foreground/85">
                     {block.title}
                   </h3>
                 </div>
@@ -117,7 +118,7 @@ const Proof = () => {
               </div>
 
               {/* Items */}
-              <div className="px-5 py-4">
+              <div className="px-7 py-5">
                 <ul className="space-y-0">
                   {block.items.map((item, j) => (
                     <li

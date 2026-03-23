@@ -143,7 +143,7 @@ const SampleFeedback = () => {
         style={{ background: "linear-gradient(90deg, transparent, hsl(0 0% 16%), transparent)" }}
       />
 
-      <div className="relative max-w-3xl mx-auto">
+      <div className="relative mx-auto" style={{ maxWidth: 900 }}>
         {/* Heading area */}
         <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end mb-16 md:mb-20 reveal-child" style={{ "--stagger": "0ms" } as React.CSSProperties}>
           <div>
