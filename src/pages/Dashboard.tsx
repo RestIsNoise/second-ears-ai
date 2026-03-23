@@ -16,10 +16,10 @@ const modeIcons: Record<string, typeof SlidersHorizontal> = {
   perception: Ear,
 };
 
-const modeColors: Record<string, string> = {
-  technical: "bg-accent text-accent-foreground",
-  musical: "bg-blue-500/15 text-blue-400",
-  perception: "bg-purple-500/15 text-purple-400",
+const modeColors: Record<string, { bg: string; text: string; class: string }> = {
+  technical: { bg: "#f0f0f0", text: "hsl(0 0% 25%)", class: "bg-accent text-accent-foreground" },
+  musical: { bg: "#f0f4ff", text: "hsl(215 60% 45%)", class: "bg-blue-500/15 text-blue-400" },
+  perception: { bg: "#f5f0ff", text: "hsl(270 50% 45%)", class: "bg-purple-500/15 text-purple-400" },
 };
 
 interface AnalysisRow {
