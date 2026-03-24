@@ -164,6 +164,7 @@ const Header = () => {
                       src={avatarError ? undefined : (avatarUrl || undefined)}
                       alt="Avatar"
                       loading="eager"
+                      referrerPolicy="no-referrer"
                       onError={() => setAvatarError(true)}
                       style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
                     />

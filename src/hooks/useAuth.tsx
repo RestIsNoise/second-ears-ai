@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshProfile = async () => {
-    if (session?.user) await fetchProfile(session.user.id);
+    if (session?.user) await fetchProfile(session.user.id, session.user);
   };
 
   return (
