@@ -212,20 +212,20 @@ const Header = () => {
                   ...(isDark ? { ["--dropdown-item-color" as any]: "#c8c8c0" } : {}),
                 }}
               >
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild className={isDark ? "[&]:text-[#c8c8c0] [&]:hover:bg-[#1a1a1a] [&]:focus:bg-[#1a1a1a]" : ""}>
                   <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild className={isDark ? "[&]:text-[#c8c8c0] [&]:hover:bg-[#1a1a1a] [&]:focus:bg-[#1a1a1a]" : ""}>
                   <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
                     <Settings className="w-4 h-4" />
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer">
+                <DropdownMenuSeparator style={isDark ? { borderColor: "#222", backgroundColor: "#222" } : undefined} />
+                <DropdownMenuItem onClick={signOut} className={`flex items-center gap-2 cursor-pointer ${isDark ? "[&]:text-[#c8c8c0] [&]:hover:bg-[#1a1a1a] [&]:focus:bg-[#1a1a1a]" : ""}`}>
                   <LogOut className="w-4 h-4" />
                   Sign out
                 </DropdownMenuItem>
