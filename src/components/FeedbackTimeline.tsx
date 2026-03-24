@@ -228,13 +228,20 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
 
                 {/* Timestamp */}
                 <span
+                  className="cursor-pointer transition-colors duration-150"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 12,
-                    color: "hsl(0 0% 60%)",
-                    backgroundColor: "hsl(0 0% 96%)",
-                    padding: "2px 6px",
+                    fontSize: 11,
+                    color: isDark ? "#888" : "hsl(0 0% 50%)",
+                    backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)",
+                    padding: "1px 6px",
                     borderRadius: 3,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
                   }}
                 >
                   {formatTime(item.timestampSec)}
