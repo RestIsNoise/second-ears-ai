@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { Check, Plus, CircleDashed, ClipboardList, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ToDoItem } from "@/types/feedback";
@@ -28,6 +28,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
   const [noteText, setNoteText] = useState("");
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isDark = useMemo(() => typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark", []);
 
   const doneCount = items.filter((i) => i.done).length;
   const totalCount = items.length;
@@ -66,7 +67,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
   return (
     <div className="flex flex-col h-full min-h-0 overflow-hidden">
       {/* Header */}
-      <div className="px-4 pt-4 pb-4" style={{ borderBottom: "1px solid hsl(0 0% 94%)" }}>
+      <div className="px-4 pt-4 pb-4" style={{ borderBottom: isDark ? "1px solid #222" : "1px solid #e0e0e0" }}>
         {totalCount > 0 && (
           <div className="flex items-center gap-2 mb-3">
             <span
@@ -90,22 +91,41 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
         {/* Segmented control */}
         <div
           className="flex items-center gap-0 p-1"
-          style={{ backgroundColor: "hsl(0 0% 94%)", borderRadius: 6 }}
+          style={{
+            backgroundColor: isDark ? "#1a1a1a" : "hsl(0 0% 94%)",
+            borderRadius: 6,
+            borderBottom: isDark ? "1px solid #222" : "1px solid #e0e0e0",
+          }}
         >
           {filters.map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className="flex-1 uppercase tracking-[0.06em] transition-all duration-100"
+              className="flex-1 uppercase tracking-[0.06em]"
               style={{
                 fontFamily: MONO,
                 fontSize: 11,
                 padding: "6px 14px",
                 borderRadius: 4,
-                color: filter === f.key ? "hsl(0 0% 7%)" : "hsl(0 0% 60%)",
-                backgroundColor: filter === f.key ? "hsl(0 0% 100%)" : "transparent",
+                color: filter === f.key
+                  ? (isDark ? "#111" : "white")
+                  : (isDark ? "#666" : "hsl(0 0% 60%)"),
+                backgroundColor: filter === f.key
+                  ? (isDark ? "#e8e8e0" : "#111")
+                  : "transparent",
                 boxShadow: filter === f.key ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
                 fontWeight: filter === f.key ? 600 : 400,
+                transition: "background 0.15s ease, color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                if (filter !== f.key) {
+                  e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (filter !== f.key) {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }
               }}
             >
               {f.label}
@@ -124,15 +144,24 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="flex items-center justify-center py-6 px-3">
+          <div className="flex items-center justify-center" style={{ margin: 16 }}>
             <div
-              className="flex flex-col items-center gap-2 px-4 py-5 w-full max-w-[190px]"
-              style={{ border: "1px dashed hsl(0 0% 80%)", borderRadius: 6 }}
+              className="flex flex-col items-center gap-2 w-full"
+              style={{
+                border: isDark ? "1px dashed #2a2a2a" : "1px dashed #ddd",
+                borderRadius: 4,
+                padding: 20,
+              }}
             >
-              <ClipboardList className="w-4 h-4" style={{ color: "hsl(var(--foreground) / 0.15)" }} />
-              <p style={{ fontFamily: MONO, fontSize: 10, color: "hsl(var(--foreground) / 0.35)", textAlign: "center" }}>
+              <ClipboardList style={{ width: 28, height: 28, color: isDark ? "#444" : "#ccc" }} />
+              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: "#aaa", textAlign: "center" }}>
                 {filter === "done" ? "No completed tasks" : filter === "open" ? "All clear" : "Track your fixes"}
               </p>
+              {filter === "all" && (
+                <p style={{ fontFamily: MONO, fontSize: 10, color: "#bbb", textAlign: "center" }}>
+                  Add fixes from feedback cards ↑
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -142,19 +171,29 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
             key={item.id}
             onClick={() => onItemClick(item)}
             className="w-full text-left flex items-start group"
-            style={{ padding: "10px 0", borderBottom: "1px solid hsl(0 0% 94%)", gap: 10 }}
+            style={{
+              padding: "10px 12px",
+              borderBottom: isDark ? "1px solid #1a1a1a" : "1px solid #f0f0ee",
+              gap: 10,
+              transition: "opacity 0.3s ease",
+            }}
           >
             {/* Checkbox */}
             <button
               onClick={(e) => { e.stopPropagation(); onToggle(item.id); }}
-              className="mt-[1px] shrink-0 flex items-center justify-center transition-all duration-100"
+              className="mt-[1px] shrink-0 flex items-center justify-center"
               style={{
                 width: 16,
                 height: 16,
                 borderRadius: 3,
-                border: item.done ? "1px solid hsl(0 0% 80%)" : "1px solid hsl(0 0% 87%)",
+                border: item.done
+                  ? (isDark ? "1px solid #333" : "1px solid hsl(0 0% 80%)")
+                  : (isDark ? "1px solid #444" : "1px solid hsl(0 0% 87%)"),
                 backgroundColor: item.done ? "hsl(var(--foreground) / 0.06)" : "transparent",
+                transition: "transform 0.1s ease",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
             >
               {item.done && <Check className="w-2.5 h-2.5 text-foreground/35" />}
             </button>
@@ -165,8 +204,11 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
                   fontFamily: MONO,
                   fontSize: 13,
                   lineHeight: 1.5,
-                  color: item.done ? "hsl(0 0% 73%)" : "hsl(0 0% 20%)",
+                  color: item.done
+                    ? "#aaa"
+                    : (isDark ? "#ccc" : "hsl(0 0% 20%)"),
                   textDecoration: item.done ? "line-through" : "none",
+                  transition: "all 0.2s ease",
                 }}
               >
                 {item.text}
@@ -186,7 +228,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
                 className="mt-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                 title="Remove"
               >
-                <X className="w-3 h-3" style={{ color: "hsl(0 0% 60%)" }} />
+                <X className="w-3 h-3" style={{ color: isDark ? "#555" : "hsl(0 0% 60%)" }} />
               </button>
             )}
           </button>
@@ -194,7 +236,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
       </div>
 
       {/* Bottom area: Add task button + inline input */}
-      <div className="px-4 py-3" style={{ borderTop: "1px solid hsl(0 0% 94%)" }}>
+      <div className="px-4 py-3" style={{ borderTop: isDark ? "1px solid #222" : "1px solid hsl(0 0% 94%)" }}>
         {showInput ? (
           <div className="flex items-center gap-2">
             <input
@@ -210,7 +252,7 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
               style={{
                 fontFamily: MONO,
                 fontSize: 13,
-                color: "hsl(0 0% 20%)",
+                color: isDark ? "#ccc" : "hsl(0 0% 20%)",
                 padding: "8px 0",
                 border: "none",
               }}
@@ -227,21 +269,29 @@ const ToDoPanel = ({ items, onToggle, onAdd, onDelete, onItemClick, loading }: P
         ) : (
           <button
             onClick={() => { setShowInput(true); setTimeout(() => inputRef.current?.focus(), 50); }}
-            className="w-full flex items-center justify-center gap-2 transition-colors"
+            className="w-full flex items-center justify-center gap-2 group/add"
             style={{
-              border: "1px dashed hsl(0 0% 80%)",
+              border: isDark ? "1px dashed #333" : "1px dashed hsl(0 0% 80%)",
               background: "transparent",
-              color: "hsl(0 0% 60%)",
+              color: isDark ? "#666" : "#888",
               padding: 10,
               borderRadius: 6,
               fontFamily: MONO,
-              fontSize: 12,
+              fontSize: 10,
+              letterSpacing: "0.12em",
               cursor: "pointer",
+              transition: "color 0.15s ease, border-color 0.15s ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "hsl(0 0% 7%)"; e.currentTarget.style.color = "hsl(0 0% 7%)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "hsl(0 0% 80%)"; e.currentTarget.style.color = "hsl(0 0% 60%)"; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = isDark ? "#666" : "#999";
+              e.currentTarget.style.color = isDark ? "#ccc" : "#333";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = isDark ? "#333" : "hsl(0 0% 80%)";
+              e.currentTarget.style.color = isDark ? "#666" : "#888";
+            }}
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5 transition-transform duration-150 group-hover/add:scale-[1.2]" />
             ADD TASK
           </button>
         )}
