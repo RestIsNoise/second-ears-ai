@@ -382,13 +382,9 @@ export function exportAnalysisPdf(n: NormalizedFeedback, releaseReadiness: strin
         lineX += doc.getTextWidth(ts) + 3;
       }
 
-      // Severity badge
-      if (item.severity) {
-        lineX = drawSeverityBadge(doc, item.severity, lineX, y);
-      }
-      // Category badge
-      if (item.category) {
-        lineX = drawCategoryBadge(doc, item.category, lineX, y);
+      // Category badge from action label
+      if (item.actionLabel) {
+        lineX = drawCategoryBadge(doc, item.actionLabel, lineX, y);
       }
       y += 5;
 
