@@ -23,7 +23,7 @@ const Auth = () => {
 
   const handleGoogle = async () => {
     const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: "https://www.secondear.app/auth/callback",
     });
     if (error) {
       toast({ title: "Google sign-in failed", description: (error as Error).message, variant: "destructive" });
@@ -31,129 +31,84 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      {/* Left — brand panel */}
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0a0a0a",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <div
-        className="flex items-center justify-center md:w-1/2 md:min-h-screen"
         style={{
-          background: "hsl(0 0% 7%)",
-          height: 80,
-          minHeight: 80,
+          width: 380,
+          background: "#111",
+          border: "1px solid #222",
+          borderRadius: 4,
+          padding: "40px 48px",
         }}
       >
-        <div className="flex flex-col items-center text-center md:block">
-          <h1
-            className="hidden md:block"
-            style={{
-              color: "white",
-              fontSize: 20,
-              fontFamily: "monospace",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase" as const,
-              fontWeight: 600,
-            }}
-          >
-            SecondEar
-          </h1>
-          {/* Mobile: compact wordmark */}
-          <h1
-            className="md:hidden"
-            style={{
-              color: "white",
-              fontSize: 14,
-              fontFamily: "monospace",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase" as const,
-              fontWeight: 600,
-            }}
-          >
-            SecondEar
-          </h1>
-          <p
-            className="hidden md:block"
-            style={{
-              color: "hsl(0 0% 53%)",
-              fontSize: 14,
-              fontStyle: "italic",
-              lineHeight: 1.7,
-              maxWidth: 280,
-              marginTop: 20,
-              textAlign: "center" as const,
-            }}
-          >
-            Upload a track. Get a prioritized fix plan. Ship better music.
-          </p>
-        </div>
-      </div>
+        <p
+          style={{
+            fontFamily: "monospace",
+            fontSize: 12,
+            letterSpacing: "0.15em",
+            color: "#555",
+            textTransform: "uppercase" as const,
+          }}
+        >
+          SecondEar
+        </p>
 
-      {/* Right — login form */}
-      <div
-        className="flex-1 flex items-center justify-center px-6 py-16 md:py-0"
-        style={{ background: "white", minHeight: "calc(100vh - 80px)" }}
-      >
-        <div className="w-full" style={{ maxWidth: 360 }}>
-          <h2
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "hsl(0 0% 7%)",
-              marginBottom: 8,
-            }}
-          >
-            Sign in
-          </h2>
-          <p
-            style={{
-              fontSize: 14,
-              color: "hsl(0 0% 40%)",
-              marginBottom: 32,
-            }}
-          >
-            Continue with your Google account.
-          </p>
+        <h2
+          style={{
+            fontSize: 20,
+            fontWeight: 700,
+            color: "#e8e8e0",
+            marginTop: 24,
+            marginBottom: 6,
+          }}
+        >
+          Sign in
+        </h2>
+        <p style={{ fontSize: 13, color: "#666", marginBottom: 28 }}>
+          Continue with your Google account.
+        </p>
 
-          {/* Google button */}
-          <button
-            onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 transition-all"
-            style={{
-              maxWidth: 320,
-              padding: 13,
-              border: "1px solid hsl(0 0% 88%)",
-              borderRadius: 6,
-              background: "white",
-              fontSize: 14,
-              fontWeight: 500,
-              color: "hsl(0 0% 20%)",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget;
-              el.style.borderColor = "hsl(0 0% 60%)";
-              el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget;
-              el.style.borderColor = "hsl(0 0% 88%)";
-              el.style.boxShadow = "none";
-            }}
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
+        <button
+          onClick={handleGoogle}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            padding: 12,
+            border: "1px solid #2a2a2a",
+            borderRadius: 3,
+            background: "#1a1a1a",
+            color: "#e8e8e0",
+            fontSize: 14,
+            fontWeight: 500,
+            cursor: "pointer",
+          }}
+        >
+          <GoogleIcon />
+          Continue with Google
+        </button>
 
-          <p
-            style={{
-              fontSize: 11,
-              color: "hsl(0 0% 73%)",
-              textAlign: "center" as const,
-              marginTop: 16,
-              maxWidth: 320,
-            }}
-          >
-            No credit card required · Private by default
-          </p>
-        </div>
+        <p
+          style={{
+            fontSize: 11,
+            color: "#444",
+            fontFamily: "monospace",
+            textAlign: "center" as const,
+            marginTop: 20,
+          }}
+        >
+          No credit card required · Private by default
+        </p>
       </div>
     </div>
   );
