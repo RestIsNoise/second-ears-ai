@@ -381,7 +381,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   padding: "12px 14px",
                   backgroundColor: !isLocked && mode === m.id
                     ? (isDark ? "#2a2a2a" : "#111")
-                    : (isDark ? "#1a1a1a" : "#ffffff"),
+                    : (isDark ? "#111" : "#ffffff"),
                   color: !isLocked && mode === m.id
                     ? (isDark ? "#e8e8e0" : "#ffffff")
                     : (isDark ? "#888" : "#333"),
