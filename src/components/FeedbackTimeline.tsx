@@ -340,8 +340,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                 <div
                   style={{
                     marginTop: 12,
-                    backgroundColor: isDark ? "#ede9e0" : "#f8f8f6",
-                    borderLeft: isDark ? "3px solid #2a2520" : `3px solid ${accent.border}`,
+                    backgroundColor: isDark ? "#141414" : "#f4f4f2",
+                    borderLeft: isDark ? "3px solid #e8e8e0" : "3px solid #111",
                     borderRadius: "0 6px 6px 0",
                     padding: "12px 16px",
                   }}
@@ -349,10 +349,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                   <div
                     style={{
                       fontFamily: MONO,
-                      fontSize: 10,
+                      fontSize: 9,
                       fontWeight: 700,
-                      letterSpacing: "0.1em",
-                      color: isDark ? "#2a2520" : "hsl(0 0% 7%)",
+                      letterSpacing: "0.18em",
+                      color: "#888",
                       marginBottom: 6,
                       textTransform: "uppercase" as const,
                     }}
@@ -363,7 +363,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                     style={{
                       fontSize: 13,
                       lineHeight: 1.6,
-                      color: isDark ? "#3a3530" : "hsl(0 0% 27%)",
+                      color: isDark ? "#aaa" : "hsl(0 0% 27%)",
                       fontFamily: MONO,
                     }}
                   >
