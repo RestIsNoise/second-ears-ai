@@ -327,7 +327,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                   style={{
                     fontSize: 14,
                     lineHeight: 1.7,
-                    color: isDark ? "#2a2520" : "hsl(0 0% 33%)",
+                    color: isDark ? "#999" : "hsl(0 0% 33%)",
                     fontFamily: MONO,
                   }}
                 >
