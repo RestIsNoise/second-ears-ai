@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
-      if (s?.user) fetchProfile(s.user.id);
+      if (s?.user) fetchProfile(s.user.id, s.user);
       setLoading(false);
     });
 
