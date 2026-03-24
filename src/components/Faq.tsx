@@ -55,7 +55,7 @@ const items = [
 const FaqItem = ({ item, isOpen, onToggle, isFirst, isDark }: { item: typeof items[0]; isOpen: boolean; onToggle: () => void; isFirst: boolean; isDark: boolean }) => (
   <div
     style={{
-      borderBottom: `1px solid ${isDark ? "#222" : "#e8e8e8"}`,
+      borderBottom: `1px solid ${isDark ? "#2a2a2a" : "#e8e8e8"}`,
       borderTop: isFirst ? "none" : undefined,
     }}
   >
@@ -127,10 +127,10 @@ const Faq = () => {
           >
             FAQ
           </p>
-          <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1, color: isDark ? "#e8e8e0" : undefined }}>
             Got questions?
           </h1>
-          <p style={{ fontSize: 16, color: isDark ? "#666" : "#666", marginTop: 10, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 16, color: "#666", marginTop: 10, lineHeight: 1.5 }}>
             Everything you need to know about SecondEar.
           </p>
         </div>

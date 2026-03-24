@@ -287,7 +287,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           padding: "40px 24px",
           backgroundColor: dragOver
             ? (isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)")
-            : (isDark ? "#1a1a1a" : "#ffffff"),
+            : (isDark ? "#111" : "#ffffff"),
           border: dragOver
             ? (isDark ? "1.5px dashed #888" : "1.5px dashed #888")
             : file
@@ -333,11 +333,11 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           className="w-full focus:outline-none"
           style={{
             height: 48,
-            border: isDark ? "1px solid #333" : "1px solid #ddd",
+            border: isDark ? "1px solid #2a2a2a" : "1px solid #ddd",
             borderRadius: 6,
             fontSize: 12,
             padding: "0 16px",
-            backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+            backgroundColor: isDark ? "#0d0d0d" : "#ffffff",
             color: isDark ? "#e8e8e0" : "#333",
             fontFamily: "'IBM Plex Mono', monospace",
             letterSpacing: "0.04em",
@@ -348,7 +348,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             e.currentTarget.style.boxShadow = isDark ? "0 0 0 3px rgba(255,255,255,0.04)" : "0 0 0 3px rgba(0,0,0,0.06)";
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd";
+            e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#ddd";
             e.currentTarget.style.boxShadow = "none";
           }}
         />
@@ -381,7 +381,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   padding: "12px 14px",
                   backgroundColor: !isLocked && mode === m.id
                     ? (isDark ? "#2a2a2a" : "#111")
-                    : (isDark ? "#1a1a1a" : "#ffffff"),
+                    : (isDark ? "#111" : "#ffffff"),
                   color: !isLocked && mode === m.id
                     ? (isDark ? "#e8e8e0" : "#ffffff")
                     : (isDark ? "#888" : "#333"),
@@ -396,7 +396,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   cursor: isLocked ? "default" : "pointer",
                 }}
                 onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#333" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
-                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
+                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#111" : "#ffffff"; } }}
               >
                 {isLocked && (
                   <span
@@ -457,7 +457,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 padding: "12px 14px",
                 backgroundColor: goal === g.id
                   ? (isDark ? "#2a2a2a" : "#111")
-                  : (isDark ? "#1a1a1a" : "#ffffff"),
+                  : (isDark ? "#111" : "#ffffff"),
                 color: goal === g.id
                   ? (isDark ? "#e8e8e0" : "#ffffff")
                   : (isDark ? "#888" : "#333"),
@@ -467,7 +467,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 borderRadius: 6,
               }}
               onMouseEnter={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#333" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
-              onMouseLeave={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
+              onMouseLeave={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#111" : "#ffffff"; } }}
             >
               <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? (isDark ? "#e8e8e0" : "rgba(255,255,255,0.7)") : (isDark ? "#555" : "#999") }} />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>

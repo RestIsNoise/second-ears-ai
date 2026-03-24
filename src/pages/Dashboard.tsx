@@ -713,7 +713,9 @@ const Dashboard = () => {
             <TabsList
               className="mb-4 h-auto p-0 gap-0 rounded-none bg-transparent"
               style={{
-                borderBottom: "1px solid hsl(0 0% 91%)",
+                borderBottom: typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
+                  ? "1px solid #1a1a1a"
+                  : "1px solid hsl(0 0% 91%)",
               }}
             >
               {[
@@ -741,32 +743,37 @@ const Dashboard = () => {
 
             <TabsContent value="tracks">
               {grouped.length === 0 ? (
+                (() => {
+                  const isDarkEmpty = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
+                  return (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <Upload size={48} color="hsl(0 0% 80%)" className="mb-5" />
-                  <h2 style={{ fontSize: 20, fontWeight: 600, color: "hsl(0 0% 20%)" }}>
+                  <Upload size={48} color={isDarkEmpty ? "#333" : "hsl(0 0% 80%)"} className="mb-5" />
+                  <h2 style={{ fontSize: 20, fontWeight: 600, color: isDarkEmpty ? "#e8e8e0" : "hsl(0 0% 20%)" }}>
                     Your mixes live here
                   </h2>
-                  <p style={{ fontSize: 14, color: "hsl(0 0% 60%)", marginTop: 8, marginBottom: 24 }}>
+                  <p style={{ fontSize: 14, color: isDarkEmpty ? "#666" : "hsl(0 0% 60%)", marginTop: 8, marginBottom: 24 }}>
                     Upload a track to get your first analysis.
                   </p>
                   <Link
                     to="/analyze"
                     className="inline-flex items-center gap-2 transition-colors"
                     style={{
-                      background: "hsl(0 0% 7%)",
-                      color: "white",
+                      background: isDarkEmpty ? "#e8e8e0" : "hsl(0 0% 7%)",
+                      color: isDarkEmpty ? "#111" : "white",
                       padding: "10px 24px",
                       borderRadius: 6,
                       fontSize: 13,
                       fontWeight: 500,
                       fontFamily: "'IBM Plex Mono', monospace",
                     }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 20%)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "hsl(0 0% 7%)"; }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkEmpty ? "#d4d0c8" : "hsl(0 0% 20%)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkEmpty ? "#e8e8e0" : "hsl(0 0% 7%)"; }}
                   >
                     Analyze your first track
                   </Link>
                 </div>
+                  );
+                })()
               ) : (
                 <>
                   {/* View toggle */}
