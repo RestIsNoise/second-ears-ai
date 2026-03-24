@@ -467,6 +467,16 @@ body::after {
   transform: scale(0.98);
 }
 
+/* CTA pulse for dashboard new-analysis button */
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0.15); }
+  50% { box-shadow: 0 0 0 6px rgba(0,0,0,0); }
+}
+.dark @keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,232,224,0.15); }
+  50% { box-shadow: 0 0 0 6px rgba(232,232,224,0); }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal,

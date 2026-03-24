@@ -686,6 +686,7 @@ const Dashboard = () => {
                     fontWeight: 500,
                     letterSpacing: "0.02em",
                     fontFamily: "'IBM Plex Mono', monospace",
+                    animation: "cta-pulse 3s ease-in-out infinite",
                   }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#d4d0c8" : "hsl(0 0% 20%)"; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)"; }}
