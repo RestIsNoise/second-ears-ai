@@ -221,7 +221,7 @@ const TrackGridCard = ({
         border: isDark ? "1px solid #2a2a2a" : "1px solid #e8e8e8",
         borderRadius: 8,
         minHeight: 280,
-        transition: "all 0.2s ease",
+        transition: "all 0.18s ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
