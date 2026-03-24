@@ -29,6 +29,13 @@ const Footer = () => (
             FAQ
           </Link>
           <span className="text-muted-foreground/20">·</span>
+          <Link
+            to="/changelog"
+            className="text-[10px] text-muted-foreground/50 tracking-wide hover:text-muted-foreground transition-colors"
+          >
+            Changelog
+          </Link>
+          <span className="text-muted-foreground/20">·</span>
           <a
             href="mailto:hello@secondears.io"
             className="text-[10px] text-muted-foreground/50 tracking-wide hover:text-muted-foreground transition-colors"
