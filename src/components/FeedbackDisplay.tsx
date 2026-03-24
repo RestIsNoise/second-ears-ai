@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Copy, Check, Share2, Disc, Link2 } from "lucide-react";
+import { ArrowLeft, Copy, Check, Share2, Link2 } from "lucide-react";
 import CompactFooter from "@/components/CompactFooter";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -951,7 +951,7 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Right: mode badge (mobile) + collaborators */}
+        {/* Right: mode badge + reference button + collaborators */}
         <div className="flex items-center gap-2 shrink-0 sm:justify-end">
           <span
             className="sm:hidden uppercase"
@@ -968,6 +968,32 @@ const FeedbackDisplay = ({
           >
             {modeLabels[mode]}
           </span>
+          <button
+            onClick={() => setRefModalOpen(true)}
+            className="transition-all duration-150"
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "6px 12px",
+              backgroundColor: "transparent",
+              border: isDark ? "1px solid #444" : "1px solid #bbb",
+              borderRadius: 3,
+              color: isDark ? "#999" : "#555",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#888";
+              e.currentTarget.style.color = isDark ? "#e8e8e0" : "#222";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = isDark ? "#444" : "#bbb";
+              e.currentTarget.style.color = isDark ? "#999" : "#555";
+            }}
+          >
+            + Reference
+          </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
@@ -1027,35 +1053,13 @@ const FeedbackDisplay = ({
           >
             {/* Summary text — full width for comfortable reading */}
             {n.overallImpression && (
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: isDark ? "#aaa" : "#555", maxWidth: 860, borderLeft: isDark ? "3px solid #444" : "3px solid #e0e0e0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+              <p style={{ fontSize: 15, lineHeight: 1.75, color: isDark ? "#ccc" : "#333", maxWidth: 680, borderLeft: isDark ? "2px solid #333" : "2px solid #d0d0d0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em", fontWeight: 400 }}>
                 {n.overallImpression}
               </p>
             )}
 
-            {/* Action controls row — compact utilities */}
+            {/* SE monogram */}
             <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
-              <button
-                onClick={() => setRefModalOpen(true)}
-                className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  padding: "5px 12px",
-                  backgroundColor: "hsl(var(--panel-bg))",
-                  border: "1px solid hsl(var(--foreground) / 0.08)",
-                  borderRadius: 2,
-                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                }}
-              >
-                <Disc className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Reference</span>
-                <span className="sm:hidden">Ref</span>
-              </button>
-
-              {/* SE monogram */}
               <div
                 className="ml-auto flex items-center justify-center"
                 style={{ opacity: 0.15 }}
