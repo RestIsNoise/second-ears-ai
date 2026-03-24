@@ -540,6 +540,7 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     return (localStorage.getItem("dashboard-view") as "list" | "grid") || "list";
   });
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
