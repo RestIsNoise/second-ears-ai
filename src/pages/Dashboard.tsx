@@ -9,6 +9,9 @@ import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import OnboardingModal from "@/components/OnboardingModal";
+
+const ONBOARDING_KEY = "secondear-onboarding-seen";
 
 const modeIcons: Record<string, typeof SlidersHorizontal> = {
   technical: SlidersHorizontal,
@@ -537,6 +540,7 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     return (localStorage.getItem("dashboard-view") as "list" | "grid") || "list";
   });
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -579,6 +583,11 @@ const Dashboard = () => {
       }));
       setProjects(mapped);
       setFetching(false);
+      // Show onboarding if 0 analyses and not seen before
+      const totalAnalyses = mapped.reduce((s, p) => s + p.analyses.length, 0);
+      if (totalAnalyses === 0 && localStorage.getItem(ONBOARDING_KEY) !== "true") {
+        setShowOnboarding(true);
+      }
     };
     load();
   }, [user]);
@@ -639,6 +648,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
       <Header />
       <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
