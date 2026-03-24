@@ -39,9 +39,10 @@ const WorkstationPanel = ({ id, title, onClose, children, headerExtra }: Props) 
       <div
         className="shrink-0 select-none"
         style={{
-          backgroundColor: "hsl(var(--panel-header))",
+          backgroundColor: "var(--wp-header-bg, hsl(var(--panel-header)))",
           borderBottom: "3px solid hsl(var(--foreground) / 0.14)",
           boxShadow: "0 2px 4px hsl(0 0% 0% / 0.06)",
+          borderLeft: "var(--wp-header-accent)",
         }}
       >
         {/* Top machined edge — 2-line bevel */}
@@ -51,7 +52,7 @@ const WorkstationPanel = ({ id, title, onClose, children, headerExtra }: Props) 
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-2 min-w-0">
             <h3
-              className="text-[13px] text-foreground/75 tracking-[0.08em] uppercase truncate font-medium"
+              className="text-[10px] text-foreground/75 tracking-[0.18em] uppercase truncate font-semibold"
               style={{ fontFamily: MONO }}
             >
               {title}
@@ -61,8 +62,22 @@ const WorkstationPanel = ({ id, title, onClose, children, headerExtra }: Props) 
 
           <button
             onClick={onClose}
-            className="text-foreground/25 hover:text-foreground/55 transition-colors rounded-[2px] p-1.5 hover:bg-foreground/[0.06] shrink-0 ml-2"
+            className="shrink-0 ml-2 flex items-center justify-center transition-all duration-150"
             title="Close panel"
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 3,
+              color: "hsl(var(--foreground) / 0.25)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.08)";
+              e.currentTarget.style.color = "hsl(var(--foreground) / 0.55)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "hsl(var(--foreground) / 0.25)";
+            }}
           >
             <X className="w-3.5 h-3.5" strokeWidth={2} />
           </button>
