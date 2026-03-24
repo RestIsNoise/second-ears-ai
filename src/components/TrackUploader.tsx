@@ -348,7 +348,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             e.currentTarget.style.boxShadow = isDark ? "0 0 0 3px rgba(255,255,255,0.04)" : "0 0 0 3px rgba(0,0,0,0.06)";
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd";
+            e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#ddd";
             e.currentTarget.style.boxShadow = "none";
           }}
         />
