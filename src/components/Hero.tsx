@@ -223,7 +223,7 @@ const Hero = () => {
                 boxShadow: "0 4px 20px hsl(0 0% 0% / 0.4)",
               }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(140 50% 45%)" }} />
+              <span className="w-1.5 h-1.5 rounded-full live-dot" style={{ background: "hsl(140 50% 45%)" }} />
               Real feedback example
             </div>
           </div>
