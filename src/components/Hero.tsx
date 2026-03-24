@@ -86,7 +86,7 @@ const Hero = () => {
             style={{ opacity: 0, transform: `translateY(${headlineY}px)`, animation: "slideInLeft 0.7s ease forwards" }}
            >
             <p
-              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up"
+              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up label-pulse"
               style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               AI speed · Human ears
