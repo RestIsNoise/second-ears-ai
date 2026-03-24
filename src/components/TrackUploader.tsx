@@ -287,7 +287,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           padding: "40px 24px",
           backgroundColor: dragOver
             ? (isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)")
-            : (isDark ? "#1a1a1a" : "#ffffff"),
+            : (isDark ? "#111" : "#ffffff"),
           border: dragOver
             ? (isDark ? "1.5px dashed #888" : "1.5px dashed #888")
             : file
