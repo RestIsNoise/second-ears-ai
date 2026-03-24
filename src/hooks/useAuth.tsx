@@ -33,12 +33,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string, user?: User) => {
     const { data } = await supabase
       .from("profiles")
       .select("display_name, avatar_url, email")
       .eq("id", userId)
       .single();
+    
+    // Backfill avatar_url from OAuth metadata if missing
+    if (data && !data.avatar_url && user) {
+      const metaAvatar = user.user_metadata?.avatar_url || user.user_metadata?.picture;
+      if (metaAvatar) {
+        await supabase.from("profiles").update({ avatar_url: metaAvatar }).eq("id", userId);
+        data.avatar_url = metaAvatar;
+      }
+    }
+    
     setProfile(data);
   };
 
@@ -47,8 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (_event, newSession) => {
         setSession(newSession);
         if (newSession?.user) {
-          // defer profile fetch to avoid Supabase deadlock
-          setTimeout(() => fetchProfile(newSession.user.id), 0);
+          const u = newSession.user;
+          setTimeout(() => fetchProfile(u.id, u), 0);
         } else {
           setProfile(null);
         }
@@ -58,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
-      if (s?.user) fetchProfile(s.user.id);
+      if (s?.user) fetchProfile(s.user.id, s.user);
       setLoading(false);
     });
 
@@ -72,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshProfile = async () => {
-    if (session?.user) await fetchProfile(session.user.id);
+    if (session?.user) await fetchProfile(session.user.id, session.user);
   };
 
   return (
