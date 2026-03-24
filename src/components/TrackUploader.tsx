@@ -436,20 +436,20 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
               style={{
                 padding: "12px 14px",
                 backgroundColor: goal === g.id
-                  ? (isDark ? "#e8e8e0" : "#111")
+                  ? (isDark ? "#2a2a2a" : "#111")
                   : (isDark ? "#1a1a1a" : "#ffffff"),
                 color: goal === g.id
-                  ? (isDark ? "#111" : "#ffffff")
+                  ? (isDark ? "#e8e8e0" : "#ffffff")
                   : (isDark ? "#888" : "#333"),
                 border: goal === g.id
-                  ? (isDark ? "1px solid #e8e8e0" : "1px solid #111")
+                  ? (isDark ? "1px solid #444" : "1px solid #111")
                   : (isDark ? "1px solid #2a2a2a" : "1px solid #e0e0e0"),
                 borderRadius: 6,
               }}
-              onMouseEnter={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#555" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
+              onMouseEnter={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#333" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
               onMouseLeave={(e) => { if (goal !== g.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
             >
-              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? (isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.7)") : "#999" }} />
+              <g.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: goal === g.id ? (isDark ? "#e8e8e0" : "rgba(255,255,255,0.7)") : (isDark ? "#555" : "#999") }} />
               <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{g.label}</p>
             </button>
               </TooltipTrigger>
