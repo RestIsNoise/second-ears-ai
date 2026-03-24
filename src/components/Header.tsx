@@ -204,11 +204,12 @@ const Header = () => {
               <DropdownMenuContent
                 align="end"
                 style={{
-                  background: "#ffffff",
-                  border: "1px solid #e8e8e8",
+                  background: isDark ? "#111" : "#ffffff",
+                  border: isDark ? "1px solid #222" : "1px solid #e8e8e8",
                   borderRadius: 6,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  boxShadow: isDark ? "0 4px 16px rgba(0,0,0,0.6)" : "0 4px 12px rgba(0,0,0,0.08)",
                   minWidth: 160,
+                  ...(isDark ? { ["--dropdown-item-color" as any]: "#c8c8c0" } : {}),
                 }}
               >
                 <DropdownMenuItem asChild>
