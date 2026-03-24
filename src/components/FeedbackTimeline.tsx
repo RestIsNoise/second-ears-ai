@@ -312,7 +312,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                 style={{
                   fontSize: 16,
                   fontWeight: 600,
-                  color: isDark ? "#1a1510" : undefined,
+                  color: isDark ? "#e8e8e0" : undefined,
                   margin: "8px 0",
                   lineHeight: 1.4,
                 }}
