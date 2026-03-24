@@ -386,8 +386,15 @@ const TrackGridCard = ({
       >
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <h3
-            className="text-[14px] font-medium tracking-[-0.01em] truncate group-hover:text-foreground transition-colors leading-tight"
-            style={{ color: isDark ? "#e8e8e0" : undefined }}
+            className="text-[14px] font-medium tracking-[-0.01em] group-hover:text-foreground transition-colors"
+            style={{
+              color: isDark ? "#e8e8e0" : undefined,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical" as any,
+              overflow: "hidden",
+              lineHeight: "1.35",
+            }}
           >
             {proj.name}
           </h3>
