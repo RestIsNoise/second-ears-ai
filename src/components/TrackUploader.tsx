@@ -285,30 +285,40 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         style={{
           minHeight: 160,
           padding: "40px 24px",
-          backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+          backgroundColor: dragOver
+            ? (isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)")
+            : (isDark ? "#1a1a1a" : "#ffffff"),
           border: dragOver
-            ? (isDark ? "2px dashed #e8e8e0" : "2px dashed #111")
+            ? (isDark ? "1.5px dashed #888" : "1.5px dashed #888")
             : file
-              ? (isDark ? "2px solid #333" : "2px solid hsl(0 0% 0% / 0.15)")
-              : (isDark ? "2px dashed #333" : "2px dashed #c8c8c4"),
+              ? (isDark ? "1.5px solid #333" : "1.5px solid hsl(0 0% 0% / 0.15)")
+              : (isDark ? "1.5px dashed #333" : "1.5px dashed #c0c0bc"),
           borderRadius: 6,
-          boxShadow: isDark ? "none" : "inset 0 1px 3px rgba(0,0,0,0.04)",
+          boxShadow: dragOver
+            ? "inset 0 0 20px rgba(0,0,0,0.04)"
+            : (isDark ? "none" : "inset 0 1px 3px rgba(0,0,0,0.04)"),
         }}
       >
         {file ? (
           <>
             <Music className="w-8 h-8" style={{ color: "#999" }} />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
-              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.04em" }}>{file.name}</p>
+              <p style={{ fontSize: 11, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
-            <Upload className="w-8 h-8" style={{ color: "#999" }} />
+            <Upload
+              className="w-8 h-8"
+              style={{
+                color: "#999",
+                animation: dragOver ? "icon-bounce 0.8s ease-in-out infinite" : "icon-bounce 2.5s ease-in-out infinite",
+              }}
+            />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
-              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.04em" }}>Drop your track here</p>
+              <p style={{ fontSize: 11, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
