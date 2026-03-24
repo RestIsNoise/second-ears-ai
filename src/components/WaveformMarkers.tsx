@@ -43,7 +43,7 @@ const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: st
   },
 };
 
-export const MARKER_ZONE_HEIGHT = 32;
+export const MARKER_ZONE_HEIGHT = 44;
 
 interface Props {
   markers: WaveformMarker[];
@@ -120,24 +120,20 @@ const MarkerTooltip = ({
             whiteSpace: "nowrap",
           }}
         >
-          <div
-            className="rounded-md px-2.5 py-1.5 shadow-lg text-xs"
-            style={{
-              backgroundColor: "hsl(var(--popover))",
-              border: "1px solid hsl(var(--border))",
-              color: "hsl(var(--popover-foreground))",
-              maxWidth: 220,
-              whiteSpace: "normal",
-            }}
-          >
-            <p className="font-medium">{marker.label}</p>
-            <p
-              className="text-muted-foreground tabular-nums mt-0.5"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-            >
-              {formatTime(marker.time)}{isUser ? " · Your note" : ""}
-            </p>
-          </div>
+           <div
+             style={{
+               backgroundColor: "#111",
+               color: "#fff",
+               padding: "4px 10px",
+               borderRadius: 3,
+               fontFamily: "'IBM Plex Mono', monospace",
+               fontSize: 11,
+               whiteSpace: "normal",
+               maxWidth: 220,
+             }}
+           >
+             {marker.label}
+           </div>
         </div>
       )}
     </div>
@@ -293,6 +289,12 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
         const isSnapped = snappedMarkerId === m.id;
         const leftPct = (m.time / duration) * 100;
         const highlighted = isActive || isSnapped;
+        const sev = m.severity || "low";
+        const sevGlow =
+          sev === "high" ? "0 0 10px rgba(239,68,68,0.5)" :
+          sev === "med" ? "0 0 10px rgba(251,191,36,0.4)" : "none";
+        const mType = m.type || "technical";
+        const TypeIcon = mType === "structural" ? Music : mType === "perceptual" ? Ear : SlidersHorizontal;
 
         return (
           <div
@@ -314,42 +316,37 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
               onHover={handleMarkerHover}
               onLeave={handleMarkerLeave}
             >
-              <div className="relative flex items-center justify-center" style={{ width: 16, height: 16 }}>
-                {/* Pulse ring */}
+              <button
+                onClick={() => onMarkerClick?.(m)}
+                className="flex flex-col items-center group"
+                aria-label={`${formatTime(m.time)} — ${m.label}`}
+              >
                 <div
-                  className="absolute inset-0 rounded-full pointer-events-none"
+                  className="flex items-center justify-center rounded-full transition-all duration-150 group-hover:scale-125"
                   style={{
-                    border: "1px solid rgba(255,255,255,0.4)",
-                    animation: `markerPulse 2s ease-out infinite`,
-                    animationDelay: `${idx * 0.3}s`,
-                  }}
-                />
-                <button
-                  onClick={() => onMarkerClick?.(m)}
-                  className="flex items-center justify-center rounded-full transition-all duration-150 relative z-10"
-                  style={{
-                    width: 16,
-                    height: 16,
-                    backgroundColor: highlighted ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)",
-                    border: `1px solid ${highlighted ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"}`,
-                    boxShadow: highlighted ? "0 0 6px rgba(255,255,255,0.12)" : "0 1px 2px rgba(0,0,0,0.3)",
+                    width: 28,
+                    height: 28,
+                    backgroundColor: highlighted ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.12)",
+                    border: `1.5px solid rgba(255,255,255,${highlighted ? 0.6 : 0.4})`,
+                    boxShadow: `0 2px 8px rgba(0,0,0,0.4)${sevGlow !== "none" ? `, ${sevGlow}` : ""}`,
                     backdropFilter: "blur(4px)",
                   }}
-                  aria-label={`${formatTime(m.time)} — ${m.label}`}
                 >
-                  <span
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 9,
-                      fontWeight: 700,
-                      color: "#ffffff",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {idx + 1}
-                  </span>
-                </button>
-              </div>
+                  <TypeIcon
+                    style={{ width: 11, height: 11, color: "rgba(255,255,255,0.85)" }}
+                    strokeWidth={2.5}
+                  />
+                </div>
+                {/* Vertical stem */}
+                <div
+                  style={{
+                    width: 2,
+                    height: 10,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    marginTop: -1,
+                  }}
+                />
+              </button>
             </MarkerTooltip>
           </div>
         );
