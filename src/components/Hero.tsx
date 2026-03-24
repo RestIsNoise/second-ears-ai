@@ -115,7 +115,7 @@ const Hero = () => {
               <Button
                 variant="hero"
                 size="lg"
-                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto"
+                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto cta-hover"
                 asChild
               >
                 <Link to="/analyze">
