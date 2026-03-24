@@ -52,10 +52,10 @@ const items = [
   },
 ];
 
-const FaqItem = ({ item, isOpen, onToggle, isFirst }: { item: typeof items[0]; isOpen: boolean; onToggle: () => void; isFirst: boolean }) => (
+const FaqItem = ({ item, isOpen, onToggle, isFirst, isDark }: { item: typeof items[0]; isOpen: boolean; onToggle: () => void; isFirst: boolean; isDark: boolean }) => (
   <div
     style={{
-      borderBottom: "1px solid #e8e8e8",
+      borderBottom: `1px solid ${isDark ? "#222" : "#e8e8e8"}`,
       borderTop: isFirst ? "none" : undefined,
     }}
   >
@@ -68,17 +68,16 @@ const FaqItem = ({ item, isOpen, onToggle, isFirst }: { item: typeof items[0]; i
         style={{
           fontSize: 15,
           fontWeight: 500,
-          color: "#111",
+          color: isDark ? "#c8c8c0" : "#111",
           transition: "color 0.15s ease",
         }}
-        className="group-hover:!text-black"
       >
         {item.q}
       </span>
       <ChevronDown
         className="w-4 h-4 shrink-0 ml-4"
         style={{
-          color: "#999",
+          color: isDark ? "#555" : "#999",
           transition: "transform 0.2s ease",
           transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
         }}
@@ -96,7 +95,7 @@ const FaqItem = ({ item, isOpen, onToggle, isFirst }: { item: typeof items[0]; i
         style={{
           fontSize: 14,
           lineHeight: 1.7,
-          color: "#555",
+          color: isDark ? "#999" : "#555",
           paddingBottom: 16,
         }}
       >
@@ -108,6 +107,7 @@ const FaqItem = ({ item, isOpen, onToggle, isFirst }: { item: typeof items[0]; i
 
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <section id="faq" className="scroll-mt-20">
@@ -130,7 +130,7 @@ const Faq = () => {
           <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
             Got questions?
           </h1>
-          <p style={{ fontSize: 16, color: "#666", marginTop: 10, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 16, color: isDark ? "#666" : "#666", marginTop: 10, lineHeight: 1.5 }}>
             Everything you need to know about SecondEar.
           </p>
         </div>
@@ -144,6 +144,7 @@ const Faq = () => {
               isOpen={openIndex === i}
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               isFirst={i === 0}
+              isDark={isDark}
             />
           ))}
         </div>
