@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
 const statusMessages = [
-  "Uploading track...",
-  "Running spectral analysis...",
-  "Measuring loudness and dynamics...",
+  "Measuring loudness...",
   "Analyzing frequency balance...",
-  "Generating your feedback...",
+  "Reading stereo image...",
+  "Mapping dynamic range...",
+  "Building your report...",
 ];
 
 interface AnalysisProgressProps {
