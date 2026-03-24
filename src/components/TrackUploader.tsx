@@ -363,19 +363,19 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                 style={{
                   padding: "12px 14px",
                   backgroundColor: !isLocked && mode === m.id
-                    ? (isDark ? "#e8e8e0" : "#111")
+                    ? (isDark ? "#2a2a2a" : "#111")
                     : (isDark ? "#1a1a1a" : "#ffffff"),
                   color: !isLocked && mode === m.id
-                    ? (isDark ? "#111" : "#ffffff")
+                    ? (isDark ? "#e8e8e0" : "#ffffff")
                     : (isDark ? "#888" : "#333"),
                   border: !isLocked && mode === m.id
-                    ? (isDark ? "1px solid #e8e8e0" : "1px solid #111")
+                    ? (isDark ? "1px solid #444" : "1px solid #111")
                     : (isDark ? "1px solid #2a2a2a" : "1px solid #e0e0e0"),
                   borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
                 }}
-                onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#555" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
+                onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#333" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
                 onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
               >
                 {isLocked && (
