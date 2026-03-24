@@ -87,8 +87,8 @@ const ListeningModes = () => {
               } as React.CSSProperties}
               onMouseEnter={(e) => {
                 const el = e.currentTarget;
-                el.style.transform = "translateY(-4px)";
-                el.style.boxShadow = isDark ? "0 8px 24px rgba(0,0,0,0.3)" : "0 8px 24px rgba(0,0,0,0.08)";
+                el.style.transform = "translateY(-3px)";
+                el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.3)";
                 el.style.borderColor = isDark ? "#555" : "hsl(0 0% 60%)";
               }}
               onMouseLeave={(e) => {
