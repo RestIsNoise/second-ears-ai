@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { Copy, Check, Plus, AudioLines } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
@@ -83,17 +83,60 @@ const CopyFixInline = ({ item }: { item: FeedbackItem }) => {
   );
 };
 
+/* ── Toggle button for adding/removing from Next Moves ── */
+const ToDoToggleButton = ({
+  item,
+  alreadyAdded,
+  onAdd,
+  onRemove,
+}: {
+  item: FeedbackItem;
+  alreadyAdded: boolean;
+  onAdd: (item: FeedbackItem) => void;
+  onRemove?: (item: FeedbackItem) => void;
+}) => {
+  const [flashGreen, setFlashGreen] = useState(false);
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (alreadyAdded) {
+      onRemove?.(item);
+    } else {
+      onAdd(item);
+      setFlashGreen(true);
+      setTimeout(() => setFlashGreen(false), 1500);
+    }
+  }, [item, alreadyAdded, onAdd, onRemove]);
+
+  const isGreen = alreadyAdded || flashGreen;
+
+  return (
+    <button
+      onClick={handleClick}
+      className="inline-flex items-center p-0.5 transition-colors"
+      style={{ color: isGreen ? "#22c55e" : undefined }}
+      title={alreadyAdded ? "Remove from Next Moves" : "Add to Next Moves"}
+    >
+      {isGreen
+        ? <Check className="w-3.5 h-3.5" />
+        : <Plus className="w-3.5 h-3.5" style={{ color: "hsl(0 0% 70%)" }} />
+      }
+    </button>
+  );
+};
+
 interface Props {
   items: FeedbackItem[];
   activeItemId: string | null;
   onItemClick: (item: FeedbackItem) => void;
   onAddToDo?: (item: FeedbackItem) => void;
+  onRemoveToDo?: (item: FeedbackItem) => void;
   todoItemIds?: Set<string>;
   scrollContainerRef?: React.RefObject<HTMLDivElement>;
   analysisId?: string | null;
 }
 
-const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoItemIds, scrollContainerRef, analysisId }: Props) => {
+const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemoveToDo, todoItemIds, scrollContainerRef, analysisId }: Props) => {
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const isDark = useMemo(() => typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark", []);
@@ -233,17 +276,14 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, todoIte
                 )}
 
                 {/* Hover actions */}
-                <div className={cn("flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0", !analysisId && "ml-auto")}>
+                <div className={cn("flex items-center gap-1.5 shrink-0", !analysisId && "ml-auto", !alreadyAdded && "opacity-0 group-hover:opacity-100 transition-opacity")}>
                   {onAddToDo && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); if (!alreadyAdded) onAddToDo(item); }}
-                      disabled={alreadyAdded}
-                      className={`inline-flex items-center p-0.5 transition-colors ${
-                        alreadyAdded ? "text-foreground/15 cursor-default" : "text-foreground/30 hover:text-foreground/60"
-                      }`}
-                    >
-                      {alreadyAdded ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                    </button>
+                    <ToDoToggleButton
+                      item={item}
+                      alreadyAdded={!!alreadyAdded}
+                      onAdd={onAddToDo}
+                      onRemove={onRemoveToDo}
+                    />
                   )}
                   <CopyFixInline item={item} />
                 </div>

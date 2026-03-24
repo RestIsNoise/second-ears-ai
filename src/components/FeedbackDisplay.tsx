@@ -401,14 +401,20 @@ const FeedbackDisplay = ({
   }, [analysisId, user]);
 
   const handleAddToDoFromFeedback = useCallback(async (item: FeedbackItem) => {
-    const actionText = item.fix || item.title;
+    const actionText = `Fix: ${item.title}`;
     const tempId = `todo-${Date.now()}`;
     const newItem: ToDoItem = { id: tempId, text: actionText, timestampSec: item.timestampSec, done: false, sourceId: item.id };
     setTodoItems((prev) => [...prev, newItem]);
-    toast({ title: "Added to Next Moves", duration: 1200 });
     const dbId = await persistTodo({ text: actionText, timestampSec: item.timestampSec, sourceId: item.id });
     if (dbId) setTodoItems((prev) => prev.map((t) => t.id === tempId ? { ...t, id: dbId } : t));
   }, [persistTodo]);
+
+  const handleRemoveToDoFromFeedback = useCallback(async (item: FeedbackItem) => {
+    const match = todoItems.find(t => t.sourceId === item.id);
+    if (!match) return;
+    setTodoItems((prev) => prev.filter((t) => t.id !== match.id));
+    await supabase.from("todos").delete().eq("id", match.id);
+  }, [todoItems]);
 
   const handleAddToDoNote = useCallback(async (text: string) => {
     const tempId = `note-${Date.now()}`;
@@ -625,6 +631,7 @@ const FeedbackDisplay = ({
                   activeItemId={activeItemId}
                   onItemClick={handleItemClick}
                   onAddToDo={handleAddToDoFromFeedback}
+                  onRemoveToDo={handleRemoveToDoFromFeedback}
                   todoItemIds={todoSourceIds}
                   scrollContainerRef={timelineScrollRef}
                   analysisId={analysisId}
