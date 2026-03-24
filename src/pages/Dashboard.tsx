@@ -414,8 +414,15 @@ const TrackGridCard = ({
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 10,
-              backgroundColor: isDark ? "#222" : modeColor.bg,
-              color: isDark ? "#888" : modeColor.text,
+              backgroundColor: isDark
+                ? (mode === "musical" ? "#0d0d1a" : mode === "perception" ? "#1a0d0d" : "#1a1a1a")
+                : (mode === "musical" ? "#f0f4ff" : mode === "perception" ? "#fff4f0" : "#f0f0ee"),
+              color: isDark
+                ? (mode === "musical" ? "#6666cc" : mode === "perception" ? "#cc6655" : "#888")
+                : (mode === "musical" ? "#4444aa" : mode === "perception" ? "#aa5544" : "#555"),
+              border: isDark
+                ? (mode === "musical" ? "1px solid #1a1a33" : mode === "perception" ? "1px solid #331a1a" : "1px solid #2a2a2a")
+                : (mode === "musical" ? "1px solid #d0d8f0" : mode === "perception" ? "1px solid #f0d8d0" : "1px solid #ddd"),
               borderRadius: 3,
             }}
           >
