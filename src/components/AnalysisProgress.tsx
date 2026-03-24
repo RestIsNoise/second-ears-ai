@@ -94,9 +94,9 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, co
       {trackName && (
         <p
           style={{
-            fontFamily: MONO,
-            fontSize: 12,
-            color: "hsl(0 0% 40%)",
+            fontFamily: "monospace",
+            fontSize: 11,
+            color: "#555",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
             marginBottom: 40,
@@ -106,16 +106,16 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, co
         </p>
       )}
 
-      {/* Pulsing bars — 7 bars, 4px wide, 12–48px height range */}
-      <div className="flex items-center gap-[6px]" style={{ height: 48 }}>
-        {[0, 120, 240, 360, 480, 600, 720].map((delay, i) => (
+      {/* Pulsing bars — 5 bars with staggered delays */}
+      <div className="flex items-end gap-[5px]" style={{ height: 48 }}>
+        {[0, 200, 400, 600, 800].map((delay, i) => (
           <div
             key={i}
             style={{
               width: 4,
               borderRadius: 2,
               background: "#e8e8e0",
-              animation: `analysis-pulse 1.2s ease-in-out ${delay}ms infinite alternate`,
+              animation: `bar-pulse 1.2s ease-in-out ${delay}ms infinite alternate`,
             }}
           />
         ))}
@@ -149,12 +149,34 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, co
         {statusMessages[msgIdx]}
       </p>
 
+      {/* Indeterminate sweep bar */}
+      <div
+        style={{
+          width: 280,
+          height: 2,
+          background: "#1a1a1a",
+          borderRadius: 1,
+          marginTop: 24,
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            background: "linear-gradient(90deg, transparent, #e8e8e0, transparent)",
+            animation: "sweep 2s ease-in-out infinite",
+          }}
+        />
+      </div>
+
       {/* Cancel */}
       {onCancel && (
         <button
           onClick={onCancel}
           style={{
-            fontFamily: MONO,
+            fontFamily: "monospace",
             fontSize: 11,
             color: "#444",
             letterSpacing: "0.08em",
@@ -162,7 +184,7 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, co
             background: "none",
             border: "none",
             cursor: "pointer",
-            marginTop: 24,
+            marginTop: 48,
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => { e.currentTarget.style.color = "#888"; }}
@@ -189,9 +211,13 @@ const AnalysisProgress = ({ currentStep, error, onRetry, onCancel, trackName, co
 
       {/* Keyframes */}
       <style>{`
-        @keyframes analysis-pulse {
+        @keyframes bar-pulse {
           0% { height: 12px; }
           100% { height: 48px; }
+        }
+        @keyframes sweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(400%); }
         }
       `}</style>
     </div>
