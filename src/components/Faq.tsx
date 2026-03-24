@@ -107,6 +107,7 @@ const FaqItem = ({ item, isOpen, onToggle, isFirst, isDark }: { item: typeof ite
 
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
 
   return (
     <section id="faq" className="scroll-mt-20">
@@ -129,7 +130,7 @@ const Faq = () => {
           <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
             Got questions?
           </h1>
-          <p style={{ fontSize: 16, color: "#666", marginTop: 10, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 16, color: isDark ? "#666" : "#666", marginTop: 10, lineHeight: 1.5 }}>
             Everything you need to know about SecondEar.
           </p>
         </div>
@@ -143,6 +144,7 @@ const Faq = () => {
               isOpen={openIndex === i}
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               isFirst={i === 0}
+              isDark={isDark}
             />
           ))}
         </div>
