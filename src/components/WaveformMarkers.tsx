@@ -352,7 +352,7 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
         );
       })}
 
-      {/* Human comment markers — compact badge style */}
+      {/* Human comment markers — circular amber badges */}
       {userMarkers.map((m) => {
         const isActive = activeMarkerId === m.id;
         const isSnapped = snappedMarkerId === m.id;
@@ -381,55 +381,31 @@ const WaveformMarkers = forwardRef<WaveformMarkersHandle, Props>(({
             >
               <button
                 onClick={() => onEditNote?.(m.id)}
-                className="flex flex-col items-center transition-all duration-150"
+                className="flex flex-col items-center group"
               >
-                {/* Rounded-square badge — distinct from circular AI markers */}
                 <div
-                  className="flex items-center gap-1 select-none"
+                  className="flex items-center justify-center rounded-full transition-all duration-150 group-hover:scale-[1.2]"
                   style={{
-                    padding: "2px 5px",
-                    borderRadius: 4,
-                    backgroundColor: highlighted
-                      ? "hsl(42 95% 62% / 0.25)"
-                      : "hsl(45 100% 72% / 0.12)",
-                    border: `1.5px solid ${highlighted ? "hsl(42 95% 62% / 0.7)" : "hsl(45 90% 58% / 0.4)"}`,
-                    boxShadow: highlighted
-                      ? "0 0 8px hsl(42 95% 62% / 0.2), 0 1px 3px rgba(0,0,0,0.3)"
-                      : "0 1px 3px rgba(0,0,0,0.35)",
-                    backdropFilter: "blur(6px)",
+                    width: 28,
+                    height: 28,
+                    backgroundColor: highlighted ? "#b45309" : "rgba(180,83,9,0.75)",
+                    border: `1.5px solid rgba(255,255,255,${highlighted ? 0.7 : 0.5})`,
+                    boxShadow: `0 2px 8px rgba(180,83,9,0.5)${highlighted ? ", 0 0 12px rgba(180,83,9,0.4)" : ""}`,
+                    backdropFilter: "blur(4px)",
                   }}
                 >
                   <MessageCircle
-                    className="shrink-0"
-                    style={{
-                      width: 10,
-                      height: 10,
-                      color: highlighted ? "hsl(42 95% 68%)" : "hsl(42 80% 55%)",
-                    }}
+                    style={{ width: 12, height: 12, color: "#fff" }}
                     strokeWidth={2.5}
                   />
-                  <span
-                    className="truncate"
-                    style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: 8,
-                      fontWeight: 600,
-                      letterSpacing: "0.04em",
-                      color: highlighted ? "hsl(42 95% 72%)" : "hsl(42 60% 50%)",
-                      maxWidth: 48,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {formatTime(m.time)}
-                  </span>
                 </div>
-                {/* Stem */}
+                {/* Vertical stem */}
                 <div
                   style={{
-                    width: 1,
-                    height: 5,
-                    backgroundColor: highlighted ? "hsl(42 95% 62% / 0.5)" : "hsl(45 90% 58% / 0.25)",
-                    marginTop: -0.5,
+                    width: 2,
+                    height: 10,
+                    backgroundColor: "rgba(180,83,9,0.4)",
+                    marginTop: -1,
                   }}
                 />
               </button>

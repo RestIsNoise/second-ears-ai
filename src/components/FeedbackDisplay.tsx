@@ -364,8 +364,27 @@ const FeedbackDisplay = ({
       }));
   }, [todoItems]);
 
-  // Human comment markers
+  // Human comment markers — load eagerly so they appear without opening the tab
   const [humanComments, setHumanComments] = useState<{ id: string; content: string; timestamp: number }[]>([]);
+
+  useEffect(() => {
+    if (!analysisId) return;
+    const loadComments = async () => {
+      const { data } = await supabase
+        .from("comments")
+        .select("id, text, timestamp_in_track")
+        .eq("analysis_id", analysisId)
+        .order("created_at", { ascending: true });
+      if (data) {
+        setHumanComments(data.map((c: any) => ({
+          id: c.id,
+          content: c.text ?? "",
+          timestamp: Number(c.timestamp_in_track ?? 0),
+        })));
+      }
+    };
+    loadComments();
+  }, [analysisId]);
 
   const commentMarkers: WaveformMarker[] = useMemo(() => {
     return humanComments
