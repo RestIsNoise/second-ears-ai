@@ -1058,30 +1058,8 @@ const FeedbackDisplay = ({
               </p>
             )}
 
-            {/* Action controls row — compact utilities */}
+            {/* SE monogram */}
             <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
-              <button
-                onClick={() => setRefModalOpen(true)}
-                className="inline-flex items-center gap-1.5 text-foreground/50 hover:text-foreground/80 transition-all duration-150"
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  padding: "5px 12px",
-                  backgroundColor: "hsl(var(--panel-bg))",
-                  border: "1px solid hsl(var(--foreground) / 0.08)",
-                  borderRadius: 2,
-                  boxShadow: "inset 0 1px 2px hsl(var(--panel-inset))",
-                }}
-              >
-                <Disc className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Reference</span>
-                <span className="sm:hidden">Ref</span>
-              </button>
-
-              {/* SE monogram */}
               <div
                 className="ml-auto flex items-center justify-center"
                 style={{ opacity: 0.15 }}
