@@ -1027,7 +1027,7 @@ const FeedbackDisplay = ({
           >
             {/* Summary text — full width for comfortable reading */}
             {n.overallImpression && (
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: isDark ? "#aaa" : "#555", maxWidth: 860, borderLeft: isDark ? "3px solid #444" : "3px solid #e0e0e0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em" }}>
+              <p style={{ fontSize: 15, lineHeight: 1.75, color: isDark ? "#ccc" : "#333", maxWidth: 680, borderLeft: isDark ? "2px solid #333" : "2px solid #d0d0d0", paddingLeft: 16, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.01em", fontWeight: 400 }}>
                 {n.overallImpression}
               </p>
             )}
