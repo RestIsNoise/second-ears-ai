@@ -648,6 +648,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
       <Header />
       <main className="pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
