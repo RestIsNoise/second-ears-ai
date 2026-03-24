@@ -1,76 +1,88 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
-
-const NotFound = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
-  return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{ background: "#f5f5f3" }}
+const NotFound = () => (
+  <div
+    className="min-h-screen flex items-center justify-center relative overflow-hidden"
+    style={{ background: "#0a0a0a" }}
+  >
+    {/* Top-left wordmark */}
+    <Link
+      to="/"
+      className="absolute top-5 left-6 z-10"
+      style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 14,
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        color: "#e8e8e0",
+        textTransform: "uppercase",
+        textDecoration: "none",
+      }}
     >
-      <div className="text-center px-6">
-        <p
-          style={{
-            fontFamily: MONO,
-            fontSize: 11,
-            letterSpacing: "0.2em",
-            color: "#999",
-            textTransform: "uppercase",
-            marginBottom: 24,
-            fontWeight: 600,
-          }}
-        >
-          404
-        </p>
-        <h1 style={{ fontSize: 32, fontWeight: 700, color: "#111", letterSpacing: "-0.02em" }}>
-          Nothing here.
-        </h1>
-        <p style={{ fontSize: 15, color: "#666", marginTop: 8, marginBottom: 32 }}>
-          This page doesn't exist or was moved.
-        </p>
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              padding: "10px 20px",
-              borderRadius: 6,
-              fontSize: 14,
-              fontWeight: 500,
-              border: "1px solid #ddd",
-              background: "transparent",
-              color: "#333",
-              cursor: "pointer",
-            }}
-          >
-            ← Back
-          </button>
-          <button
-            onClick={() => navigate("/dashboard")}
-            style={{
-              padding: "10px 20px",
-              borderRadius: 6,
-              fontSize: 14,
-              fontWeight: 500,
-              border: "1px solid #111",
-              background: "#111",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Go to dashboard
-          </button>
-        </div>
+      SecondEar
+    </Link>
+
+    {/* Giant decorative 404 */}
+    <span
+      aria-hidden="true"
+      className="absolute select-none pointer-events-none"
+      style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 120,
+        fontWeight: 900,
+        color: "#1a1a1a",
+        lineHeight: 1,
+      }}
+    >
+      404
+    </span>
+
+    {/* Content */}
+    <div className="relative z-10 text-center px-6">
+      <p
+        style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 10,
+          letterSpacing: "0.2em",
+          color: "#555",
+          textTransform: "uppercase",
+          marginBottom: 16,
+          fontWeight: 600,
+        }}
+      >
+        Page not found
+      </p>
+      <h1
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#e8e8e0",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        You took a wrong turn.
+      </h1>
+      <p
+        style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 13,
+          color: "#555",
+          marginTop: 8,
+        }}
+      >
+        This page doesn't exist or was moved.
+      </p>
+      <div className="flex flex-col items-center gap-3 mt-8">
+        <Button variant="default" size="sm" asChild>
+          <Link to="/dashboard">→ Go to Dashboard</Link>
+        </Button>
+        <Button variant="ghost" size="sm" asChild className="text-[#888] hover:text-[#e8e8e0]">
+          <Link to="/">← Back to home</Link>
+        </Button>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default NotFound;
