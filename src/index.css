@@ -483,6 +483,12 @@ body::after {
   transform: scale(0.98);
 }
 
+/* Upload icon bounce */
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 /* Card entry animation for feedback items */
 @keyframes card-enter {
   from { opacity: 0; transform: translateY(10px); }

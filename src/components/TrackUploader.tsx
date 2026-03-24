@@ -285,30 +285,40 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
         style={{
           minHeight: 160,
           padding: "40px 24px",
-          backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
+          backgroundColor: dragOver
+            ? (isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)")
+            : (isDark ? "#1a1a1a" : "#ffffff"),
           border: dragOver
-            ? (isDark ? "2px dashed #e8e8e0" : "2px dashed #111")
+            ? (isDark ? "1.5px dashed #888" : "1.5px dashed #888")
             : file
-              ? (isDark ? "2px solid #333" : "2px solid hsl(0 0% 0% / 0.15)")
-              : (isDark ? "2px dashed #333" : "2px dashed #c8c8c4"),
+              ? (isDark ? "1.5px solid #333" : "1.5px solid hsl(0 0% 0% / 0.15)")
+              : (isDark ? "1.5px dashed #333" : "1.5px dashed #c0c0bc"),
           borderRadius: 6,
-          boxShadow: isDark ? "none" : "inset 0 1px 3px rgba(0,0,0,0.04)",
+          boxShadow: dragOver
+            ? "inset 0 0 20px rgba(0,0,0,0.04)"
+            : (isDark ? "none" : "inset 0 1px 3px rgba(0,0,0,0.04)"),
         }}
       >
         {file ? (
           <>
             <Music className="w-8 h-8" style={{ color: "#999" }} />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>{file.name}</p>
-              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.04em" }}>{file.name}</p>
+              <p style={{ fontSize: 11, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em" }}>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
             </div>
           </>
         ) : (
           <>
-            <Upload className="w-8 h-8" style={{ color: "#999" }} />
+            <Upload
+              className="w-8 h-8"
+              style={{
+                color: "#999",
+                animation: dragOver ? "icon-bounce 0.8s ease-in-out infinite" : "icon-bounce 2.5s ease-in-out infinite",
+              }}
+            />
             <div className="text-center">
-              <p style={{ fontSize: 16, fontWeight: 500, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace" }}>Drop your track here</p>
-              <p style={{ fontSize: 12, color: isDark ? "#666" : "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace" }}>or click to browse · MP3, WAV, FLAC</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#e8e8e0" : "#333", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.04em" }}>Drop your track here</p>
+              <p style={{ fontSize: 11, color: "#aaa", marginTop: 4, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.06em" }}>or click to browse · MP3, WAV, FLAC</p>
             </div>
           </>
         )}
@@ -325,15 +335,22 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             height: 48,
             border: isDark ? "1px solid #333" : "1px solid #ddd",
             borderRadius: 6,
-            fontSize: 14,
+            fontSize: 12,
             padding: "0 16px",
             backgroundColor: isDark ? "#1a1a1a" : "#ffffff",
             color: isDark ? "#e8e8e0" : "#333",
             fontFamily: "'IBM Plex Mono', monospace",
-            transition: "border-color 0.15s, box-shadow 0.15s",
+            letterSpacing: "0.04em",
+            transition: "border-color 0.2s, box-shadow 0.2s",
           }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.boxShadow = isDark ? "0 0 0 2px rgba(255,255,255,0.06)" : "0 0 0 2px rgba(0,0,0,0.04)"; }}
-          onBlur={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.boxShadow = "none"; }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = isDark ? "#666" : "#888";
+            e.currentTarget.style.boxShadow = isDark ? "0 0 0 3px rgba(255,255,255,0.04)" : "0 0 0 3px rgba(0,0,0,0.06)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd";
+            e.currentTarget.style.boxShadow = "none";
+          }}
         />
         <p className="text-[9px] text-foreground/30 mt-1 ml-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>Optional: references, goals, or specific concerns.</p>
       </div>
@@ -371,6 +388,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   border: !isLocked && mode === m.id
                     ? (isDark ? "1px solid #444" : "1px solid #111")
                     : (isDark ? "1px solid #2a2a2a" : "1px solid #e0e0e0"),
+                  borderLeft: !isLocked && mode === m.id
+                    ? (isDark ? "3px solid #e8e8e0" : "3px solid #111")
+                    : undefined,
                   borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
@@ -394,8 +414,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   </span>
                 )}
                 <m.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: !isLocked && mode === m.id ? (isDark ? "#e8e8e0" : "rgba(255,255,255,0.7)") : (isDark ? "#555" : "hsl(var(--foreground) / 0.5)") }} />
-                <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
-                <p className="text-[9px] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", color: !isLocked && mode === m.id ? (isDark ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.6)") : "#999" }}>{m.tag}</p>
+                <p className="text-[11px]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: !isLocked && mode === m.id ? 700 : 600 }}>{m.label}</p>
+                <p className="mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.08em", color: !isLocked && mode === m.id ? (isDark ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.6)") : "#888" }}>{m.tag}</p>
                 {isLocked && lockedModeTooltip === m.id && (
                   <span
                     className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-sm z-10 animate-fade-in"
@@ -474,10 +494,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       <Button
         variant="default"
         size="lg"
-        className="w-full font-bold uppercase"
+        className="w-full uppercase active:scale-[0.98]"
         style={{
-          height: 52, fontSize: 13, letterSpacing: "0.08em", borderRadius: 6,
+          height: 52,
+          fontSize: 13,
+          letterSpacing: "0.15em",
+          borderRadius: 6,
           fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 700,
+          transition: "background 0.3s ease, transform 0.1s ease",
           ...(isDark ? { backgroundColor: "#e8e8e0", color: "#111", borderColor: "#e8e8e0" } : {}),
         }}
         disabled={!file || isAnalyzing || !!cooldownMessage}
