@@ -387,6 +387,47 @@ body::after {
   transform: scale(1);
 }
 
+/* ── Signal Chain staggered card entry ── */
+.signal-card {
+  opacity: 0;
+  filter: blur(8px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease,
+    filter 0.5s ease;
+  will-change: opacity, transform, filter;
+}
+
+.signal-card--upload {
+  transform: translateX(-30px);
+}
+
+.signal-card--analyze {
+  transform: translateY(20px);
+  transition-delay: 0.15s;
+}
+
+.signal-card--fix {
+  transform: translateX(30px);
+  transition-delay: 0.3s;
+}
+
+.reveal.is-visible .signal-card {
+  opacity: 1;
+  transform: translate(0);
+  filter: blur(0);
+}
+
+/* Signal chain arrow connector pulse */
+@keyframes signal-arrow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.reveal.is-visible .signal-arrow-pulse {
+  animation: signal-arrow-pulse 2s ease-in-out infinite;
+}
+
 /* Line draw */
 @keyframes draw-line {
   from { transform: scaleX(0); }
@@ -521,6 +562,15 @@ body::after {
     transform: none !important;
     filter: none !important;
     transition: none !important;
+    animation: none !important;
+  }
+  .signal-card {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .signal-arrow-pulse {
     animation: none !important;
   }
   .pro-emphasis {

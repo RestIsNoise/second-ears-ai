@@ -26,7 +26,7 @@ const steps = [
 ];
 
 const HowItWorks = () => {
-  const { ref, isVisible } = useScrollReveal();
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.2 });
 
   return (
     <section
@@ -89,79 +89,80 @@ const HowItWorks = () => {
 
           {/* Steps row */}
           <div className="grid grid-cols-1 md:grid-cols-3">
-            {steps.map((step, i) => (
-              <div
-                key={step.number}
-                className="relative reveal-child"
-                style={{ "--stagger": `${200 + i * 100}ms` } as React.CSSProperties}
-              >
+            {steps.map((step, i) => {
+              const cardClass = ["signal-card--upload", "signal-card--analyze", "signal-card--fix"][i];
+              return (
                 <div
-                  className="relative px-7 py-7 md:py-8 flex flex-col h-full"
-                  style={{
-                    borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
-                    borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
-                  }}
+                  key={step.number}
+                  className={`relative signal-card ${cardClass}`}
                 >
-                  {/* Number + Icon row */}
-                  <div className="flex items-center gap-4 mb-5">
-                    <div
-                      className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 reveal-pop"
-                      style={{
-                        "--stagger": `${300 + i * 100}ms`,
-                        background: "hsl(var(--surface-b))",
-                        border: "1px solid hsl(var(--foreground) / 0.1)",
-                        boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 3px hsl(0 0% 0% / 0.07)",
-                      } as React.CSSProperties}
-                    >
-                      <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
-                    </div>
-                    <div className="flex items-baseline gap-2.5">
-                      <span
-                        className="text-[13px] text-foreground/45 tracking-wider font-semibold"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                      >
-                        {step.number}
-                      </span>
-                      <h3 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">
-                        {step.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-[15px] text-foreground/75 leading-[1.75] mb-5 flex-1">
-                    {step.description}
-                  </p>
-
-                  {/* Proof */}
-                  <p
-                    className="text-[12px] text-foreground/50 tracking-[0.14em] uppercase font-bold"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                  >
-                    {step.proof}
-                  </p>
-                </div>
-
-                {/* Arrow connector on desktop */}
-                {i < 2 && (
                   <div
-                    className="hidden md:block absolute -right-px top-1/2 -translate-y-1/2 z-10"
-                    aria-hidden="true"
+                    className="relative px-7 py-7 md:py-8 flex flex-col h-full"
+                    style={{
+                      borderRight: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
+                      borderBottom: i < 2 ? "1px solid hsl(var(--foreground) / 0.1)" : "none",
+                    }}
                   >
-                    <svg width="12" height="20" viewBox="0 0 12 20" fill="none" className="translate-x-[5px]">
-                      <path
-                        d="M1 1L10 10L1 19"
-                        stroke="hsl(var(--foreground))"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        opacity="0.15"
-                      />
-                    </svg>
+                    {/* Number + Icon row */}
+                    <div className="flex items-center gap-4 mb-5">
+                      <div
+                        className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 reveal-pop"
+                        style={{
+                          "--stagger": `${200 + i * 150}ms`,
+                          background: "hsl(var(--surface-b))",
+                          border: "1px solid hsl(var(--foreground) / 0.1)",
+                          boxShadow: "inset 0 1px 0 hsl(0 0% 100% / 0.5), 0 1px 3px hsl(0 0% 0% / 0.07)",
+                        } as React.CSSProperties}
+                      >
+                        <step.icon className="w-5 h-5 text-foreground/80" strokeWidth={1.8} />
+                      </div>
+                      <div className="flex items-baseline gap-2.5">
+                        <span
+                          className="text-[13px] text-foreground/45 tracking-wider font-semibold"
+                          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                        >
+                          {step.number}
+                        </span>
+                        <h3 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">
+                          {step.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-[15px] text-foreground/75 leading-[1.75] mb-5 flex-1">
+                      {step.description}
+                    </p>
+
+                    {/* Proof */}
+                    <p
+                      className="text-[12px] text-foreground/50 tracking-[0.14em] uppercase font-bold"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    >
+                      {step.proof}
+                    </p>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {/* Arrow connector on desktop */}
+                  {i < 2 && (
+                    <div
+                      className="hidden md:block absolute -right-px top-1/2 -translate-y-1/2 z-10 signal-arrow-pulse"
+                      aria-hidden="true"
+                    >
+                      <svg width="12" height="20" viewBox="0 0 12 20" fill="none" className="translate-x-[5px]">
+                        <path
+                          d="M1 1L10 10L1 19"
+                          stroke="hsl(var(--foreground))"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Bottom bar — signal flow indicator */}
