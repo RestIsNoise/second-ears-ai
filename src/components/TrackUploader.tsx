@@ -333,7 +333,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
           className="w-full focus:outline-none"
           style={{
             height: 48,
-            border: isDark ? "1px solid #333" : "1px solid #ddd",
+            border: isDark ? "1px solid #2a2a2a" : "1px solid #ddd",
             borderRadius: 6,
             fontSize: 12,
             padding: "0 16px",
