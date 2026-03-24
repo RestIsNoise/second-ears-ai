@@ -388,6 +388,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   border: !isLocked && mode === m.id
                     ? (isDark ? "1px solid #444" : "1px solid #111")
                     : (isDark ? "1px solid #2a2a2a" : "1px solid #e0e0e0"),
+                  borderLeft: !isLocked && mode === m.id
+                    ? (isDark ? "3px solid #e8e8e0" : "3px solid #111")
+                    : undefined,
                   borderRadius: 6,
                   opacity: isLocked ? 0.4 : 1,
                   cursor: isLocked ? "default" : "pointer",
