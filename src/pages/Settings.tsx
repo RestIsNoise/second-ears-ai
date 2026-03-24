@@ -31,14 +31,78 @@ const sidebarItems: { id: Section; label: string; icon: React.ElementType }[] = 
 
 const MONO = "'IBM Plex Mono', monospace";
 
-const SectionTitle = ({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) => (
-  <div className="mb-6">
-    <h2 style={{ fontSize: 18, fontWeight: 600, color: "hsl(var(--foreground))", marginBottom: subtitle ? 4 : 12 }}>{children}</h2>
+/* ─── Styled section heading ─── */
+const SectionTitle = ({ children, subtitle, isDark }: { children: React.ReactNode; subtitle?: string; isDark: boolean }) => (
+  <div style={{ marginBottom: 24 }}>
+    <h2
+      style={{
+        fontFamily: MONO,
+        fontSize: 10,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color: "#888",
+        fontWeight: 600,
+        paddingBottom: 8,
+        borderBottom: isDark ? "1px solid #222" : "1px solid #e0e0e0",
+      }}
+    >
+      {children}
+    </h2>
     {subtitle && (
-      <p style={{ fontSize: 13, color: "#999", marginBottom: 12 }}>{subtitle}</p>
+      <p style={{ fontFamily: MONO, fontSize: 11, color: "#888", marginTop: 8 }}>{subtitle}</p>
     )}
-    <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.1)", borderColor: undefined }} />
   </div>
+);
+
+/* ─── Styled label ─── */
+const FieldLabel = ({ children }: { children: React.ReactNode }) => (
+  <label
+    style={{
+      fontFamily: MONO,
+      fontSize: 10,
+      letterSpacing: "0.1em",
+      color: "#666",
+      textTransform: "uppercase",
+      display: "block",
+      marginBottom: 6,
+      fontWeight: 500,
+    }}
+  >
+    {children}
+  </label>
+);
+
+/* ─── Styled input ─── */
+const StyledInput = ({ isDark, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { isDark: boolean }) => (
+  <input
+    {...props}
+    style={{
+      width: "100%",
+      border: isDark ? "1px solid #2a2a2a" : "1px solid #d0d0cc",
+      borderRadius: 3,
+      fontSize: 14,
+      padding: "10px 12px",
+      background: isDark ? "#1a1a1a" : "white",
+      color: isDark ? "#e8e8e0" : "#111",
+      fontFamily: MONO,
+      outline: "none",
+      transition: "all 0.2s",
+      ...(props.readOnly ? { opacity: 0.6, cursor: "default" } : {}),
+      ...((props as any).style || {}),
+    }}
+    onFocus={(e) => {
+      if (!props.readOnly) {
+        e.currentTarget.style.borderColor = isDark ? "#666" : "#888";
+        e.currentTarget.style.boxShadow = isDark
+          ? "0 0 0 3px rgba(255,255,255,0.04)"
+          : "0 0 0 3px rgba(0,0,0,0.05)";
+      }
+    }}
+    onBlur={(e) => {
+      e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#d0d0cc";
+      e.currentTarget.style.boxShadow = "none";
+    }}
+  />
 );
 
 const Settings = () => {
@@ -204,88 +268,119 @@ const Settings = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="pt-24 pb-16 px-6">
-        <div style={{ maxWidth: 800, margin: "0 auto", padding: "0" }}>
-
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
           <div className="flex flex-col md:flex-row">
-            {/* ═══ SIDEBAR (desktop) / TABS (mobile) ═══ */}
-            <nav style={{ width: 200, flexShrink: 0 }}>
-              {/* Mobile: horizontal tabs */}
-              <div className="flex md:hidden gap-1 overflow-x-auto pb-2 -mx-1 px-1">
-                {sidebarItems.map((item) => {
-                  const isActive = activeSection === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveSection(item.id)}
-                      className="flex items-center gap-2 whitespace-nowrap transition-colors"
-                      style={{
-                        fontFamily: MONO,
-                        fontSize: 12,
-                        fontWeight: isActive ? 500 : 400,
-                        padding: "10px 14px",
-                        borderRadius: 6,
-                        backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
-                        color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
-                      }}
-                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
-                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = isDark ? "#555" : "#666"; } }}
-                    >
-                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
 
-              {/* Desktop: vertical sidebar */}
-              <div className="hidden md:flex flex-col gap-0.5">
-                {sidebarItems.map((item) => {
-                  const isActive = activeSection === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveSection(item.id)}
-                      className="flex items-center gap-2.5 text-left w-full transition-colors"
-                      style={{
-                        fontFamily: MONO,
-                        fontSize: 12,
-                        fontWeight: isActive ? 500 : 400,
-                        padding: "10px 14px",
-                        borderRadius: 6,
-                        backgroundColor: isActive ? (isDark ? "#e8e8e0" : "#111") : "transparent",
-                        color: isActive ? (isDark ? "#111" : "#fff") : (isDark ? "#555" : "#666"),
-                      }}
-                      onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#f0f0ee"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; } }}
-                      onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = isDark ? "#555" : "#666"; } }}
-                    >
-                      <item.icon style={{ width: 16, height: 16, opacity: isActive ? 1 : 0.5 }} />
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
+            {/* ═══ SIDEBAR ═══ */}
+            <nav
+              className="hidden md:block flex-shrink-0"
+              style={{
+                width: 200,
+                background: isDark ? "#111" : "#f5f5f3",
+                borderRadius: 4,
+                padding: "8px 0",
+                alignSelf: "flex-start",
+              }}
+            >
+              {sidebarItems.map((item) => {
+                const active = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveSection(item.id)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      width: "100%",
+                      textAlign: "left",
+                      fontFamily: MONO,
+                      fontSize: 11,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      padding: "10px 16px",
+                      fontWeight: active ? 700 : 400,
+                      color: active
+                        ? (isDark ? "#e8e8e0" : "#111")
+                        : "#888",
+                      borderLeft: active
+                        ? (isDark ? "2px solid #e8e8e0" : "2px solid #111")
+                        : "2px solid transparent",
+                      background: active
+                        ? (isDark ? "#161616" : "white")
+                        : "transparent",
+                      transition: "all 0.15s",
+                      cursor: "pointer",
+                      border: "none",
+                      borderLeftStyle: "solid",
+                      borderLeftWidth: 2,
+                      borderLeftColor: active
+                        ? (isDark ? "#e8e8e0" : "#111")
+                        : "transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.color = isDark ? "#ccc" : "#444";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.color = "#888";
+                      }
+                    }}
+                  >
+                    <item.icon style={{ width: 14, height: 14, opacity: active ? 1 : 0.5 }} />
+                    {item.label}
+                  </button>
+                );
+              })}
             </nav>
 
-            {/* ═══ MAIN CONTENT ═══ */}
-            <div className="flex-1 min-w-0" style={{ paddingLeft: 48 }}>
+            {/* Mobile: horizontal tabs */}
+            <div className="flex md:hidden gap-1 overflow-x-auto pb-3 -mx-1 px-1 mb-4">
+              {sidebarItems.map((item) => {
+                const active = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveSection(item.id)}
+                    className="flex items-center gap-2 whitespace-nowrap"
+                    style={{
+                      fontFamily: MONO,
+                      fontSize: 10,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      fontWeight: active ? 700 : 400,
+                      padding: "8px 14px",
+                      borderRadius: 3,
+                      backgroundColor: active ? (isDark ? "#e8e8e0" : "#111") : "transparent",
+                      color: active ? (isDark ? "#111" : "#fff") : "#888",
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    <item.icon style={{ width: 13, height: 13 }} />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ═══ CONTENT ═══ */}
+            <div className="flex-1 min-w-0 md:pl-12">
+
               {/* ── PROFILE ── */}
               {activeSection === "profile" && (
                 <section>
-                  <SectionTitle>Profile</SectionTitle>
-                  <div className="space-y-5">
+                  <SectionTitle isDark={isDark}>Profile</SectionTitle>
+                  <div className="space-y-6">
                     {/* Avatar */}
                     <div>
-                      <label
-                        className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-2"
-                        style={{ fontFamily: MONO }}
-                      >
-                        Photo
-                      </label>
+                      <FieldLabel>Photo</FieldLabel>
                       <div className="flex items-center gap-4">
-                        <div className="relative group">
+                        <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                           <Avatar
-                            className="h-[72px] w-[72px]"
-                            style={{ border: "1px solid hsl(0 0% 87%)" }}
+                            className="h-12 w-12"
+                            style={{ border: isDark ? "1px solid #333" : "1px solid #d0d0cc" }}
                           >
                             <AvatarImage
                               src={avatarError ? undefined : (avatarUrl || undefined)}
@@ -296,32 +391,48 @@ const Settings = () => {
                               style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
                             />
                             <AvatarFallback
-                              className="text-lg font-medium bg-secondary text-foreground/60"
-                              style={{ display: avatarUrl && !avatarError ? "none" : undefined }}
+                              style={{
+                                background: isDark ? "#222" : "#e8e8e4",
+                                color: isDark ? "#888" : "#666",
+                                fontSize: 14,
+                                fontWeight: 600,
+                                fontFamily: MONO,
+                                display: avatarUrl && !avatarError ? "none" : undefined,
+                              }}
                             >
                               {initials}
                             </AvatarFallback>
                           </Avatar>
+                          <div
+                            className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{
+                              background: isDark ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.4)",
+                            }}
+                          >
+                            <Camera className="w-4 h-4 text-white" />
+                          </div>
+                        </div>
+                        <div>
                           <button
                             onClick={() => fileInputRef.current?.click()}
                             disabled={uploading}
-                            className="absolute inset-0 flex items-center justify-center rounded-full bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{
+                              fontFamily: MONO,
+                              fontSize: 11,
+                              letterSpacing: "0.06em",
+                              color: isDark ? "#888" : "#666",
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              textDecoration: "underline",
+                              textUnderlineOffset: 3,
+                            }}
                           >
-                            <Camera className="w-5 h-5 text-foreground/70" />
-                          </button>
-                        </div>
-                        <div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => fileInputRef.current?.click()}
-                            disabled={uploading}
-                            className="h-8 text-xs gap-1.5"
-                          >
-                            <Camera className="w-3 h-3" />
                             {uploading ? "Uploading…" : "Upload photo"}
-                          </Button>
-                          <p className="text-[10px] text-muted-foreground/50 mt-1">JPG or PNG, max 2MB</p>
+                          </button>
+                          <p style={{ fontFamily: MONO, fontSize: 9, color: "#555", marginTop: 4, letterSpacing: "0.04em" }}>
+                            JPG or PNG, max 2 MB
+                          </p>
                         </div>
                         <input
                           ref={fileInputRef}
@@ -335,61 +446,46 @@ const Settings = () => {
 
                     {/* Display name */}
                     <div>
-                      <label
-                        className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-1.5"
-                        style={{ fontFamily: MONO }}
-                      >
-                        Display name
-                      </label>
-                      <Input
+                      <FieldLabel>Display name</FieldLabel>
+                      <StyledInput
+                        isDark={isDark}
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Your name"
-                        className="h-10 text-sm"
-                        style={{
-                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
-                          borderRadius: 4,
-                          padding: "0 12px",
-                          backgroundColor: isDark ? "#1a1a1a" : undefined,
-                          color: isDark ? "#e8e8e0" : undefined,
-                        }}
                       />
                     </div>
 
                     {/* Email */}
                     <div>
-                      <label
-                        className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-1.5"
-                        style={{ fontFamily: MONO }}
-                      >
-                        Email
-                      </label>
-                      <Input
+                      <FieldLabel>Email</FieldLabel>
+                      <StyledInput
+                        isDark={isDark}
                         value={user?.email || ""}
                         readOnly
-                        className={cn("h-10 text-sm", !isDark && "bg-secondary/30 text-muted-foreground")}
-                        style={{
-                          border: isDark ? "1px solid #333" : "1px solid hsl(0 0% 82%)",
-                          borderRadius: 4,
-                          padding: "0 12px",
-                          backgroundColor: isDark ? "#1a1a1a" : undefined,
-                          color: isDark ? "#e8e8e0" : undefined,
-                        }}
                       />
                     </div>
 
-                    <Button
-                      size="sm"
+                    <button
                       onClick={handleSaveProfile}
                       disabled={saving}
-                      className="h-9 text-xs px-6 w-full"
                       style={{
-                        maxWidth: 200,
-                        ...(isDark ? { backgroundColor: "#e8e8e0", color: "#111", borderColor: "#e8e8e0" } : {}),
+                        fontFamily: MONO,
+                        letterSpacing: "0.1em",
+                        fontSize: 11,
+                        textTransform: "uppercase",
+                        fontWeight: 700,
+                        padding: "10px 28px",
+                        borderRadius: 3,
+                        border: "none",
+                        cursor: saving ? "default" : "pointer",
+                        opacity: saving ? 0.5 : 1,
+                        background: isDark ? "#e8e8e0" : "#111",
+                        color: isDark ? "#111" : "#fff",
+                        transition: "all 0.15s",
                       }}
                     >
                       {saving ? "Saving…" : "Save changes"}
-                    </Button>
+                    </button>
                   </div>
                 </section>
               )}
@@ -397,36 +493,47 @@ const Settings = () => {
               {/* ── PREFERENCES ── */}
               {activeSection === "preferences" && (
                 <section>
-                  <SectionTitle>Preferences</SectionTitle>
+                  <SectionTitle isDark={isDark}>Preferences</SectionTitle>
                   <div>
-                    <label
-                      className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-2"
-                      style={{ fontFamily: MONO }}
-                    >
-                      Default analysis mode
-                    </label>
-                    <div className="flex gap-2 mt-1">
+                    <FieldLabel>Default analysis mode</FieldLabel>
+                    <div className="flex gap-2 mt-2">
                       {modes.map((m) => {
                         const Icon = m.icon;
-                        const isActive = defaultMode === m.id;
+                        const active = defaultMode === m.id;
                         return (
                           <button
                             key={m.id}
                             onClick={() => handleModeChange(m.id)}
-                            className={cn(
-                              "flex items-center gap-2 px-3.5 py-2 rounded-lg border text-xs font-medium transition-all",
-                              isActive
-                                ? "border-foreground/20 bg-secondary text-foreground"
-                                : "border-border text-muted-foreground hover:border-foreground/10 hover:text-foreground"
-                            )}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              fontFamily: MONO,
+                              fontSize: 11,
+                              fontWeight: active ? 700 : 400,
+                              letterSpacing: "0.06em",
+                              padding: "8px 14px",
+                              borderRadius: 3,
+                              border: active
+                                ? (isDark ? "1px solid #e8e8e0" : "1px solid #111")
+                                : (isDark ? "1px solid #2a2a2a" : "1px solid #d0d0cc"),
+                              background: active
+                                ? (isDark ? "#1a1a1a" : "#f5f5f3")
+                                : "transparent",
+                              color: active
+                                ? (isDark ? "#e8e8e0" : "#111")
+                                : "#888",
+                              cursor: "pointer",
+                              transition: "all 0.15s",
+                            }}
                           >
-                            <Icon className="w-3.5 h-3.5" />
+                            <Icon style={{ width: 14, height: 14 }} />
                             {m.label}
                           </button>
                         );
                       })}
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-2">
+                    <p style={{ fontFamily: MONO, fontSize: 10, color: "#666", marginTop: 8, letterSpacing: "0.04em" }}>
                       Pre-selects this mode when starting a new analysis
                     </p>
                   </div>
@@ -436,35 +543,33 @@ const Settings = () => {
               {/* ── APPEARANCE ── */}
               {activeSection === "appearance" && (
                 <section>
-                  <SectionTitle>Appearance</SectionTitle>
+                  <SectionTitle isDark={isDark}>Appearance</SectionTitle>
                   <div>
-                    <label
-                      className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block mb-3"
-                      style={{ fontFamily: MONO }}
-                    >
-                      Theme
-                    </label>
-                    <div className="flex gap-3">
+                    <FieldLabel>Theme</FieldLabel>
+                    <div className="flex gap-3 mt-2">
                       <button
                         onClick={() => { if (isDark) toggleTheme(); }}
                         style={{
                           display: "flex",
                           alignItems: "center",
                           gap: 8,
-                          height: 44,
-                          minWidth: 140,
-                          borderRadius: 8,
-                          fontSize: 13,
-                          fontWeight: 500,
+                          height: 42,
+                          minWidth: 130,
+                          borderRadius: 3,
+                          fontSize: 11,
+                          fontWeight: !isDark ? 700 : 400,
                           fontFamily: MONO,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
                           justifyContent: "center",
                           transition: "all 0.15s",
-                          backgroundColor: !isDark ? "#111" : "#1a1a1a",
-                          color: !isDark ? "#fff" : "#666",
-                          border: !isDark ? "none" : "1px solid #333",
+                          backgroundColor: !isDark ? "#111" : "transparent",
+                          color: !isDark ? "#fff" : "#888",
+                          border: !isDark ? "1px solid #111" : (isDark ? "1px solid #2a2a2a" : "1px solid #d0d0cc"),
+                          cursor: "pointer",
                         }}
                       >
-                        <Sun className="w-4 h-4" />
+                        <Sun className="w-3.5 h-3.5" />
                         Light
                       </button>
                       <button
@@ -473,24 +578,27 @@ const Settings = () => {
                           display: "flex",
                           alignItems: "center",
                           gap: 8,
-                          height: 44,
-                          minWidth: 140,
-                          borderRadius: 8,
-                          fontSize: 13,
-                          fontWeight: 500,
+                          height: 42,
+                          minWidth: 130,
+                          borderRadius: 3,
+                          fontSize: 11,
+                          fontWeight: isDark ? 700 : 400,
                           fontFamily: MONO,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
                           justifyContent: "center",
                           transition: "all 0.15s",
                           backgroundColor: isDark ? "#e8e8e0" : "transparent",
-                          color: isDark ? "#111" : "#666",
-                          border: isDark ? "none" : "1px solid #ddd",
+                          color: isDark ? "#111" : "#888",
+                          border: isDark ? "1px solid #e8e8e0" : "1px solid #d0d0cc",
+                          cursor: "pointer",
                         }}
                       >
-                        <Moon className="w-4 h-4" />
+                        <Moon className="w-3.5 h-3.5" />
                         Dark
                       </button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-2">
+                    <p style={{ fontFamily: MONO, fontSize: 10, color: "#666", marginTop: 8, letterSpacing: "0.04em" }}>
                       Changes apply instantly across the app
                     </p>
                   </div>
@@ -500,23 +608,19 @@ const Settings = () => {
               {/* ── SUBSCRIPTION ── */}
               {activeSection === "subscription" && (
                 <section>
-                  <SectionTitle>Subscription</SectionTitle>
+                  <SectionTitle isDark={isDark}>Subscription</SectionTitle>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <span
-                        style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "#999" }}
-                      >
-                        Current plan
-                      </span>
+                      <FieldLabel>Current plan</FieldLabel>
                       {userPlan === "pro" ? (
                         <span
                           style={{
                             fontFamily: MONO,
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: 700,
-                            letterSpacing: "0.06em",
-                            padding: "4px 10px",
-                            borderRadius: 4,
+                            letterSpacing: "0.08em",
+                            padding: "3px 10px",
+                            borderRadius: 3,
                             backgroundColor: isDark ? "#4ade80" : "#111",
                             color: isDark ? "#111" : "#fff",
                           }}
@@ -527,14 +631,14 @@ const Settings = () => {
                         <span
                           style={{
                             fontFamily: MONO,
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: 700,
-                            letterSpacing: "0.06em",
-                            padding: "4px 10px",
-                            borderRadius: 4,
-                            backgroundColor: isDark ? "#222" : "hsl(var(--foreground) / 0.05)",
-                            color: isDark ? "#888" : "hsl(var(--foreground) / 0.4)",
-                            border: isDark ? "1px solid #333" : "1px solid hsl(var(--foreground) / 0.08)",
+                            letterSpacing: "0.08em",
+                            padding: "3px 10px",
+                            borderRadius: 3,
+                            backgroundColor: isDark ? "#1a1a1a" : "#f5f5f3",
+                            color: "#888",
+                            border: isDark ? "1px solid #2a2a2a" : "1px solid #d0d0cc",
                           }}
                         >
                           FREE
@@ -562,30 +666,35 @@ const Settings = () => {
                               setPortalLoading(false);
                             }
                           }}
-                          className="flex items-center gap-2 transition-colors"
                           style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
                             fontFamily: MONO,
-                            fontSize: 13,
+                            fontSize: 11,
+                            letterSpacing: "0.06em",
                             padding: "10px 20px",
-                            borderRadius: 6,
-                            border: isDark ? "1px solid #333" : "1px solid #ddd",
+                            borderRadius: 3,
+                            border: isDark ? "1px solid #2a2a2a" : "1px solid #d0d0cc",
                             backgroundColor: isDark ? "#1a1a1a" : "#fff",
-                            color: isDark ? "#888" : "#333",
+                            color: isDark ? "#888" : "#444",
+                            cursor: "pointer",
+                            transition: "all 0.15s",
                           }}
                           onMouseEnter={(e) => { e.currentTarget.style.borderColor = isDark ? "#e8e8e0" : "#111"; e.currentTarget.style.color = isDark ? "#e8e8e0" : "#111"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#333" : "#ddd"; e.currentTarget.style.color = isDark ? "#aaa" : "#333"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#d0d0cc"; e.currentTarget.style.color = isDark ? "#888" : "#444"; }}
                         >
                           <CreditCard className="w-3.5 h-3.5" />
                           {portalLoading ? "Redirecting…" : "Manage subscription"}
                         </button>
-                        <p className="text-[10px] text-muted-foreground/50 mt-2">
+                        <p style={{ fontFamily: MONO, fontSize: 10, color: "#666", marginTop: 8, letterSpacing: "0.04em" }}>
                           Cancel, change payment method, or view billing history
                         </p>
                       </div>
                     )}
 
                     {userPlan !== "pro" && (
-                      <p className="text-[11px] text-muted-foreground/50 leading-relaxed">
+                      <p style={{ fontFamily: MONO, fontSize: 11, color: "#666", lineHeight: 1.6 }}>
                         Upgrade to Pro for unlimited analyses, all listening modes, and priority processing.
                       </p>
                     )}
@@ -596,22 +705,30 @@ const Settings = () => {
               {/* ── ACCOUNT ── */}
               {activeSection === "account" && (
                 <section>
-                  <SectionTitle subtitle="Danger zone — these actions are permanent.">Account</SectionTitle>
+                  <SectionTitle isDark={isDark} subtitle="Danger zone — these actions are permanent.">Account</SectionTitle>
                   <div>
                     <button
                       onClick={() => setDeleteOpen(true)}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-md text-xs font-medium transition-colors hover:bg-destructive/5"
                       style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        fontFamily: MONO,
+                        fontSize: 11,
+                        letterSpacing: "0.06em",
+                        padding: "10px 20px",
+                        borderRadius: 3,
                         border: "1px solid hsl(0 84% 60%)",
                         color: "hsl(0 84% 60%)",
                         background: "transparent",
-                        fontFamily: MONO,
+                        cursor: "pointer",
+                        transition: "all 0.15s",
                       }}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       Delete account
                     </button>
-                    <p className="text-[11px] text-muted-foreground/50 mt-2.5 leading-relaxed">
+                    <p style={{ fontFamily: MONO, fontSize: 10, color: "#666", marginTop: 8, letterSpacing: "0.04em", lineHeight: 1.6 }}>
                       This will permanently delete all your projects and analyses.
                     </p>
                   </div>
@@ -634,14 +751,12 @@ const Settings = () => {
               This will permanently delete your account and all your analyses. This action cannot be undone.
             </p>
             <div>
-              <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                Type DELETE to confirm
-              </label>
-              <Input
+              <FieldLabel>Type DELETE to confirm</FieldLabel>
+              <StyledInput
+                isDark={isDark}
                 value={deleteConfirm}
                 onChange={(e) => setDeleteConfirm(e.target.value)}
                 placeholder="DELETE"
-                className="mt-1.5 h-9 text-sm font-mono"
               />
             </div>
             <div className="flex justify-end gap-2">
