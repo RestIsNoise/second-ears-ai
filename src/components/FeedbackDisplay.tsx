@@ -60,6 +60,74 @@ function detectTags(text: string): string[] {
   return tags;
 }
 
+/* ─── What Works cards with scroll-reveal ─── */
+const WhatWorksCards = ({ items, mode, isDark }: { items: { title: string; description?: string }[]; mode: string; isDark: boolean }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setRevealed(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="px-5 pb-5 space-y-2 flex-1 flex flex-col">
+      {items.map((item, i) => {
+        const tags = detectTags(`${item.title} ${item.description || ""}`);
+        return (
+          <div
+            key={i}
+            style={{
+              background: isDark ? "#0a160a" : "#f0faf0",
+              border: isDark ? "1px solid #14321a" : "1px solid #bbf7d0",
+              borderLeft: "3px solid #16a34a",
+              borderRadius: 4,
+              padding: "16px 20px",
+              opacity: revealed ? 1 : 0,
+              transform: revealed ? "translateY(0)" : "translateY(8px)",
+              transition: `opacity 0.4s ease ${i * 0.1}s, transform 0.4s ease ${i * 0.1}s`,
+            }}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <h4 style={{ fontSize: 15, fontWeight: 700, color: isDark ? "#e8e8e0" : "#111" }}>{item.title}</h4>
+              {tags.length > 0 && (
+                <div className="flex items-center gap-1 shrink-0 flex-wrap">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        background: "rgba(22,163,74,0.1)",
+                        color: "#16a34a",
+                        fontFamily: "monospace",
+                        fontSize: 9,
+                        letterSpacing: "0.1em",
+                        padding: "2px 8px",
+                        borderRadius: 10,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            {item.description && (
+              <p style={{ fontSize: 13, color: isDark ? "#888" : "#555", lineHeight: 1.7, marginTop: 4 }}>{item.description}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const modeWhatWorksLabel: Record<string, string> = {
   technical: "What works",
   musical: "What lands",
@@ -1410,8 +1478,8 @@ const FeedbackDisplay = ({
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
-            backgroundColor: isDark ? "#0a0f0a" : "hsl(48 20% 97%)",
-            border: isDark ? "1px solid #1a3a1a" : "1px solid hsl(0 0% 91%)",
+            backgroundColor: isDark ? "#060d06" : "#f5fbf5",
+            border: isDark ? "1px solid #14321a" : "1px solid #bbf7d0",
             borderRadius: 6,
             overflow: "hidden",
           }}
@@ -1420,7 +1488,7 @@ const FeedbackDisplay = ({
             <div
               className="flex flex-col"
               style={{
-                borderRight: n.yourFocus.question ? (isDark ? "1px solid #1a3a1a" : "1px solid hsl(0 0% 91%)") : "none",
+                borderRight: n.yourFocus.question ? (isDark ? "1px solid #14321a" : "1px solid hsl(0 0% 91%)") : "none",
               }}
             >
               {/* Section label */}
@@ -1429,59 +1497,26 @@ const FeedbackDisplay = ({
                   style={{
                     fontSize: 10,
                     fontFamily: "monospace",
-                    letterSpacing: "0.15em",
-                    color: "#22c55e",
+                    letterSpacing: "0.18em",
+                    color: "#16a34a",
                     textTransform: "uppercase" as const,
                     fontWeight: 700,
-                    marginBottom: 16,
+                    marginBottom: 6,
                   }}
                 >
                   {modeWhatWorksLabel[mode] || "What Works"}
                 </h3>
+                <span
+                  style={{
+                    display: "block",
+                    width: 32,
+                    height: 1,
+                    background: "#16a34a",
+                    marginBottom: 16,
+                  }}
+                />
               </div>
-              <div className="px-5 pb-5 space-y-2 flex-1 flex flex-col">
-                {n.whatWorks.map((item, i) => {
-                  const tags = detectTags(`${item.title} ${item.description || ""}`);
-                  return (
-                    <div
-                      key={i}
-                      style={{
-                        background: isDark ? "#0f1a0f" : "white",
-                        border: isDark ? "1px solid #1a3a1a" : "1px solid hsl(0 0% 91%)",
-                        borderLeft: "3px solid #22c55e",
-                        borderRadius: 6,
-                        padding: "16px 20px",
-                      }}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <h4 style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#e8e8e0" : "hsl(0 0% 7%)" }}>{item.title}</h4>
-                        {tags.length > 0 && (
-                          <div className="flex items-center gap-1 shrink-0 flex-wrap">
-                            {tags.map((tag) => (
-                              <span
-                                key={tag}
-                                style={{
-                                  background: isDark ? "rgba(34,197,94,0.1)" : "hsl(138 76% 97%)",
-                                  color: isDark ? "#4ade80" : "hsl(142 76% 36%)",
-                                  fontSize: 10,
-                                  padding: "2px 8px",
-                                  borderRadius: 10,
-                                  fontWeight: 500,
-                                }}
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {item.description && (
-                        <p style={{ fontSize: 13, color: isDark ? "#888" : "hsl(0 0% 33%)", lineHeight: 1.7, marginTop: 4 }}>{item.description}</p>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              <WhatWorksCards items={n.whatWorks} mode={mode} isDark={isDark} />
             </div>
           )}
 
