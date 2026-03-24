@@ -99,15 +99,24 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                   onClick={() => !disabled && onToggle(panel.id)}
                   disabled={disabled}
                   className={cn(
-                    "w-full flex items-center gap-2.5 text-left transition-colors duration-75",
+                    "w-full flex items-center gap-2.5 text-left transition-all duration-150",
                     disabled && "cursor-not-allowed opacity-40",
-                    !isActive && !disabled && "hover:bg-[hsl(40_10%_96%)] hover:text-[hsl(0_0%_7%)]",
                   )}
                   style={{
                     padding: "10px 12px",
-                    borderLeft: isActive ? "3px solid hsl(0 0% 7%)" : "3px solid transparent",
-                    backgroundColor: isActive ? "hsl(0 0% 7%)" : "transparent",
+                    borderLeft: isActive ? "2px solid var(--sidebar-active-accent, hsl(0 0% 7%))" : "2px solid transparent",
+                    backgroundColor: isActive ? "var(--sidebar-active-bg, rgba(0,0,0,0.04))" : "transparent",
                     cursor: disabled ? "not-allowed" : "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive && !disabled) {
+                      e.currentTarget.style.backgroundColor = "var(--sidebar-hover-bg, rgba(0,0,0,0.03))";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive && !disabled) {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }
                   }}
                 >
                   {/* Label */}
@@ -117,9 +126,10 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                       fontFamily: MONO,
                       fontSize: 11,
                       letterSpacing: "0.06em",
-                      color: isActive ? "hsl(0 0% 100%)" : "hsl(0 0% 40%)",
-                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? "var(--sidebar-active-text, hsl(0 0% 7%))" : "#aaa",
+                      fontWeight: isActive ? 600 : 400,
                       lineHeight: 1.1,
+                      transition: "color 0.15s ease",
                     }}
                   >
                     {panel.label}
@@ -134,6 +144,7 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                       borderRadius: "50%",
                       backgroundColor: isActive ? "hsl(145 55% 45%)" : "hsl(0 0% 82%)",
                       boxShadow: isActive ? "0 0 4px hsl(145 55% 45% / 0.5)" : "none",
+                      animation: isActive ? "dot-pulse 2.5s ease-in-out infinite" : "none",
                     }}
                   />
                 </button>

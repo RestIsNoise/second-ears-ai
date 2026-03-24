@@ -128,6 +128,16 @@
 
     /* Header bar for analysis page */
     --analysis-header: 25 4% 80%;
+
+    /* Workstation panel header */
+    --wp-header-bg: #ebebea;
+    --wp-header-accent: 2px solid #111;
+
+    /* Sidebar module states */
+    --sidebar-active-accent: #111;
+    --sidebar-active-bg: rgba(0,0,0,0.04);
+    --sidebar-active-text: hsl(0 0% 7%);
+    --sidebar-hover-bg: rgba(0,0,0,0.03);
   }
 
   .dark,
@@ -168,6 +178,12 @@
     --surface-alt: 0 0% 8%;
     --surface-inset: 0 0% 6%;
     --analysis-header: 0 0% 8%;
+    --wp-header-bg: #161616;
+    --wp-header-accent: 2px solid #e8e8e0;
+    --sidebar-active-accent: #e8e8e0;
+    --sidebar-active-bg: rgba(255,255,255,0.04);
+    --sidebar-active-text: #e8e8e0;
+    --sidebar-hover-bg: rgba(255,255,255,0.03);
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 0 0% 90%;
@@ -465,6 +481,12 @@ body::after {
 }
 .cta-hover:active {
   transform: scale(0.98);
+}
+
+/* Green status dot pulse for active sidebar modules */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 /* CTA pulse for dashboard new-analysis button */
