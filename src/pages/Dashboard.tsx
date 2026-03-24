@@ -9,6 +9,9 @@ import { SlidersHorizontal, Music, Ear, Trash2, AudioLines, Inbox, Archive, List
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import OnboardingModal from "@/components/OnboardingModal";
+
+const ONBOARDING_KEY = "secondear-onboarding-seen";
 
 const modeIcons: Record<string, typeof SlidersHorizontal> = {
   technical: SlidersHorizontal,
