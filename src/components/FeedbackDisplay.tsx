@@ -60,6 +60,74 @@ function detectTags(text: string): string[] {
   return tags;
 }
 
+/* ─── What Works cards with scroll-reveal ─── */
+const WhatWorksCards = ({ items, mode, isDark }: { items: { title: string; description?: string }[]; mode: string; isDark: boolean }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setRevealed(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="px-5 pb-5 space-y-2 flex-1 flex flex-col">
+      {items.map((item, i) => {
+        const tags = detectTags(`${item.title} ${item.description || ""}`);
+        return (
+          <div
+            key={i}
+            style={{
+              background: isDark ? "#0a160a" : "#f0faf0",
+              border: isDark ? "1px solid #14321a" : "1px solid #bbf7d0",
+              borderLeft: "3px solid #16a34a",
+              borderRadius: 4,
+              padding: "16px 20px",
+              opacity: revealed ? 1 : 0,
+              transform: revealed ? "translateY(0)" : "translateY(8px)",
+              transition: `opacity 0.4s ease ${i * 0.1}s, transform 0.4s ease ${i * 0.1}s`,
+            }}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <h4 style={{ fontSize: 15, fontWeight: 700, color: isDark ? "#e8e8e0" : "#111" }}>{item.title}</h4>
+              {tags.length > 0 && (
+                <div className="flex items-center gap-1 shrink-0 flex-wrap">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        background: "rgba(22,163,74,0.1)",
+                        color: "#16a34a",
+                        fontFamily: "monospace",
+                        fontSize: 9,
+                        letterSpacing: "0.1em",
+                        padding: "2px 8px",
+                        borderRadius: 10,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            {item.description && (
+              <p style={{ fontSize: 13, color: isDark ? "#888" : "#555", lineHeight: 1.7, marginTop: 4 }}>{item.description}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const modeWhatWorksLabel: Record<string, string> = {
   technical: "What works",
   musical: "What lands",
