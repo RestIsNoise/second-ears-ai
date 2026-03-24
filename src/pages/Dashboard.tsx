@@ -583,6 +583,11 @@ const Dashboard = () => {
       }));
       setProjects(mapped);
       setFetching(false);
+      // Show onboarding if 0 analyses and not seen before
+      const totalAnalyses = mapped.reduce((s, p) => s + p.analyses.length, 0);
+      if (totalAnalyses === 0 && localStorage.getItem(ONBOARDING_KEY) !== "true") {
+        setShowOnboarding(true);
+      }
     };
     load();
   }, [user]);
