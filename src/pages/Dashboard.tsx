@@ -221,28 +221,34 @@ const TrackGridCard = ({
         border: isDark ? "1px solid #2a2a2a" : "1px solid #e8e8e8",
         borderRadius: 8,
         minHeight: 280,
-        transition: "all 0.2s ease",
+        transition: "all 0.18s ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
-        el.style.boxShadow = isDark ? "0 4px 20px rgba(0,0,0,0.4)" : "0 4px 16px rgba(0,0,0,0.08)";
-        el.style.borderColor = isDark ? "#444" : "#e8e8e8";
-        el.style.transform = "translateY(-2px)";
+        el.style.boxShadow = isDark ? "0 8px 24px rgba(0,0,0,0.5)" : "0 8px 24px rgba(0,0,0,0.10)";
+        el.style.borderColor = isDark ? "#444" : "#d0d0d0";
+        el.style.transform = "translateY(-3px)";
+        const waveThumb = el.querySelector<HTMLElement>("[data-waveform-thumb]");
+        if (waveThumb) waveThumb.style.filter = "brightness(1.15)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.boxShadow = "none";
         el.style.borderColor = isDark ? "#2a2a2a" : "#e8e8e8";
         el.style.transform = "translateY(0)";
+        const waveThumb = el.querySelector<HTMLElement>("[data-waveform-thumb]");
+        if (waveThumb) waveThumb.style.filter = "brightness(1)";
       }}
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
       <div
+        data-waveform-thumb
         className="relative overflow-hidden"
         style={{
           background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
           height: 160,
           borderRadius: "6px 6px 0 0",
+          transition: "filter 0.18s ease",
         }}
       >
         {/* Faint grid lines */}
@@ -380,8 +386,15 @@ const TrackGridCard = ({
       >
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <h3
-            className="text-[14px] font-medium tracking-[-0.01em] truncate group-hover:text-foreground transition-colors leading-tight"
-            style={{ color: isDark ? "#e8e8e0" : undefined }}
+            className="text-[14px] font-medium tracking-[-0.01em] group-hover:text-foreground transition-colors"
+            style={{
+              color: isDark ? "#e8e8e0" : undefined,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical" as any,
+              overflow: "hidden",
+              lineHeight: "1.35",
+            }}
           >
             {proj.name}
           </h3>
@@ -401,8 +414,15 @@ const TrackGridCard = ({
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 10,
-              backgroundColor: isDark ? "#222" : modeColor.bg,
-              color: isDark ? "#888" : modeColor.text,
+              backgroundColor: isDark
+                ? (mode === "musical" ? "#0d0d1a" : mode === "perception" ? "#1a0d0d" : "#1a1a1a")
+                : (mode === "musical" ? "#f0f4ff" : mode === "perception" ? "#fff4f0" : "#f0f0ee"),
+              color: isDark
+                ? (mode === "musical" ? "#6666cc" : mode === "perception" ? "#cc6655" : "#888")
+                : (mode === "musical" ? "#4444aa" : mode === "perception" ? "#aa5544" : "#555"),
+              border: isDark
+                ? (mode === "musical" ? "1px solid #1a1a33" : mode === "perception" ? "1px solid #331a1a" : "1px solid #2a2a2a")
+                : (mode === "musical" ? "1px solid #d0d8f0" : mode === "perception" ? "1px solid #f0d8d0" : "1px solid #ddd"),
               borderRadius: 3,
             }}
           >
@@ -418,7 +438,7 @@ const TrackGridCard = ({
           )}
         </div>
 
-        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#444" : "#999" }}>
+        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#555" : "#888" }}>
           {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
         </p>
       </div>
@@ -666,6 +686,7 @@ const Dashboard = () => {
                     fontWeight: 500,
                     letterSpacing: "0.02em",
                     fontFamily: "'IBM Plex Mono', monospace",
+                    animation: "cta-pulse 3s ease-in-out infinite",
                   }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#d4d0c8" : "hsl(0 0% 20%)"; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = isDarkHeader ? "#e8e8e0" : "hsl(0 0% 7%)"; }}
