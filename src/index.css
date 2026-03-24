@@ -409,6 +409,64 @@ body::after {
   100% { transform: scale(1.8); opacity: 0; }
 }
 
+/* ── Micro-animations ── */
+
+/* 1. Hero screenshot float */
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.hero-float {
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+/* 2. Eyebrow label pulse */
+@keyframes label-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+.label-pulse {
+  animation: label-pulse 4s ease-in-out infinite;
+}
+
+/* 3. Live dot breathing */
+@keyframes live-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+.live-dot {
+  animation: live-dot 2s ease-in-out infinite;
+}
+
+/* 7. Nav link underline slide */
+.nav-link-underline {
+  position: relative;
+}
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.2s ease;
+}
+.nav-link-underline:hover::after {
+  width: 100%;
+}
+
+/* 8. CTA button scale */
+.cta-hover {
+  transition: transform 0.15s ease;
+}
+.cta-hover:hover {
+  transform: scale(1.02);
+}
+.cta-hover:active {
+  transform: scale(0.98);
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -422,6 +480,12 @@ body::after {
     animation: none !important;
   }
   .pro-emphasis {
+    animation: none !important;
+  }
+  .hero-float,
+  .label-pulse,
+  .live-dot,
+  .cta-hover {
     animation: none !important;
   }
 }

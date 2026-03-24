@@ -86,7 +86,7 @@ const Hero = () => {
             style={{ opacity: 0, transform: `translateY(${headlineY}px)`, animation: "slideInLeft 0.7s ease forwards" }}
            >
             <p
-              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up"
+              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up label-pulse"
               style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               AI speed · Human ears
@@ -115,7 +115,7 @@ const Hero = () => {
               <Button
                 variant="hero"
                 size="lg"
-                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto"
+                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto cta-hover"
                 asChild
               >
                 <Link to="/analyze">
@@ -169,7 +169,7 @@ const Hero = () => {
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
             className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
-            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards" }}
+            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards, hero-float 6s ease-in-out 1s infinite" }}
           >
             {/* Glow behind frame */}
             <div
@@ -223,7 +223,7 @@ const Hero = () => {
                 boxShadow: "0 4px 20px hsl(0 0% 0% / 0.4)",
               }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(140 50% 45%)" }} />
+              <span className="w-1.5 h-1.5 rounded-full live-dot" style={{ background: "hsl(140 50% 45%)" }} />
               Real feedback example
             </div>
           </div>

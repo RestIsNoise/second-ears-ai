@@ -149,7 +149,25 @@ const Pricing = () => {
                   transform: plan.featured ? "scale(1.03)" : undefined,
                   zIndex: plan.featured ? 10 : undefined,
                   opacity: plan.comingSoon ? 0.75 : 1,
+                  transition: "box-shadow 0.3s ease",
+                  cursor: plan.comingSoon ? "default" : "pointer",
                 } as React.CSSProperties}
+                onMouseEnter={(e) => {
+                  if (!plan.comingSoon) {
+                    e.currentTarget.style.boxShadow = plan.featured
+                      ? "0 0 0 1px rgba(255,255,255,0.15), 0 16px 40px rgba(0,0,0,0.4)"
+                      : isDark
+                        ? "0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.3)"
+                        : "0 0 0 1px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!plan.comingSoon) {
+                    e.currentTarget.style.boxShadow = plan.featured
+                      ? "0 16px 48px -12px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
+                      : isDark ? "none" : "0 1px 4px hsl(0 0% 0% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)";
+                  }
+                }}
               >
                 {/* Badge */}
                 {(plan.featured || plan.comingSoon) && (
