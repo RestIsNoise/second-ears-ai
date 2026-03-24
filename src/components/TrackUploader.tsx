@@ -414,8 +414,8 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   </span>
                 )}
                 <m.icon className="w-3.5 h-3.5 mb-1.5" style={{ color: !isLocked && mode === m.id ? (isDark ? "#e8e8e0" : "rgba(255,255,255,0.7)") : (isDark ? "#555" : "hsl(var(--foreground) / 0.5)") }} />
-                <p className="text-[11px] font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{m.label}</p>
-                <p className="text-[9px] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", color: !isLocked && mode === m.id ? (isDark ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.6)") : "#999" }}>{m.tag}</p>
+                <p className="text-[11px]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: !isLocked && mode === m.id ? 700 : 600 }}>{m.label}</p>
+                <p className="mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.08em", color: !isLocked && mode === m.id ? (isDark ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.6)") : "#888" }}>{m.tag}</p>
                 {isLocked && lockedModeTooltip === m.id && (
                   <span
                     className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-sm z-10 animate-fade-in"
