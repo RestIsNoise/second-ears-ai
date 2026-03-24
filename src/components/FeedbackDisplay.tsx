@@ -951,7 +951,7 @@ const FeedbackDisplay = ({
           </div>
         </div>
 
-        {/* Right: mode badge (mobile) + collaborators */}
+        {/* Right: mode badge + reference button + collaborators */}
         <div className="flex items-center gap-2 shrink-0 sm:justify-end">
           <span
             className="sm:hidden uppercase"
@@ -968,6 +968,32 @@ const FeedbackDisplay = ({
           >
             {modeLabels[mode]}
           </span>
+          <button
+            onClick={() => setRefModalOpen(true)}
+            className="transition-all duration-150"
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "6px 12px",
+              backgroundColor: "transparent",
+              border: isDark ? "1px solid #444" : "1px solid #bbb",
+              borderRadius: 3,
+              color: isDark ? "#999" : "#555",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#888";
+              e.currentTarget.style.color = isDark ? "#e8e8e0" : "#222";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = isDark ? "#444" : "#bbb";
+              e.currentTarget.style.color = isDark ? "#999" : "#555";
+            }}
+          >
+            + Reference
+          </button>
           <CollaboratorAvatars analysisId={analysisId ?? null} />
         </div>
       </div>
