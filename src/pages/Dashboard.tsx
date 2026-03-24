@@ -713,7 +713,9 @@ const Dashboard = () => {
             <TabsList
               className="mb-4 h-auto p-0 gap-0 rounded-none bg-transparent"
               style={{
-                borderBottom: "1px solid hsl(0 0% 91%)",
+                borderBottom: typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark"
+                  ? "1px solid #1a1a1a"
+                  : "1px solid hsl(0 0% 91%)",
               }}
             >
               {[
