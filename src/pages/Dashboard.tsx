@@ -225,15 +225,19 @@ const TrackGridCard = ({
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
-        el.style.boxShadow = isDark ? "0 4px 20px rgba(0,0,0,0.4)" : "0 4px 16px rgba(0,0,0,0.08)";
-        el.style.borderColor = isDark ? "#444" : "#e8e8e8";
-        el.style.transform = "translateY(-2px)";
+        el.style.boxShadow = isDark ? "0 8px 24px rgba(0,0,0,0.5)" : "0 8px 24px rgba(0,0,0,0.10)";
+        el.style.borderColor = isDark ? "#444" : "#d0d0d0";
+        el.style.transform = "translateY(-3px)";
+        const waveThumb = el.querySelector<HTMLElement>("[data-waveform-thumb]");
+        if (waveThumb) waveThumb.style.filter = "brightness(1.15)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.boxShadow = "none";
         el.style.borderColor = isDark ? "#2a2a2a" : "#e8e8e8";
         el.style.transform = "translateY(0)";
+        const waveThumb = el.querySelector<HTMLElement>("[data-waveform-thumb]");
+        if (waveThumb) waveThumb.style.filter = "brightness(1)";
       }}
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
