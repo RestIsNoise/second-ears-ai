@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Share2, Lock, Globe, Download, Link2, UserPlus } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
@@ -23,6 +22,182 @@ const getBtnStyle = (isDark: boolean) => ({
   color: isDark ? "#888" : undefined,
 });
 
+/* ── Invite Modal ── */
+const InviteModal = ({
+  open,
+  onClose,
+  analysisId,
+  isDark,
+}: {
+  open: boolean;
+  onClose: () => void;
+  analysisId: string;
+  isDark: boolean;
+}) => {
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setEmail("");
+      setSuccess(false);
+      setTimeout(() => inputRef.current?.focus(), 80);
+    }
+  }, [open]);
+
+  // ESC to close
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open, onClose]);
+
+  const handleInvite = useCallback(async () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !user) return;
+    setInviting(true);
+    try {
+      const { error } = await supabase.from("collaborators").insert({
+        analysis_id: analysisId,
+        invited_email: trimmed,
+        role: "viewer" as const,
+        invited_by: user.id,
+      });
+      if (error) {
+        if (error.code === "23505") {
+          toast({ title: "Already invited", description: "This email has already been invited.", duration: 2000 });
+        } else {
+          toast({ title: "Invite failed", variant: "destructive", duration: 2000 });
+        }
+      } else {
+        setSuccess(true);
+        setTimeout(() => onClose(), 2000);
+      }
+    } finally {
+      setInviting(false);
+    }
+  }, [email, analysisId, user, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{ background: "rgba(0,0,0,0.4)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        style={{
+          width: 420,
+          borderRadius: 4,
+          background: isDark ? "#111" : "white",
+          border: isDark ? "1px solid #222" : "1px solid #e0e0e0",
+          boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.6)" : "0 8px 32px rgba(0,0,0,0.12)",
+          padding: "28px 28px 24px",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {success ? (
+          <div className="flex flex-col items-center justify-center py-6 gap-2">
+            <p style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 600, color: "#22c55e" }}>
+              Invite sent ✓
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Title */}
+            <p
+              style={{
+                fontFamily: "monospace",
+                fontSize: 11,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#999",
+                marginBottom: 12,
+                fontWeight: 700,
+              }}
+            >
+              Invite collaborator
+            </p>
+
+            {/* Description */}
+            <p style={{ fontSize: 13, color: "#888", marginBottom: 20, lineHeight: 1.5 }}>
+              Share this analysis with someone who can leave comments and todos.
+            </p>
+
+            {/* Email label */}
+            <label
+              style={{
+                fontFamily: "monospace",
+                fontSize: 11,
+                color: "#666",
+                letterSpacing: "0.08em",
+                display: "block",
+                marginBottom: 6,
+              }}
+            >
+              Email address
+            </label>
+
+            {/* Email input */}
+            <input
+              ref={inputRef}
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleInvite(); }}
+              style={{
+                width: "100%",
+                fontSize: 14,
+                padding: "10px 12px",
+                borderRadius: 4,
+                outline: "none",
+                background: isDark ? "#0d0d0d" : "#fafafa",
+                border: isDark ? "1px solid #2a2a2a" : "1px solid #d0d0d0",
+                color: isDark ? "#e8e8e0" : "#111",
+                fontFamily: "inherit",
+              }}
+            />
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-3" style={{ marginTop: 20 }}>
+              <button
+                onClick={onClose}
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#888",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "8px 14px",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Cancel
+              </button>
+              <Button
+                onClick={handleInvite}
+                disabled={!email.trim() || inviting}
+                className="h-9 px-5 text-[12px] font-bold"
+                style={{ fontFamily: MONO, letterSpacing: "0.06em" }}
+              >
+                {inviting ? "Sending…" : "Send invite →"}
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 interface ShareBlockProps {
   onExportPdf?: () => void;
   analysisId?: string | null;
@@ -33,9 +208,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
   const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
   const [isPublic, setIsPublic] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [showInvite, setShowInvite] = useState(false);
-  const [email, setEmail] = useState("");
-  const [inviting, setInviting] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [toggling, setToggling] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +231,6 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
     const handler = (e: MouseEvent) => {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
         setPopoverOpen(false);
-        setShowInvite(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -72,34 +244,6 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
       setPopoverOpen(false);
     } catch {
       toast({ title: "Copy failed", variant: "destructive", duration: 1500 });
-    }
-  };
-
-  const handleInvite = async () => {
-    const trimmed = email.trim().toLowerCase();
-    if (!trimmed || !analysisId || !user) return;
-    setInviting(true);
-    try {
-      const { error } = await supabase.from("collaborators").insert({
-        analysis_id: analysisId,
-        invited_email: trimmed,
-        role: "viewer" as const,
-        invited_by: user.id,
-      });
-      if (error) {
-        if (error.code === "23505") {
-          toast({ title: "Already invited", description: "This email has already been invited.", duration: 2000 });
-        } else {
-          toast({ title: "Invite failed", variant: "destructive", duration: 2000 });
-        }
-      } else {
-        toast({ title: "Invite sent", duration: 1500 });
-        setEmail("");
-        setShowInvite(false);
-        setPopoverOpen(false);
-      }
-    } finally {
-      setInviting(false);
     }
   };
 
@@ -138,7 +282,7 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
         {/* Share button with popover */}
         <div className="relative" ref={popoverRef}>
           <button
-            onClick={() => { setPopoverOpen(!popoverOpen); setShowInvite(false); }}
+            onClick={() => setPopoverOpen(!popoverOpen)}
             className="w-full flex items-center justify-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
             style={getBtnStyle(isDark)}
           >
@@ -170,71 +314,42 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
                 boxShadow: "0 4px 12px hsl(0 0% 0% / 0.15), inset 0 1px 2px hsl(var(--panel-inset))",
               }}
             >
-              {!showInvite ? (
-                <div className="py-1">
-                  <button
-                    onClick={handleCopyLink}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
-                    style={dropdownItemStyle}
-                  >
-                    <Link2 className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                    Copy link
-                  </button>
-                  <button
-                    onClick={() => setShowInvite(true)}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
-                    style={dropdownItemStyle}
-                  >
-                    <UserPlus className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                    Invite
-                  </button>
-                  <button
-                    onClick={handleTogglePublic}
-                    disabled={toggling}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
-                    style={dropdownItemStyle}
-                  >
-                    {isPublic ? (
-                      <>
-                        <Lock className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                        Make private
-                      </>
-                    ) : (
-                      <>
-                        <Globe className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                        Make public
-                      </>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <div className="p-3 space-y-2">
-                  <span
-                    className="text-foreground/45"
-                    style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}
-                  >
-                    Invite by email
-                  </span>
-                  <div className="flex gap-1.5">
-                    <Input
-                      type="email"
-                      placeholder="email@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleInvite()}
-                      className="text-xs h-8 flex-1 bg-background/50"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={handleInvite}
-                      disabled={!email.trim() || inviting || !analysisId}
-                      className="h-8 px-3 text-[11px]"
-                    >
-                      Invite
-                    </Button>
-                  </div>
-                </div>
-              )}
+              <div className="py-1">
+                <button
+                  onClick={handleCopyLink}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
+                  style={dropdownItemStyle}
+                >
+                  <Link2 className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                  Copy link
+                </button>
+                <button
+                  onClick={() => { setPopoverOpen(false); setInviteOpen(true); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors"
+                  style={dropdownItemStyle}
+                >
+                  <UserPlus className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                  Invite
+                </button>
+                <button
+                  onClick={handleTogglePublic}
+                  disabled={toggling}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-foreground/50 hover:text-foreground/75 hover:bg-foreground/[0.04] transition-colors disabled:opacity-50"
+                  style={dropdownItemStyle}
+                >
+                  {isPublic ? (
+                    <>
+                      <Lock className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                      Make private
+                    </>
+                  ) : (
+                    <>
+                      <Globe className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                      Make public
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -251,6 +366,16 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
           </button>
         )}
       </div>
+
+      {/* ── Invite Modal ── */}
+      {analysisId && (
+        <InviteModal
+          open={inviteOpen}
+          onClose={() => setInviteOpen(false)}
+          analysisId={analysisId}
+          isDark={isDark}
+        />
+      )}
 
       {/* ── Brand mark ── */}
       <div
