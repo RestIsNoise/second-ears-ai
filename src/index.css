@@ -483,6 +483,12 @@ body::after {
   transform: scale(0.98);
 }
 
+/* Card entry animation for feedback items */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Green status dot pulse for active sidebar modules */
 @keyframes dot-pulse {
   0%, 100% { opacity: 1; }

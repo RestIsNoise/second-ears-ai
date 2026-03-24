@@ -188,42 +188,60 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
               className={cn("group cursor-pointer")}
               style={{
                 opacity: 0,
-                transform: "translateY(12px)",
-                animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
+                transform: "translateY(10px)",
+                animation: `card-enter 0.3s ease forwards ${idx * 0.08}s`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
                 background: isActive
                   ? accent.bg
                   : isDark
-                    ? "#f5f2eb"
-                    : "white",
-                border: `1px solid ${isActive ? accent.border : isDark ? "#e8e2d4" : "hsl(0 0% 91%)"}`,
+                    ? "#1a1a1a"
+                    : "#fafaf8",
+                border: `1px solid ${isActive ? accent.border : isDark ? "#2a2a2a" : "hsl(0 0% 91%)"}`,
+                borderLeft: `3px solid ${isActive ? accent.border : isDark ? "rgba(232,232,224,0.3)" : "rgba(17,17,17,0.3)"}`,
                 borderRadius: 8,
                 padding: 20,
                 marginBottom: 12,
-                transition: "box-shadow 0.2s, border-color 0.15s",
+                transition: "background 0.15s ease, box-shadow 0.2s, border-color 0.15s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = isDark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.06)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget;
+                el.style.boxShadow = isDark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.06)";
+                el.style.background = isActive ? accent.bg : isDark ? "#1e1e1e" : "#f5f5f2";
+                el.style.borderLeftColor = isDark ? "#e8e8e0" : "#111";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.boxShadow = "none";
+                el.style.background = isActive ? accent.bg : isDark ? "#1a1a1a" : "#fafaf8";
+                el.style.borderLeftColor = isActive ? accent.border : isDark ? "rgba(232,232,224,0.3)" : "rgba(17,17,17,0.3)";
+              }}
             >
               {/* ═══ CARD HEADER ROW ═══ */}
               <div className="flex items-center gap-2 flex-wrap">
                 {/* Index */}
                 <span
-                  style={{ fontFamily: MONO, fontSize: 12, color: "hsl(0 0% 60%)", letterSpacing: "0.02em" }}
+                  style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: isDark ? "#555" : "#bbb", letterSpacing: "0.02em" }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
 
                 {/* Timestamp */}
                 <span
+                  className="cursor-pointer transition-colors duration-150"
                   style={{
                     fontFamily: MONO,
-                    fontSize: 12,
-                    color: "hsl(0 0% 60%)",
-                    backgroundColor: "hsl(0 0% 96%)",
-                    padding: "2px 6px",
+                    fontSize: 11,
+                    color: isDark ? "#888" : "hsl(0 0% 50%)",
+                    backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)",
+                    padding: "1px 6px",
                     borderRadius: 3,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
                   }}
                 >
                   {formatTime(item.timestampSec)}
@@ -294,7 +312,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                 style={{
                   fontSize: 16,
                   fontWeight: 600,
-                  color: isDark ? "#1a1510" : undefined,
+                  color: isDark ? "#e8e8e0" : undefined,
                   margin: "8px 0",
                   lineHeight: 1.4,
                 }}
@@ -309,7 +327,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                   style={{
                     fontSize: 14,
                     lineHeight: 1.7,
-                    color: isDark ? "#2a2520" : "hsl(0 0% 33%)",
+                    color: isDark ? "#999" : "hsl(0 0% 33%)",
                     fontFamily: MONO,
                   }}
                 >
@@ -322,8 +340,8 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                 <div
                   style={{
                     marginTop: 12,
-                    backgroundColor: isDark ? "#ede9e0" : "#f8f8f6",
-                    borderLeft: isDark ? "3px solid #2a2520" : `3px solid ${accent.border}`,
+                    backgroundColor: isDark ? "#141414" : "#f4f4f2",
+                    borderLeft: isDark ? "3px solid #e8e8e0" : "3px solid #111",
                     borderRadius: "0 6px 6px 0",
                     padding: "12px 16px",
                   }}
@@ -331,10 +349,10 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                   <div
                     style={{
                       fontFamily: MONO,
-                      fontSize: 10,
+                      fontSize: 9,
                       fontWeight: 700,
-                      letterSpacing: "0.1em",
-                      color: isDark ? "#2a2520" : "hsl(0 0% 7%)",
+                      letterSpacing: "0.18em",
+                      color: "#888",
                       marginBottom: 6,
                       textTransform: "uppercase" as const,
                     }}
@@ -345,7 +363,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
                     style={{
                       fontSize: 13,
                       lineHeight: 1.6,
-                      color: isDark ? "#3a3530" : "hsl(0 0% 27%)",
+                      color: isDark ? "#aaa" : "hsl(0 0% 27%)",
                       fontFamily: MONO,
                     }}
                   >
