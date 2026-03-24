@@ -1564,7 +1564,7 @@ const FeedbackDisplay = ({
             {[
               { href: "/privacy", label: "Privacy" },
               { href: "/terms", label: "Terms" },
-              { href: "mailto:hello@secondears.io", label: "Contact" },
+              { href: "/#contact", label: "Contact" },
             ].map((link) => (
               <a
                 key={link.href}
