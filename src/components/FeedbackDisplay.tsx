@@ -1058,29 +1058,41 @@ const FeedbackDisplay = ({
               </p>
             )}
 
-            {/* SE monogram */}
+            {/* SE monogram badge */}
             <div className={cn("flex items-center gap-2 flex-wrap", n.overallImpression && "mt-2.5")}>
               <div
-                className="ml-auto flex items-center justify-center"
-                style={{ opacity: 0.15 }}
+                className="ml-auto flex items-center justify-center rounded-full transition-all duration-200"
+                style={{
+                  width: 32,
+                  height: 32,
+                  backgroundColor: "#111",
+                  border: "1.5px solid rgba(255,255,255,0.25)",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
+                  cursor: "default",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
+                  e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 8px rgba(255,255,255,0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)";
+                }}
                 aria-hidden="true"
               >
-                <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M2 12.5C2.8 13.5 4.2 14 6 14C8.5 14 10 12.8 10 11C10 9.2 8.5 8.5 6.2 7.8C4 7.1 2.5 6.2 2.5 4.2C2.5 2.2 4.2 1 6.5 1C8 1 9.3 1.5 10 2.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="square"
-                    fill="none"
-                  />
-                  <path
-                    d="M16 1H24.5M16 7.5H23M16 14H24.5M16 1V14"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="square"
-                    fill="none"
-                  />
-                </svg>
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    fontWeight: 900,
+                    letterSpacing: "0.05em",
+                    color: "#e8e8e0",
+                    textTransform: "uppercase",
+                    lineHeight: 1,
+                  }}
+                >
+                  SE
+                </span>
               </div>
             </div>
 
