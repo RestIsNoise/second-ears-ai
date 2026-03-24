@@ -66,17 +66,6 @@ const Hero = () => {
         />
       </div>
 
-      {/* Diagonal bar motif */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div
-          className="absolute -top-[20%] left-[72%] w-[1px] h-[160%] rotate-[70deg] origin-center"
-          style={{ background: "hsl(0 0% 100% / 0.06)" }}
-        />
-        <div
-          className="absolute -top-[20%] left-[78%] w-[1px] h-[160%] rotate-[70deg] origin-center"
-          style={{ background: "hsl(0 0% 100% / 0.06)" }}
-        />
-      </div>
 
       <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-36 sm:pt-48 sm:pb-48 md:pt-56 md:pb-56 lg:pt-60 lg:pb-56">
         <div className="grid lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-end">
