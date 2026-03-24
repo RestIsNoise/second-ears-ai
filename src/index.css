@@ -178,6 +178,12 @@
     --surface-alt: 0 0% 8%;
     --surface-inset: 0 0% 6%;
     --analysis-header: 0 0% 8%;
+    --wp-header-bg: #161616;
+    --wp-header-accent: 2px solid #e8e8e0;
+    --sidebar-active-accent: #e8e8e0;
+    --sidebar-active-bg: rgba(255,255,255,0.04);
+    --sidebar-active-text: #e8e8e0;
+    --sidebar-hover-bg: rgba(255,255,255,0.03);
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 0 0% 90%;
