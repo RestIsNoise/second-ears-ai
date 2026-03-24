@@ -120,24 +120,20 @@ const MarkerTooltip = ({
             whiteSpace: "nowrap",
           }}
         >
-          <div
-            className="rounded-md px-2.5 py-1.5 shadow-lg text-xs"
-            style={{
-              backgroundColor: "hsl(var(--popover))",
-              border: "1px solid hsl(var(--border))",
-              color: "hsl(var(--popover-foreground))",
-              maxWidth: 220,
-              whiteSpace: "normal",
-            }}
-          >
-            <p className="font-medium">{marker.label}</p>
-            <p
-              className="text-muted-foreground tabular-nums mt-0.5"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}
-            >
-              {formatTime(marker.time)}{isUser ? " · Your note" : ""}
-            </p>
-          </div>
+           <div
+             style={{
+               backgroundColor: "#111",
+               color: "#fff",
+               padding: "4px 10px",
+               borderRadius: 3,
+               fontFamily: "'IBM Plex Mono', monospace",
+               fontSize: 11,
+               whiteSpace: "normal",
+               maxWidth: 220,
+             }}
+           >
+             {marker.label}
+           </div>
         </div>
       )}
     </div>
