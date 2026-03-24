@@ -17,6 +17,7 @@ import FaqPage from "./pages/Faq";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import PricingPage from "./pages/Pricing";
+import Changelog from "./pages/Changelog";
 
 const queryClient = new QueryClient();
 
