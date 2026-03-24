@@ -494,10 +494,15 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
       <Button
         variant="default"
         size="lg"
-        className="w-full font-bold uppercase"
+        className="w-full uppercase active:scale-[0.98]"
         style={{
-          height: 52, fontSize: 13, letterSpacing: "0.08em", borderRadius: 6,
+          height: 52,
+          fontSize: 13,
+          letterSpacing: "0.15em",
+          borderRadius: 6,
           fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 700,
+          transition: "background 0.3s ease, transform 0.1s ease",
           ...(isDark ? { backgroundColor: "#e8e8e0", color: "#111", borderColor: "#e8e8e0" } : {}),
         }}
         disabled={!file || isAnalyzing || !!cooldownMessage}
