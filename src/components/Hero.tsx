@@ -168,8 +168,8 @@ const Hero = () => {
 
           {/* Right column — Screenshot with scroll-linked scale */}
           <div
-            className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0 hero-float"
-            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards" }}
+            className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
+            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards, hero-float 6s ease-in-out 1s infinite" }}
           >
             {/* Glow behind frame */}
             <div
