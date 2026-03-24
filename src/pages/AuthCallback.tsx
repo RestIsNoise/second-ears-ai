@@ -7,8 +7,18 @@ const AuthCallback = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
-      // Brief delay to let Supabase client process any hash fragment automatically
-      await new Promise((r) => setTimeout(r, 500));
+      // PKCE flow: exchange the ?code= param for a session
+      const code = new URLSearchParams(window.location.search).get("code");
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          navigate("/dashboard", { replace: true });
+          return;
+        }
+      }
+
+      // Fallback: check if a session already exists
       const { data: { session } } = await supabase.auth.getSession();
       navigate(session ? "/dashboard" : "/auth", { replace: true });
     };
