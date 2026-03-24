@@ -368,13 +368,17 @@ const FeedbackDisplay = ({
   const [humanComments, setHumanComments] = useState<{ id: string; content: string; timestamp: number }[]>([]);
 
   useEffect(() => {
-    if (!analysisId) return;
+    if (!analysisId || !user) return;
     const loadComments = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("comments")
         .select("id, text, timestamp_in_track")
         .eq("analysis_id", analysisId)
         .order("created_at", { ascending: true });
+      if (error) {
+        console.warn("[Comments] eager load failed:", error.message);
+        return;
+      }
       if (data) {
         setHumanComments(data.map((c: any) => ({
           id: c.id,
@@ -384,7 +388,7 @@ const FeedbackDisplay = ({
       }
     };
     loadComments();
-  }, [analysisId]);
+  }, [analysisId, user]);
 
   const commentMarkers: WaveformMarker[] = useMemo(() => {
     return humanComments
