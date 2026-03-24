@@ -438,7 +438,7 @@ const TrackGridCard = ({
           )}
         </div>
 
-        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#444" : "#999" }}>
+        <p className="mt-2 tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: isDark ? "#555" : "#888" }}>
           {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
         </p>
       </div>
