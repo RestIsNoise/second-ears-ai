@@ -188,23 +188,34 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
               className={cn("group cursor-pointer")}
               style={{
                 opacity: 0,
-                transform: "translateY(12px)",
-                animation: `fixFadeUp 0.35s ease forwards ${idx * 80}ms`,
+                transform: "translateY(10px)",
+                animation: `card-enter 0.3s ease forwards ${idx * 0.08}s`,
                 scrollMarginTop: 32,
                 scrollMarginBottom: 160,
                 background: isActive
                   ? accent.bg
                   : isDark
-                    ? "#f5f2eb"
-                    : "white",
-                border: `1px solid ${isActive ? accent.border : isDark ? "#e8e2d4" : "hsl(0 0% 91%)"}`,
+                    ? "#1a1a1a"
+                    : "#fafaf8",
+                border: `1px solid ${isActive ? accent.border : isDark ? "#2a2a2a" : "hsl(0 0% 91%)"}`,
+                borderLeft: `3px solid ${isActive ? accent.border : isDark ? "rgba(232,232,224,0.3)" : "rgba(17,17,17,0.3)"}`,
                 borderRadius: 8,
                 padding: 20,
                 marginBottom: 12,
-                transition: "box-shadow 0.2s, border-color 0.15s",
+                transition: "background 0.15s ease, box-shadow 0.2s, border-color 0.15s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = isDark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.06)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget;
+                el.style.boxShadow = isDark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.06)";
+                el.style.background = isActive ? accent.bg : isDark ? "#1e1e1e" : "#f5f5f2";
+                el.style.borderLeftColor = isDark ? "#e8e8e0" : "#111";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.boxShadow = "none";
+                el.style.background = isActive ? accent.bg : isDark ? "#1a1a1a" : "#fafaf8";
+                el.style.borderLeftColor = isActive ? accent.border : isDark ? "rgba(232,232,224,0.3)" : "rgba(17,17,17,0.3)";
+              }}
             >
               {/* ═══ CARD HEADER ROW ═══ */}
               <div className="flex items-center gap-2 flex-wrap">
