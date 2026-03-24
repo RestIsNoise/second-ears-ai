@@ -43,7 +43,7 @@ const markerTypeColor: Record<MarkerType, { bg: string; border: string; text: st
   },
 };
 
-export const MARKER_ZONE_HEIGHT = 32;
+export const MARKER_ZONE_HEIGHT = 44;
 
 interface Props {
   markers: WaveformMarker[];
