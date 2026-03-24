@@ -68,7 +68,7 @@ const CollaboratorAvatars = ({ analysisId }: CollaboratorAvatarsProps) => {
           <Tooltip key={c.id}>
             <TooltipTrigger asChild>
               <Avatar className="w-6 h-6 border-2 border-background cursor-default">
-                <AvatarImage src={c.avatar_url || undefined} />
+                <AvatarImage src={c.avatar_url || undefined} referrerPolicy="no-referrer" />
                 <AvatarFallback className="text-[8px] font-semibold bg-secondary text-foreground/60">
                   {initials}
                 </AvatarFallback>
