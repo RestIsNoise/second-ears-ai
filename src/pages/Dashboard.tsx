@@ -242,11 +242,13 @@ const TrackGridCard = ({
     >
       {/* ══════ DARK MINI-PLAYER TOP HALF ══════ */}
       <div
+        data-waveform-thumb
         className="relative overflow-hidden"
         style={{
           background: "linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%)",
           height: 160,
           borderRadius: "6px 6px 0 0",
+          transition: "filter 0.18s ease",
         }}
       >
         {/* Faint grid lines */}
