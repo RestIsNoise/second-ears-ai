@@ -396,7 +396,7 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
                   cursor: isLocked ? "default" : "pointer",
                 }}
                 onMouseEnter={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#333" : "#999"; e.currentTarget.style.backgroundColor = isDark ? "#222" : "#fafafa"; } }}
-                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff"; } }}
+                onMouseLeave={(e) => { if (!isLocked && mode !== m.id) { e.currentTarget.style.borderColor = isDark ? "#2a2a2a" : "#e0e0e0"; e.currentTarget.style.backgroundColor = isDark ? "#111" : "#ffffff"; } }}
               >
                 {isLocked && (
                   <span
