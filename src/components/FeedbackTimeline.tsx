@@ -221,7 +221,7 @@ const FeedbackTimeline = ({ items, activeItemId, onItemClick, onAddToDo, onRemov
               <div className="flex items-center gap-2 flex-wrap">
                 {/* Index */}
                 <span
-                  style={{ fontFamily: MONO, fontSize: 12, color: "hsl(0 0% 60%)", letterSpacing: "0.02em" }}
+                  style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: isDark ? "#555" : "#bbb", letterSpacing: "0.02em" }}
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
