@@ -55,7 +55,7 @@ const items = [
 const FaqItem = ({ item, isOpen, onToggle, isFirst, isDark }: { item: typeof items[0]; isOpen: boolean; onToggle: () => void; isFirst: boolean; isDark: boolean }) => (
   <div
     style={{
-      borderBottom: `1px solid ${isDark ? "#222" : "#e8e8e8"}`,
+      borderBottom: `1px solid ${isDark ? "#2a2a2a" : "#e8e8e8"}`,
       borderTop: isFirst ? "none" : undefined,
     }}
   >
