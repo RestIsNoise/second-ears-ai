@@ -1478,8 +1478,8 @@ const FeedbackDisplay = ({
             n.whatWorks.length > 0 && n.yourFocus.question ? "grid-cols-1 sm:grid-cols-[1fr_1fr]" : "grid-cols-1"
           )}
           style={{
-            backgroundColor: isDark ? "#0a0f0a" : "hsl(48 20% 97%)",
-            border: isDark ? "1px solid #1a3a1a" : "1px solid hsl(0 0% 91%)",
+            backgroundColor: isDark ? "#060d06" : "#f5fbf5",
+            border: isDark ? "1px solid #14321a" : "1px solid #bbf7d0",
             borderRadius: 6,
             overflow: "hidden",
           }}
