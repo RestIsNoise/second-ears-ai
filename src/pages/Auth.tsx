@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/lib/supabaseClient";
 
 const GoogleIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -22,11 +22,14 @@ const Auth = () => {
   }, [user, navigate]);
 
   const handleGoogle = async () => {
-    const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: "https://www.secondear.app/auth/callback",
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://www.secondear.app/auth/callback",
+      },
     });
     if (error) {
-      toast({ title: "Google sign-in failed", description: (error as Error).message, variant: "destructive" });
+      toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
     }
   };
 
