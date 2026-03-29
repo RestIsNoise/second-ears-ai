@@ -338,7 +338,10 @@ export function normalizeFeedbackResponse(
   // ── Release status
   const releaseStatus = (() => {
     const rs = fb.releaseStatus || fb.release_status;
-    if (rs && typeof rs === "object" && (rs as any).label) return str((rs as any).label);
+    if (rs && typeof rs === "object") {
+      const label = str((rs as any).label);
+      return label || null;
+    }
     const explicit = str(fb.release) || str(fb.readiness) || str(rs);
     if (explicit) return explicit;
     return null;
