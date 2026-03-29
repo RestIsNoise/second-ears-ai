@@ -654,9 +654,12 @@ const FeedbackDisplay = ({
     if (n.releaseStatus) return n.releaseStatus;
     const lufs = n.metrics.integratedLufs;
     const peak = n.metrics.peakDbtp;
+    const dr = n.metrics.dynamicRange;
     if (lufs !== null && peak !== null) {
+      if (lufs >= -9 && peak < -0.3 && dr !== null && dr < 6) return "Club master";
+      if (lufs < -20 || peak >= 0) return "Not mastered";
       if (lufs >= -14 && lufs <= -9 && peak < -1) return "Ready";
-      if ((lufs >= -16 && lufs <= -7) && peak < 0) return "Almost there";
+      if (lufs >= -16 && lufs <= -7 && peak < 0) return "Almost there";
       return "Needs work";
     }
     return null;

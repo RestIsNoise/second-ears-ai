@@ -337,9 +337,11 @@ export function normalizeFeedbackResponse(
 
   // ── Release status
   const releaseStatus = (() => {
-    const explicit = str(fb.release) || str(fb.readiness) || str(fb.releaseStatus) || str(fb.release_status);
+    const rs = fb.releaseStatus || fb.release_status;
+    if (rs && typeof rs === "object" && (rs as any).label) return str((rs as any).label);
+    const explicit = str(fb.release) || str(fb.readiness) || str(rs);
     if (explicit) return explicit;
-    return null; // will be computed from metrics in the component
+    return null;
   })();
 
   // ── Your Focus
