@@ -546,6 +546,8 @@ const Dashboard = () => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
 
+  useEffect(() => { document.title = "My Projects — SecondEar"; }, []);
+
   useEffect(() => {
     if (searchParams.get("upgraded") === "true") {
       toast({

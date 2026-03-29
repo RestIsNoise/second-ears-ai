@@ -55,6 +55,10 @@ const ProjectDetail = () => {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
 
+  useEffect(() => {
+    document.title = projectName ? `${projectName} — SecondEar` : "SecondEar";
+  }, [projectName]);
+
   const loadProject = useCallback(async () => {
     if (!user || !id) return;
     setFetching(true);

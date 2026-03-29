@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
@@ -10,6 +11,7 @@ const trustItems = [
 ];
 
 const PricingPage = () => {
+  useEffect(() => { document.title = "Pricing — SecondEar"; }, []);
   const isDark = typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "dark";
   return (
   <div className="min-h-screen bg-background">

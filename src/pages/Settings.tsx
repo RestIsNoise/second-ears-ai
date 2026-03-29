@@ -106,6 +106,7 @@ const StyledInput = ({ isDark, ...props }: React.InputHTMLAttributes<HTMLInputEl
 );
 
 const Settings = () => {
+  useEffect(() => { document.title = "Settings — SecondEar"; }, []);
   const { user, profile, loading, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);

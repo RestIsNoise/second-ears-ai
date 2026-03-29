@@ -21,6 +21,8 @@ const Auth = () => {
     if (user) navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
+  useEffect(() => { document.title = "Sign In — SecondEar"; }, []);
+
   const handleGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
