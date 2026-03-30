@@ -331,9 +331,11 @@ export function normalizeFeedbackResponse(
       }
     : null;
 
-  // ── Top cards
-  const topIssue = timelineItems[0]?.title ? extractShortLabel(timelineItems[0].title) : "";
-  const biggestWin = whatWorks[0]?.title ? extractShortLabel(whatWorks[0].title) : "";
+  // ── Top cards (prefer Gemini-chosen tags, fall back to first item)
+  const topIssue = str(fb.issueTag) || str(fb.issue_tag)
+    || (timelineItems[0]?.title ? extractShortLabel(timelineItems[0].title) : "");
+  const biggestWin = str(fb.winTag) || str(fb.win_tag)
+    || (whatWorks[0]?.title ? extractShortLabel(whatWorks[0].title) : "");
 
   // ── Release status
   const releaseStatus = (() => {
