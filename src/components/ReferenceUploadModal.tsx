@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
+import { sanitizeFilename } from "@/lib/sanitizeFilename";
 
 const ACCEPTED = [".wav", ".mp3", ".aiff", ".aif"];
 
@@ -32,7 +33,7 @@ const ReferenceUploadModal = ({ open, onClose, onComparisonStart, userMetrics, u
     setUploading(true);
     try {
       // 1. Upload to Supabase storage
-      const path = `references/${Date.now()}-${file.name}`;
+      const path = `references/${Date.now()}-${sanitizeFilename(file.name)}`;
       const { error: uploadErr } = await supabase.storage.from("tracks").upload(path, file);
       if (uploadErr) throw new Error(uploadErr.message);
 
