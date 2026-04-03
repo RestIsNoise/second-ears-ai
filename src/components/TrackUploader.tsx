@@ -242,6 +242,9 @@ const TrackUploader = ({ onResult, isAnalyzing, setIsAnalyzing, onProgressStep, 
             }
             throw new Error(userMessage);
           }
+          if (statusData.status === "not_found") {
+            throw new Error("Analysis not found. Please try again.");
+          }
           // still processing — continue polling
         }
         if (!result) throw new Error("Analysis timed out. Please try again.");
