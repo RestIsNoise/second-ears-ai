@@ -33,9 +33,7 @@ const Hero = () => {
   }, [user]);
 
   // Subtle parallax: headline moves up slightly, screenshot scales in
-  const headlineY = progress * -18; // px
-  const screenshotScale = 0.96 + progress * 0.04; // 0.96 → 1.0
-  const glowOpacity = 0.3 + progress * 0.15;
+  const headlineY = progress * -18;
 
   return (
     <section
