@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollReveal";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
-import HeroAnimation from "@/components/HeroAnimation";
+import HeroVisual from "@/components/HeroVisual";
 
 const trustItems = [
   "No card required",
@@ -153,12 +153,12 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Right column — Animated product flow */}
+          {/* Right column — Static visual */}
           <div
             className="relative lg:justify-self-end mx-auto lg:mx-0 w-full max-w-[520px]"
             style={{ opacity: 0, animation: "slideInRight 0.7s ease 0.2s forwards" }}
           >
-            <HeroAnimation />
+            <HeroVisual />
           </div>
         </div>
       </div>
