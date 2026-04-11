@@ -392,17 +392,6 @@ const HeroAnimation = () => {
                     {card.title}
                   </h3>
 
-                  {/* Observation */}
-                  <p
-                    style={{
-                      fontSize: 14,
-                      lineHeight: 1.7,
-                      color: "#999",
-                      fontFamily: MONO,
-                    }}
-                  >
-                    {card.observation}
-                  </p>
 
                   {/* Fix block — exact match to FeedbackTimeline */}
                   <div
