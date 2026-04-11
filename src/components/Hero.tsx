@@ -56,7 +56,7 @@ const Hero = () => {
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
           className="absolute top-1/3 right-[15%] w-[500px] h-[500px] rounded-full blur-[140px] transition-opacity duration-700"
-          style={{ background: `hsl(0 0% 18% / ${glowOpacity})` }}
+          style={{ background: `hsl(0 0% 18% / 0.35)` }}
         />
         <div
           className="absolute top-[60%] left-[20%] w-[300px] h-[300px] rounded-full blur-[120px]"
