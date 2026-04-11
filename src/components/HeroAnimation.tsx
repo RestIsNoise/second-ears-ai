@@ -393,40 +393,42 @@ const HeroAnimation = () => {
                   </h3>
 
 
-                  {/* Fix block */}
-                  <div
-                    style={{
-                      marginTop: 8,
-                      backgroundColor: "#141414",
-                      borderLeft: "3px solid #e8e8e0",
-                      borderRadius: "0 6px 6px 0",
-                      padding: "8px 14px",
-                    }}
-                  >
+                  {/* Fix block — only show for high/med */}
+                  {card.severity !== "low" && (
                     <div
                       style={{
-                        fontFamily: MONO,
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.18em",
-                        color: "#888",
-                        marginBottom: 6,
-                        textTransform: "uppercase",
+                        marginTop: 8,
+                        backgroundColor: "#141414",
+                        borderLeft: "3px solid #e8e8e0",
+                        borderRadius: "0 6px 6px 0",
+                        padding: "8px 14px",
                       }}
                     >
-                      FIX
+                      <div
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: 9,
+                          fontWeight: 700,
+                          letterSpacing: "0.18em",
+                          color: "#888",
+                          marginBottom: 4,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        FIX
+                      </div>
+                      <p
+                        style={{
+                          fontSize: 12,
+                          lineHeight: 1.5,
+                          color: "#aaa",
+                          fontFamily: MONO,
+                        }}
+                      >
+                        {card.fix}
+                      </p>
                     </div>
-                    <p
-                      style={{
-                        fontSize: 13,
-                        lineHeight: 1.6,
-                        color: "#aaa",
-                        fontFamily: MONO,
-                      }}
-                    >
-                      {card.fix}
-                    </p>
-                  </div>
+                  )}
                 </div>
               );
             })}
