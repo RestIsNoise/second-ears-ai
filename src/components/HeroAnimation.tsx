@@ -306,7 +306,7 @@ const HeroAnimation = () => {
 
         {/* ═══ PHASE 3 — Feedback Cards ═══ */}
         <div style={phaseStyle(step === 2)}>
-          <div style={{ padding: "4px 0", display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ padding: "4px 0", display: "flex", flexDirection: "column", gap: 8 }}>
             {FEEDBACK_CARDS.map((card, idx) => {
               const sev = SEVERITY_MAP[card.severity];
               const borderColor = BORDER_COLORS[card.severity];
@@ -323,7 +323,7 @@ const HeroAnimation = () => {
                     border: "1px solid #2a2a2a",
                     borderLeft: `3px solid ${borderColor}`,
                     borderRadius: 8,
-                    padding: 20,
+                    padding: "14px 16px",
                   }}
                 >
                   {/* Header row — matches FeedbackTimeline exactly */}
