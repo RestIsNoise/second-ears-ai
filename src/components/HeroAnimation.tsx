@@ -110,7 +110,7 @@ const HeroAnimation = () => {
   return (
     <div style={{ fontFamily: MONO, position: "relative" }}>
       {/* Animation area */}
-      <div style={{ position: "relative", minHeight: 340, maxHeight: 500, overflow: "hidden" }}>
+      <div style={{ position: "relative", height: 480 }}>
 
         {/* ═══ PHASE 1 — Track Loaded ═══ */}
         <div style={phaseStyle(step === 0)}>
