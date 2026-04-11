@@ -382,10 +382,10 @@ const HeroAnimation = () => {
                   {/* Title — matches FeedbackTimeline */}
                   <h3
                     style={{
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: 600,
                       color: "#e8e8e0",
-                      margin: "8px 0",
+                      margin: "6px 0 0",
                       lineHeight: 1.4,
                     }}
                   >
@@ -393,14 +393,14 @@ const HeroAnimation = () => {
                   </h3>
 
 
-                  {/* Fix block — exact match to FeedbackTimeline */}
+                  {/* Fix block */}
                   <div
                     style={{
-                      marginTop: 12,
+                      marginTop: 8,
                       backgroundColor: "#141414",
                       borderLeft: "3px solid #e8e8e0",
                       borderRadius: "0 6px 6px 0",
-                      padding: "12px 16px",
+                      padding: "8px 14px",
                     }}
                   >
                     <div
