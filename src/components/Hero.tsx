@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollReveal";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
-import heroScreenshot from "@/assets/hero-screenshot.png";
+import HeroAnimation from "@/components/HeroAnimation";
 
 const trustItems = [
   "No card required",
@@ -33,9 +33,7 @@ const Hero = () => {
   }, [user]);
 
   // Subtle parallax: headline moves up slightly, screenshot scales in
-  const headlineY = progress * -18; // px
-  const screenshotScale = 0.96 + progress * 0.04; // 0.96 → 1.0
-  const glowOpacity = 0.3 + progress * 0.15;
+  const headlineY = progress * -18;
 
   return (
     <section
@@ -58,7 +56,7 @@ const Hero = () => {
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
           className="absolute top-1/3 right-[15%] w-[500px] h-[500px] rounded-full blur-[140px] transition-opacity duration-700"
-          style={{ background: `hsl(0 0% 18% / ${glowOpacity})` }}
+          style={{ background: `hsl(0 0% 18% / 0.35)` }}
         />
         <div
           className="absolute top-[60%] left-[20%] w-[300px] h-[300px] rounded-full blur-[120px]"
@@ -155,66 +153,12 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Right column — Screenshot with scroll-linked scale */}
+          {/* Right column — Animated product flow */}
           <div
-            className="relative lg:justify-self-end mx-auto lg:mx-0 lg:mr-0 lg:pr-0"
-            style={{ opacity: 0, overflow: "visible", animation: "slideInRight 0.7s ease 0.2s forwards, hero-float 6s ease-in-out 1s infinite" }}
+            className="relative lg:justify-self-end mx-auto lg:mx-0 w-full max-w-[520px]"
+            style={{ opacity: 0, animation: "slideInRight 0.7s ease 0.2s forwards" }}
           >
-            {/* Glow behind frame */}
-            <div
-              className="absolute -inset-8 sm:-inset-10 rounded-3xl blur-[100px] pointer-events-none transition-opacity duration-500"
-              aria-hidden="true"
-              style={{ background: `hsl(0 0% 16% / ${glowOpacity + 0.1})` }}
-            />
-
-            {/* Screenshot frame with scroll-linked scale */}
-            <div
-              className="relative w-full rounded-xl border shadow-2xl"
-              style={{
-                borderColor: "hsl(0 0% 100% / 0.08)",
-                transform: `scale(${screenshotScale})`,
-                transition: "transform 50ms linear",
-                overflow: "visible",
-              }}
-            >
-              {/* Window dots bar */}
-              <div
-                className="flex items-center gap-1.5 px-4 py-2.5 border-b"
-                style={{
-                  borderColor: "hsl(0 0% 100% / 0.06)",
-                  background: "hsl(0 0% 7%)",
-                }}
-              >
-                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
-                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
-                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(0 0% 25%)" }} />
-              </div>
-
-              {/* Screenshot */}
-              <div className="w-full overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
-                <img
-                  src={heroScreenshot}
-                  alt="SecondEar waveform timeline with timestamped feedback cards and actionable fix suggestions"
-                  className="block"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                  loading="eager"
-                />
-              </div>
-            </div>
-
-            {/* Label chip */}
-            <div
-              className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] font-medium tracking-wide border backdrop-blur-sm"
-              style={{
-                borderColor: "hsl(0 0% 100% / 0.1)",
-                background: "hsl(0 0% 8% / 0.85)",
-                color: "hsl(0 0% 60%)",
-                boxShadow: "0 4px 20px hsl(0 0% 0% / 0.4)",
-              }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full live-dot" style={{ background: "hsl(140 50% 45%)" }} />
-              Real feedback example
-            </div>
+            <HeroAnimation />
           </div>
         </div>
       </div>
