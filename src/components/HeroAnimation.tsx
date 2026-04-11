@@ -28,22 +28,19 @@ const FEEDBACK_CARDS = [
     time: "0:14",
     severity: "high" as const,
     title: "Low-end buildup below 80 Hz",
-    observation: "Sub frequencies are masking the kick fundamental throughout the verse sections",
-    fix: "Apply high-pass at 60 Hz on the master bus, cut 2 dB at 100 Hz on the bass channel",
+    fix: "High-pass at 60 Hz on master bus",
   },
   {
     time: "1:32",
     severity: "med" as const,
     title: "Vocal sibilance around 6–8 kHz",
-    observation: "The de-essing threshold is set too high, letting sharp transients through on louder phrases",
-    fix: "Use a de-esser targeting 6.5 kHz, −4 dB reduction",
+    fix: "De-esser targeting 6.5 kHz, −4 dB",
   },
   {
     time: "2:48",
     severity: "low" as const,
-    title: "Solid stereo width in the chorus",
-    observation: "Imaging is well balanced with good mono compatibility on the fold-down check",
-    fix: "No action needed — translate well across playback systems",
+    title: "Solid stereo width in chorus",
+    fix: "No action — imaging is well balanced",
   },
 ];
 
