@@ -119,7 +119,7 @@ const HeroVisual = () => {
           style={{
             background: "#1a1a1a",
             border: "1px solid #2a2a2a",
-            borderLeft: "3px solid hsl(0 55% 50%)",
+            borderLeft: "3px solid hsl(38 92% 50%)",
             borderRadius: 8,
             padding: "16px 18px",
           }}
@@ -128,7 +128,7 @@ const HeroVisual = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {/* Index */}
             <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: "#555", letterSpacing: "0.02em" }}>
-              01
+              04
             </span>
             {/* Timestamp */}
             <span
@@ -141,7 +141,7 @@ const HeroVisual = () => {
                 borderRadius: 3,
               }}
             >
-              0:49
+              3:36
             </span>
             {/* Severity badge */}
             <span
@@ -152,12 +152,12 @@ const HeroVisual = () => {
                 letterSpacing: "0.04em",
                 padding: "3px 8px",
                 borderRadius: 4,
-                backgroundColor: "#fff0f0",
-                color: "#cc0000",
+                backgroundColor: "#3a2a08",
+                color: "#EF9F27",
                 textTransform: "uppercase" as const,
               }}
             >
-              HIGH
+              MED
             </span>
             {/* Mode tag */}
             <span
@@ -187,8 +187,20 @@ const HeroVisual = () => {
               lineHeight: 1.4,
             }}
           >
-            Heavily limited dynamics
+            Stereo image collapses in the densest section
           </h3>
+
+          <p
+            style={{
+              fontSize: 12,
+              lineHeight: 1.6,
+              color: "#9a9a92",
+              fontFamily: MONO,
+              margin: "8px 0 0",
+            }}
+          >
+            Around 3:30 the mix narrows noticeably and loses depth, even though levels are stable. Listener fatigue spikes here.
+          </p>
 
           {/* Fix block */}
           <div
@@ -222,7 +234,7 @@ const HeroVisual = () => {
                 margin: 0,
               }}
             >
-              Reduce limiter gain reduction — target −10 to −11 LUFS
+              Pan supporting elements wider in this section, or automate the reverb sends up by 1–2 dB to restore space.
             </p>
           </div>
         </div>

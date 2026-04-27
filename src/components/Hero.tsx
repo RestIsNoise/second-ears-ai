@@ -83,9 +83,7 @@ const Hero = () => {
               className="text-[2rem] sm:text-[2.6rem] md:text-[3.2rem] lg:text-[3.75rem] font-semibold tracking-tight leading-[1.08] mb-5 sm:mb-6 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
-              Actionable mix
-              <br className="hidden sm:block" />
-              {" "}feedback in minutes.
+              Your second pair of ears.
             </h1>
 
             <p
