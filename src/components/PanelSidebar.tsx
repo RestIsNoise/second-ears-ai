@@ -126,8 +126,11 @@ const PanelSidebar = ({ panels, activePanels, onToggle, maxPanels = 4, footer }:
                       fontFamily: MONO,
                       fontSize: 11,
                       letterSpacing: "0.06em",
-                      color: isActive ? "var(--sidebar-active-text, hsl(0 0% 7%))" : "#aaa",
-                      fontWeight: isActive ? 600 : 400,
+                      color: isActive
+                        ? "var(--sidebar-active-text, hsl(0 0% 7%))"
+                        : "var(--sidebar-inactive-text, hsl(0 0% 28%))",
+                      opacity: isActive ? 1 : disabled ? 0.45 : 0.85,
+                      fontWeight: isActive ? 600 : 500,
                       lineHeight: 1.1,
                       transition: "color 0.15s ease",
                     }}

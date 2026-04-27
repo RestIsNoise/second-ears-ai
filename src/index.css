@@ -137,6 +137,7 @@
     --sidebar-active-accent: #111;
     --sidebar-active-bg: rgba(0,0,0,0.04);
     --sidebar-active-text: hsl(0 0% 7%);
+    --sidebar-inactive-text: hsl(0 0% 25%);
     --sidebar-hover-bg: rgba(0,0,0,0.03);
   }
 
@@ -183,6 +184,7 @@
     --sidebar-active-accent: #e8e8e0;
     --sidebar-active-bg: rgba(255,255,255,0.04);
     --sidebar-active-text: #e8e8e0;
+    --sidebar-inactive-text: hsl(0 0% 78%);
     --sidebar-hover-bg: rgba(255,255,255,0.03);
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 90%;
