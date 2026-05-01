@@ -1,11 +1,10 @@
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
-// Compact waveform for mockup
 const WAVE = [
-  6, 14, 9, 18, 5, 22, 12, 16, 8, 24, 7, 19, 13, 21, 4, 16, 10, 25,
-  8, 19, 11, 21, 6, 23, 13, 17, 7, 22, 12, 20, 5, 15, 9, 24, 9, 20,
-  6, 17, 13, 22, 5, 19, 10, 21, 7, 23, 12, 16, 11, 25, 8, 19, 14, 21,
-  6, 17, 12, 23, 10, 20, 7, 15, 13, 22, 6, 18, 11, 24,
+  6, 12, 8, 16, 5, 19, 11, 14, 7, 21, 7, 17, 12, 18, 4, 14, 9, 22,
+  8, 17, 10, 19, 6, 20, 12, 15, 7, 19, 11, 18, 5, 13, 9, 21, 9, 18,
+  6, 15, 12, 19, 5, 17, 9, 19, 7, 20, 11, 14, 10, 22, 8, 17, 13, 19,
+  6, 15, 11, 20, 9, 18, 7, 13, 12, 19, 6, 16, 10, 21,
 ];
 
 const MARKERS = [
@@ -20,18 +19,63 @@ const sevColor = (s: string) =>
 const sevBg = (s: string) =>
   s === "high" ? "#3a1010" : s === "med" ? "#3a2a08" : "#0f2a18";
 
-const NotesCard = ({
+const Tag = ({
+  label,
+  text,
+  color,
+  bg,
+  border,
+}: {
+  label: string;
+  text: string;
+  color: string;
+  bg: string;
+  border: string;
+}) => (
+  <div
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "3px 8px",
+      borderRadius: 999,
+      background: bg,
+      border: `1px solid ${border}`,
+    }}
+  >
+    <span
+      style={{
+        fontSize: 8,
+        fontWeight: 700,
+        letterSpacing: "0.14em",
+        color,
+        textTransform: "uppercase",
+      }}
+    >
+      {label}
+    </span>
+    <span style={{ fontSize: 9, fontWeight: 500, color: "#d8d8d0" }}>{text}</span>
+  </div>
+);
+
+const FeedbackCard = ({
   idx,
   ts,
   sev,
+  mode,
   title,
+  desc,
   fix,
+  faded,
 }: {
   idx: string;
   ts: string;
   sev: "high" | "med" | "low";
+  mode: string;
   title: string;
+  desc: string;
   fix: string;
+  faded?: boolean;
 }) => (
   <div
     style={{
@@ -41,17 +85,19 @@ const NotesCard = ({
       borderRadius: 4,
       padding: "8px 10px",
       marginBottom: 6,
+      opacity: faded ? 0.35 : 1,
     }}
   >
-    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
-      <span style={{ fontSize: 9, fontWeight: 700, color: "#555" }}>{idx}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 5 }}>
+      <span style={{ fontSize: 9, fontWeight: 700, color: "#555", fontFamily: MONO }}>{idx}</span>
       <span
         style={{
           fontSize: 8,
           color: "#888",
           background: "rgba(255,255,255,0.06)",
-          padding: "1px 4px",
+          padding: "1px 5px",
           borderRadius: 2,
+          fontFamily: MONO,
         }}
       >
         {ts}
@@ -59,83 +105,151 @@ const NotesCard = ({
       <span
         style={{
           fontSize: 8,
-          fontWeight: 600,
-          letterSpacing: "0.04em",
+          fontWeight: 700,
+          letterSpacing: "0.06em",
           padding: "1px 5px",
           borderRadius: 2,
           background: sevBg(sev),
           color: sevColor(sev),
           textTransform: "uppercase",
+          fontFamily: MONO,
         }}
       >
         {sev}
       </span>
+      <span
+        style={{
+          fontSize: 8,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          padding: "1px 5px",
+          borderRadius: 2,
+          background: "rgba(255,255,255,0.05)",
+          color: "#999",
+          fontFamily: MONO,
+        }}
+      >
+        {mode}
+      </span>
     </div>
-    <div style={{ fontSize: 10, fontWeight: 600, color: "#e8e8e0", lineHeight: 1.35, marginBottom: 4 }}>
+    <div style={{ fontSize: 10.5, fontWeight: 600, color: "#e8e8e0", lineHeight: 1.35, marginBottom: 4 }}>
       {title}
+    </div>
+    <div
+      style={{
+        fontSize: 9,
+        color: "#8a8a82",
+        lineHeight: 1.5,
+        fontFamily: MONO,
+        marginBottom: 6,
+        whiteSpace: "pre-line",
+      }}
+    >
+      {desc}
     </div>
     <div
       style={{
         background: "#0e0e0e",
         borderLeft: "2px solid #e8e8e0",
-        padding: "4px 7px",
+        padding: "5px 8px",
         borderRadius: "0 3px 3px 0",
       }}
     >
-      <div style={{ fontSize: 7, fontWeight: 700, letterSpacing: "0.18em", color: "#888", marginBottom: 2 }}>
+      <div
+        style={{
+          fontSize: 7.5,
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          color: "#888",
+          marginBottom: 2,
+          fontFamily: MONO,
+        }}
+      >
         FIX
       </div>
-      <div style={{ fontSize: 9, color: "#a8a89e", lineHeight: 1.4 }}>{fix}</div>
+      <div style={{ fontSize: 9, color: "#a8a89e", lineHeight: 1.5, fontFamily: MONO, whiteSpace: "pre-line" }}>
+        {fix}
+      </div>
     </div>
   </div>
 );
 
-const Metric = ({
+const Gauge = ({
   label,
-  value,
-  unit,
   status,
   statusColor,
+  value,
+  unit,
+  fill,
 }: {
   label: string;
-  value: string;
-  unit?: string;
   status: string;
   statusColor: string;
+  value: string;
+  unit: string;
+  fill: number;
 }) => (
-  <div
-    style={{
-      background: "#141414",
-      border: "1px solid #232323",
-      borderRadius: 4,
-      padding: "8px 10px",
-      marginBottom: 6,
-    }}
-  >
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-      <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.16em", color: "#777" }}>{label}</span>
+  <div style={{ marginBottom: 8 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
+      <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.12em", color: "#999", fontFamily: MONO }}>
+        {label}
+      </span>
       <span
         style={{
           fontSize: 7,
           fontWeight: 700,
           letterSpacing: "0.1em",
           color: statusColor,
-          background: `${statusColor}1a`,
-          padding: "1px 4px",
+          background: `${statusColor}1f`,
+          padding: "1px 5px",
           borderRadius: 2,
           textTransform: "uppercase",
+          fontFamily: MONO,
         }}
       >
         {status}
       </span>
     </div>
-    <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-      <span style={{ fontSize: 16, fontWeight: 600, color: "#F0EDE8", letterSpacing: "-0.02em" }}>{value}</span>
-      {unit && <span style={{ fontSize: 9, color: "#666" }}>{unit}</span>}
+    <div style={{ position: "relative", height: 4, background: "#0a0a0a", borderRadius: 2, overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex" }}>
+        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
+        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
+        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
+        <div style={{ flex: 1 }} />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: `${fill}%`,
+          top: -1,
+          width: 2,
+          height: 6,
+          background: statusColor,
+          borderRadius: 1,
+        }}
+      />
     </div>
-    <div style={{ marginTop: 6, height: 3, background: "#0a0a0a", borderRadius: 2, overflow: "hidden" }}>
-      <div style={{ height: "100%", width: "62%", background: statusColor, opacity: 0.7 }} />
+    <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 3 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#F0EDE8", letterSpacing: "-0.01em", fontFamily: MONO }}>
+        {value}
+      </span>
+      <span style={{ fontSize: 8, color: "#666", fontFamily: MONO }}>{unit}</span>
     </div>
+  </div>
+);
+
+const SectionHead = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      fontSize: 7.5,
+      fontWeight: 700,
+      letterSpacing: "0.2em",
+      color: "#666",
+      marginBottom: 6,
+      fontFamily: MONO,
+    }}
+  >
+    {children}
   </div>
 );
 
@@ -144,28 +258,48 @@ const Todo = ({ text, done }: { text: string; done?: boolean }) => (
     style={{
       display: "flex",
       alignItems: "flex-start",
-      gap: 6,
-      padding: "6px 0",
+      gap: 7,
+      padding: "7px 0",
       borderBottom: "1px solid #1c1c1c",
     }}
   >
     <div
       style={{
-        width: 10,
-        height: 10,
+        width: 11,
+        height: 11,
         borderRadius: 2,
-        border: "1px solid #444",
+        border: `1px solid ${done ? "#EF9F27" : "#444"}`,
         background: done ? "#EF9F27" : "transparent",
         marginTop: 1,
         flexShrink: 0,
+        position: "relative",
       }}
-    />
+    >
+      {done && (
+        <span
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 8,
+            color: "#0a0a0a",
+            fontWeight: 900,
+            lineHeight: 1,
+          }}
+        >
+          ✓
+        </span>
+      )}
+    </div>
     <div
       style={{
-        fontSize: 9,
+        fontSize: 9.5,
         color: done ? "#555" : "#c8c8c0",
         lineHeight: 1.4,
         textDecoration: done ? "line-through" : "none",
+        fontFamily: MONO,
       }}
     >
       {text}
@@ -182,7 +316,7 @@ const HeroVisual = () => {
         background: "#0d0d0d",
         border: "1px solid #232323",
         borderRadius: 8,
-        boxShadow: "0 30px 80px -20px rgba(0,0,0,0.8), 0 12px 30px -8px rgba(0,0,0,0.6)",
+        boxShadow: "0 30px 80px -20px rgba(0,0,0,0.85), 0 12px 30px -8px rgba(0,0,0,0.6)",
         overflow: "hidden",
       }}
     >
@@ -217,7 +351,9 @@ const HeroVisual = () => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#F0EDE8" }}>vida_retro_v4.mp3</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#F0EDE8" }}>
+            mitch_oliver_out_of_space.wav
+          </span>
           <span
             style={{
               fontSize: 7,
@@ -230,24 +366,58 @@ const HeroVisual = () => {
               border: "1px solid #2a2a2a",
             }}
           >
-            v4
+            v2
           </span>
         </div>
         <span style={{ fontSize: 8, color: "#555", letterSpacing: "0.06em" }}>3:42 · 44.1 kHz · STEREO</span>
       </div>
 
-      {/* Waveform with markers */}
-      <div style={{ padding: "12px 14px 10px", borderBottom: "1px solid #1c1c1c" }}>
-        <div style={{ position: "relative", height: 40, display: "flex", alignItems: "center" }}>
+      {/* Bio */}
+      <div style={{ padding: "10px 14px 8px" }}>
+        <p
+          style={{
+            fontSize: 10,
+            lineHeight: 1.55,
+            color: "#a8a89e",
+            fontFamily: MONO,
+            margin: 0,
+          }}
+        >
+          This track presents a heavily limited and frequency-imbalanced master.
+          <br />
+          The sound is dense and lacks dynamic movement. Listener fatigue spikes
+          <br />
+          in the densest sections.
+        </p>
+      </div>
+
+      {/* Status tags */}
+      <div
+        style={{
+          padding: "0 14px 10px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 6,
+        }}
+      >
+        <Tag label="ISSUE" text="Heavily Limited Dynamics" color="#E24B4A" bg="#2a1010" border="#5a1f1f" />
+        <Tag label="WIN" text="Driving Rhythmic Foundation" color="#4ade80" bg="#0f2a18" border="#1f5a3a" />
+        <Tag label="RELEASE" text="Released" color="#999" bg="#1a1a1a" border="#333" />
+      </div>
+
+      {/* Waveform — compact */}
+      <div style={{ padding: "8px 14px 8px", borderTop: "1px solid #1c1c1c", borderBottom: "1px solid #1c1c1c" }}>
+        <div style={{ position: "relative", height: 26, display: "flex", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 1.5, height: "100%", flex: 1 }}>
             {WAVE.map((h, i) => {
               const marker = MARKERS.find((m) => m.i === i);
+              const scaledH = Math.max(3, Math.round(h * 0.6));
               return (
                 <div key={i} style={{ position: "relative", height: "100%", display: "flex", alignItems: "center" }}>
                   <div
                     style={{
                       width: 2,
-                      height: h,
+                      height: scaledH,
                       borderRadius: 1,
                       background: marker ? sevColor(marker.sev) : "rgba(160,155,145,0.28)",
                     }}
@@ -280,35 +450,53 @@ const HeroVisual = () => {
       </div>
 
       {/* 3-column panels */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr 0.9fr", gap: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr 0.85fr", gap: 0 }}>
         {/* SECONDEAR NOTES */}
-        <div style={{ padding: "10px 12px", borderRight: "1px solid #1c1c1c" }}>
+        <div style={{ padding: "10px 12px", borderRight: "1px solid #1c1c1c", maxHeight: 280, overflow: "hidden", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ade80" }} />
             <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.18em", color: "#aaa" }}>
               SECONDEAR NOTES
             </span>
           </div>
-          <NotesCard
+          <FeedbackCard
             idx="01"
             ts="0:24"
             sev="high"
-            title="Vocal sibilance peaks at 7 kHz"
-            fix="Apply de-esser, threshold around −18 dB"
+            mode="TECH"
+            title="Heavily limited dynamics"
+            desc={"Dynamic range heavily compressed, transients\nrounded off, fatiguing energy plateau."}
+            fix={"Reduce gain into limiter. Target -10 to -11\nLUFS for streaming compliance."}
           />
-          <NotesCard
+          <FeedbackCard
             idx="02"
             ts="1:08"
             sev="med"
-            title="Low-end buildup masks kick"
-            fix="Cut 80–120 Hz on bass by 2–3 dB"
+            mode="TECH"
+            title="Low-end congestion"
+            desc={"Sub band significantly higher than low band,\nburying kick fundamentals."}
+            fix={"Surgical EQ cut at 40-60Hz, -2 to -3dB on\nmaster bus."}
           />
-          <NotesCard
+          <FeedbackCard
             idx="03"
             ts="2:14"
             sev="low"
+            mode="MIX"
             title="Reverb tail too long on snare"
-            fix="Shorten decay to 0.8s in chorus"
+            desc={"Decay smears the second-half groove and softens transients."}
+            fix={"Shorten decay to 0.8s, automate down in chorus."}
+            faded
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 50,
+              background: "linear-gradient(to bottom, transparent, #0d0d0d 85%)",
+              pointerEvents: "none",
+            }}
           />
         </div>
 
@@ -320,10 +508,18 @@ const HeroVisual = () => {
               TECHNICAL METRICS
             </span>
           </div>
-          <Metric label="LUFS" value="−9.4" unit="dB" status="HOT" statusColor="#EF9F27" />
-          <Metric label="DR" value="6.2" unit="dB" status="LOW" statusColor="#E24B4A" />
-          <Metric label="PEAK" value="−0.3" unit="dB" status="OK" statusColor="#4ade80" />
-          <Metric label="STEREO" value="0.62" status="OK" statusColor="#4ade80" />
+
+          <SectionHead>LOUDNESS</SectionHead>
+          <Gauge label="INT. LUFS" status="HOT" statusColor="#EF9F27" value="−8.9" unit="LUFS" fill={82} />
+
+          <div style={{ height: 4 }} />
+          <SectionHead>DYNAMICS</SectionHead>
+          <Gauge label="DR" status="CRUSHED" statusColor="#E24B4A" value="2.9" unit="DR" fill={18} />
+          <Gauge label="PEAK" status="CLIP" statusColor="#E24B4A" value="0.0" unit="dBTP" fill={98} />
+
+          <div style={{ height: 4 }} />
+          <SectionHead>STEREO / BALANCE</SectionHead>
+          <Gauge label="STEREO" status="NARROW" statusColor="#EF9F27" value="+0.15" unit="" fill={32} />
         </div>
 
         {/* NEXT MOVES */}
@@ -332,11 +528,48 @@ const HeroVisual = () => {
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#F0EDE8" }} />
             <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.18em", color: "#aaa" }}>NEXT MOVES</span>
           </div>
-          <Todo text="Fix: De-ess vocal at 7 kHz" />
-          <Todo text="Fix: Cut 80–120 Hz on bass" />
-          <Todo text="Fix: Tighten snare reverb" done />
+
+          {/* Tabs */}
+          <div
+            style={{
+              display: "flex",
+              gap: 4,
+              marginBottom: 6,
+              padding: 2,
+              background: "#0a0a0a",
+              border: "1px solid #1c1c1c",
+              borderRadius: 4,
+            }}
+          >
+            {[
+              { label: "ALL", active: true },
+              { label: "OPEN", active: false },
+              { label: "DONE", active: false },
+            ].map((t) => (
+              <span
+                key={t.label}
+                style={{
+                  flex: 1,
+                  textAlign: "center",
+                  fontSize: 8,
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  padding: "3px 0",
+                  borderRadius: 2,
+                  color: t.active ? "#0a0a0a" : "#777",
+                  background: t.active ? "#F0EDE8" : "transparent",
+                  fontFamily: MONO,
+                }}
+              >
+                {t.label}
+              </span>
+            ))}
+          </div>
+
+          <Todo text="Reduce limiting on master" />
+          <Todo text="Cut 40-60Hz on bass" />
+          <Todo text="De-ess vocal at 7kHz" done />
           <Todo text="Re-check LUFS after limiter" />
-          <Todo text="Reference against 'Blinding Lights'" />
         </div>
       </div>
 
