@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Upload, Play } from "lucide-react";
+import { Sparkles, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollReveal";
@@ -7,11 +7,22 @@ import { useAuth } from "@/hooks/useAuth";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
 import HeroVisual from "@/components/HeroVisual";
 
-const trustItems = [
-  "No card required",
-  "Not used for AI training",
-  "Private by default",
-];
+const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
+
+const GoogleG = () => (
+  <span
+    className="inline-flex items-center justify-center rounded-full bg-white"
+    style={{ width: 18, height: 18 }}
+    aria-hidden="true"
+  >
+    <svg width="11" height="11" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+  </span>
+);
 
 const Hero = () => {
   const { ref: parallaxRef, progress } = useScrollProgress<HTMLElement>();
@@ -38,7 +49,7 @@ const Hero = () => {
   return (
     <section
       ref={parallaxRef}
-      className="relative overflow-hidden lg:min-h-[600px]"
+      className="relative overflow-hidden"
       style={{ background: "hsl(0 0% 4%)", color: "hsl(0 0% 94%)" }}
     >
       {/* Noise grain overlay */}
@@ -65,99 +76,101 @@ const Hero = () => {
       </div>
 
 
-      <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-36 sm:pt-48 sm:pb-48 md:pt-56 md:pb-56 lg:pt-60 lg:pb-56">
-        <div className="grid lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-end">
+      <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-32 md:pb-24 lg:pt-32 lg:pb-20">
+        <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-12 items-center">
           {/* Left column — Copy with parallax */}
            <div
             className="max-w-xl"
             style={{ opacity: 0, transform: `translateY(${headlineY}px)`, animation: "slideInLeft 0.7s ease forwards" }}
            >
             <p
-              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-6 sm:mb-8 animate-fade-up label-pulse"
+              className="text-[10px] font-medium tracking-[0.25em] uppercase mb-5 animate-fade-up label-pulse"
               style={{ color: "hsl(0 0% 55%)", fontFamily: "'IBM Plex Mono', monospace" }}
             >
               AI speed · Human ears
             </p>
 
             <h1
-              className="text-[2rem] sm:text-[2.6rem] md:text-[3.2rem] lg:text-[3.75rem] font-semibold tracking-tight leading-[1.08] mb-5 sm:mb-6 animate-fade-up"
+              className="text-[2.1rem] sm:text-[2.7rem] md:text-[3.1rem] lg:text-[3.4rem] font-semibold tracking-tight leading-[1.05] mb-5 animate-fade-up"
               style={{ animationDelay: "0.08s" }}
             >
-              Your second pair of ears.
+              <span className="block">Actionable</span>
+              <span className="block">mix feedback</span>
+              <span className="block font-light" style={{ color: "hsl(0 0% 78%)" }}>
+                in under 2 minutes.
+              </span>
             </h1>
 
             <p
-              className="text-[13px] sm:text-[14px] leading-relaxed font-light mb-8 sm:mb-10 max-w-md animate-fade-up"
-              style={{ color: "hsl(0 0% 60%)", animationDelay: "0.16s" }}
+              className="text-[13px] sm:text-[14px] leading-relaxed font-light mb-7 max-w-lg animate-fade-up"
+              style={{ color: "hsl(0 0% 94% / 0.7)", animationDelay: "0.16s" }}
             >
-              From upload to a prioritized fix plan, instantly.
+              AI analyzes your mix, then gives you timestamped issues, technical metrics, and a prioritized fix plan you can share with collaborators.
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-3 sm:gap-3.5 mb-7 sm:mb-8 animate-fade-up"
+              className="flex flex-col sm:flex-row gap-3 mb-5 animate-fade-up"
               style={{ animationDelay: "0.24s" }}
             >
               <Button
                 variant="hero"
                 size="lg"
-                className="h-12 px-10 text-[13px] gap-2 w-full sm:w-auto cta-hover"
+                className="h-12 px-7 text-[13px] gap-2.5 w-full sm:w-auto cta-hover"
                 asChild
               >
                 <Link to="/analyze">
-                  <Upload className="w-4 h-4" />
-                  {isPro ? "Analyze a track" : "Start free analysis"}
+                  <GoogleG />
+                  {isPro ? "Analyze a track" : "Get free feedback"}
                 </Link>
-              </Button>
-              <Button
-                size="lg"
-                className="h-11 px-8 text-[13px] rounded-full font-medium tracking-tight transition-all duration-200 border bg-transparent hover:bg-white/5 w-full sm:w-auto"
-                style={{
-                  borderColor: "hsl(0 0% 100% / 0.15)",
-                  color: "hsl(0 0% 80%)",
-                }}
-                onClick={() =>
-                  document
-                    .getElementById("demo-section")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-              >
-                <Play className="w-3.5 h-3.5 mr-1" />
-                See live demo
               </Button>
             </div>
 
-            {/* Trust row — hidden for Pro users */}
+            {/* Inline trust row — single line monospace */}
             {!isPro && (
-            <div
-              className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 animate-fade-up"
-              style={{ animationDelay: "0.32s" }}
-            >
-              {trustItems.map((item, i) => (
-                <span
-                  key={item}
-                  className="flex items-center gap-2 text-[11px] tracking-wide whitespace-nowrap"
-                  style={{ color: "hsl(0 0% 42%)" }}
-                >
-                  {i > 0 && (
-                    <span
-                      className="w-px h-3 shrink-0"
-                      style={{ background: "hsl(0 0% 24%)" }}
-                    />
-                  )}
-                  {item}
-                </span>
-              ))}
-            </div>
+              <p
+                className="text-[10.5px] tracking-[0.04em] animate-fade-up"
+                style={{
+                  color: "hsl(0 0% 94% / 0.5)",
+                  fontFamily: MONO,
+                  animationDelay: "0.32s",
+                }}
+              >
+                No credit card required · Not used for AI training · Private by default
+              </p>
             )}
           </div>
 
           {/* Right column — Static visual */}
           <div
-            className="relative lg:justify-self-end mx-auto lg:mx-0 w-full max-w-[520px]"
+            className="relative lg:justify-self-end mx-auto lg:mx-0 w-full max-w-[640px]"
             style={{ opacity: 0, animation: "slideInRight 0.7s ease 0.2s forwards" }}
           >
             <HeroVisual />
           </div>
+        </div>
+
+        {/* Bottom trust strip */}
+        <div
+          className="relative mt-12 sm:mt-14 pt-6 border-t flex flex-wrap items-center justify-center gap-x-8 gap-y-3 animate-fade-up"
+          style={{
+            borderColor: "hsl(0 0% 100% / 0.06)",
+            color: "hsl(0 0% 94% / 0.6)",
+            fontFamily: MONO,
+            animationDelay: "0.4s",
+          }}
+        >
+          <span className="flex items-center gap-2 text-[11px] tracking-wide whitespace-nowrap">
+            <Sparkles className="w-3.5 h-3.5" style={{ color: "hsl(0 0% 94% / 0.5)" }} />
+            Thousands of tracks analyzed
+          </span>
+          <span className="flex items-center gap-2 text-[11px] tracking-wide whitespace-nowrap">
+            <Shield className="w-3.5 h-3.5" style={{ color: "hsl(0 0% 94% / 0.5)" }} />
+            Your music never used for AI training
+          </span>
+          <span className="flex items-center gap-2 text-[11px] tracking-wide whitespace-nowrap">
+            <Zap className="w-3.5 h-3.5" style={{ color: "hsl(0 0% 94% / 0.5)" }} />
+            Free to start — no credit card
+          </span>
         </div>
       </div>
 
