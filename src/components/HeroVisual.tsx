@@ -352,7 +352,7 @@ const HeroVisual = () => {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: "#F0EDE8" }}>
-            mitch_oliver_out_of_space.wav
+            Rest is Noise - Vida Retro.wav
           </span>
           <span
             style={{
@@ -383,11 +383,11 @@ const HeroVisual = () => {
             margin: 0,
           }}
         >
-          This track presents a heavily limited and frequency-imbalanced master.
+          Atmospheric retro production with a strong rhythmic core. The vintage
           <br />
-          The sound is dense and lacks dynamic movement. Listener fatigue spikes
+          character is well-defined, but the mid-range is crowded and the chorus
           <br />
-          in the densest sections.
+          sections don't lift relative to the verses.
         </p>
       </div>
 
@@ -400,8 +400,8 @@ const HeroVisual = () => {
           gap: 6,
         }}
       >
-        <Tag label="ISSUE" text="Heavily Limited Dynamics" color="#E24B4A" bg="#2a1010" border="#5a1f1f" />
-        <Tag label="WIN" text="Driving Rhythmic Foundation" color="#4ade80" bg="#0f2a18" border="#1f5a3a" />
+        <Tag label="ISSUE" text="Masked Lead in Chorus" color="#E24B4A" bg="#2a1010" border="#5a1f1f" />
+        <Tag label="WIN" text="Strong Vintage Character" color="#4ade80" bg="#0f2a18" border="#1f5a3a" />
         <Tag label="RELEASE" text="Released" color="#999" bg="#1a1a1a" border="#333" />
       </div>
 
@@ -450,7 +450,7 @@ const HeroVisual = () => {
       </div>
 
       {/* 3-column panels */}
-      <div style={{ display: "grid", gridTemplateColumns: "0.55fr 1.25fr 1fr 0.85fr", gap: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "0.55fr 1.7fr 1fr 1fr", gap: 0 }}>
         {/* MODULES SIDEBAR */}
         <div
           style={{
@@ -534,9 +534,9 @@ const HeroVisual = () => {
             ts="0:24"
             sev="high"
             mode="TECH"
-            title="Heavily limited dynamics"
-            desc={"Dynamic range heavily compressed, transients\nrounded off, fatiguing energy plateau."}
-            fix={"Reduce gain into limiter. Target -10 to -11\nLUFS for streaming compliance."}
+            title="Lead synth masked in chorus"
+            desc={"The lead sits behind the hi-hat layers in the chorus.\nThe retro warmth fights itself in the 2–4kHz region\nand loses presence right when it needs to carry the section."}
+            fix={"Dynamic EQ on hi-hat bus keyed to the lead, −3dB at 3kHz.\nOr push the lead 1.5dB with parallel saturation instead of\nEQ — keeps the warmth intact."}
           />
           <FeedbackCard
             idx="02"
