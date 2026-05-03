@@ -179,18 +179,16 @@ const Gauge = ({
   status,
   statusColor,
   value,
-  unit,
   fill,
 }: {
   label: string;
   status: string;
   statusColor: string;
   value: string;
-  unit: string;
   fill: number;
 }) => (
-  <div style={{ marginBottom: 8 }}>
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
+  <div style={{ marginBottom: 6 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
       <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.12em", color: "#999", fontFamily: MONO }}>
         {label}
       </span>
@@ -210,30 +208,28 @@ const Gauge = ({
         {status}
       </span>
     </div>
-    <div style={{ position: "relative", height: 4, background: "#0a0a0a", borderRadius: 2, overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, display: "flex" }}>
-        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
-        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
-        <div style={{ flex: 1, borderRight: "1px solid #1a1a1a" }} />
-        <div style={{ flex: 1 }} />
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: `${fill}%`,
-          top: -1,
-          width: 2,
-          height: 6,
-          background: statusColor,
-          borderRadius: 1,
-        }}
-      />
-    </div>
-    <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 3 }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: "#F0EDE8", letterSpacing: "-0.01em", fontFamily: MONO }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <span style={{ fontSize: 15, fontWeight: 700, color: "#F0EDE8", letterSpacing: "-0.02em", fontFamily: MONO, lineHeight: 1, minWidth: 42 }}>
         {value}
       </span>
-      <span style={{ fontSize: 8, color: "#666", fontFamily: MONO }}>{unit}</span>
+      <div style={{ flex: 1, display: "flex", gap: 2 }}>
+        {Array.from({ length: 10 }).map((_, i) => {
+          const filled = i < Math.round((fill / 100) * 10);
+          const isExtreme = fill >= 80 || fill <= 20;
+          return (
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                height: 6,
+                background: filled ? (isExtreme ? statusColor : "#666") : "#1a1a1a",
+                borderRadius: 1,
+                opacity: filled ? (isExtreme ? 0.9 : 0.7) : 1,
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   </div>
 );
@@ -580,16 +576,16 @@ const HeroVisual = () => {
           </div>
 
           <SectionHead>LOUDNESS</SectionHead>
-          <Gauge label="INT. LUFS" status="HOT" statusColor="#EF9F27" value="−8.9" unit="LUFS" fill={82} />
+          <Gauge label="INT. LUFS" status="HOT" statusColor="#EF9F27" value="−8.9" fill={82} />
 
-          <div style={{ height: 4 }} />
+          <div style={{ height: 1, background: "#1c1c1c", margin: "8px 0" }} />
           <SectionHead>DYNAMICS</SectionHead>
-          <Gauge label="DR" status="CRUSHED" statusColor="#E24B4A" value="2.9" unit="DR" fill={18} />
-          <Gauge label="PEAK" status="CLIP" statusColor="#E24B4A" value="0.0" unit="dBTP" fill={98} />
+          <Gauge label="DR" status="CRUSHED" statusColor="#E24B4A" value="2.9" fill={18} />
 
-          <div style={{ height: 4 }} />
+          <div style={{ height: 1, background: "#1c1c1c", margin: "8px 0" }} />
           <SectionHead>STEREO / BALANCE</SectionHead>
-          <Gauge label="STEREO" status="NARROW" statusColor="#EF9F27" value="+0.15" unit="" fill={32} />
+          <Gauge label="WIDTH" status="NARROW" statusColor="#EF9F27" value="+0.15" fill={28} />
+          <Gauge label="SUB/KICK" status="OK" statusColor="#4ade80" value="1.8" fill={55} />
         </div>
 
         {/* NEXT MOVES */}
