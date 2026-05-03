@@ -450,7 +450,77 @@ const HeroVisual = () => {
       </div>
 
       {/* 3-column panels */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr 0.85fr", gap: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "0.55fr 1.25fr 1fr 0.85fr", gap: 0 }}>
+        {/* MODULES SIDEBAR */}
+        <div
+          style={{
+            padding: "10px 10px",
+            borderRight: "1px solid #1c1c1c",
+            background: "#0a0a0a",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 6,
+              marginBottom: 6,
+              borderBottom: "1px solid #1c1c1c",
+            }}
+          >
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.18em", color: "#888", fontFamily: MONO }}>
+              MODULES
+            </span>
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.1em", color: "#555", fontFamily: MONO }}>
+              3/6
+            </span>
+          </div>
+          {[
+            { label: "SECONDEAR NOTES", active: true },
+            { label: "REFERENCE MATCH", active: false },
+            { label: "DEEP READ", active: false },
+            { label: "TECHNICAL METRICS", active: true },
+            { label: "HUMAN FEEDBACK", active: false },
+            { label: "NEXT MOVES", active: true },
+          ].map((m) => (
+            <div
+              key={m.label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "6px 6px 6px 7px",
+                marginBottom: 2,
+                borderLeft: m.active ? "2px solid #F0EDE8" : "2px solid transparent",
+                background: m.active ? "rgba(255,255,255,0.02)" : "transparent",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 8.5,
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  color: m.active ? "#e8e8e0" : "#555",
+                  fontFamily: MONO,
+                }}
+              >
+                {m.label}
+              </span>
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: "50%",
+                  background: m.active ? "#4ade80" : "#3a3a3a",
+                  flexShrink: 0,
+                  marginLeft: 6,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
         {/* SECONDEAR NOTES */}
         <div style={{ padding: "10px 12px", borderRight: "1px solid #1c1c1c", maxHeight: 280, overflow: "hidden", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
