@@ -408,15 +408,15 @@ const HeroVisual = () => {
       {/* Waveform — compact */}
       <div style={{ padding: "8px 14px 8px", borderTop: "1px solid #1c1c1c", borderBottom: "1px solid #1c1c1c" }}>
         <div style={{ position: "relative", height: 26, display: "flex", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 1.5, height: "100%", flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 1, height: "100%", flex: 1, width: "100%" }}>
             {WAVE.map((h, i) => {
               const marker = MARKERS.find((m) => m.i === i);
               const scaledH = Math.max(3, Math.round(h * 0.6));
               return (
-                <div key={i} style={{ position: "relative", height: "100%", display: "flex", alignItems: "center" }}>
+                <div key={i} style={{ position: "relative", height: "100%", display: "flex", alignItems: "center", flex: 1 }}>
                   <div
                     style={{
-                      width: 2,
+                      width: "100%",
                       height: scaledH,
                       borderRadius: 1,
                       background: marker ? sevColor(marker.sev) : "rgba(160,155,145,0.28)",
