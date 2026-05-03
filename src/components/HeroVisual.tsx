@@ -632,10 +632,10 @@ const HeroVisual = () => {
             ))}
           </div>
 
-          <Todo text="Reduce limiting on master" />
-          <Todo text="Cut 40-60Hz on bass" />
-          <Todo text="De-ess vocal at 7kHz" done />
-          <Todo text="Re-check LUFS after limiter" />
+          <Todo text="Dynamic EQ on hi-hat bus, −3dB at 3kHz" />
+          <Todo text="Widen pads with mid/side EQ above 200Hz" />
+          <Todo text="Sidechain sub to kick, 60Hz crossover" done />
+          <Todo text="Re-check chorus lift after lead boost" />
         </div>
       </div>
 
