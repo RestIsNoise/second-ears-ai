@@ -95,6 +95,7 @@ const ShareModal = ({ open, onOpenChange, analysisId, isPublic, onTogglePublic, 
         if (error.code === "23505") {
           toast({ title: "Already invited", description: "This email has already been invited.", duration: 2000 });
         } else {
+          console.error("[ShareModal] invite error:", error.code, error.message, error.details, error.hint);
           toast({ title: "Invite failed", variant: "destructive", duration: 2000 });
         }
       } else {
