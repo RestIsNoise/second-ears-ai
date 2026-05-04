@@ -45,11 +45,56 @@ const Header = () => {
       user?.user_metadata?.avatar_url ||
       user?.user_metadata?.picture ||
       null;
-    if (url) {
-      if (url !== avatarUrl) avatarOkRef.current = false;
-      setAvatarUrl(url);
-      setAvatarError(false);
-    }
+    if (!url || !user?.id) return;
+
+    const cacheKey = `user_avatar_cache_${user.id}`;
+    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+
+    // Try cache first
+    try {
+      const raw = localStorage.getItem(cacheKey);
+      if (raw) {
+        const parsed = JSON.parse(raw) as { dataUrl: string; sourceUrl: string; ts: number };
+        if (
+          parsed?.dataUrl &&
+          parsed.sourceUrl === url &&
+          Date.now() - parsed.ts < SEVEN_DAYS
+        ) {
+          avatarOkRef.current = true;
+          setAvatarUrl(parsed.dataUrl);
+          setAvatarError(false);
+          return;
+        }
+      }
+    } catch { /* ignore cache read errors */ }
+
+    // No valid cache: fetch and cache as base64
+    avatarOkRef.current = false;
+    setAvatarUrl(url);
+    setAvatarError(false);
+
+    (async () => {
+      try {
+        const res = await fetch(url, { mode: "cors", referrerPolicy: "no-referrer" });
+        if (!res.ok) return;
+        const blob = await res.blob();
+        const dataUrl: string = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+        try {
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({ dataUrl, sourceUrl: url, ts: Date.now() })
+          );
+        } catch { /* quota exceeded — skip */ }
+        avatarOkRef.current = true;
+        setAvatarUrl(dataUrl);
+        setAvatarError(false);
+      } catch { /* fall back to direct URL already set */ }
+    })();
   }, [user, profile]);
 
   // Fetch user plan
