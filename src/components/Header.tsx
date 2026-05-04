@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthHeaders, BACKEND } from "@/lib/backendFetch";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -160,25 +160,27 @@ const Header = () => {
                     className={cn("transition-all duration-500", scrolled ? "h-7 w-7" : "h-8 w-8")}
                     style={{ border: isDark ? "1px solid #444" : "1px solid #e0e0e0" }}
                   >
-                    <AvatarImage
-                      src={avatarError ? undefined : (avatarUrl || undefined)}
-                      alt="Avatar"
-                      loading="eager"
-                      referrerPolicy="no-referrer"
-                      onError={() => setAvatarError(true)}
-                      style={{ display: avatarUrl && !avatarError ? undefined : "none" }}
-                    />
-                    <AvatarFallback
-                      style={{
-                        background: isDark ? "#333" : "#111",
-                        color: isDark ? "#e8e8e0" : "#fff",
-                        fontSize: 13,
-                        fontWeight: 600,
-                        display: avatarUrl && !avatarError ? "none" : undefined,
-                      }}
-                    >
-                      {initials}
-                    </AvatarFallback>
+                    {avatarUrl && !avatarError ? (
+                      <img
+                        src={avatarUrl}
+                        alt="Avatar"
+                        loading="eager"
+                        referrerPolicy="no-referrer"
+                        onError={() => setAvatarError(true)}
+                        className="aspect-square h-full w-full object-cover"
+                      />
+                    ) : (
+                      <AvatarFallback
+                        style={{
+                          background: isDark ? "#333" : "#111",
+                          color: isDark ? "#e8e8e0" : "#fff",
+                          fontSize: 13,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {initials}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   {userPlan === "pro" && (
                     <span
