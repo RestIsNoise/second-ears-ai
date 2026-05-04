@@ -239,7 +239,10 @@ const ShareBlock = ({ onExportPdf, analysisId }: ShareBlockProps) => {
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      const shareLink = analysisId
+        ? `${window.location.origin}/shared/${analysisId}`
+        : window.location.href;
+      await navigator.clipboard.writeText(shareLink);
       toast({ title: "Copied!", duration: 1500 });
       setPopoverOpen(false);
     } catch {

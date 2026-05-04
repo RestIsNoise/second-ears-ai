@@ -33,7 +33,9 @@ const ShareModal = ({ open, onOpenChange, analysisId, isPublic, onTogglePublic, 
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [inviting, setInviting] = useState(false);
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = typeof window !== "undefined"
+    ? (analysisId ? `${window.location.origin}/shared/${analysisId}` : window.location.href)
+    : "";
 
   const fetchCollaborators = useCallback(async () => {
     if (!analysisId) return;
