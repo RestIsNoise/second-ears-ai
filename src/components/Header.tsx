@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,6 +27,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
+  const avatarOkRef = useRef(false);
   const [userPlan, setUserPlan] = useState<string>("free");
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const Header = () => {
       user?.user_metadata?.picture ||
       null;
     if (url) {
+      if (url !== avatarUrl) avatarOkRef.current = false;
       setAvatarUrl(url);
       setAvatarError(false);
     }
@@ -166,7 +168,8 @@ const Header = () => {
                         alt="Avatar"
                         loading="eager"
                         referrerPolicy="no-referrer"
-                        onError={() => setAvatarError(true)}
+                        onLoad={() => { avatarOkRef.current = true; }}
+                        onError={() => { if (!avatarOkRef.current) setAvatarError(true); }}
                         className="aspect-square h-full w-full object-cover"
                       />
                     ) : (
