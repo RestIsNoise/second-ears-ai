@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Share2, Lock, Globe, Download, Link2, UserPlus } from "lucide-react";
+import { Share2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
+import ShareModal from "@/components/ShareModal";
 
 const MONO = "'IBM Plex Mono', 'DM Mono', monospace";
 
